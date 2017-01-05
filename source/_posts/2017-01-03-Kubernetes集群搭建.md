@@ -647,8 +647,8 @@ systemctl status kube-dns
 ```
 注意：kube-dns重启好慢...
 
-master主机修改/etc/resolv.conf
-添加域名：
+#### 修改/etc/resolv.conf
+master主机添加域名：
 ```bash
 [root@k8s-master ~]# vi /etc/resolv.conf 
 # k8s.zxy.com为对应的域名，其他保存不变
@@ -676,7 +676,8 @@ curl http://127.0.0.1:8081/cache
 
 ### node1(192.168.10.7)执行
 
-#### 修改/etc/resolv.conf，添加域名：
+#### 修改/etc/resolv.conf
+添加域名：
 ```bash
 [root@k8s-node1 ~]# vi /etc/resolv.conf 
 # k8s.zxy.com为对应的域名，其他保存不变
