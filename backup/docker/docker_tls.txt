@@ -1,0 +1,117 @@
+docker load -i /docker/works/images/others/redis-master.tar 
+docker load -i /docker/works/images/others/guestbook-redis-slave.tar 
+docker load -i /docker/works/images/others/guestbook-php-frontend.tar
+
+v1.5.1:
+```bash
+images=(kube-proxy-amd64:v1.5.1 kube-discovery-amd64:1.0 kubedns-amd64:1.9 kube-scheduler-amd64:v1.5.1 kube-controller-manager-amd64:v1.5.1 kube-apiserver-amd64:v1.5.1 etcd-amd64:3.0.14-kubeadm kube-dnsmasq-amd64:1.4 exechealthz-amd64:1.2 pause-amd64:3.0 kubernetes-dashboard-amd64:v1.5.0)
+for imageName in ${images[@]} ; do
+  docker pull mritd/$imageName
+  docker tag mritd/$imageName gcr.io/google_containers/$imageName
+  docker rmi mritd/$imageName
+done
+```
+
+v1.4.6
+```bash
+images=(kube-proxy-amd64:v1.4.6 kube-discovery-amd64:1.0 kubedns-amd64:1.8 kube-scheduler-amd64:v1.4.6 kube-controller-manager-amd64:v1.4.6 kube-apiserver-amd64:v1.4.6 etcd-amd64:v3.0.13 kube-dnsmasq-amd64:1.4 exechealthz-amd64:1.2 pause-amd64:3.0 kubernetes-dashboard-amd64:v1.4.0)
+for imageName in ${images[@]} ; do
+  docker pull mritd/$imageName
+  docker tag mritd/$imageName gcr.io/google_containers/$imageName
+  docker rmi mritd/$imageName
+done
+```
+
+
+docker load -i /docker/works/images/k8s/tar/quagga.tar
+docker run -itd --name=router --privileged --net=host index.alauda.cn/georce/router
+
+docker start `docker ps -a |grep 'index.alauda.cn/georce/router'|awk '{print $1}'`
+
+for SERVICES in kube-dns kube-apiserver kube-controller-manager kube-scheduler; do
+systemctl restart $SERVICES
+systemctl enable $SERVICES
+systemctl status $SERVICES
+done
+
+
+for SERVICES in kube-proxy kubelet; do
+systemctl restart $SERVICES
+systemctl enable $SERVICES
+systemctl status $SERVICES
+done
+
+cp -a /docker/k8s /k8s
+cp -a /docker/k8s/kubernetes/config /docker/k8s/kubernetes/config
+
+
+kube-apiserver --advertise-address=192.168.10.6 --bind-address=192.168.10.6 --insecure-bind-address=127.0.0.1 \
+ --etcd-servers=http://192.168.10.6:2379 \
+ --allow-privileged=true \
+ --service-cluster-ip-range=10.254.0.0/16 \
+ --secure-port=443 --insecure-port=8080 \
+ --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota \
+ --tls-cert-file=/docker/k8s/kubernetes/apiserver.crt \
+ --tls-private-key-file=/docker/k8s/kubernetes/apiserver.key \
+ --client-ca-file=/docker/k8s/kubernetes/ca.crt \
+ --service-account-key-file=/docker/k8s/kubernetes/apiserver.key \
+ --basic-auth-file=`kubernetes/basic_auth.csv
+
+
+kube-controller-manager --kubeconfig=/docker/k8s/kubernetes/config \
+ --service-account-private-key-file=/docker/k8s/kubernetes/apiserver.key \
+ --root-ca-file=/docker/k8s/kubernetes/ca.crt
+
+kube-scheduler --kubeconfig=/docker/k8s/kubernetes/config
+
+#kube-dns --dns-port=53 --domain=k8s.zxy.com --kube-master-url=http://127.0.0.1
+kube-dns --dns-port=53 --domain=k8s.zxy.com --kubecfg-file=/docker/k8s/kubernetes/config
+kube-dns --dns-port=53 --domain=k8s.zxy.com --kubecfg-file=/etc/kubernetes/kubeconfig.yaml
+
+kubelet --require-kubeconfig \
+ --kubeconfig=/docker/k8s/kubernetes/config \
+ --allow-privileged=true \
+ --cluster-domain=k8s.zxy.com \
+ --cluster-dns=192.168.10.6
+
+kube-proxy --kubeconfig=/docker/k8s/kubernetes/config \
+ --proxy-mode=iptables
+
+
+kubelet --require-kubeconfig \
+ --kubeconfig=/docker/k8s/kubernetes/config \
+ --allow-privileged=true \
+ --hostname-override=k8s-node2 \
+ --cluster-domain=k8s.zxy.com \
+ --cluster-dns=192.168.10.6
+
+kube-proxy --kubeconfig=/docker/k8s/kubernetes/config \
+ --proxy-mode=iptables
+
+mkdir -p /k8s/kubernetes
+/docker/k8s/kubernetes/config
+current-context: default-context
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /docker/k8s/kubernetes/ca.crt
+    server: https://192.168.10.6
+  name: default-cluster
+contexts:
+- context:
+    cluster: default-cluster
+    user: admin
+  name: default-context
+- context:
+kind: Config
+preferences: {}
+users:
+- name: admin
+  user:
+    client-certificate: /docker/k8s/kubernetes/admin.crt
+    client-key: /docker/k8s/kubernetes/admin.key
+
+
+etcdctl --endpoints http://192.168.10.6:2379 set /coreos.com/network/config '{"NetWork":"10.0.0.0/16"}'
+
+

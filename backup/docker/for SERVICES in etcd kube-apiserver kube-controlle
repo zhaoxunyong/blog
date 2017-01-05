@@ -1,0 +1,20 @@
+for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do
+systemctl restart $SERVICES
+systemctl status $SERVICES
+done
+
+for SERVICES in etcd kube-proxy kubelet docker; do
+systemctl restart $SERVICES
+systemctl status $SERVICES
+done
+
+
+
+for SERVICES in kube-apiserver kube-controller-manager kube-scheduler; do
+systemctl stop $SERVICES
+done
+
+for SERVICES in kube-proxy kubelet docker; do
+systemctl stop $SERVICES
+done
+

@@ -1,0 +1,783 @@
+private docker registry
+http://www.cnblogs.com/lienhua34/p/4922130.html
+https://docs.docker.com/registry/deploying/
+
+必须先安装registry:2
+#docker run -d -p 5000:5000 --restart=always --name registry registry:2
+映射主机的/docker/registry目录到容器的/var/lib/registry
+docker run -d -p 5000:5000 --restart=always --name registry -v /docker/registry:/var/lib/registry registry:2
+docker start registry
+查看ip：docker exec registry ip addr
+
+#dockerui:
+#docker run -d -p 9000:9000 --name dockerui -v /var/run/docker.sock:/var/run/docker.sock uifd/ui-for-docker
+#docker start dockerui
+
+https://github.com/shipyard/shipyard
+curl -s https://shipyard-project.com/deploy | bash -s
+#wget -O shipyard.sh https://shipyard-project.com/deploy
+#安装：export ACTION=deploy;export PORT=9001;sh shipyard.sh
+#更新：export ACTION=upgrade;export PORT=9001;sh shipyard.sh 
+#移除：export ACTION=remove;sh shipyard.sh
+#更多查看：sh shipyard.sh -h
+注意：防火墙要放行2375端口，否则看不到container
+login: admin/shipyard
+建议用shipyard
+
+shipyard中已经有registry的功能了。
+#docker run -d -p 8080:8080 atcol/docker-registry-ui(不支持V2，不能使用)
+#sudo docker run \
+#  -d \
+#  -e ENV_DOCKER_REGISTRY_HOST=192.168.10.9 \
+#  -e ENV_DOCKER_REGISTRY_PORT=5000 \
+#  -p 9002:80 \
+#  konradkleine/docker-registry-frontend:v2
+#重启：
+#docker stop $(docker ps -a |grep docker-registry-frontend|awk '{print $1}')
+#docker start $(docker ps -a |grep docker-registry-frontend|awk '{print $1}')
+
+
+测试：
+docker tag registry:2 192.168.10.6:5000/zhaoxunyong/registry:2
+docker push 192.168.10.6:5000/zhaoxunyong/registry:2
+
+删除private registry中的镜像：
+docker exec -it registry /bin/sh
+删除/var/lib/registry/docker/registry/v2/repositories目录下对应的目录
+
+
+停止所有的docker容器：
+docker stop $(docker ps -q -a)
+
+2. macos:
+wget https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.pkg
+Docker Quickstart Terminal:
+开启Docker Toolbox虚拟机
+如果启动不了:
+https://forums.docker.com/t/unable-to-start-docker-on-os-x-10-11-3-toolbox-1-10-2/6704/2
+Edit: running the command "VBoxManage hostonlyif remove vboxnet2" removed the additional interface that was causing the problem.
+docker info查看是否启动成功
+查看docker ip:
+docker-machine ip
+
+或者手动创建虚拟机：
+https://github.com/widuu/chinese_docker/blob/master/installation/mac.md
+
+docker-machine ls
+创建已经创建的default:
+docker-machine rm default
+docker-machine create --driver virtualbox default
+启动虚拟机：docker-machine start default
+查看环境变量
+docker-machine env default
+docker-machine ip
+连接到 default 虚拟机
+必须要执行以下命令才能连接到docker:
+eval "$(docker-machine env default)"
+docker info
+进入虚拟机：docker-machine ssh
+
+验证：
+192.168.99.101:2376
+docker run hello-world
+docker run -d -P --name web nginx
+docker ps
+查看 container 的端口
+$ docker port web
+443/tcp -> 0.0.0.0:49156
+80/tcp -> 0.0.0.0:49157
+如果您想停止并删除正在运行的 nginx container 的话，请执行如下操作：
+$ docker stop web
+$ docker rm web
+
+#为容器挂载一个卷
+跳转到您的用户 $HOME 目录下。
+$ cd $HOME
+创建一个新的 site 目录。
+$ mkdir site
+跳转到 site 目录中。
+$ cd site
+创建一个新的 index.html 文件。
+$ echo "my new site" > index.html
+开启一个新 nginx container 并将 html 目录替换为 site 目录。
+$ docker run -d -P -v $HOME/site:/usr/share/nginx/html --name mysite nginx
+获取到 mysite 这个 container 的端口。
+$ docker port mysite
+80/tcp -> 0.0.0.0:49166
+443/tcp -> 0.0.0.0:49165
+
+
+#---------------------------------------------------------------
+自动启动：
+service docker start
+默认以/var/run/docker.sock文件监听
+手动启动：
+docker daemon -H tcp://0.0.0.0:2375 #
+-H unix://var/run/docker.sock
+-D为debug
+永久生效的话可修改：vim /usr/lib/systemd/system/docker.service中的ExecStart选项。
+
+#--------------------------------------------------------------
+1. 创建容器交互式容器：
+docker run --name web -i -t docker.io/centos /bin/bash
+--name：
+容器命名
+--rm:创建并运行一次后自动删除
+-d: 守护式容器，不加-d的话，会直接进入docker命令行，exit后容器也退出了。
+--restart=on-failure:5 当容器退出代码为非0时，自动尝试重启5次
+--restart=always 容器退出时，总会自动启动
+
+docker ps：
+显示正在运行的容器
+docker ps -a:
+显示所有的容器
+docker ps -l:
+显示最后一个运行的容器
+删除：
+docker rm <CONTAINER ID>
+
+2. 启动与停止：
+docker start <NAME>
+docker stop <NAME>
+进入已启动的容器:
+docker attach <NAME>
+注意：进入容器后，执行exit后，容器会关掉。要：CTRL+P+Q才不会退出容器
+docker rm后，再创建容器会恢复到原始内容。
+
+3.
+docker run --name daemon_dave -d docker.io/centos /bin/sh -c "while true;do echo hello world;sleep 1;done"
+docker run --log-driver="syslog" --name dave -d docker.io/centos /bin/sh -c "while true;do echo hello world;sleep 1;done"
+查看已运行的容器日志：docker logs --tail -n100 -f web或docker logs -f web
+--log-driver="syslog": 将日志输出到/var/log/message中，通过docker logs会禁用
+
+容器内进程：docker top|stats <NAME1> <NAME2>
+
+在容器外部执行容器内的命令：
+docker exec -d web touch /etc/new_config_file
+docker exec -t -i web /bin/bash类似于docker attach web，但容器不会自动退出
+
+docker的目录：/var/lib/docker，包括了镜像、配置。
+
+显示本机中的docker镜像：docker images
+搜索：docker search redis
+checkout：docker pull docker.io/redis
+
+docker login
+
+commit到hub.docker.com
+1. commit本机：
+docker commit -m "A newcustom image" -a "zhaoxunyong" redis zhaoxunyong/redis:1.0.0-SNAPSHOT
+docker images
+[root@www ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+zhaoxunyong/redis   1.0.0-SNAPSHOT      a62c1023c9a1        9 seconds ago       182.9 MB
+docker.io/redis     latest              1c2ac2024e4b        7 days ago          182.9 MB
+2. 从新的镜像创建：
+docker run -d -i -i --name redis zhaoxunyong/redis:1.0.0-SNAPSHOT
+3. 删除一个image:
+docker rmi zhaoxunyong/redis:latest
+4. commit到hub.docker.com
+docker push zhaoxunyong/redis:1.0.0-SNAPSHOT
+
+Dockerfile:
+构建：docker build --no-cache -t="zhaoxunyong/mycentos:latest" ./
+--no-ache表示每次都会从头到尾构建
+docker images
+查看历史记录：
+docker history <IMAGE.NAME>
+
+
+指定端口：
+docker run -d -p 80 --name nginx zhaoxunyong/mycentos nginx -g "daemon off;"
+docker run -d -p 8080:80 --name nginx zhaoxunyong/mycentos nginx -g "daemon off;"
+-p 8080:80: 表示把容器中的80端口映射到宿主机的8080端口
+run -d -P --name nginx zhaoxunyong/mycentos nginx -g "daemon off;" 
+-P：表示将Dockerfile中的EXPOSE端口对外分布
+
+查看映射的端口：
+[root@www docker]# docker port nginx 80
+0.0.0.0:1024
+curl localhost:1024
+
+CMD ["", ""]
+注意：CMD只能指定一条。如果docker run有传cmd的话，Dockerfile中的CMD无效
+
+ENTRYPOINT ["", ""]
+不会被外面的参数覆盖，同时CMD或者外面传的参数会作为ENTRYPOINT的参数
+也可以在外面：docker run --entrypoint覆盖ENTRYPOINT指令
+
+WORKDIR:
+脚本运行的工作目录,目录会自动创建。
+也可以在外面： -w覆盖WORKDIR指令
+
+设置环境变更：
+ENV WORK_HOME /zxy
+WORKDIR $WORK_HOME
+进入容器可以通过env查看
+也可以通过外面：-e "WORK_HOME=/zxy"指定
+
+USER nginx
+指定运行的用户，不指定默认root
+
+VOLUME:
+VOLUME ["/data"]
+创建一个可以从本地主机或其他容器挂载的挂载点
+
+LABEL:
+LABEL location="New York" type="Data Center" role="Web Server"
+
+COPY:
+ADD:
+
+ARG:
+构建时，传递参数给构建：
+ARG build
+ARG webapp_user=user(user为默认值)
+传递参数：--build-arg build=1234
+如：docker build --build-arg build=1234 -t zhaoxunyong/mycentos ./
+
+ONBUILD:
+触发器：在另外有构建基于这个构建时触发，只能继承一次
+如：ONBUILD ADD test.sh /software/
+
+挂载目录到容器
+-v $PWD/website:/var/www/html/website:ro
+挂载website目录到容器的var/www/htmlwebsite，权限为ro, rw为可读写(默认) ro为只读
+
+--volumes-from containername
+把containername所有的VOLUME挂载到新容器中。
+
+
+网络连接：
+1. Networking：推荐
+docker network create app
+docker network inspect app
+docker network ls
+创建：
+docker run -d --net=app --name db docker.io/redis
+docker run -it --net=app --name centos docker.io/centos /bin/bash
+测试：
+进入docker exec -it centos /bin/bash，ping db就可以ping通
+进入docker exec -it db /bin/bash，ping centos也可以ping通
+
+加入到app网络：
+docker run -d -p 8088:80 --name nginx docker.io/nginx
+docker network connect app nginx
+进入docker exec -it nginx /bin/bash，ping db或centos就能ping通
+/etc/hosts中没有对应的记录。还不清楚在哪设置的,好像 the embedded DNS server reachable at 127.0.0.11，https://docs.docker.com/engine/userguide/networking/#/docker-embedded-dns-server
+
+断开：docker network disconnect app nginx
+
+2. link:1.9之前版本使用：
+--link 原containername:别名
+只支持在相同的宿主机中。
+可以多次使用--link
+docker run -d --name db docker.io/redis 
+docker run -d -p 8088:80 --name nginx --link db:redis_db docker.io/nginx
+进入docker exec -it nginx /bin/bash，ping redis_db就能ping通, /etc/hosts可以看到对应的记录。
+可以在容器中通过env查看环境变量
+--icc=false:关闭所有没有链接的容器间的通信
+
+
+Docker compose:
+安装pip:
+yum install python2-pip
+安装compose:
+pip install -U docker-compose
+docker-compose --version
+
+vim redis/Dockerfile
+
+# Version: 1.0.0
+FROM docker.io/centos
+MAINTAINER zhaoxunyong@qq.com
+
+RUN yum -y install epel-release
+RUN yum -y install redis
+
+VOLUME [ "/var/lib/redis", "/var/log/redis" ]
+
+#ENTRYPOINT [ "redis-server", "--logfile", "/var/log/redis/redis-server.log" ]
+ENTRYPOINT [ "redis-server" ]
+
+EXPOSE 6379
+
+#docker build -t zhaoxunyong/redis ./
+
+vim nginx/Dockerfile
+
+# Version: 1.0.0
+FROM docker.io/centos
+
+RUN yum -y install epel-release
+RUN yum -y install nginx
+
+EXPOSE 80
+
+#CMD [ "nginx", "-g", "daemon off;"]
+
+docker build -t zhaoxunyong/ngnix ./
+
+vim docker-compose.yml
+web:
+  image: zhaoxunyong/nginx
+  command: nginx -g 'daemon off;'
+  ports:
+    - "8081:80"
+  links:
+    - redis
+
+redis:
+  image: zhaoxunyong/redis
+  ports:
+    - "6379:6379"
+
+docker-compose up
+docker-compose up -d
+docker-compose ps
+docker-compose logs
+docker-compose logs -f
+docker-compose stop
+
+#http://blog.csdn.net/mn960mn/article/details/51753893
+
+docker rm -v $(docker ps -a|grep consul |awk '{print $1}')
+
+docker network create app
+
+consul agent -server -bootstrap-expect 2 -data-dir /tmp/consul -node=n1 -bind=你的ip -dc=dc1
+
+docker run -d --name consul1 --net=app -p 8400:8400 -p 8500:8500 -p 8600:8600 -h consul1 zhaoxunyong/consul \
+ -server -bootstrap -bind=0.0.0.0 -client=172.18.0.2 -data-dir=data -ui -node=node1
+
+docker run -d --name consul2 --net=app -p 8401:8400 -p 8501:8500 -h consul2 zhaoxunyong/consul \
+ -bind=0.0.0.0 -client=172.18.0.3 -data-dir=data -node=node2 -join=172.18.0.2
+
+docker run -d --name consul3 --net=app -p 8402:8400 -p 8502:8500 -h consul3 zhaoxunyong/consul \
+ -bind=0.0.0.0 -client=172.18.0.4 -data-dir=data -node=node3 -join=172.18.0.2
+
+docker exec consul1 bin/consul members -rpc-addr=172.18.0.2:8400
+
+docker start consul1 consul2 consul3
+
+http://192.168.10.9:8500/
+
+#--------------------------------------------------------------------------
+集群安装：
+
+#https://www.kubernetes.org.cn/doc-16
+1. master(192.168.10.6/k8s1):
+
+导入images:
+cd /docker/works/images/k8s/
+./importK8s.sh
+
+docker load -i /docker/works/images/others/redis-master.tar 
+docker load -i /docker/works/images/others/guestbook-redis-slave.tar 
+docker load -i /docker/works/images/others/guestbook-php-frontend.tar
+
+2. Node(192.168.10.7/k8s-node1):
+
+从节点，将会运行kubelet, proxy和docker。
+
+修改：/etc/kubernetes/config
+#KUBE_MASTER="--master=http://k8s-master:8080"
+sed -i 's;^KUBE_MASTER=.*;KUBE_MASTER="--master=http://192.168.10.6:8080";' /etc/kubernetes/config
+
+修改10.7：/etc/kubernetes/kubelet
+#KUBELET_ADDRESS="--address=0.0.0.0"
+#KUBELET_HOSTNAME="--hostname-override=k8s-node1"
+#KUBELET_API_SERVER="--api-servers=http://k8s-master:8080"
+
+sed -i 's;^KUBELET_ADDRESS=.*;KUBELET_ADDRESS="--address=0.0.0.0";' /etc/kubernetes/kubelet
+sed -i 's;^KUBELET_HOSTNAME=.*;KUBELET_HOSTNAME="--hostname-override=k8s-node1";' /etc/kubernetes/kubelet
+sed -i 's;^KUBELET_API_SERVER=.*;KUBELET_API_SERVER="--api-servers=http://192.168.10.6:8080";' /etc/kubernetes/kubelet
+
+重启：
+for SERVICES in kube-proxy kubelet docker; do
+systemctl restart $SERVICES
+systemctl enable $SERVICES
+systemctl status $SERVICES
+done
+
+导入images:
+cd /docker/works/images/k8s/
+./importK8s.sh
+
+docker load -i /docker/works/images/others/redis-master.tar 
+docker load -i /docker/works/images/others/guestbook-redis-slave.tar 
+docker load -i /docker/works/images/others/guestbook-php-frontend.tar
+
+
+node监控：(ctAdvisor)
+http://192.168.10.7:4194/containers/
+
+
+
+查看node:
+[root@k8s1 ~]# kubectl get nodes
+NAME      STATUS    AGE
+k8s2      Ready     3m
+k8s3      Ready     3m
+检查：
+每台node是都有iptables记录。通过iptables-save查看。正常情况下，必须有类似于以下的日志：
+-A KUBE-SERVICES -d 10.254.107.235/32 -p tcp -m comment --comment "default/redis-slave: cluster IP" -m tcp --dport 6379 -j KUBE-SVC-AGR3D4D4FQNH4O33
+-A KUBE-SERVICES -d 10.254.71.133/32 -p tcp -m comment --comment "default/redis-master: cluster IP" -m tcp --dport 6379 -j KUBE-SVC-7GF4BJM3Z6CMNVML
+-A KUBE-SERVICES -d 10.254.0.1/32 -p tcp -m comment --comment "default/kubernetes:https cluster IP" -m tcp --dport 443 -j KUBE-SVC-NPX46M4PTMTKRN6Y
+-A KUBE-SERVICES -d 10.254.9.106/32 -p tcp -m comment --comment "default/frontend: cluster IP" -m tcp --dport 80 -j KUBE-SVC-GYQQTB6TY565JPRW
+
+暴露对外端口方式：
+1. 在service中通过nodePort定义：
+type: NodePort
+  ports:
+    # the port that this service should serve on
+  - port: 80
+    nodePort: 30001
+ 其中端口号必须在：30000-32767之间
+
+2. 通过rc定义：
+ports:
+ - containerPort: 80
+   hostPort: 80
+
+出现的情况：
+1. 发现有一台始终没有iptables规则：
+通过tail -n100 -f /var/log/message查看，发现有一台node，没有修改/etc/kubernetes/config中的apiserver的地址。
+
+-------------------
+
+images=(kube-proxy-amd64:v1.4.5 kube-discovery-amd64:1.0 kubedns-amd64:1.7 kube-scheduler-amd64:v1.4.5 kube-controller-manager-amd64:v1.4.5 kube-apiserver-amd64:v1.4.5 etcd-amd64:2.2.5 kube-dnsmasq-amd64:1.3 exechealthz-amd64:1.1 pause-amd64:3.0 kubernetes-dashboard-amd64:v1.4.1)
+for imageName in ${images[@]} ; do
+  docker pull mritd/$imageName
+  docker tag mritd/$imageName gcr.io/google_containers/$imageName
+  docker rmi mritd/$imageName
+done
+
+master(kubeadmin方式)-------------------------------------------------------
+#https://mritd.me/2016/10/29/set-up-kubernetes-cluster-by-kubeadm/#section-5
+#cd /docker/works/images/k8s/rpm/docker
+#yum localinstall *.rpm
+yum install docker-engine -y
+sed -i "s;^ExecStart=/usr/bin/dockerd$;ExecStart=/usr/bin/dockerd --registry-mirror=http://3fecfd09.m.daocloud.io;" /usr/lib/systemd/system/docker.service
+
+systemctl start docker
+systemctl enable docker
+
+#cd /docker/works/images/k8s/rpm/k8s
+#yum localinstall *.rpm
+yum install -y socat kubelet kubeadm kubectl kubernetes-cni
+
+cd /docker/works/images/k8s
+./importK8s.sh
+
+# 写入 hostname(node 节点后缀改成 .node)
+#echo "192-168-10-6.master" > /etc/hostname 
+hostnamectl --static set-hostname 192-168-10-6.master
+hostnamectl命令会自动生成/etc/hostname文件
+# 加入 hosts
+#echo "127.0.0.1   192-168-10-6.master" >> /etc/hosts
+#echo '192.168.10.6 192-168-10-6.master
+#192.168.10.7   192-168-10-7.node' >> /etc/hosts
+echo '192.168.10.6 k8s-master
+192.168.10.7   k8s-node1' >> /etc/hosts
+# 不重启情况下使内核生效
+#sysctl kernel.hostname=192-168-10-6.master
+
+kubeadm 等相关 rpm 安装后会生成 /etc/kubernetes 目录，而 kubeadm init 时候又会检测这些目录是否存在，如果存在则停止初始化，所以要先清理一下，以下清理脚本来源于 官方文档 Tear down 部分，该脚本同样适用于初始化失败进行重置
+
+systemctl stop kubelet;
+# 注意: 下面这条命令会干掉所有正在运行的 docker 容器，
+# 如果要进行重置操作，最好先确定当前运行的所有容器都能干掉(干掉不影响业务)，
+# 否则的话最好手动删除 kubeadm 创建的相关容器(gcr.io 相关的)
+docker rm -f -v $(docker ps -q);
+find /var/lib/kubelet | xargs -n 1 findmnt -n -t tmpfs -o TARGET -T | uniq | xargs -r umount -v;
+rm -r -f /etc/kubernetes /var/lib/kubelet /var/lib/etcd;
+
+systemctl enable kubelet
+systemctl start kubelet
+
+kubeadm init --api-advertise-addresses 192.168.10.6 
+[kubeadm] WARNING: kubeadm is in alpha, please do not use it for production clusters.
+[preflight] Running pre-flight checks
+[init] Using Kubernetes version: v1.5.1
+[tokens] Generated token: "586c91.f045fd055f9b7155"
+[certificates] Generated Certificate Authority key and certificate.
+[certificates] Generated API Server key and certificate
+[certificates] Generated Service Account signing keys
+[certificates] Created keys and certificates in "/etc/kubernetes/pki"
+[kubeconfig] Wrote KubeConfig file to disk: "/etc/kubernetes/kubelet.conf"
+[kubeconfig] Wrote KubeConfig file to disk: "/etc/kubernetes/admin.conf"
+[apiclient] Created API client, waiting for the control plane to become ready
+[apiclient] All control plane components are healthy after 15.646161 seconds
+[apiclient] Waiting for at least one node to register and become ready
+[apiclient] First node is ready after 3.052755 seconds
+[apiclient] Creating a test deployment
+[apiclient] Test deployment succeeded
+[token-discovery] Created the kube-discovery deployment, waiting for it to become ready
+[token-discovery] kube-discovery is ready after 9.011433 seconds
+[addons] Created essential addon: kube-proxy
+[addons] Created essential addon: kube-dns
+
+Your Kubernetes master has initialized successfully!
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+    http://kubernetes.io/docs/admin/addons/
+
+You can now join any number of machines by running the following on each node:
+
+kubeadm join --token=586c91.f045fd055f9b7155 192.168.10.6
+
+node-------------------------------------------------------
+cd /docker/works/images/k8s/rpm/docker
+yum localinstall *.rpm
+sed -i "s;^ExecStart=/usr/bin/dockerd$;ExecStart=/usr/bin/dockerd --registry-mirror=http://3fecfd09.m.daocloud.io;" /usr/lib/systemd/system/docker.service
+
+systemctl start docker
+systemctl enable docker
+
+cd /docker/works/images/k8s/rpm/k8s
+yum localinstall *.rpm
+
+cd /docker/works/images/k8s
+./importK8s.sh
+
+#echo "192-168-10-7.node" > /etc/hostname 
+#hostnamectl --static set-hostname 192-168-10-7.node
+#echo '192.168.10.6 192-168-10-6.master
+#192.168.10.7   192-168-10-7.node' >> /etc/hosts
+echo '192.168.10.6 k8s-master
+192.168.10.7   k8s-node1' >> /etc/hosts
+#sysctl kernel.hostname=192-168-10-7.node
+
+# 启动 kubelet
+systemctl enable kubelet
+systemctl start kubelet
+
+# 初始化加入集群
+[root@k8s2 k8s]# kubeadm join --token=586c91.f045fd055f9b7155 192.168.10.6
+[kubeadm] WARNING: kubeadm is in alpha, please do not use it for production clusters.
+[preflight] Running pre-flight checks
+[tokens] Validating provided token
+[discovery] Created cluster info discovery client, requesting info from "http://192.168.10.6:9898/cluster-info/v1/?token-id=a02acc"
+[discovery] Cluster info object received, verifying signature using given token
+[discovery] Cluster info signature and contents are valid, will use API endpoints [https://192.168.10.6:6443]
+[bootstrap] Trying to connect to endpoint https://192.168.10.6:6443
+[bootstrap] Detected server version: v1.5.1
+[bootstrap] Successfully established connection with endpoint "https://192.168.10.6:6443"
+[csr] Created API client to obtain unique certificate for this node, generating keys and certificate signing request
+[csr] Received signed certificate from the API server:
+Issuer: CN=kubernetes | Subject: CN=system:node:192-168-10-7.node | CA: false
+Not before: 2016-12-26 09:49:00 +0000 UTC Not After: 2017-12-26 09:49:00 +0000 UTC
+[csr] Generating kubelet configuration
+[kubeconfig] Wrote KubeConfig file to disk: "/etc/kubernetes/kubelet.conf"
+
+Node join complete:
+* Certificate signing request sent to master and response
+  received.
+* Kubelet informed of new secure connection details.
+
+Run 'kubectl get nodes' on the master to see this machine join.
+
+
+在master执行：
+[root@k8s1 k8s]# kubectl get nodes
+NAME                  STATUS         AGE
+192-168-10-6.master   Ready,master   13m
+192-168-10-7.node     Ready          26s
+
+
+#--------------------------------------------------------
+#http://blog.csdn.net/yanzi1225627/article/details/51121507
+#CentOS命令行使用shadowsocks代理的方法:
+#yum install python-pip
+#pip install shadowsocks
+#vi /etc/shadowsocks.json
+#{
+#"server":"153.125.237.148",
+#"server_port":31015,
+#"local_address": "127.0.0.1",
+#"local_port":1080,
+#"password":"Aa123456",
+#"timeout":600,
+#"method":"aes-256-cfb"
+#}
+#
+##sslocal -c /etc/shadowsocks.json
+##To run in the background
+#sudo sslocal -c /etc/shadowsocks.json -d start
+#
+##Auto Start the Client on System Boot
+##Edit /etc/rc.local file
+##sudo vi /etc/rc.local
+##Put the following line above the exit 0 line:
+#sudo sslocal -c /etc/shadowsocks.json -d start
+#
+#安装Privoxy:
+#wget http://www.privoxy.org/sf-download-mirror/Sources/3.0.26%20%28stable%29/privoxy-3.0.26-stable-src.tar.gz
+#useradd privoxy
+#autoheader && autoconf
+#./configure
+#make && make install
+#
+#查看vim /usr/local/etc/privoxy/config文件，先搜索关键字:listen-address找到listen-address 127.0.#0.1:8118这一句，保证这一句没有注释，8118就是将来http代理要输入的端口。然后搜索forward-socks5t,将forward-socks5t / 127.0.#0.1:1080 .此句的注释去掉. 
+#privoxy --user privoxy /usr/local/etc/privoxy/config
+#
+#配置/etc/profile
+#
+#执行vim /etc/profile,添加如下三句:
+#
+#export http_proxy=http://127.0.0.1:8118
+#export https_proxy=http://127.0.0.1:8118
+#export ftp_proxy=http://127.0.0.1:8118
+#
+#source /etc/profile
+#
+#快速启动：
+#sudo sslocal -c /etc/shadowsocks.json -d start
+#privoxy --user privoxy /usr/local/etc/privoxy/config
+
+macos/linux终端：(建议用这个)
+http://droidyue.com/blog/2016/04/04/set-shadowsocks-proxy-for-terminal/index.html
+
+
+
+--------------------------------------------------------------
+etcd集群安装：
+rpm安装：
+yum -y install etcd
+版本为：etcd-3.0.15-1.x86_64
+systemctl start etcd
+systemctl enable etcd
+https://mritd.me/2016/09/01/Etcd-%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/
+http://blog.csdn.net/u010511236/article/details/52386229
+etcd1:
+grep -v ^# /etc/etcd/etcd.conf 
+ETCD_NAME=etcd1
+ETCD_DATA_DIR="/var/lib/etcd/etcd1"
+ETCD_LISTEN_PEER_URLS="http://192.168.10.6:2380"
+ETCD_LISTEN_CLIENT_URLS="http://127.0.0.1:2379,http://192.168.10.6:2379,http://192.168.10.6:4001"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.10.6:2380"
+ETCD_DISCOVERY="https://discovery.etcd.io/248e628e9c77cc927dc1cc2749f3c9bf"
+ETCD_INITIAL_CLUSTER_STATE="new"
+ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
+ETCD_ADVERTISE_CLIENT_URLS="http://192.168.10.6:2379,http://192.168.10.6:4001"
+
+etcd2:
+grep -v ^# /etc/etcd/etcd.conf 
+ETCD_NAME=etcd2
+ETCD_DATA_DIR="/var/lib/etcd/etcd2"
+ETCD_LISTEN_PEER_URLS="http://192.168.10.7:2380"
+ETCD_LISTEN_CLIENT_URLS="http://127.0.0.1:2379,http://192.168.10.7:2379,http://192.168.10.7:4001"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.10.7:2380"
+ETCD_DISCOVERY="https://discovery.etcd.io/248e628e9c77cc927dc1cc2749f3c9bf"
+ETCD_INITIAL_CLUSTER_STATE="exist"
+ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
+ETCD_ADVERTISE_CLIENT_URLS="http://192.168.10.7:2379,http://192.168.10.7:4001"
+
+etcd3:
+grep -v ^# /etc/etcd/etcd.conf 
+ETCD_NAME=etcd3
+ETCD_DATA_DIR="/var/lib/etcd/etcd3"
+ETCD_LISTEN_PEER_URLS="http://192.168.10.8:2380"
+ETCD_LISTEN_CLIENT_URLS="http://127.0.0.1:2379,http://192.168.10.8:2379,http://192.168.10.8:4001"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.10.8:2380"
+ETCD_DISCOVERY="https://discovery.etcd.io/248e628e9c77cc927dc1cc2749f3c9bf"
+ETCD_INITIAL_CLUSTER_STATE="exist"
+ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
+ETCD_ADVERTISE_CLIENT_URLS="http://192.168.10.8:2379,http://192.168.10.8:4001"
+
+基于已有集群的服务发现
+# 获取集群标识 size 代表要创建的集群大小
+curl -w "\n" 'https://discovery.etcd.io/new?size=3'
+# 返回如下
+https://discovery.etcd.io/f6a252c5240cc89b91fa00dac95d5732
+
+# 设置集群标识,删除掉 ETCD_INITIAL_CLUSTER 字段,添加：
+ETCD_DISCOVERY="https://discovery.etcd.io/f6a252c5240cc89b91fa00dac95d5732"
+也可以通过已有的集群自动发现：
+首先需要在已经搭建的etcd中创建用于发现的url
+curl -X PUT http://10.0.1.33:2379/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83/_config/size -d value=3
+
+返回：
+{"action":"set","node":{"key":"/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83/_config/size","value":"3","modifiedIndex":170010,"createdIndex":170010}}
+
+如上表示创建一个集群大小为3的etcd发现url，创建成功后按如下配置启动各节点
+./etcd --name infra0 --initial-advertise-peer-urls http://10.0.1.111:2380 \
+  --listen-peer-urls http://10.0.1.111:2380 \
+  --listen-client-urls http://10.0.1.111:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls http://10.0.1.111:2379 \ 
+ --discovery http://10.0.1.33:2379/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83
+
+(无用)
+#kubernetes dashboard异常解决：
+#x509: certificate signed by unknown authority
+#生成证书时的 -subj "/CN=kube-apiserver",其中kube-apiserver"必须要是kube-apiserver，并且也要用kube-apiserver访问才行
+
+出现x509: failed to load system roots and no roots provided时：
+http://stackoverflow.com/questions/38551685/kubernetes-dashboard-and-ssl-x509-failed-to-load-system-roots-and-no-roots-pr
+container中需要mount目录：
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: kubernetes-dashboard
+  name: kubernetes-dashboard
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-dashboard
+  template:
+    ...
+    spec:
+      volumes:
+      - name: "etcpki"
+        hostPath:
+          path: "/etc/pki"
+      - name: "config"
+        hostPath:
+          path: "/k8s"
+      containers:
+      - name: kubernetes-dashboard
+        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.0
+        resources:
+          # keep request = limit to keep this container in guaranteed class
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
+        env:
+        - name: KUBECONFIG
+          value: /k8s/.kube/config
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        args:
+          # Uncomment the following line to manually specify Kubernetes API server Host
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+          # to it. Uncomment only if the default does not work.
+          - --apiserver-host=https://kube-apiserver
+        volumeMounts:
+        - name: "etcpki"
+          mountPath: "/etc/pki"
+          readOnly: true
+        - name: "config"
+          mountPath: "/k8s"
+          readOnly: true
+          ...
+
+kubectl远程访问：
+export KUBERNETES_MASTER=https://kube-apiserver
+kubectl --kubeconfig=/k8s/.kube/config proxy
+
+
+
+
+
+
+
+
