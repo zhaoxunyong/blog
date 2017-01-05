@@ -26,12 +26,12 @@ login: admin/shipyard
 
 shipyard中已经有registry的功能了。
 #docker run -d -p 8080:8080 atcol/docker-registry-ui(不支持V2，不能使用)
-#sudo docker run \
-#  -d \
-#  -e ENV_DOCKER_REGISTRY_HOST=192.168.10.9 \
-#  -e ENV_DOCKER_REGISTRY_PORT=5000 \
-#  -p 9002:80 \
-#  konradkleine/docker-registry-frontend:v2
+sudo docker run \
+  -d \
+  -e ENV_DOCKER_REGISTRY_HOST=172.28.3.96 \
+  -e ENV_DOCKER_REGISTRY_PORT=5000 \
+  -p 9002:80 \
+  konradkleine/docker-registry-frontend:v2
 #重启：
 #docker stop $(docker ps -a |grep docker-registry-frontend|awk '{print $1}')
 #docker start $(docker ps -a |grep docker-registry-frontend|awk '{print $1}')
