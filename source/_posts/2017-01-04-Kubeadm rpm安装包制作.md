@@ -1,5 +1,5 @@
 ---
-title: Kubernetes rpm安装包制作
+title: Kubeadm rpm安装包制作
 date: 2017-01-04 10:22:47
 categories: ["kubernetes"]
 tags: ["kubernetes"]

@@ -1,0 +1,56 @@
+macos:
+wget https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.pkg
+Docker Quickstart Terminal:
+开启Docker Toolbox虚拟机
+如果启动不了:
+https://forums.docker.com/t/unable-to-start-docker-on-os-x-10-11-3-toolbox-1-10-2/6704/2
+Edit: running the command "VBoxManage hostonlyif remove vboxnet2" removed the additional interface that was causing the problem.
+docker info查看是否启动成功
+查看docker ip:
+docker-machine ip
+
+或者手动创建虚拟机：
+https://github.com/widuu/chinese_docker/blob/master/installation/mac.md
+
+docker-machine ls
+创建已经创建的default:
+docker-machine rm default
+docker-machine create --driver virtualbox default
+启动虚拟机：docker-machine start default
+查看环境变量
+docker-machine env default
+docker-machine ip
+连接到 default 虚拟机
+必须要执行以下命令才能连接到docker:
+eval "$(docker-machine env default)"
+docker info
+进入虚拟机：docker-machine ssh
+
+验证：
+192.168.99.101:2376
+docker run hello-world
+docker run -d -P --name web nginx
+docker ps
+查看 container 的端口
+$ docker port web
+443/tcp -> 0.0.0.0:49156
+80/tcp -> 0.0.0.0:49157
+如果您想停止并删除正在运行的 nginx container 的话，请执行如下操作：
+$ docker stop web
+$ docker rm web
+
+#为容器挂载一个卷
+跳转到您的用户 $HOME 目录下。
+$ cd $HOME
+创建一个新的 site 目录。
+$ mkdir site
+跳转到 site 目录中。
+$ cd site
+创建一个新的 index.html 文件。
+$ echo "my new site" > index.html
+开启一个新 nginx container 并将 html 目录替换为 site 目录。
+$ docker run -d -P -v $HOME/site:/usr/share/nginx/html --name mysite nginx
+获取到 mysite 这个 container 的端口。
+$ docker port mysite
+80/tcp -> 0.0.0.0:49166
+443/tcp -> 0.0.0.0:49165

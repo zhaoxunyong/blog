@@ -18,7 +18,9 @@ kubernetes版本为：v1.5.1
 |192.168.10.7|k8s-node1|docker、kube-proxy、kubelet|512m|
 |192.168.10.8|k8s-node2|docker、kube-proxy、kubelet|512m|
 
-### 每台安装docker
+### 安装基础软件
+以下为每台都需要同样的操作
+
 配置yum源：
 ```bash
 [root@k8s-master ~]$ tee /etc/yum.repos.d/docker.repo <<-'EOF'
@@ -34,6 +36,52 @@ EOF
 安装：
 ```bash
 yum -y install docker-engine
+```
+
+修改配置：
+```bash
+#修改时区
+ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime
+
+#关闭内核安全
+sed -i 's;SELINUX=.*;SELINUX=disabled;' /etc/selinux/config
+setenforce 0
+getenforce
+
+#关闭防火墙
+systemctl disable iptables firewalld
+systemctl stop iptables firewalld
+
+#优化内核
+cat /etc/security/limits.conf|grep 65535 > /dev/null
+if [[ $? != 0 ]]; then
+cat >> /etc/security/limits.conf  << EOF
+*               soft    nofile             65535
+*               hard    nofile             65535
+*               soft    nproc              65535
+*               hard    nproc              65535
+EOF
+fi
+
+#打开端口转发
+#永久修改：/etc/sysctl.conf中的net.ipv4.ip_forward=1，生效：sysctl -p
+#临时修改：echo 1 > /proc/sys/net/ipv4/ip_forward，重启后失效
+
+cat /etc/sysctl.conf|grep "net.ipv4.ip_forward" > /dev/null
+if [[ $? != 0 ]]; then
+cat >> /etc/sysctl.conf  << EOF
+net.ipv4.tcp_fin_timeout = 30
+net.ipv4.tcp_keepalive_time = 300
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.ip_forward = 1
+EOF
+sysctl -p
+fi
+
+
+su - root -c "ulimit -a"
 ```
 
 docker加速：
@@ -67,8 +115,6 @@ done
 ```bash
 hostnamectl --static set-hostname k8s-master
 
-systemctl disable iptables firewalld
-systemctl stop iptables firewalld
 
 #初始化目录
 /etc/kubernetes/ssl/
@@ -79,18 +125,6 @@ sysctl kernel.hostname=k8s-master
 echo '192.168.10.6 k8s-master
 192.168.10.7   k8s-node1
 192.168.10.8   k8s-node2' >> /etc/hosts
-
-#打开端口转发
-#永久修改：/etc/sysctl.conf中的net.ipv4.ip_forward=1，生效：sysctl -p
-#临时修改：echo 1 > /proc/sys/net/ipv4/ip_forward，重启后失效
-#此处为永久修改
-cat /etc/sysctl.conf|grep "net.ipv4.ip_forward" > /dev/null
-if [[ $? != 0 ]]; then
-cat >> /etc/sysctl.conf  << EOF
-net.ipv4.ip_forward = 1
-EOF
-sysctl -p
-fi
 
 #采用直接路由，docker0的网段不能一样，所以需要修改docker的子网地址--bip=10.1.10.1/24
 #vim /usr/lib/systemd/system/docker.service
@@ -129,9 +163,6 @@ echo "docker start \`docker ps -a |grep 'index.alauda.cn/georce/router'|awk '{pr
 ```bash
 hostnamectl --static set-hostname k8s-node1
 
-systemctl disable iptables firewalld
-systemctl stop iptables firewalld
-
 #初始化目录
 /etc/kubernetes/ssl/
 
@@ -141,15 +172,6 @@ sysctl kernel.hostname=k8s-node1
 echo '192.168.10.6 k8s-master
 192.168.10.7   k8s-node1
 192.168.10.8   k8s-node2' >> /etc/hosts
-
-#打开端口转发
-cat /etc/sysctl.conf|grep "net.ipv4.ip_forward" > /dev/null
-if [[ $? != 0 ]]; then
-cat >> /etc/sysctl.conf  << EOF
-net.ipv4.ip_forward = 1
-EOF
-sysctl -p
-fi
 
 #采用直接路由，docker0的网段不能一样，所以需要修改docker的子网地址--bip=10.1.20.1/24
 #vim /usr/lib/systemd/system/docker.service
@@ -177,9 +199,6 @@ echo "docker start \`docker ps -a |grep 'index.alauda.cn/georce/router'|awk '{pr
 ```bash
 hostnamectl --static set-hostname k8s-node2
 
-systemctl disable iptables firewalld
-systemctl stop iptables firewalld
-
 #初始化目录
 /etc/kubernetes/ssl/
 
@@ -189,15 +208,6 @@ sysctl kernel.hostname=k8s-node2
 echo '192.168.10.6 k8s-master
 192.168.10.7   k8s-node1
 192.168.10.8   k8s-node2' >> /etc/hosts
-
-#打开端口转发
-cat /etc/sysctl.conf|grep "net.ipv4.ip_forward" > /dev/null
-if [[ $? != 0 ]]; then
-cat >> /etc/sysctl.conf  << EOF
-net.ipv4.ip_forward = 1
-EOF
-sysctl -p
-fi
 
 #采用直接路由，docker0的网段不能一样，所以需要修改docker的子网地址--bip=10.1.30.1/24
 #vim /usr/lib/systemd/system/docker.service
@@ -662,11 +672,11 @@ nameserver 114.114.114.114
 
 测试：
 ```bash
-nslookup -type=srv redis-slave         
+nslookup -type=srv kubernetes.default         
 Server:         192.168.10.6
 Address:        192.168.10.6#53
 
-redis-slave.default.svc.k8s.zxy.com  service = 10 100 0 3563366661643766.redis-slave.default.svc.k8s.zxy.com.
+kubernetes.default.svc.k8s.zxy.com  service = 10 100 0 3563366661643766.kubernetes.default.svc.k8s.zxy.com.
 
 curl http://127.0.0.1:8081/readiness
 ok
@@ -1011,6 +1021,20 @@ type: NodePort
 ```
 添加type: NodePort与nodePort: 30001参数，对外暴露30001
 
+暴露对外端口方式：
+1. 在service中通过nodePort定义：
+type: NodePort
+  ports:
+    # the port that this service should serve on
+  - port: 80
+    nodePort: 30001
+ 其中端口号必须在：30000-32767之间
+
+2. 通过rc定义：
+ports:
+ - containerPort: 80
+   hostPort: 80
+
 创建redis-master的service与rc:
 ```bash
 kubectl create -f redis-slave-service.yaml
@@ -1043,6 +1067,9 @@ redis-slave-rrl87    1/1       Running   0          2m        10.1.30.3   k8s-no
 
 异常问题：
 该demo是基于环境变量，所以必须先创建service，再创建rc，否则会出现STATUS为Running，但功能会报错。
+
+发现有一台始终没有iptables规则：
+通过tail -n100 -f /var/log/message查看，发现有一台node，没有修改/etc/kubernetes/config中的apiserver的地址。
 
 ## docker registry
 此章节为通过kubernetes方式部署。

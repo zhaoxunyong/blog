@@ -97,6 +97,11 @@ redis-master   1         1         2h
 redis-slave    3         3         2h
 ```
 
+#### 动态调用deployment
+```bash
+kubectl scale deployment elasticsearch --replicas=1 -n kube-system
+```
+
 #### 创建namespaces
 kubectl create -f namespace-dev.yaml
 kubectl get pods --namespace=development
