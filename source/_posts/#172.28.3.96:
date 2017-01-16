@@ -1,0 +1,32 @@
+#172.28.3.96:
+route add -net 10.1.20.0 netmask 255.255.255.0 gw 172.28.3.97
+route add -net 10.1.30.0 netmask 255.255.255.0 gw 172.28.3.98
+#172.28.3.97:
+route add -net 10.1.10.0 netmask 255.255.255.0 gw 172.28.3.96
+route add -net 10.1.30.0 netmask 255.255.255.0 gw 172.28.3.98
+#172.28.3.98:
+route add -net 10.1.10.0 netmask 255.255.255.0 gw 172.28.3.96
+route add -net 10.1.20.0 netmask 255.255.255.0 gw 172.28.3.97
+
+
+sed -i 's;^ETCD_LISTEN_CLIENT_URLS=.*;ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://172.28.3.96:2379";' /etc/etcd/etcd.conf
+sed -i 's;^ETCD_ADVERTISE_CLIENT_URLS=.*;ETCD_ADVERTISE_CLIENT_URLS="http://localhost:2379,http://172.28.3.96:2379";' /etc/etcd/etcd.conf
+
+
+sed -i 's;^KUBE_LOGTOSTDERR=.*;KUBE_LOGTOSTDERR="--logtostderr=true";g' /etc/kubernetes/apiserver
+
+tee /etc/kubernetes/config <<-'EOF'
+KUBE_LOGTOSTDERR="--logtostderr=true"
+KUBE_LOG_LEVEL="--v=0"
+KUBE_ALLOW_PRIV="--allow-privileged=false"
+KUBE_MASTER="--master=https://172.28.3.96:6443"
+EOF
+
+
+[root@k8s-master ~]$ grep -v ^# /etc/kubernetes/apiserver
+KUBE_API_ADDRESS="--bind-address=172.28.3.96 --insecure-bind-address=127.0.0.1"
+KUBE_API_PORT="--secure-port=6443 --insecure-port=8080"
+KUBE_ETCD_SERVERS="--etcd-servers=http://172.28.3.96:2379"
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
+KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
+KUBE_API_ARGS="--tls-cert-file=/etc/kubernetes/ssl/apiserver.pem --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem --client-ca-file=/etc/kubernetes/ssl/ca.pem --service-account-key-file=/etc/kubernetes/ssl/apiserver-key.pem"

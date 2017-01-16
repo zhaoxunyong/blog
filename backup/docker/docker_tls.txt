@@ -2,32 +2,12 @@ docker load -i /docker/works/images/others/redis-master.tar
 docker load -i /docker/works/images/others/guestbook-redis-slave.tar 
 docker load -i /docker/works/images/others/guestbook-php-frontend.tar
 
-docker pull zhanghepeng/dnsmasq-metrics-amd64:1.0
-docker tag zhanghepeng/dnsmasq-metrics-amd64:1.0 gcr.io/google_containers/dnsmasq-metrics-amd64:1.0
-docker rmi zhanghepeng/dnsmasq-metrics-amd64:1.0
+
 
 docker pull jicki/flannel-git:v0.6.1-28-g5dde68d-amd64
 docker tag jicki/flannel-git:v0.6.1-28-g5dde68d-amd64 quay.io/coreos/flannel-git:v0.6.1-28-g5dde68d-amd64
 docker rmi jicki/flannel-git:v0.6.1-28-g5dde68d-amd64
 
-
-v1.4.5
-images=(kube-proxy-amd64:v1.4.5 kube-discovery-amd64:1.0 kubedns-amd64:1.7 kube-scheduler-amd64:v1.4.5 kube-controller-manager-amd64:v1.4.5 kube-apiserver-amd64:v1.4.5 etcd-amd64:2.2.5 kube-dnsmasq-amd64:1.3 exechealthz-amd64:1.1 pause-amd64:3.0 kubernetes-dashboard-amd64:v1.4.1)
-for imageName in ${images[@]} ; do
-  docker pull mritd/$imageName
-  docker tag mritd/$imageName gcr.io/google_containers/$imageName
-  docker rmi mritd/$imageName
-done
-
-v1.4.6
-```bash
-images=(kube-proxy-amd64:v1.4.6 kube-discovery-amd64:1.0 kubedns-amd64:1.8 kube-scheduler-amd64:v1.4.6 kube-controller-manager-amd64:v1.4.6 kube-apiserver-amd64:v1.4.6 etcd-amd64:v3.0.13 kube-dnsmasq-amd64:1.4 exechealthz-amd64:1.2 pause-amd64:3.0 kubernetes-dashboard-amd64:v1.4.0)
-for imageName in ${images[@]} ; do
-  docker pull mritd/$imageName
-  docker tag mritd/$imageName gcr.io/google_containers/$imageName
-  docker rmi mritd/$imageName
-done
-```
 
 
 docker load -i /docker/works/images/k8s/tar/quagga.tar
@@ -39,6 +19,10 @@ for SERVICES in kube-dns kube-apiserver kube-controller-manager kube-scheduler; 
 systemctl restart $SERVICES
 systemctl enable $SERVICES
 systemctl status $SERVICES
+done
+
+for dns in `kubectl get pod -o wide -n kube-system|grep kube-dns|awk '{print $1}'`; do 
+kubectl delete pod $dns -n kube-system
 done
 
 

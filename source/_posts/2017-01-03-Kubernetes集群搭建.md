@@ -40,17 +40,30 @@ yum -y install docker-engine
 
 修改配置：
 ```bash
+#修改dns
+cat /etc/NetworkManager/NetworkManager.conf|grep "dns=none" > /dev/null
+if [[ $? != 0 ]]; then
+  echo "dns=none" >> /etc/NetworkManager/NetworkManager.conf
+  systemctl restart NetworkManager.service
+fi
+
 #修改时区
 ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime
 
 #关闭内核安全
-sed -i 's;SELINUX=.*;SELINUX=disabled;' /etc/selinux/config
-setenforce 0
-getenforce
+#sed -i 's;SELINUX=.*;SELINUX=disabled;' /etc/selinux/config
+sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
+#setenforce 0
+#getenforce
+#reboot
+[root@k8s-node2 ~]# sestatus
+SELinux status:                 disabled
 
 #关闭防火墙
-systemctl disable iptables firewalld
-systemctl stop iptables firewalld
+systemctl disable iptables
+systemctl stop iptables
+systemctl disable firewalld
+systemctl stop firewalld
 
 #优化内核
 cat /etc/security/limits.conf|grep 65535 > /dev/null
@@ -117,7 +130,7 @@ hostnamectl --static set-hostname k8s-master
 
 
 #初始化目录
-/etc/kubernetes/ssl/
+mkdir -p /etc/kubernetes/ssl/
 
 # 不重启情况下使内核生效
 sysctl kernel.hostname=k8s-master
@@ -500,16 +513,32 @@ etcdctl member list
 
 #### config
 ```bash
+tee /etc/kubernetes/config <<-'EOF'
+KUBE_LOGTOSTDERR="--logtostderr=true"
+KUBE_LOG_LEVEL="--v=0"
+KUBE_ALLOW_PRIV="--allow-privileged=false"
+KUBE_MASTER="--master=https://192.168.10.6:6443"
+EOF
+
 [root@k8s-master ~]$ grep -v ^# /etc/kubernetes/config
 KUBE_LOGTOSTDERR="--logtostderr=true"
 KUBE_LOG_LEVEL="--v=0"
 KUBE_ALLOW_PRIV="--allow-privileged=false"
-KUBE_MASTER="--master=http://192.168.10.6:8080"
+KUBE_MASTER="--master=https://192.168.10.6:6443"
 ```
 
 #### apiserver
 修改：
 ```bash
+tee /etc/kubernetes/apiserver <<-'EOF'
+KUBE_API_ADDRESS="--bind-address=192.168.10.6 --insecure-bind-address=127.0.0.1"
+KUBE_API_PORT="--secure-port=6443 --insecure-port=8080"
+KUBE_ETCD_SERVERS="--etcd-servers=http://192.168.10.6:2379"
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
+KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
+KUBE_API_ARGS="--tls-cert-file=/etc/kubernetes/ssl/apiserver.pem --tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem --client-ca-file=/etc/kubernetes/ssl/ca.pem --service-account-key-file=/etc/kubernetes/ssl/apiserver-key.pem"
+EOF
+
 [root@k8s-master ~]$ grep -v ^# /etc/kubernetes/apiserver
 KUBE_API_ADDRESS="--bind-address=192.168.10.6 --insecure-bind-address=127.0.0.1"
 KUBE_API_PORT="--secure-port=6443 --insecure-port=8080"
@@ -540,6 +569,10 @@ systemctl status kube-apiserver
 #### controller-manager
 修改：
 ```bash
+tee /etc/kubernetes/controller-manager <<-'EOF'
+KUBE_CONTROLLER_MANAGER_ARGS="--service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem  --root-ca-file=/etc/kubernetes/ssl/ca.pem --master=http://127.0.0.1:8080"
+EOF
+
 [root@k8s-master ~]$ grep -v ^# /etc/kubernetes/controller-manager
 KUBE_CONTROLLER_MANAGER_ARGS="--service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem  --root-ca-file=/etc/kubernetes/ssl/ca.pem --master=http://127.0.0.1:8080"
 ```
@@ -559,8 +592,12 @@ systemctl status kube-controller-manager
 #### scheduler
 修改：
 ```bash
-[root@k8s-master ~]$ grep -v ^# /etc/kubernetes/scheduler
+tee /etc/kubernetes/scheduler <<-'EOF'
 KUBE_SCHEDULER_ARGS="--kubeconfig=/docker/k8s/kubernetes/config"
+EOF
+
+[root@k8s-master ~]$ grep -v ^# /etc/kubernetes/scheduler
+KUBE_SCHEDULER_ARGS="--kubeconfig=/etc/kubernetes/ssl/kubeconfig.yaml"
 ```
 
 如果不使用证书的话：
@@ -601,29 +638,36 @@ a命名空间(namespace)下有个Service:s1 App: a1，b命名空间(namespace)�
 
 kube-dns为1.3新增的功能，不用再手动安装skyDns，使用更方便，但没有包括在rpm包中。我们可以手动从二进制包中copy到/usr/bin目录中:
 ```bash
-copy kube-dns /usr/bin/
+cp kube-dns /usr/bin/
 
 #新建kube-dns配置文件
-[root@k8s-master]# vi /etc/kubernetes/kube-dns
+tee /etc/kubernetes/kube-dns <<-'EOF'
+# kubernetes kube-dns config
+KUBE_DNS_PORT="--dns-port=53"
+KUBE_DNS_DOMAIN="--domain=k8s.zxy.com"
+#KUBE_DNS_MASTER="--kube-master-url=http://127.0.0.1:8080"
+KUBE_DNS_ARGS="--kubecfg-file=/etc/kubernetes/ss/kubeconfig.yaml"
+EOF
+
+[root@k8s-master]# grep -v ^# /etc/kubernetes/kube-dns
 ###
 # kubernetes kube-dns config
 KUBE_DNS_PORT="--dns-port=53"
 KUBE_DNS_DOMAIN="--domain=k8s.zxy.com"
-#KUBE_DNS_MASTER="--kube-master-url=https://192.168.10.6"
-KUBE_DNS_ARGS="--kubecfg-file=/etc/kubernetes/ss/kubeconfig.yaml"
+KUBE_DNS_ARGS="--kubecfg-file=/etc/kubernetes/ssl/kubeconfig.yaml"
 ```
 
 如果不使用证书的话：
 ```bash
 KUBE_DNS_PORT="--dns-port=53"
 KUBE_DNS_DOMAIN="--domain=k8s.zxy.com"
-KUBE_DNS_MASTER="--kube-master-url=http://192.168.10.6:8080"
+KUBE_DNS_MASTER="--kube-master-url=http://127.0.0.1:8080"
 KUBE_DNS_ARGS=""
 ```
  
-#新建kube-dns.service配置文件
-[root@k8s-master]# vi /usr/lib/systemd/system/kube-dns.service 
+新建kube-dns.service配置文件
 ```bash
+tee /usr/lib/systemd/system/kube-dns.service <<-'EOF'
 [Unit]
 Description=Kubernetes Kube-dns Server
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
@@ -642,6 +686,7 @@ Restart=on-failure
  
 [Install]
 WantedBy=multi-user.target
+EOF
 ```
 
 创建工作目录：
@@ -660,7 +705,7 @@ systemctl status kube-dns
 #### 修改/etc/resolv.conf
 master主机添加域名：
 ```bash
-[root@k8s-master ~]# vi /etc/resolv.conf 
+tee /etc/resolv.conf <<-'EOF'
 # k8s.zxy.com为对应的域名，其他保存不变
 search default.svc.k8s.zxy.com svc.k8s.zxy.com k8s.zxy.com
 # dns服务的ip
@@ -668,11 +713,12 @@ nameserver 192.168.10.6
  
 nameserver 8.8.8.8
 nameserver 114.114.114.114
+EOF
 ```
 
 测试：
 ```bash
-nslookup -type=srv kubernetes.default         
+nslookup -type=srv kubernetes
 Server:         192.168.10.6
 Address:        192.168.10.6#53
 
@@ -689,7 +735,7 @@ curl http://127.0.0.1:8081/cache
 #### 修改/etc/resolv.conf
 添加域名：
 ```bash
-[root@k8s-node1 ~]# vi /etc/resolv.conf 
+tee /etc/resolv.conf <<-'EOF'
 # k8s.zxy.com为对应的域名，其他保存不变
 search default.svc.k8s.zxy.com svc.k8s.zxy.com k8s.zxy.com
 # dns服务的ip
@@ -697,11 +743,19 @@ nameserver 192.168.10.6
  
 nameserver 8.8.8.8
 nameserver 114.114.114.114
+EOF
 ```
 
 #### config
 修改：
 ```bash
+tee /etc/kubernetes/config <<-'EOF'
+KUBE_LOGTOSTDERR="--logtostderr=true"
+KUBE_LOG_LEVEL="--v=0"
+KUBE_ALLOW_PRIV="--allow-privileged=false"
+KUBE_MASTER="--master=https://192.168.10.6:6443"
+EOF
+
 [root@k8s-node1 ~]$ grep -v ^# /etc/kubernetes/config
 KUBE_LOGTOSTDERR="--logtostderr=true"
 KUBE_LOG_LEVEL="--v=0"
@@ -714,12 +768,19 @@ KUBE_MASTER="--master=https://192.168.10.6:6443"
 KUBE_LOGTOSTDERR="--logtostderr=true"
 KUBE_LOG_LEVEL="--v=0"
 KUBE_ALLOW_PRIV="--allow-privileged=false"
-KUBE_MASTER="--master=http://192.168.10.6:8080"
+KUBE_MASTER="--master=http://127.0.0.1:8080"
 ```
 
 #### kubelet
 修改：
 ```bash
+tee /etc/kubernetes/kubelet <<-'EOF'
+KUBELET_ADDRESS="--address=192.168.10.7"
+KUBELET_HOSTNAME="--hostname-override=k8s-node1"
+KUBELET_API_SERVER="--api-servers=https://192.168.10.6:6443"
+KUBELET_ARGS="--tls-cert-file=/etc/kubernetes/ssl/node1-worker.pem --tls-private-key-file=/etc/kubernetes/ssl/node1-worker-key.pem --kubeconfig=/etc/kubernetes/ssl/worker1-kubeconfig.yaml --cluster-domain=k8s.zxy.com --cluster-dns=192.168.10.6"
+EOF
+
 [root@k8s-node1 ~]$ grep -v ^# /etc/kubernetes/kubelet 
 KUBELET_ADDRESS="--address=192.168.10.7"
 KUBELET_HOSTNAME="--hostname-override=k8s-node1"
@@ -745,8 +806,12 @@ systemctl status kubelet
 #### kube-proxy
 修改：
 ```bash
+tee /etc/kubernetes/proxy <<-'EOF'
+KUBE_PROXY_ARGS="--kubeconfig=/etc/kubernetes/ssl/worker1-kubeconfig.yaml"
+EOF
+
 [root@k8s-node1 ~]$ grep -v ^# /etc/kubernetes/proxy
-KUBE_PROXY_ARGS="--master=https://192.168.10.6:6443 --kubeconfig=/etc/kubernetes/ssl/worker1-kubeconfig.yaml"
+KUBE_PROXY_ARGS="--kubeconfig=/etc/kubernetes/ssl/worker1-kubeconfig.yaml"
 ```
 
 如果不使用证书的话：
@@ -784,13 +849,21 @@ http://192.168.10.7:4194/
 同node1一样，以下内容会有所不一样：
 ```bash
 #kubelet
-KUBELET_ADDRESS="--address=192.168.10.7"
-KUBELET_HOSTNAME="--hostname-override=k8s-node1"
-KUBELET_ARGS="--tls-cert-file=/etc/kubernetes/ssl/node1-worker.pem --tls-private-key-file=/etc/kubernetes/ssl/node1-worker-key.pem --kubeconfig=/etc/kubernetes/ssl/worker1-kubeconfig.yaml --cluster-domain=k8s.zxy.com --cluster-dns=192.168.10.6"
+KUBELET_ADDRESS="--address=192.168.10.8"
+KUBELET_HOSTNAME="--hostname-override=k8s-node2"
+KUBELET_ARGS="--tls-cert-file=/etc/kubernetes/ssl/node2-worker.pem --tls-private-key-file=/etc/kubernetes/ssl/node2-worker-key.pem --kubeconfig=/etc/kubernetes/ssl/worker2-kubeconfig.yaml --cluster-domain=k8s.zxy.com --cluster-dns=192.168.10.6"
 
 #proxy
 KUBE_PROXY_ARGS="--master=https://192.168.10.6:6443 --kubeconfig=/etc/kubernetes/ssl/worker1-kubeconfig.yaml"
 ```
+
+启动服务
+```bash
+for SERVICES in kubelet kube-proxy; do
+systemctl enable $SERVICES
+systemctl start $SERVICES
+systemctl status $SERVICES
+done
 
 ### 测试
 重启master所有服务：
@@ -803,7 +876,7 @@ done
 
 重启node所有服务：
 ```bash
-for SERVICES in kube-proxy kubelet; do
+for SERVICES in kubelet kube-proxy; do
 systemctl restart $SERVICES
 systemctl status $SERVICES
 done
@@ -844,7 +917,7 @@ kube-apiserver:
 
 kube-controller-manager:
 ```bash
-/usr/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://192.168.10.6:8080
+/usr/bin/kube-controller-manager --logtostderr=true --v=0 --master=http://127.0.0.1:8080
 ```
 
 kube-scheduler:
@@ -854,7 +927,7 @@ kube-scheduler:
 
 kube-dns:
 ```bash
-/usr/bin/kube-dns --dns-port=53 --domain=k8s.zxy.com --kube-master-url=http://192.168.10.6:8080
+/usr/bin/kube-dns --dns-port=53 --domain=k8s.zxy.com --kube-master-url=http://127.0.0.1:8080
 ```
 
 ### node
@@ -877,12 +950,12 @@ kubelet:
 
 ## kube-dashboard
 ### 创建
-对应的yaml文件可以参考[dashborad](https://github.com/zhaoxunyong/blog/tree/master/backup/k8s/dashborad)
+对应的yaml文件可以参考[dashborad](https://github.com/zhaoxunyong/blog/tree/master/backup/k8s/yaml/dashborad)
 
 如果apiserver为非加密方式，需要添加args参数(与ports平行)：
 ```bash
 args:
- - --apiserver-host=http://192.168.10.6:8080
+ - --apiserver-host=http://127.0.0.1:8080
 ```
 
 开始创建：
@@ -905,6 +978,15 @@ kubernetes-dashboard   10.254.142.79   <none>        80/TCP    12s       k8s-app
 # create rc
 [root@k8s-master ~]$ kubectl create -f dashboard-controller.yaml 
 replicationcontroller "kubernetes-dashboard-v1.5.0" created
+```
+
+如出现以下的日志表示创建成功：
+```bash
+[root@k8s-master dashboard]# kubectl logs kubernetes-dashboard-v1.5.0-fnlhb -n kube-system
+Using HTTP port: 9090
+Creating API server client for https://10.254.0.1:443
+Successful initial request to the apiserver, version: 1.5.1
+Creating in-cluster Heapster client
 ```
 
 ### 异常解决
@@ -946,17 +1028,19 @@ Refer to the troubleshooting guide for more information: https://github.com/kube
 
 请安装以下方式操作：
 ```bash
-[root@k8s-master ~]$ get secrets --namespace=kube-system
+[root@k8s-master ~]$ kubectl get secrets --namespace=kube-system
 NAME                  TYPE                                  DATA      AGE
 default-token-fwvl9   kubernetes.io/service-account-token   3         1h
 
+#kubectl delete secret `kubectl get secrets --namespace=kube-system |awk '{print $1}' | sed -e '1d'` --namespace=kube-system
 [root@k8s-master ~]$ kubectl delete secret default-token-fwvl9 --namespace=kube-system
 secret "default-token-fwvl9" deleted
 
-[root@k8s-master ~]$ get rc -n kube-system
+[root@k8s-master ~]$ kubectl get rc -n kube-system
 NAME                          DESIRED   CURRENT   READY     AGE
 kubernetes-dashboard-v1.5.0   1         1         0         6m
 
+#kubectl delete rc `kubectl get rc -n kube-system |awk '{print $1}' | sed -e '1d'` --namespace=kube-system 
 [root@k8s-master ~]$ kubectl delete rc kubernetes-dashboard-v1.5.0 --namespace=kube-system      
 replicationcontroller "kubernetes-dashboard-v1.5.0" deleted
 
@@ -965,7 +1049,23 @@ replicationcontroller "kubernetes-dashboard-v1.5.0" created
 ```
 
 访问：
-http://192.168.10.7:9090/
+https://192.168.10.6:6443/ui
+如果提示Unauthorized的话，需要在/etc/kubernetes/apiserver中KUBE_API_ARGS参数后添加：
+```bash
+KUBE_API_ARGS="--basic-auth-file=/etc/kubernetes/basic_auth.csv"
+```
+
+basic_auth.csv格式为：
+```bash
+password,username,uid
+```
+
+重启服务：
+```bash
+systemctl daemon-reload
+systemctl restart kube-apiserver
+```
+
 具体node请用get pod命令查看:
 ```bash
 kubectl get pod -o wide -n kube-system
@@ -974,6 +1074,7 @@ kubernetes-dashboard-v1.5.0-8hsb9   1/1       Running   0          13m       10.
 ```
 
 ## 创建服务
+> 参考：http://running.iteye.com/blog/2322959
 本例以kubernetes源码中的guestbook为例讲解如何创建服务
 
 先下载源码：
@@ -1015,7 +1116,6 @@ env:
 ```bash
 type: NodePort
   ports:
-    # the port that this service should serve on
   - port: 80
     nodePort: 30001
 ```
@@ -1023,17 +1123,20 @@ type: NodePort
 
 暴露对外端口方式：
 1. 在service中通过nodePort定义：
+```bash
 type: NodePort
   ports:
-    # the port that this service should serve on
   - port: 80
     nodePort: 30001
+```
  其中端口号必须在：30000-32767之间
 
 2. 通过rc定义：
+```bash
 ports:
  - containerPort: 80
    hostPort: 80
+```
 
 创建redis-master的service与rc:
 ```bash

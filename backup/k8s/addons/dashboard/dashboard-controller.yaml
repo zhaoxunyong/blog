@@ -45,9 +45,9 @@ spec:
         #  value: /etc/kubernetes/worker-kubeconfig.yaml
         ports:
         - containerPort: 9090
-          hostPort: 9090
-        args:
-         - --apiserver-host=http://192.168.10.6:8080
+          #hostPort: 9090
+        #args:
+        # - --apiserver-host=http://192.168.10.6:8080
         #volumeMounts:
         #- name: "etcpki"
         #  mountPath: "/etc/pki"
