@@ -103,6 +103,3 @@ users:
     client-key: /docker/k8s/kubernetes/admin.key
 
 
-etcdctl --endpoints http://192.168.10.6:2379 set /coreos.com/network/config '{"NetWork":"10.0.0.0/16"}'
-
-

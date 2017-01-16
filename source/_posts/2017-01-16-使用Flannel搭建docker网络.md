@@ -64,7 +64,7 @@ FLANNEL_ETCD="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379"
 FLANNEL_ETCD_KEY="/coreos.com/network"
 ```
 
-如果是vagrant启动的虚拟机的话，会多个10.0.2.15的eth0网段，需要添加--iface参数，需要个性/usr/lib/systemd/system/flanneld.service：
+如果是vagrant启动的虚拟机的话，会多个10.0.2.15的eth0网段，需要添加--iface参数，需要修改/usr/lib/systemd/system/flanneld.service：
 ```bash
 $ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld --iface=eth1 \
   -etcd-endpoints=${FLANNEL_ETCD} -etcd-prefix=${FLANNEL_ETCD_KEY} $FLANNEL_OPTIONS;g' /usr/lib/systemd/system/flanneld.service
@@ -75,7 +75,7 @@ $ systemctl enable flanneld
 $ systemctl restart flanneld
 ```
 
-### 自动修改docker网段
+### 修改docker网段
 ```bash
 $ vim /usr/lib/systemd/system/docker.service
 EnvironmentFile=/run/flannel/docker
@@ -88,7 +88,7 @@ $ systemctl restart docker
 ```
 
 ### 手动修改docker网段
-也可以手动修改docker网段，不过每次开机都要执行，很麻烦。建议用[自动修改docker网段](#自动修改docker网段)：
+也可以在docker服务启动后，手动修改docker网段，不过每次开机都要执行，很麻烦。建议采用：[修改docker网段](#修改docker网段)：
 ```bash
 source /run/flannel/subnet.env
 ifconfig docker0 ${FLANNEL_SUBNET}
