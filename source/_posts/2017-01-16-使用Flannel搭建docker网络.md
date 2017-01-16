@@ -1,0 +1,151 @@
+---
+title: 使用Flannel搭建docker网络
+date: 2017-01-16 17:18:45
+categories: ["docker", "kubernetes"]
+tags: ["docker", "kubernetes"]
+---
+docker跨宿主机的网络解决方案有几种：
+1. 直接路由+quagga
+2. calico
+3. flannel
+4. weave
+
+flannel综合性能比还是很不错，建议使用。具体网络模型如图所示：
+![flannel](/images/packet-01.png)
+
+本文详细介绍一下flannel的安装与配置。
+
+## 安装
+### 安装etcd
+参考[etcd集群安装](etcd集群安装.html)
+
+### rpm安装
+```bash
+tee /etc/yum.repos.d/k8s.repo <<-'EOF'
+[k8s-repo]
+name=kubernetes Repository
+baseurl=https://rpm.mritd.me/centos/7/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://cdn.mritd.me/keys/rpm.public.key
+EOF
+```
+
+安装：
+```bash
+yum install -y flannel
+```
+
+如果这个源不稳定的话，可以下载我创建好的源，直接通过yum localinstall *.rpm方式安装
+```bash
+git clone https://git.coding.net/zhaoxunyong/repo.git
+cd repo/yum/flannel/x86_64
+yum -y localinstall flannel-0.6.2-1.x86_64.rpm
+```
+
+## 配置
+在etcd中设置flannel所使用的ip段:
+```bash
+etcdctl --endpoints "192.168.10.6:2379,http://192.168.10.6:4001" \
+ set /coreos.com/network/config '{"NetWork":"10.0.0.0/16"}'
+```
+
+### 每台执行：
+```bash
+$ sed -i 's;^FLANNEL_ETCD=.*;\
+  FLANNEL_ETCD="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379";g' \
+  /etc/sysconfig/flanneld
+
+$ sed -i 's;^FLANNEL_ETCD_KEY=.*;\
+  FLANNEL_ETCD_KEY="/coreos.com/network";g' /etc/sysconfig/flanneld
+
+$ grep -v ^# /etc/sysconfig/flanneld
+FLANNEL_ETCD="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379"
+FLANNEL_ETCD_KEY="/coreos.com/network"
+```
+
+如果是vagrant启动的虚拟机的话，会多个10.0.2.15的eth0网段，需要添加--iface参数，需要个性/usr/lib/systemd/system/flanneld.service：
+```bash
+$ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld --iface=eth1 \
+  -etcd-endpoints=${FLANNEL_ETCD} -etcd-prefix=${FLANNEL_ETCD_KEY} $FLANNEL_OPTIONS;g' /usr/lib/systemd/system/flanneld.service
+
+### 启动服务
+$ systemctl daemon-reload
+$ systemctl enable flanneld
+$ systemctl restart flanneld
+```
+
+### 自动修改docker网段
+```bash
+$ vim /usr/lib/systemd/system/docker.service
+EnvironmentFile=/run/flannel/docker
+ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS
+
+#重启docker服务
+$ systemctl daemon-reload
+$ systemctl enable docker
+$ systemctl restart docker
+```
+
+### 手动修改docker网段
+也可以手动修改docker网段，不过每次开机都要执行，很麻烦。建议用[自动修改docker网段](#自动修改docker网段)：
+```bash
+source /run/flannel/subnet.env
+ifconfig docker0 ${FLANNEL_SUBNET}
+```
+
+### 二进制文件安装
+安装：
+```bash
+wget https://github.com/coreos/flannel/releases/download/v0.6.1/flannel-v0.6.1-linux-amd64.tar.gz
+tar -zxvf flannel-v0.6.1-linux-amd64.tar.gz
+```
+解压后的文件有：flanneld、mk-docker-opts.sh，其中flanneld为执行文件，sh脚本用于生成Docker启动参数。
+
+在etcd中设置flannel所使用的ip段:
+```bash
+etcdctl --endpoints "192.168.10.6:2379,http://192.168.10.6:4001" \
+ set /coreos.com/network/config '{"NetWork":"10.0.0.0/16"}'
+```
+
+启动：
+```bash
+flanneld --iface=eth1 -etcd-endpoints=http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379 -etcd-prefix=/coreos.com/network
+```
+
+手动生成docker变量：
+```bash
+mk-docker-opts.sh -d /run/docker_opts.env -c
+```
+
+修改docker启动文件：
+```bash
+$ vim /usr/lib/systemd/system/docker.service
+EnvironmentFile=/run/docker_opts.env
+ExecStart=/usr/bin/dockerd $DOCKER_OPTS
+```
+
+重启docker服务:
+```bash
+$ systemctl daemon-reload
+$ systemctl enable docker
+$ systemctl restart docker
+```
+
+## 测试
+在3台机器上运行：
+```bash
+docker run -it bash
+```
+
+进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
+
+
+## 参考
+> https://mritd.me/2016/09/03/Dokcer-%E4%BD%BF%E7%94%A8-Flannel-%E8%B7%A8%E4%B8%BB%E6%9C%BA%E9%80%9A%E8%AE%AF/
+> http://qkxue.net/info/108138/docker-kubernetes-flannel
+> https://segmentfault.com/a/1190000007585313
+> http://blog.dataman-inc.com/shurenyun-docker-133/
+> http://cmgs.me/life/docker-network-cloud
+> http://dockone.io/article/1115
+> http://blog.liuker.cn/index.php/docker/30.html
