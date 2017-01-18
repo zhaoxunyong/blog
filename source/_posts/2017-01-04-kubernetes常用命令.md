@@ -97,6 +97,36 @@ redis-master   1         1         2h
 redis-slave    3         3         2h
 ```
 
+#### node unschedule
+```bash
+vim unschedule_node.yaml
+apiVersion: v1
+kind: Node
+metadata:
+  name: k8s-node1
+  labels:
+    kubernetes.io/hostname: k8s-node1
+spec:
+  unschedulable: true
+
+kubectl replace -f unschedule_node.yaml
+```
+或者：
+unschedule:
+```bash
+[root@k8s-master x86_64]# kubectl patch node k8s-node1 -p '{"spec": {"unschedulable": true}}'
+
+[root@k8s-master x86_64]# kubectl get no
+NAME        STATUS                     AGE
+127.0.0.1   NotReady                   8d
+k8s-node1   Ready,SchedulingDisabled   8d
+k8s-node2   Ready                      8d
+```
+schedule:
+```bash
+[root@k8s-master x86_64]# kubectl patch node k8s-node1 -p '{"spec": {"unschedulable": false}}'
+```
+
 #### 动态调用deployment
 ```bash
 kubectl scale deployment elasticsearch --replicas=1 -n kube-system
