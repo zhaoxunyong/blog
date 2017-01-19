@@ -99,7 +99,7 @@ redis-slave    3         3         2h
 
 #### node unschedule
 ```bash
-vim unschedule_node.yaml
+[root@k8s-master x86_64]# vim unschedule_node.yaml
 apiVersion: v1
 kind: Node
 metadata:
@@ -109,7 +109,7 @@ metadata:
 spec:
   unschedulable: true
 
-kubectl replace -f unschedule_node.yaml
+[root@k8s-master x86_64]# kubectl replace -f unschedule_node.yaml
 ```
 或者：
 unschedule:
@@ -133,8 +133,10 @@ kubectl scale deployment elasticsearch --replicas=1 -n kube-system
 ```
 
 #### 创建namespaces
+```bash
 kubectl create -f namespace-dev.yaml
 kubectl get pods --namespace=development
+```
 
 ## 参考
 > http://blog.csdn.net/felix_yujing/article/details/51622132
