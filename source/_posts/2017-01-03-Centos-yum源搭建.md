@@ -202,6 +202,7 @@ rkt.x86_64                              1.21.0-1                       my-repo
 
 ## 参考
 > http://debugo.com/gpg/
+> https://mritd.me/2016/08/02/yum-%E7%AC%94%E8%AE%B0/
 > http://blog.sina.cn/dpool/blog/s/blog_6a5aee670101rx0a.html
 
 
