@@ -4,6 +4,10 @@ date: 2017-01-04 10:22:47
 categories: ["kubernetes"]
 tags: ["kubernetes"]
 ---
+本文记录一下Kubeadm rpm安装包的制作过程。
+
+<!-- more -->
+
 ## 生成rpm安装包
 
 ```bash

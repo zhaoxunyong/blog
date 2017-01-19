@@ -12,6 +12,8 @@ docker跨宿主机的网络解决方案有几种：
 
 calico与flannel综合性能比还是很不错，建议使用。本文详细介绍flannel的安装与配置。
 
+<!-- more -->
+
 具体网络模型如图所示：
 ![flannel](/images/packet-01.png)
 

@@ -6,6 +6,8 @@ tags: ["kubernetes"]
 ---
 Kubernetes就不介绍了，用了都说好。
 
+<!-- more -->
+
 ## 环境准备
 ### 3台虚拟机
 具体参考：[Vagrant环境搭建](Vagrant环境搭建.html)

@@ -4,6 +4,10 @@ date: 2017-01-04 09:56:26
 categories: ["kubernetes"]
 tags: ["kubernetes"]
 ---
+本文记录一下kubernetes的常用命令。
+
+<!-- more -->
+
 ## kubectl常用使用
 
 ### 查看类命令
