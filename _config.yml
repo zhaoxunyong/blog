@@ -12,9 +12,9 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://www.gcalls.cn
+url: http://blog.gcalls.cn
 root: /
-permalink: /blog/:year/:month/:title.html
+permalink: blog/:year/:month/:title.html
 permalink_defaults:
 
 # Directory
