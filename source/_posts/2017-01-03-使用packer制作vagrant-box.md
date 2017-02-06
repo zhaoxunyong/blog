@@ -62,9 +62,30 @@ $ shasum CentOS-7-x86_64-DVD-1511.iso
 ### 开始生成
 ```bash
 cd centos
+#默认只用于virtualBox虚机环境
 bin/box build centos72
 (或者packer build -var-file=centos72.json centos.json)
+
+#也可以指定生成的是哪个虚拟机：
+# packer build -only=virtualbox-iso -var-file=centos72.json centos.json
+# 或者bin/box build centos72 virtualbox
+
+# packer build -only=parallels-iso -var-file=centos72.json centos.json
+# 或者bin/box build centos72 parallels
 ```
+
+如果使用parallels，vagrant需要安装plugin：
+```bash
+vagrant plugin install vagrant-parallels
+```
+
+使用parallels时，如出现ImportError: No module named prlsdkapi错误，需要安装ParallelsVirtualizationSDK：
+参考：https://forum.parallels.com/threads/error-while-building-with-packer.339491/
+```bash
+#brew cask install parallels-virtualization-sdk
+wget http://download.parallels.com/desktop/v11/11.2.0-32581/ParallelsVirtualizationSDK-11.2.0-32581-mac.dmg
+```
+
 注意生成期间不要进入虚拟机进行任何操作。
 
 如果想自定义安装一些软件，可以在script/update.sh中定义，比如：
