@@ -62,7 +62,7 @@ $ shasum CentOS-7-x86_64-DVD-1511.iso
 ### 开始生成
 ```bash
 cd centos
-#默认只用于virtualBox虚机环境
+#默认会生成所有虚拟机环境的文件，包括vmware/virtualbox/parallels，前提是安装了相应的虚拟机。
 bin/box build centos72
 (或者packer build -var-file=centos72.json centos.json)
 
