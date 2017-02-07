@@ -25,6 +25,11 @@ yum --downloadonly --downloaddir=x86_64 install nginx
 yumdownloader --destdir=x86_64 --resolve nginx
 ```
 
+下载某个repo的所有内容
+```bash
+reposync -r [repo name]
+```
+
 ## 创建repo
 ```bash
 createrepo .
