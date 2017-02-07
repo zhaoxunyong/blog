@@ -83,7 +83,8 @@ vagrant plugin install vagrant-parallels
 参考：https://forum.parallels.com/threads/error-while-building-with-packer.339491/
 ```bash
 #brew cask install parallels-virtualization-sdk
-wget http://download.parallels.com/desktop/v11/11.2.0-32581/ParallelsVirtualizationSDK-11.2.0-32581-mac.dmg
+#wget http://download.parallels.com/desktop/v11/11.2.0-32581/ParallelsVirtualizationSDK-11.2.0-32581-mac.dmg
+wget http://download.parallels.com/desktop/v12/12.1.3-41532/ParallelsVirtualizationSDK-12.1.3-41532-mac.dmg
 ```
 
 注意生成期间不要进入虚拟机进行任何操作。
