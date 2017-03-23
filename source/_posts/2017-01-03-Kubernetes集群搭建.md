@@ -52,9 +52,8 @@ fi
 #修改时区
 ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime
 
-#关闭内核安全
-#sed -i 's;SELINUX=.*;SELINUX=disabled;' /etc/selinux/config
-sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
+#关闭内核安全(如果是vagrant方式，第一次完成后需要重启vagrant才能生效。)
+sed -i 's;SELINUX=.*;SELINUX=disabled;' /etc/selinux/config
 #setenforce 0
 #getenforce
 #reboot
@@ -866,6 +865,7 @@ systemctl enable $SERVICES
 systemctl start $SERVICES
 systemctl status $SERVICES
 done
+```
 
 ### 测试
 重启master所有服务：
