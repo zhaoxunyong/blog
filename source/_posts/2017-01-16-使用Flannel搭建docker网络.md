@@ -24,58 +24,41 @@ calico与flannel综合性能比还是很不错，建议使用。本文详细介�
 参考[etcd集群安装](etcd集群安装.html)
 
 ### rpm安装
-#### 配置yum源
-```bash
-tee /etc/yum.repos.d/k8s.repo <<-'EOF'
-[k8s-repo]
-name=kubernetes Repository
-baseurl=https://rpm.mritd.me/centos/7/x86_64
-enabled=1
-gpgcheck=1
-gpgkey=https://cdn.mritd.me/keys/rpm.public.key
-EOF
-```
 
 #### 安装
 ```bash
 yum install -y flannel
 ```
-
-如果这个源不稳定的话，可以下载我创建好的源，直接通过yum localinstall *.rpm方式安装
-```bash
-git clone https://git.coding.net/zhaoxunyong/repo.git
-cd repo/yum/flannel/x86_64
-yum -y localinstall flannel-0.6.2-1.x86_64.rpm
-```
+版本为：0.7.1
 
 #### 配置
 在etcd中设置flannel所使用的ip段:
 ```bash
-etcdctl --endpoints "192.168.10.6:2379,http://192.168.10.6:4001" set /coreos.com/network/config '{"NetWork":"10.244.0.0/16"}'
+etcdctl --endpoints "http://192.168.10.6:2379,http://192.168.10.7:2379,http://192.168.10.8:2379" set /coreos.com/network/config '{"NetWork":"10.244.0.0/16"}'
 ```
 
 每台执行：
 ```bash
-$ sed -i 's;^FLANNEL_ETCD=.*;FLANNEL_ETCD="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379";g' \
+$ sed -i 's;^FLANNEL_ETCD_ENDPOINTS=.*;FLANNEL_ETCD_ENDPOINTS="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379";g' \
 /etc/sysconfig/flanneld
 
-$ sed -i 's;^FLANNEL_ETCD_KEY=.*;FLANNEL_ETCD_KEY="/coreos.com/network";g' \
+$ sed -i 's;^FLANNEL_ETCD_PREFIX=.*;FLANNEL_ETCD_PREFIX="/coreos.com/network";g' \
 /etc/sysconfig/flanneld
 
 $ grep -v ^# /etc/sysconfig/flanneld
-FLANNEL_ETCD="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379"
-FLANNEL_ETCD_KEY="/coreos.com/network"
+FLANNEL_ETCD_ENDPOINTS="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379"
+FLANNEL_ETCD_PREFIX="/coreos.com/network"
 ```
 
 如果是vagrant启动的虚拟机的话，会多个10.0.2.15的eth0网段，需要添加--iface参数，需要修改/usr/lib/systemd/system/flanneld.service：
 ```bash
-$ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld --iface=eth1 -etcd-endpoints=${FLANNEL_ETCD} -etcd-prefix=${FLANNEL_ETCD_KEY} $FLANNEL_OPTIONS;g' \
+$ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld-start --iface=eth1 -etcd-endpoints=${FLANNEL_ETCD_ENDPOINTS} -etcd-prefix=${FLANNEL_ETCD_PREFIX} $FLANNEL_OPTIONS;g' \
 /usr/lib/systemd/system/flanneld.service
 
 启动服务：
-$ systemctl daemon-reload
-$ systemctl enable flanneld
-$ systemctl restart flanneld
+systemctl daemon-reload
+systemctl enable flanneld
+systemctl restart flanneld
 ```
 
 在service脚本中，会自动通过以下命令生成docker bip所需要的环境变量：
@@ -89,20 +72,21 @@ DOCKER_OPT_MTU="--mtu=1472"
 DOCKER_NETWORK_OPTIONS=" --bip=10.244.38.1/24 --ip-masq=true --mtu=1472"
 ```
 
-修改docker网段：
+docker网段修改：
+a. 修改docker网段：
 ```bash
 $ vim /usr/lib/systemd/system/docker.service
 EnvironmentFile=/run/flannel/docker
 ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS
 
 #重启docker服务
-$ systemctl daemon-reload
-$ systemctl enable docker
-$ systemctl restart docker
+systemctl daemon-reload
+systemctl enable docker
+systemctl restart docker
 ```
 
-手动修改docker网段：
-也可以在docker服务启动后，手动修改docker网段，不过每次开机都要执行，很麻烦。建议采用：[修改docker网段](#修改docker网段)：
+b. 手动修改docker网段：
+也可以在docker服务启动后，手动修改docker网段，不过每次开机都要执行，很麻烦。建议采用：[修改docker网段](#a. 修改docker网段)：
 ```bash
 source /run/flannel/subnet.env
 ifconfig docker0 ${FLANNEL_SUBNET}
@@ -146,7 +130,7 @@ tar -zxvf flannel-v0.6.1-linux-amd64.tar.gz
 
 在etcd中设置flannel所使用的ip段:
 ```bash
-etcdctl --endpoints "192.168.10.6:2379,http://192.168.10.6:4001" set /coreos.com/network/config '{"NetWork":"10.244.0.0/16"}'
+etcdctl --endpoints "http://192.168.10.6:2379,http://192.168.10.7:2379,http://192.168.10.8:2379" set /coreos.com/network/config '{"NetWork":"10.244.0.0/16"}'
 ```
 
 启动：
@@ -178,7 +162,7 @@ $ systemctl restart docker
 ## 测试
 在3台机器上运行：
 ```bash
-docker run -it bash
+docker run -it --rm --name centos centos bash
 ```
 
 进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
