@@ -29,7 +29,7 @@ calico与flannel综合性能比还是很不错，建议使用。本文详细介�
 ```bash
 yum install -y flannel
 ```
-版本为：0.7.1
+版本：0.7.1
 
 #### 配置
 在etcd中设置flannel所使用的ip段:
@@ -58,7 +58,8 @@ $ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld-start --iface=eth1 -etcd-e
 启动服务：
 systemctl daemon-reload
 systemctl enable flanneld
-systemctl restart flanneld
+systemctl start flanneld
+systemctl status flanneld
 ```
 
 在service脚本中，会自动通过以下命令生成docker bip所需要的环境变量：
@@ -75,9 +76,14 @@ DOCKER_NETWORK_OPTIONS=" --bip=10.244.38.1/24 --ip-masq=true --mtu=1472"
 docker网段修改：
 a. 修改docker网段：
 ```bash
-$ vim /usr/lib/systemd/system/docker.service
-EnvironmentFile=/run/flannel/docker
-ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS
+sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' /usr/lib/systemd/system/docker.service
+
+sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
+/usr/lib/systemd/system/docker.service
+
+#$ vim /usr/lib/systemd/system/docker.service
+#EnvironmentFile=/run/flannel/docker
+#ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS
 
 #重启docker服务
 systemctl daemon-reload

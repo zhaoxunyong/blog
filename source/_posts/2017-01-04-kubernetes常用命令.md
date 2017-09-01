@@ -25,6 +25,8 @@ kubectl -s http://localhost:8080 get componentstatuses
 #### 查看pods所在的运行节点
 ```bash
 kubectl get pods(po) -o wide
+kubectl get pod -o wide -n kube-system
+kubectl get pods -o wide --all-namespaces
 ```
 
 #### 查看pods定义的详细信息
@@ -55,6 +57,11 @@ kubectl get pod --selector name=redis
 #### 查看运行的pod的环境变量
 ```bash
 kubectl exec pod名 env
+```
+
+#### 查看运行的pod的日志
+```bash
+kubectl logs -f --tail 100 pod名
 ```
 
 #### 查看pod的endpoint
@@ -89,6 +96,33 @@ kubectl delete pod pod名
 kubectl delete rc rc名
 kubectl delete service service名
 kubectl delete pod --all
+```
+
+#### 删除所有pods
+比如需要删除所有的curl实例：参考[https://www.58jb.com/html/155.html](https://www.58jb.com/html/155.html)
+```bssh
+kubectl get pods --all-namespaces -o wide
+NAMESPACE     NAME                                 READY     STATUS    RESTARTS   AGE       IP             NODE
+default       curl-57077659-swdxm                  1/1       Running   0          9m        10.244.3.3     k8s-node2
+```
+
+先查看对应的rs：
+```bash
+kubectl get rs
+NAME            DESIRED   CURRENT   READY     AGE
+curl-57077659   1         1         1         50m
+```
+
+再查看对应的deployment：
+```bash
+kubectl get deployment
+NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+curl      1         1         1            1           52m
+```
+
+需要把deployment删除才行：
+```bash
+kubectl delete deployment curl
 ```
 
 #### 动态调整rc replicas
