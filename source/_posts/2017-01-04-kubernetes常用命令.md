@@ -176,6 +176,3 @@ kubectl create -f namespace-dev.yaml
 kubectl get pods --namespace=development
 ```
 
-## 参考
-> http://blog.csdn.net/felix_yujing/article/details/51622132
-> [docker与kubectl命令对比](http://www.pangxie.space/docker/157)
