@@ -232,7 +232,7 @@ https://192.168.10.6:6443/api/v1/namespaces/default/endpoints/nginx-app
 #### 创建Service
 
 前面虽然创建了Pod，但是在kubernetes中，Pod的IP地址会随着Pod的重启而变化，并不建议直接拿Pod的IP来交互。那如何来访问这些Pod提供的服务呢？使用Service。Service为一组Pod（通过labels来选择）提供一个统一的入口，并为它们提供负载均衡和自动服务发现。比如，可以为前面的nginx-app创建一个service：
-
+```bash
 $ kubectl expose deployment nginx-app --port=80 --target-port=80 --type=NodePort
 service "nginx-app" exposed
 $ kubectl describe service nginx-app
@@ -247,6 +247,7 @@ NodePort:      		<unset>	30772/TCP
 Endpoints:     		172.17.0.3:80
 Session Affinity:      	None
 No events.
+```
 
 该命令不能设置nodePort，如果需要指定nodePort，需要通过kubectl edit service nginx-app修改：
 ```yaml
@@ -278,7 +279,8 @@ PING nginx-app (10.97.111.200): 56 data bytes
 ```
 
 
-这样，在cluster内部就可以通过http://10.0.0.66和http://node-ip:30772来访问nginx-app。而在cluster外面，则只能通过http://node-ip:30772来访问。
+这样，在cluster内部就可以通过http://10.97.111.200和http://node-ip:32222来访问nginx-app。
+而在cluster外面，则只能通过http://node-ip:32222来访问。
 
 
 ### deployment部署文件
