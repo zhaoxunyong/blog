@@ -3,6 +3,7 @@ title: 使用packer制作vagrant box
 date: 2017-01-03 09:42:40
 categories: ["vagrant"]
 tags: ["vagrant"]
+toc: true
 ---
 box可以从官网下载，但有时候下载很慢，并且对应的版本可能不是自己想要的。本文以centos7为例介绍一下怎样制作vagrant box。
 

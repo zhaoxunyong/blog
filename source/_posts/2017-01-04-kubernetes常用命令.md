@@ -3,6 +3,7 @@ title: kubernetes常用命令
 date: 2017-01-04 09:56:26
 categories: ["kubernetes"]
 tags: ["kubernetes"]
+toc: true
 ---
 本文记录一下kubernetes的常用命令。
 

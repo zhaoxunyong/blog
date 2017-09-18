@@ -3,6 +3,7 @@ title: kubernetes学习总结
 date: 2017-09-09 19:09:16
 categories: ["kubernetes"]
 tags: ["kubernetes"]
+toc: true
 ---
 本文记录一下kubernetes的常用功能。
 

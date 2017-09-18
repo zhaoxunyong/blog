@@ -3,6 +3,7 @@ title: Kubernetes集群搭建
 date: 2017-01-03 09:11:20
 categories: ["kubernetes"]
 tags: ["kubernetes"]
+toc: true
 ---
 Kubernetes就不介绍了，用了都说好。
 
