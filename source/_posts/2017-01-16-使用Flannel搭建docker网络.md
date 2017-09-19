@@ -40,14 +40,14 @@ etcdctl --endpoints "http://192.168.10.6:2379,http://192.168.10.7:2379,http://19
 
 每台执行：
 ```bash
-$ sed -i 's;^FLANNEL_ETCD_ENDPOINTS=.*;FLANNEL_ETCD_ENDPOINTS="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379";g' \
+$ sed -i 's;^FLANNEL_ETCD_ENDPOINTS=.*;FLANNEL_ETCD_ENDPOINTS="http://192.168.10.6:2379,http://192.168.10.7:2379,http://192.168.10.8:2379";g' \
 /etc/sysconfig/flanneld
 
 $ sed -i 's;^FLANNEL_ETCD_PREFIX=.*;FLANNEL_ETCD_PREFIX="/coreos.com/network";g' \
 /etc/sysconfig/flanneld
 
 $ grep -v ^# /etc/sysconfig/flanneld
-FLANNEL_ETCD_ENDPOINTS="http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379"
+FLANNEL_ETCD_ENDPOINTS="http://192.168.10.6:2379,http://192.168.10.7:2379,http://192.168.10.8:2379"
 FLANNEL_ETCD_PREFIX="/coreos.com/network"
 ```
 
@@ -93,6 +93,7 @@ systemctl restart docker
 ```
 
 b. 手动修改docker网段：
+不建议。
 也可以在docker服务启动后，手动修改docker网段，不过每次开机都要执行，很麻烦。建议采用：[修改docker网段](#a. 修改docker网段)：
 ```bash
 source /run/flannel/subnet.env
@@ -100,6 +101,7 @@ ifconfig docker0 ${FLANNEL_SUBNET}
 ```
 
 ### docker方式
+不建议。
 安装flannel:
 ```bash
 etcdctl rm /coreos.com/network/ --recursive
@@ -111,7 +113,7 @@ docker run --net=host -d --privileged=true --restart=always \
  -v /run:/run \
  -v /etc/kubernetes:/etc/kubernetes \
  quay.io/coreos/flannel-git:v0.6.1-28-g5dde68d-amd64 /opt/bin/flanneld --iface=eth1 \
- -etcd-endpoints=http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379 -etcd-prefix=/coreos.com/network
+ -etcd-endpoints=http://192.168.10.6:2379,http://192.168.10.7:2379,http://192.168.10.8:2379 -etcd-prefix=/coreos.com/network
 
 #查看网络段：
 etcdctl ls /coreos.com/network/subnets
@@ -142,7 +144,7 @@ etcdctl --endpoints "http://192.168.10.6:2379,http://192.168.10.7:2379,http://19
 
 启动：
 ```bash
-flanneld --iface=eth1 -etcd-endpoints=http://192.168.10.6:2379,192.168.10.7:2379,192.168.10.8:2379 -etcd-prefix=/coreos.com/network
+flanneld --iface=eth1 -etcd-endpoints=http://192.168.10.6:2379,http://192.168.10.7:2379,http://192.168.10.8:2379 -etcd-prefix=/coreos.com/network
 ```
 
 手动生成docker变量：
