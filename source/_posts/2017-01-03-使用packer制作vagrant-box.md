@@ -17,62 +17,69 @@ mkdir -p /Vagrant/packer/
 cd /Vagrant/packer/
 ```
 
-### 下载centos7.2镜像
+### 下载centos镜像
 ```bash
-wget http://mirrors.aliyun.com/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-DVD-1511.iso
+#wget http://mirrors.aliyun.com/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-DVD-1511.iso
+#wget http://mirrors.aliyun.com/centos/7.3.1611/isos/x86_64/CentOS-7-x86_64-DVD-1611.iso
+wget http://mirrors.aliyun.com/centos/7.4.1708/isos/x86_64/CentOS-7-x86_64-DVD-1708.iso
 ```
-注意：不要用CentOS-7-x86_64-Minimal-1511.iso，否则创建后使用时会出现/sbin/mount.vboxsf: mounting failed with the error的错误。
+注意：不要用Minimal版本，否则创建后使用时会出现/sbin/mount.vboxsf: mounting failed with the error的错误。
 
 ### 安装packer工具
 ```bash
-wget https://releases.hashicorp.com/packer/0.12.1/packer_0.12.1_darwin_amd64.zip
-unzip packer_0.12.1_darwin_amd64.zip 
+#MacOS
+#wget https://releases.hashicorp.com/packer/0.12.1/packer_0.12.1_darwin_amd64.zip
+#unzip packer_0.12.1_darwin_amd64.zip 
+wget https://releases.hashicorp.com/packer/1.1.0/packer_1.1.0_darwin_amd64.zip
+unzip packer_1.1.0_darwin_amd64.zip
 sudo mv packer /usr/local/bin/
 ```
 
 ### 下载centos.json
 ```bash
+#git clone https://github.com/chef/bento.git
 git clone https://github.com/boxcutter/centos.git
 ```
 
 ## 开始制作
 
-### 修改centos72.json
-先进入centos目录，然后修改cento72.json文件：
+### 修改centos7.json
+先进入centos目录，然后修改cento7.json文件：
 ```bash
 {
-  "_comment": "Build with `packer build -var-file=centos72.json centos.json`",
-  "vm_name": "centos72",
+  "_comment": "Build with `packer build -var-file=centos7.json centos.json`",
+  "vm_name": "centos7",
   "cpus": "1",
-  "disk_size": "65536",
-  "iso_checksum": "4c6c65b5a70a1142dadb3c65238e9e97253c0d3a",
-  "iso_checksum_type": "sha1",
-  "iso_name": "CentOS-7-x86_64-DVD-1511.iso",
-  "iso_url": "file:///Vagrant/packer/CentOS-7-x86_64-DVD-1511.iso",
-  "kickstart": "ks7.cfg",
-  "memory": "512",
+  "disk_size": "102400",
+  "http_directory": "kickstart/centos7",
+  "iso_checksum": "ec7500d4b006702af6af023b1f8f1b890b6c7ee54400bb98cef968b883cd6546",
+  "iso_checksum_type": "sha256",
+  "iso_name": "CentOS-7-x86_64-DVD-1708.iso",
+  "iso_url": "/Vagrant/packer/CentOS-7-x86_64-DVD-1708.iso",
+  "memory": "1024",
   "parallels_guest_os_type": "centos7"
 }
 ```
+
 主要修改iso_checksum、iso_name、iso_url几个参数，其中iso_checksum值可以通过以下命令获取：
 ```bash
-$ shasum CentOS-7-x86_64-DVD-1511.iso 
-4c6c65b5a70a1142dadb3c65238e9e97253c0d3a  CentOS-7-x86_64-DVD-1511.iso
+$ shasum -a 256 CentOS-7-x86_64-DVD-1708.iso
+ec7500d4b006702af6af023b1f8f1b890b6c7ee54400bb98cef968b883cd6546  CentOS-7-x86_64-DVD-1708.iso
 ```
 
 ### 开始生成
 ```bash
 cd centos
 #默认会生成所有虚拟机环境的文件，包括vmware/virtualbox/parallels，前提是安装了相应的虚拟机。
-bin/box build centos72
-(或者packer build -var-file=centos72.json centos.json)
+packer build -var-file=centos7.json centos.json
+(或者bin/box build centos7，只能在unix环境下执行)
 
 #也可以指定生成的是哪个虚拟机：
-# packer build -only=virtualbox-iso -var-file=centos72.json centos.json
+# packer build -only=virtualbox-iso -var-file=centos7.json centos.json
 # 或者bin/box build centos72 virtualbox
 
-# packer build -only=parallels-iso -var-file=centos72.json centos.json
-# 或者bin/box build centos72 parallels
+# packer build -only=parallels-iso -var-file=centos7.json centos.json
+# 或者bin/box build centos7 parallels
 ```
 
 如果使用parallels，vagrant需要安装plugin：
@@ -110,13 +117,13 @@ fi
 如出现以下表示制作成功：
 ```html
 ==> Builds finished. The artifacts of successful builds are:
---> virtualbox-iso: 'virtualbox' provider box: box/virtualbox/centos72-2.0.22.box
+--> virtualbox-iso: 'virtualbox' provider box: box/virtualbox/centos7-0.0.99.box
 ```
 
-生成的文件很小，只有378M：
+生成的文件很小，只有439M：
 ```bash
-$ ls -lh box/virtualbox/centos72-2.0.22.box
--rw-r--r--  1 zxy  wheel   378M  1  3 10:19 box/virtualbox/centos72-2.0.22.box
+$ ls -lh box/virtualbox/centos7-0.0.99.box
+-rw-r--r--  1 zxy  wheel   439M  1  3 10:19 box/virtualbox/centos7-0.0.99.box
 ```
 
 ## 参考
