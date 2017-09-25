@@ -25,6 +25,7 @@ Request.Options feignOptions() {
 Request.Options是一个static class
 
 如果都有配置@Configuration的话，spring.factories中的@Configuration会在项目的@Configuration之后再加载。不能通过@AutoConfigureOrder定义加载顺序。
+项目中或者spring.factories
 
 ## Zipkin
 
