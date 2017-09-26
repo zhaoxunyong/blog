@@ -27,64 +27,8 @@ kubectl create -f kube-flannel.yml
 因为使用kubeadm安装的集群是不带认证的，所以无法直接从https:///ui访问，可以添加NodePort方式访问
 
 
-minikube:
-http://feisky.xyz/2016/08/24/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AAKubernetes%E9%9B%86%E7%BE%A4/
-
-https://github.com/kubernetes/minikube
-
-https://kubernetes.io/docs/getting-started-guides/minikube/
-
-SET HTTP_PROXY=http://127.0.0.1:1080
-SET HTTPS_PROXY=http://127.0.0.1:1080
-
-#https://chocolatey.org/install
-Install with cmd.exe
-Run the following command:
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
 
-#https://chocolatey.org/packages/Minikube
-choco install -y minikube
-
-需要在管理员模式下运行，并且要关闭windows代理，否则会报错:
-C:\Windows\system32>kubectl get no
-Unable to connect to the server: net/http: TLS handshake timeout
-
-C:\>minikube start --docker-env HTTP_PROXY=http://192.168.0.102:1080 --docker-env HTTPS_PROXY=http://192.168.0.102:1080
-Starting local Kubernetes v1.7.5 cluster...
-Starting VM...
-Getting VM IP address...
-Moving files into cluster...
-Setting up certs...
-Connecting to cluster...
-Setting up kubeconfig...
-Starting cluster components...
-Kubectl is now configured to use the cluster.
-
-注意：要在c:\下运行命令，否则会有很多问题。（minikube与kubectl我是放在system32目录下）
-
-$ kubectl run nginx --image=nginx --port=80
-deployment "nginx" created
-$ kubectl expose deployment nginx --port=80 --type=NodePort --name=nginx-http
-service "nginx-http" exposed
-$ kubectl get pods
-NAME                     READY     STATUS    RESTARTS   AGE
-nginx-2032906785-81t56   1/1       Running   0          2m
-$ kubectl get services
-NAME         CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   10.0.0.1     <none>        443/TCP   20m
-nginx-http   10.0.0.146   <none>        80/TCP    2m
-$ minikube service nginx-http --url
-http://192.168.64.10:30569
-
-kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
-kubectl expose deployment hello-minikube --type=NodePort
-minikube service hello-minikube --url
-curl http://192.168.99.100:30259
-
-如有异常，可以重启：
-minikube stop
-minikube start --docker-env HTTP_PROXY=http://127.0.0.1:1080 --docker-env HTTPS_PROXY=http://127.0.0.1:1080
 
 
 
