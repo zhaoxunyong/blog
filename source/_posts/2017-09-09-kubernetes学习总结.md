@@ -840,7 +840,7 @@ spec:
 ```
 
 ### 创建
-
+参考[traefik.zip](/files/traefik.zip)
 ```bash
 kubectl create -f ./
 ```
