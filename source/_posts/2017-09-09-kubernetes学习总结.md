@@ -706,6 +706,155 @@ web-ingress   www.zhaoxy.com,frontend.zhaoxy.com,nginx.zhaoxy.com   192.168.10.6
 
 完成后我们可以通过keppalived对nginx做集群即可。
 
+## 部署Traefik
+参考[http://huxos.me/kubernetes/2017/09/19/kubernetes-cluster-07-ingress.html](http://huxos.me/kubernetes/2017/09/19/kubernetes-cluster-07-ingress.html)
+Ingress的引入主要解决创建入口站点规则的问题，主要作用于7层入口(http)。 可以通过K8s的Ingress对象定义类似于nginx中的vhost、localtion、upstream等。 Nginx官方也有Ingress的实现nginxinc/kubernetes-ingress来对接k8s。
+
+考虑到[Traefik](https://github.com/containous/traefik)部署较为方便，使用traefik提供Ingress服务。
+
+![traefik](/images/traefik.png)
+
+### 定义traefik需要的RBAC规则
+
+traefik-rbac.yaml:
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+  namespace: kube-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: traefik-ingress-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+- kind: ServiceAccount
+  name: traefik-ingress-controller
+  namespace: kube-system
+
+```
+
+### 定义ingress编排的daemonset模版
+
+traefik-daemonset.yaml:
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    k8s-app: traefik-ingress-lb
+  name: traefik-ingress-controller
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: traefik-ingress-lb
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      containers:
+      - args:
+        - --web
+        - --web.address=:8580
+        - --kubernetes
+        - --web.metrics
+        - --web.metrics.prometheus
+        image: traefik
+        imagePullPolicy: IfNotPresent
+        name: traefik-ingress-lb
+        ports:
+        - containerPort: 80
+          hostPort: 80
+          protocol: TCP
+        - containerPort: 8580
+          hostPort: 8580
+          protocol: TCP
+        resources:
+          requests:
+            #cpu: "2"
+            memory: 512M
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      nodeSelector:
+        role: ingress
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: traefik-ingress-controller
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+```
+
+### 创建ingress规则
+
+traefik-ingress.yaml:
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: metadata 
+  namespace: default
+spec:
+  rules:
+  - host: a.zhaoxy.com
+    http:
+      paths:
+      - backend:
+          serviceName: nginx-app 
+          servicePort: 80
+```
+
+### 创建
+参考[traefik.zip](/files/traefik.zip)
+```bash
+kubectl create -f ./
+```
+
+### 访问
+
+这样其实相当于定义了一个http的站点，域名a.zhaoxy.com指向了default的metadata-server这个服务。
+访问相关节点的8580端口就能看到a.zhaoxy.com站点对应的信息了。
+
+可以通过http://a.zhaoxy.com访问nginx-app的80服务。
+可以通过http://a.zhaoxy.com:8580/dashboard/访问监控服务。
+
+![traefik-dashboard](/images/traefik-dashboard.png)
+
 
 ## 参考
 > http://blog.csdn.net/felix_yujing/article/details/51622132
@@ -721,3 +870,4 @@ web-ingress   www.zhaoxy.com,frontend.zhaoxy.com,nginx.zhaoxy.com   192.168.10.6
 > http://kubernetes.kansea.com/docs/
 > https://www.kubernetes.org.cn/1885.html
 > https://mritd.me/2017/03/04/how-to-use-nginx-ingress
+> http://huxos.me/kubernetes/2017/09/19/kubernetes-cluster-07-ingress.html
