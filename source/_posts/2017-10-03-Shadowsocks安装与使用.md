@@ -39,11 +39,11 @@ yum install shadowsocks-libev
     "server_port":45678,
     "password":"你的密码",
     "timeout":300,
-    "method":"aes-256-cfb"
+    "method":"aes-256-gcm"
 }
 ```
 
-其中server为你的服务器IP，默认是127.0.0.1 , 只在本地监听，不允许远程连接，设置为0.0.0.0时在服务器全部IP监听。server_port为服务器监听的端口，这里是8888。
+其中server为你的服务器IP，默认是127.0.0.1 , 只在本地监听，不允许远程连接，设置为0.0.0.0时在服务器全部IP监听。server_port为服务器监听的端口，这里是45678。
 
 启动：
 ```bash
@@ -65,7 +65,7 @@ systemctl start shadowsocks-libev
     "local_port":8888, //本地监听socks5端口
     "password":"changeme", //ss密码
     "timeout":60,
-    "method":"aes-128-gcm" //ss加密方式
+    "method":"aes-256-gcm" //ss加密方式
 }
 ```
 
@@ -87,6 +87,12 @@ ExecStart=/usr/bin/ss-local -c /etc/shadowsocks-libev/client.json
 [Install]  
 WantedBy=multi-user.target  
 EOF
+```
+
+启动：
+```bash
+systemctl enable sslocal
+systemctl start sslocal
 ```
 
 查看端口：

@@ -84,7 +84,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 11111   # cluster IP 的端口
+  - port: 11111   # cluster IP 的端口，也就是service的ip，默认为containerPort
     targetPort: 8080  # container容器的端口
     nodePort: 30001
   selector:
@@ -458,12 +458,20 @@ spec:
 为在pod上挂载宿主机上的文件或者目录
 ```yaml
     spec:
+      #hostNetwork: true
+      containers:
+      - name: tomcat
+        image: tomcat:8.5.20
+        ports:
+        - containerPort: 8080
+          #hostPort: 80
+        volumeMounts:
+        - name: workdir
+          mountPath: /opt
       volumes:
       - name: workdir
         hostPath:
-          path: "/data"
-      containers:
-        ...
+          path: "/data/works/tomcat/logs"
 ```
 
 ### nfs
