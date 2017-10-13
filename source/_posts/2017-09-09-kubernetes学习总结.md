@@ -270,7 +270,8 @@ spec:
 NAME            CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
 nginx-app       10.97.111.200    <nodes>       80:32222/TCP      10m
 
-[root@k8s-master ~]# kubectl run busybox --rm -ti --image=busybox /bin/sh
+[root@k8s-master ~]# kubectl run busybox --rm -ti --image=busybox --restart=Never /bin/sh
+#以上每次退出后会自动删除images中的镜像，每次执行都会重新下载image，所以每次执行都会有些慢。
 If you don't see a command prompt, try pressing enter.
 / # ping nginx-app
 PING nginx-app (10.97.111.200): 56 data bytes
