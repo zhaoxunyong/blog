@@ -226,3 +226,6 @@ subjectAltName = IP:192.168.10.6
 ```
 
 也可以直接在创建crt时，传-reqexts SAN参数。
+
+## 参考
+> https://github.com/kubernetes/kubernetes/blob/v1.7.5/cluster/addons/registry/
