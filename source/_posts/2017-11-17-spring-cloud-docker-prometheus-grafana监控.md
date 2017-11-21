@@ -938,6 +938,14 @@ docker run --rm --name zipkin-dependencies \
 openzipkin/zipkin-dependencies:1.5.4
 ```
 
+这个只会运行一次后退出，如果需要定时执行的话，需要加入到cron中。
+
+#### 效果
+
+![zipkin-server-ui](/images/zipkin-server-ui.png)
+
+![zipkin-dependencies](/images/zipkin-dependencies.png)
+
 ## 参考
 > http://tech.lede.com/2017/04/19/rd/server/SpringCloudSleuth/
 > https://segmentfault.com/a/1190000008629939
