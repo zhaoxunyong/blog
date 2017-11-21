@@ -62,7 +62,7 @@ systemctl start shadowsocks-libev
     "server":"x.x.x.x", //ss服务器
     "server_port":20982, //ss端口
     "local_address":"0.0.0.0", //本地监听socks5 ip
-    "local_port":8888, //本地监听socks5端口
+    "local_port":8899, //本地监听socks5端口
     "password":"changeme", //ss密码
     "timeout":60,
     "method":"aes-256-gcm" //ss加密方式
@@ -97,14 +97,14 @@ systemctl start sslocal
 
 查看端口：
 ```bash
-[root@k8s-master ~]# lsof -i:8888
+[root@k8s-master ~]# lsof -i:8899
 COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 ss-local 4405 root    6u  IPv4  37703      0t0  TCP *:socks (LISTEN)
 ```
 
 测试：
 ```bash
-[root@k8s-master ~]# curl --socks5 127.0.0.1:8888 http://httpbin.org/ip
+[root@k8s-master ~]# curl --socks5 127.0.0.1:8899 http://httpbin.org/ip
 {
   "origin": "x.x.x.x"
 }
@@ -115,7 +115,7 @@ ss-local 4405 root    6u  IPv4  37703      0t0  TCP *:socks (LISTEN)
 浏览器配置proxy:
 如果是chrome浏览器，参考其他教程：安装个SwitchyOmega插件就行。
 具体可参考[SwitchyOmega.zip](/files/SwitchyOmega.zip)
-如果是firefox，如下配置proxy：127.0.0.1:8888  类型选择sock5，并且勾选remote dns。
+如果是firefox，如下配置proxy：127.0.0.1:8899  类型选择sock5，并且勾选remote dns。
 如果不勾，照样无法使用ss翻墙。
 
 ### ssh client
@@ -123,10 +123,10 @@ ss-local 4405 root    6u  IPv4  37703      0t0  TCP *:socks (LISTEN)
 可以找一台国外或者香港的服务器作为代理，然后在国内的服务器上，执行以下命令：
 
 ```bash
-ssh -q -N -f -D 0.0.0.0:8888 vagrant@47.12.12.116
+ssh -q -N -f -D 0.0.0.0:8899 vagrant@47.12.12.116
 ```
 
-然后就可以直接在chrome中配置proxy：127.0.0.1:8888，类型选择sock5了。
+然后就可以直接在chrome中配置proxy：127.0.0.1:8899，类型选择sock5了。
 还可以通过privoxy将SOCKS5转换为http服务，具体请参考[Privoxy](#Privoxy)
 
 ### Privoxy
@@ -145,7 +145,7 @@ vim /etc/privoxy/config
 # 监听端口
 listen-address  0.0.0.0:1080
 # shadowsocks 的本地端口
-forward-socks5t / 127.0.0.1:8888 .
+forward-socks5t / 127.0.0.1:8899 .
 ```
 
 启动：
@@ -196,7 +196,7 @@ source ~/.bash_profile生效。
 开启代理： proxy_no
 关闭代理： proxy_off
 
-可以在chrome通过SwitchyOmega设置SOCKS5的8888的端口、或者http的1080端口。
+可以在chrome通过SwitchyOmega设置SOCKS5的8899的端口、或者http的1080端口。
 
 ## shadowsocks GUI客户端
 
