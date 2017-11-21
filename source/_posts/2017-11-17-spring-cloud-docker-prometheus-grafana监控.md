@@ -590,3 +590,357 @@ turbine:
 效果：
 ![hystrix](/images/hystrix.png)
 
+## sleuth zipkin
+
+spring cloud sleuth是从google的dapper论文的思想实现的，提供了对spring cloud系列的链路追踪。
+
+目的：
+> 提供链路追踪。通过sleuth可以很清楚的看出一个请求都经过了哪些服务。可以很方便的理清服务间的调用关系。
+> 可视化错误。对于程序未捕捉的异常，可以在zipkin界面上看到。
+> 分析耗时。通过sleuth可以很方便的看出每个采样请求的耗时，分析出哪些服务调用比较耗时。当服务调用的耗时随着请求量的增大而增大时，也可以对服务的扩容提供一定的提醒作用。
+> 优化链路。对于频繁地调用一个服务，或者并行地调用等，可以针对业务做一些优化措施。
+
+### 应用程序集成
+
+#### sleuth+log
+
+添加依赖：
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>
+```
+
+这种方式只需要引入jar包即可。如果配置log4j，这样会在打印出如下的日志：
+```log
+2017-04-08 23:56:50.459 INFO [bootstrap,38d6049ff0686023,d1b8b0352d3f6fa9,false] 8764 — [nio-8080-exec-1] demo.JpaSingleDatasourceApplication : Step 2: Handling print
+2017-04-08 23:56:50.459 INFO [bootstrap,38d6049ff0686023,d1b8b0352d3f6fa9,false] 8764 — [nio-8080-exec-1] demo.JpaSingleDatasourceApplication : Step 1: Handling home
+```
+
+比原先的日志多出了 [bootstrap,38d6049ff0686023,d1b8b0352d3f6fa9,false] 这些内容，[appname,traceId,spanId,exportable]。
+
+appname：服务名称
+traceId\spanId：链路追踪的两个术语，后面有介绍
+exportable:是否是发送给zipkin
+
+#### sleuth+zipkin+http
+
+sleuth收集跟踪信息通过http请求发给zipkin。这种需要启动一个zipkin,zipkin用来存储数据和展示数据。
+
+添加依赖：
+```xml
+<!--<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zipkin</artifactId>
+</dependency>
+```
+
+配置：
+```yml
+spring:
+  sleuth:
+    sampler:
+      percentage: 1.0
+  zipkin:
+    enabled: true
+    base-url: http://localhost:9411/
+```
+
+#### sletuh+streaming+zipkin
+
+这种方式通过spring cloud streaming将追踪信息发送到zipkin。spring cloud streaming目前只有kafka和rabbitmq的binder。以rabbitmq为例：
+
+添加依赖：
+```xml
+<dependency>
+   <groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-sleuth-stream</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+</dependency>
+```
+
+配置：
+```yml
+spring:
+  sleuth:
+    stream:
+      enabled: true
+    sampler:
+      percentage: 1
+  #for sleuth
+  rabbitmq:
+    host: 192.168.99.100
+    port: 5672
+    username: guest
+    password: guest
+#    virtual-host: cloud_host
+```
+
+### zipkin-server
+
+Zipkin 是 Twitter 的一个开源项目，允许开发者收集 Twitter 各个服务上的监控数据，并提供查询接口。
+
+#### 安装
+
+zipkin-server采用spring方式安装：
+
+##### http方式
+
+添加依赖：
+```yml
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-server</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-autoconfigure-ui</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+启动类添加：
+```java
+@EnableZipkinServer
+@SpringBootApplication
+```
+
+##### stream方式
+
+添加依赖：
+```yml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-sleuth-zipkin-stream</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-autoconfigure-ui</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+启动类添加：
+```java
+@EnableZipkinStreamServer
+@SpringBootApplication
+```
+
+配置：
+```yml
+spring:
+  #@EnableZipkinStreamServer时使用  
+  rabbitmq:
+    host: 192.168.100.88
+    port: 5672
+    username: guest
+    password: guest
+```
+
+##### elasticsearch安装
+
+如果容器内部通讯没有打通的话，需要采用以下方式部署：
+```bash
+tee elasticsearch.yml << EOF
+network.host: 192.168.64.179
+discovery.zen.minimum_master_nodes: 1
+EOF
+ 
+docker run --privileged=true --net=host -d -h elasticsearch --restart=always --name elasticsearch \
+-p 9200:9200 -p 9300:9300 \
+-e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
+-v "$PWD/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml" \
+elasticsearch:2.4.4
+
+如果想将存储指到容器外，可以映射：
+#-v "$PWD/config":/usr/share/elasticsearch/config \
+#-v "$PWD/esdata":/usr/share/elasticsearch/data \
+
+#index
+curl http://192.168.99.100:9200/_cat/indices?v
+```
+
+如果有打通容器内部通讯或者与zipkin-server部署在同一台机器上，则安装比较简单：
+
+```bash
+docker run -d -h elasticsearch --restart=always --name elasticsearch \
+-p 9200:9200 -p 9300:9300 \
+-e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
+elasticsearch:2.4.4
+```
+
+##### rabbitmq
+
+日志采集是通过sleuth-zipkin-stream方式收集的，此处采用rabbitmq。可以采用docker方式安装：
+
+```bash
+docker run -d -h rabbitmq --restart=always --name rabbitmq -p 5672:5672 -p 15672:15672 \
+rabbitmq:3.6.6
+
+ # login:guest/guest   
+ # url:http://ip:15672
+docker exec -it rabbitmq rabbitmq-plugins enable rabbitmq_management
+#docker run -d --hostname my-rabbit --name some-rabbit -p 8080:15672 rabbitmq:3-management
+#docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e
+RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
+
+# list_queues
+#docker exec -it rabbitmq rabbitmqctl list_queues
+```
+
+#### 数据存储
+
+##### Mem
+
+内存方式，只适合于测试环境：
+
+配置：
+```yml
+zipkin:  
+  storage:
+    type: mem
+```
+
+##### MySQL
+
+添加依赖：
+```xml
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-autoconfigure-storage-mysql</artifactId>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+```
+
+配置：
+```yml
+spring:
+  application:
+    name: zipkin-server
+    
+  datasource:
+    url: jdbc:mysql://192.168.100.88:3308/zipkin?autoReconnect=true
+    username: root
+    password: helloworld
+    driver-class-name: com.mysql.jdbc.Driver
+#    schema: classpath:/mysql.sql
+#    initialize: true
+#    continue-on-error: true
+
+zipkin:
+  storage:
+    type: mysql
+```
+
+##### Elasticsearch
+
+添加依赖：
+```xml
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-autoconfigure-storage-elasticsearch</artifactId>
+    <version>1.19.2</version>
+</dependency>
+<dependency>
+    <groupId>org.elasticsearch</groupId>
+    <artifactId>elasticsearch</artifactId>
+</dependency>
+```
+
+配置：
+```yml
+zipkin:
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      cluster: elasticsearch
+      hosts: 192.168.108.183:9300
+      index: zipkin
+#      index-shards: ${ES_INDEX_SHARDS:5}
+#      index-replicas: ${ES_INDEX_REPLICAS:1}
+```
+
+#### zipkin-dependencies
+
+如果为非mem方式部署的zipkin-server，[zipkin-dependencies](https://github.com/openzipkin/zipkin-dependencies)是没有数据的，需要加入zipkin-dependencies模块才能正常显示。以elasticsearch为例：
+
+添加依赖：
+```xml
+<dependency>
+    <groupId>io.zipkin.dependencies</groupId>
+    <artifactId>zipkin-dependencies-elasticsearch</artifactId>
+    <version>1.5.4</version>
+</dependency>
+```
+
+添加代码：
+```java
+@Component
+public class ElasticsearchDependenciesTask {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    @Value("${spark.es.nodes}")
+    private String esNodes;
+    
+    @Value("${spark.driver.allowMultipleContexts}")
+    private String allowMultipleContexts;
+    
+    @Scheduled(cron = "0 */5 * * * ?")
+    public void run() throws Exception {
+//        -e ES_HOSTS="192.168.108.183:9200"
+        Map<String, String> envs = Maps.newHashMap();
+        envs.put("spark.driver.allowMultipleContexts",allowMultipleContexts);
+        envs.put("ES_HOSTS",esNodes);
+        EnvUtils.setEnv(envs);
+        ElasticsearchDependenciesJob.builder().build().run();
+    }   
+}
+```
+
+配置：
+```yml
+# dependencies-elasticsearch配置
+spark:
+  driver:
+    allowMultipleContexts: true
+  es:
+    nodes: 192.168.108.183:9200
+```
+
+内部是通过spark进行数据分析，再生成对应的dependencies数据。
+
+当然也可以通过docker部署：
+```bash
+docker run --rm --name zipkin-dependencies \
+-e STORAGE_TYPE=elasticsearch \
+-e ES_HOSTS=192.168.108.183:9200 \
+-e "JAVA_OPTS=-Xms128m -Xmx128m" \
+openzipkin/zipkin-dependencies:1.5.4
+```
+
+## 参考
+> http://tech.lede.com/2017/04/19/rd/server/SpringCloudSleuth/
+> https://segmentfault.com/a/1190000008629939
+> https://mykite.github.io/2017/04/21/zipkin%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88%E4%B8%80%EF%BC%89/
+
+
