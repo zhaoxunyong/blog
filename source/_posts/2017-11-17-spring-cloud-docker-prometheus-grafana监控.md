@@ -581,6 +581,7 @@ turbine:
   #turbine需要聚合的集群名称，需要在对应的服务的，通过 http://localhost:8050/turbine.stream?cluster=default 访问 
   #aggregator.clusterConfig: hkcash
   aggregator.clusterConfig: default
+  instanceUrlSuffix: ${management.context-path}/hystrix.stream
   #获取集群名表达式，这里表示获取元数据中的cluster数据，在lms的配置文件中配置对应信息
   #clusterNameExpression: metadata['cluster']
   clusterNameExpression: new String("default")
