@@ -595,9 +595,13 @@ turbine:
 spring cloud sleuth是从google的dapper论文的思想实现的，提供了对spring cloud系列的链路追踪。
 
 目的：
+
 > 提供链路追踪。通过sleuth可以很清楚的看出一个请求都经过了哪些服务。可以很方便的理清服务间的调用关系。
+
 > 可视化错误。对于程序未捕捉的异常，可以在zipkin界面上看到。
+
 > 分析耗时。通过sleuth可以很方便的看出每个采样请求的耗时，分析出哪些服务调用比较耗时。当服务调用的耗时随着请求量的增大而增大时，也可以对服务的扩容提供一定的提醒作用。
+
 > 优化链路。对于频繁地调用一个服务，或者并行地调用等，可以针对业务做一些优化措施。
 
 ### 应用程序集成
@@ -686,7 +690,7 @@ spring:
 
 ### zipkin-server
 
-Zipkin 是 Twitter 的一个开源项目，允许开发者收集 Twitter 各个服务上的监控数据，并提供查询接口。
+Zipkin 是 Twitter 的一个开源项目，允许开发者收集Twitter各个服务上的监控数据，并提供查询接口。
 
 #### 安装
 
@@ -793,8 +797,7 @@ rabbitmq:3.6.6
  # url:http://ip:15672
 docker exec -it rabbitmq rabbitmq-plugins enable rabbitmq_management
 #docker run -d --hostname my-rabbit --name some-rabbit -p 8080:15672 rabbitmq:3-management
-#docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e
-RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
+#docker run -d --hostname my-rabbit --name some-rabbit -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-management
 
 # list_queues
 #docker exec -it rabbitmq rabbitmqctl list_queues
@@ -850,6 +853,8 @@ zipkin:
   storage:
     type: mysql
 ```
+
+[SQL文件](/files/zipkin-mysql.sql)
 
 ##### Elasticsearch
 
@@ -945,6 +950,16 @@ openzipkin/zipkin-dependencies:1.5.4
 ![zipkin-server-ui](/images/zipkin-server-ui.png)
 
 ![zipkin-dependencies](/images/zipkin-dependencies.png)
+
+可能sleuth收集了很多你不想要的接口请求，可能通过以下配置排除掉：
+```yml
+spring:
+  sleuth:
+    web:
+      skip-pattern: /js/.*|/css/.*|/html/.*|/htm/.*|/static/.*|/ops/.*|/api-docs.*|/swagger.*|.*\.png|.*\.gif|.*\.css|.*\.js|.*\.html|/favicon.ico|/myhealth
+    scheduled:
+      skip-pattern: .*RedisOperationsSessionRepository
+```
 
 ## 参考
 > http://tech.lede.com/2017/04/19/rd/server/SpringCloudSleuth/
