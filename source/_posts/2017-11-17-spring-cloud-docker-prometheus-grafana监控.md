@@ -958,7 +958,8 @@ spring:
     web:
       skip-pattern: /js/.*|/css/.*|/html/.*|/htm/.*|/static/.*|/ops/.*|/api-docs.*|/swagger.*|.*\.png|.*\.gif|.*\.css|.*\.js|.*\.html|/favicon.ico|/myhealth
     scheduled:
-      skip-pattern: .*RedisOperationsSessionRepository
+      enabled: false
+      #skip-pattern: .*RedisOperationsSessionRepository
 ```
 
 ## 参考
