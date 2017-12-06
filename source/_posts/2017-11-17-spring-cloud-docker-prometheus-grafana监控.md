@@ -142,6 +142,26 @@ endpoints:
     enabled: true
 ```
 
+也可以对某个接口作数据收集：
+
+```java
+private final Gauge getErrorTaskListRequests = Gauge.build()
+  .labelNames("api","desc").name("boc_getErrorTaskList")
+  help("Boc getErrorTaskList failure.").register();
+
+@Override
+public List<TaskDto> getErrorTaskList() {
+  getErrorTaskListRequests.clear();
+  if(taskDtoList!=null && !taskDtoList.isEmpty()) {
+      getErrorTaskListRequests.labels("getErrorTaskList","定时任务监控").inc(taskDtoList.size());
+  }
+  return taskDtoList;
+}
+
+```
+
+![prometheus-customer](/images/prometheus-customer.png)
+
 访问：
 http://ip:port/ops/prometheus
 ![prometheus.png](/images/prometheus.png)
