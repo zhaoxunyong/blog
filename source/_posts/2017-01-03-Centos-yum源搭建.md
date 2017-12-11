@@ -206,6 +206,12 @@ kubernetes-cni.x86_64                   0.3.0.1-0.07a8a2               my-repo
 rkt.x86_64                              1.21.0-1                       my-repo  
 ```
 
+显示某个软件的所有版本
+
+```bash
+yum --showduplicates list docker-engine
+```
+
 ## 参考
 > http://debugo.com/gpg/
 > https://mritd.me/2016/08/02/yum-%E7%AC%94%E8%AE%B0/
