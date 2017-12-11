@@ -77,8 +77,6 @@ DOCKER_NETWORK_OPTIONS=" --bip=10.244.38.1/24 --ip-masq=true --mtu=1472"
 docker网段修改：
 a. 修改docker网段：
 ```bash
-sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' /usr/lib/systemd/system/docker.service
-
 sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
 /usr/lib/systemd/system/docker.service
 
