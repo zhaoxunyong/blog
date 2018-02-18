@@ -1,0 +1,63 @@
+--------------bootstrap-vue------------
+cd app
+cnpm i -g vue-cli
+vue init bootstrap-vue/webpack-simple frontend
+cd frontend
+cnpm i
+#cnpm i bootstrap-vue
+npm run dev
+
+----------------vue----------------------
+cd app
+# 通过vue-cli建立一个名字为frontend的工程
+vue init webpack frontend
+cd frontend
+
+#安装所有依赖
+# 这里推荐安装Taobao的CNPM(https://npm.taobao.org/)，速度快嘛
+cnpm install
+
+#创建一个pom.xml
+touch pom.xml
+
+#通过npm命令启动node server ：localhost:8080
+npm run dev
+
+一般来说，build过之后，根据vue-cli生成的工程app/frontend/config/index.js
+是直接打包到：
+index: path.resolve(__dirname, '../dist/index.html'),
+assetsRoot: path.resolve(__dirname, '../dist'),
+
+也就是生成一个dist文件夹
+
+我们这里稍微做一下修改：
+
+index: path.resolve(__dirname, '../target/dist/index.html'),
+assetsRoot: path.resolve(__dirname, '../target/dist'),
+
+聪明的同学到这里，可能会想到。对哦，我们是整个web发布。是不是有可能和前后端统一一个war有关系。
+
+
+https://bootstrap-vue.js.org/docs/
+https://alligator.io/vuejs/using-bootstrap4/
+https://www.jianshu.com/p/0d2a0f59cae5
+https://github.com/eirslett/frontend-maven-plugin#installing-node-and-npm
+https://github.com/boylegu/SpringBoot-vue/blob/master/README-CN.md
+http://www.inmensys.com/spring-boot-and-vuejs
+https://github.com/vuejs/awesome-vue
+http://samchu.logdown.com/posts/1300192-example-springboot-thymeleaf-vue
+https://github.com/apidoc/apidoc
+https://github.com/boylegu/SpringBoot-vue
+https://github.com/ninuxGithub/spring-boot-vue-separate
+https://www.jianshu.com/p/61ea86d88c98
+https://segmentfault.com/a/1190000005168085
+http://www.cnblogs.com/SamWeb/p/6391373.html
+https://zhuanlan.zhihu.com/p/25892367
+https://tomoya92.github.io/2017/03/09/thymeleaf-layout/
+https://www.jianshu.com/p/6251ed0719c4
+http://www.ityouknow.com/springboot/2016/05/01/springboot(%E5%9B%9B)-thymeleaf%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3.html
+https://laracasts.com/series/learn-vue-2-step-by-step
+https://www.w3cplus.com/sassguide/
+
+
+
