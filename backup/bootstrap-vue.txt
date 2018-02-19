@@ -55,9 +55,14 @@ http://www.cnblogs.com/SamWeb/p/6391373.html
 https://zhuanlan.zhihu.com/p/25892367
 https://tomoya92.github.io/2017/03/09/thymeleaf-layout/
 https://www.jianshu.com/p/6251ed0719c4
+http://blog.csdn.net/FungLeo/article/details/77602914
 http://www.ityouknow.com/springboot/2016/05/01/springboot(%E5%9B%9B)-thymeleaf%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3.html
 https://laracasts.com/series/learn-vue-2-step-by-step
 https://www.w3cplus.com/sassguide/
+https://github.com/fengcms/vue-demo-cnodejs
+https://github.com/sass/node-sass/issues/468
+
+
 
 
 
