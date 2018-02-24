@@ -32,10 +32,21 @@ assetsRoot: path.resolve(__dirname, '../dist'),
 
 我们这里稍微做一下修改：
 
-index: path.resolve(__dirname, '../target/dist/index.html'),
+<!-- index: path.resolve(__dirname, '../target/dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../target/dist'),
 
-聪明的同学到这里，可能会想到。对哦，我们是整个web发布。是不是有可能和前后端统一一个war有关系。
+聪明的同学到这里，可能会想到。对哦，我们是整个web发布。是不是有可能和前后端统一一个war有关系。 -->
+
+修改config/index.js:
+proxyTable: {
+  '/**': {
+    target: 'http://localhost:8081', // 你接口的域名
+    secure: false,
+    changeOrigin: false,
+  }
+},
+
+只有在dev时生效
 
 
 https://bootstrap-vue.js.org/docs/
@@ -62,7 +73,21 @@ https://www.w3cplus.com/sassguide/
 https://github.com/fengcms/vue-demo-cnodejs
 https://github.com/sass/node-sass/issues/468
 
+vue init webpack frontend
+cnpm install
+cnpm install bootstrap-vue
+cnpm install node-sass
+cnpm install axios
+cnpm install vue-confirm
 
+
+cnpm install http-server -g
+
+frontend/config/index.js:
+index: path.resolve(__dirname, '../target/dist/index.html'),
+assetsRoot: path.resolve(__dirname, '../target/dist'),
+
+修改代理：
 
 
 
