@@ -9,44 +9,44 @@ npm run dev
 
 ----------------vue----------------------
 cd app
-# é€šè¿‡vue-cliå»ºç«‹ä¸€ä¸ªåå­—ä¸ºfrontendçš„å·¥ç¨‹
+# Í¨¹ıvue-cli½¨Á¢Ò»¸öÃû×ÖÎªfrontendµÄ¹¤³Ì
 vue init webpack frontend
 cd frontend
 
-#å®‰è£…æ‰€æœ‰ä¾èµ–
-# è¿™é‡Œæ¨èå®‰è£…Taobaoçš„CNPM(https://npm.taobao.org/)ï¼Œé€Ÿåº¦å¿«å˜›
+#°²×°ËùÓĞÒÀÀµ
+# ÕâÀïÍÆ¼ö°²×°TaobaoµÄCNPM(https://npm.taobao.org/)£¬ËÙ¶È¿ìÂï
 cnpm install
 
-#åˆ›å»ºä¸€ä¸ªpom.xml
+#´´½¨Ò»¸öpom.xml
 touch pom.xml
 
-#é€šè¿‡npmå‘½ä»¤å¯åŠ¨node server ï¼šlocalhost:8080
+#Í¨¹ınpmÃüÁîÆô¶¯node server £ºlocalhost:8080
 npm run dev
 
-ä¸€èˆ¬æ¥è¯´ï¼Œbuildè¿‡ä¹‹åï¼Œæ ¹æ®vue-cliç”Ÿæˆçš„å·¥ç¨‹app/frontend/config/index.js
-æ˜¯ç›´æ¥æ‰“åŒ…åˆ°ï¼š
+Ò»°ãÀ´Ëµ£¬build¹ıÖ®ºó£¬¸ù¾İvue-cliÉú³ÉµÄ¹¤³Ìapp/frontend/config/index.js
+ÊÇÖ±½Ó´ò°üµ½£º
 index: path.resolve(__dirname, '../dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../dist'),
 
-ä¹Ÿå°±æ˜¯ç”Ÿæˆä¸€ä¸ªdistæ–‡ä»¶å¤¹
+Ò²¾ÍÊÇÉú³ÉÒ»¸ödistÎÄ¼ş¼Ğ
 
-æˆ‘ä»¬è¿™é‡Œç¨å¾®åšä¸€ä¸‹ä¿®æ”¹ï¼š
+ÎÒÃÇÕâÀïÉÔÎ¢×öÒ»ÏÂĞŞ¸Ä£º
 
 <!-- index: path.resolve(__dirname, '../target/dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../target/dist'),
 
-èªæ˜çš„åŒå­¦åˆ°è¿™é‡Œï¼Œå¯èƒ½ä¼šæƒ³åˆ°ã€‚å¯¹å“¦ï¼Œæˆ‘ä»¬æ˜¯æ•´ä¸ªwebå‘å¸ƒã€‚æ˜¯ä¸æ˜¯æœ‰å¯èƒ½å’Œå‰åç«¯ç»Ÿä¸€ä¸€ä¸ªwaræœ‰å…³ç³»ã€‚ -->
+´ÏÃ÷µÄÍ¬Ñ§µ½ÕâÀï£¬¿ÉÄÜ»áÏëµ½¡£¶ÔÅ¶£¬ÎÒÃÇÊÇÕû¸öweb·¢²¼¡£ÊÇ²»ÊÇÓĞ¿ÉÄÜºÍÇ°ºó¶ËÍ³Ò»Ò»¸öwarÓĞ¹ØÏµ¡£ -->
 
-ä¿®æ”¹config/index.js:
+ĞŞ¸Äconfig/index.js:
 proxyTable: {
   '/**': {
-    target: 'http://localhost:8081', // ä½ æ¥å£çš„åŸŸå
+    target: 'http://localhost:8081', // Äã½Ó¿ÚµÄÓòÃû
     secure: false,
     changeOrigin: false,
   }
 },
 
-åªæœ‰åœ¨devæ—¶ç”Ÿæ•ˆ
+Ö»ÓĞÔÚdevÊ±ÉúĞ§
 
 
 https://bootstrap-vue.js.org/docs/
@@ -72,6 +72,8 @@ https://laracasts.com/series/learn-vue-2-step-by-step
 https://www.w3cplus.com/sassguide/
 https://github.com/fengcms/vue-demo-cnodejs
 https://github.com/sass/node-sass/issues/468
+#npm login password incrocer
+https://segmentfault.com/q/1010000003876273
 
 vue init webpack frontend
 cnpm install
@@ -79,15 +81,30 @@ cnpm install bootstrap-vue
 cnpm install node-sass
 cnpm install axios
 cnpm install vue-confirm
-
+cnpm install open-iconic
+cnpm install sortablejs
+cnpm install vue2-autocomplete-js
+#cnpm install vuejs-auto-complete
+cnpm install stock-auto-complete
+cnpm install stylus stylus-loader style-loader --save-dev
 
 cnpm install http-server -g
+
+$ npm adduser --registry http://registry.cnpmjs.org
+Username: dave.zhao
+Password: Aa654321
+Email: (this IS public) zhaoxunyong@qq.com
+Logged in as dave.zhao on http://registry.cnpmjs.org/.
+
+npm login --registry http://registry.cnpmjs.org
+npm publish --registry http://registry.cnpmjs.org
+
 
 frontend/config/index.js:
 index: path.resolve(__dirname, '../target/dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../target/dist'),
 
-ä¿®æ”¹ä»£ç†ï¼š
+ĞŞ¸Ä´úÀí£º
 
 
 
