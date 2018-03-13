@@ -87,6 +87,7 @@ cnpm install vue2-autocomplete-js
 #cnpm install vuejs-auto-complete
 cnpm install stock-auto-complete
 cnpm install stylus stylus-loader style-loader --save-dev
+#cnpm i wc-messagebox --save
 
 cnpm install http-server -g
 
