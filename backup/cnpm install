@@ -1,0 +1,16 @@
+cnpm install
+cnpm install bootstrap-vue
+cnpm install node-sass
+cnpm install axios
+cnpm install vue-confirm
+cnpm install open-iconic
+cnpm install stock-auto-complete
+cnpm install stylus stylus-loader style-loader --save-dev
+
+
+cnpm install sortablejs
+#cnpm install vue2-autocomplete-js
+#cnpm install vuejs-auto-complete
+
+npm rebuild node-sass --force
+
