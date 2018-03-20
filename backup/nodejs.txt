@@ -16,3 +16,25 @@ dos2unix bootstrap-vue.txt
 sudo apt-get install enca
 enca -L zh_CN bootstrap-vue.txt
 enca -L zh_CN -x utf-8 bootstrap-vue.txt
+
+git:
+https://stackoverflow.com/questions/1580596/how-do-i-make-git-ignore-file-mode-chmod-changes
+git config core.fileMode false
+
+blog:
+#http://stevenshi.me/2017/05/23/ubuntu-hexo/
+npm install
+npm install  hexo-cli -g
+npm install hexo-server -g
+npm install hexo-deployer-git -g
+npm rebuild node-sass --force
+npm dedupe
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+hexo s
+
+sudo apt-get install   python3-markdown   python3-bs4  wkhtmltopdf
+wget http://remarkableapp.github.io/files/remarkable_1.87_all.deb
+sudo apt-get install -f
+remarkable
+
