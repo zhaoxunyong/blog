@@ -1,0 +1,42 @@
+14.118.132.74
+https://keepass.info/help/base/keys.html
+https://www.cisco.com/c/zh_cn/support/index.html
+https://software.cisco.com/download/release.html?mdfid=286281283&flowid=72322&softwareid=282364313&release=4.5.04029&relind=AVAILABLE&rellifecycle=&reltype=latest
+
+
+http://blog.sina.com.cn/s/blog_484d87770102wkll.html:
+sudo apt-get install network-manager-openconnect-gnome 
+sudo openconnect -u xxx --script=/etc/vpn/vpnc-script --no-dtls ip
+sudo mkdir -p /etc/vpn
+cd /etc/vpn
+sudo wget http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script
+sudo chmod +x /etc/vpn/vpnc-script 
+sudo openconnect -u xxx --script=/etc/vpn/vpnc-script --no-cert-check --no-system-trust --no-dtls ip
+
+http://man.linuxde.net/screen
+screen -S vpn
+sudo vpn.sh
+
+关闭窗口
+
+screen -ls
+screen -r vpn
+
+screen -S yourname -> 新建一个叫yourname的session
+screen -ls -> 列出当前所有的session
+screen -r yourname -> 回到yourname这个session
+screen -d yourname -> 远程detach某个session
+screen -d -r yourname -> 结束当前session并回到yourname这个session
+
+#!/usr/bin/expect
+
+set timeout -1
+#set PWD vagrant
+#spawn passwd
+spawn openconnect -u xx --script=/etc/vpn/vpnc-script --no-dtls ip
+expect "确定"
+send "确定\r"
+expect "Password:"
+send "xxxxxx\r"
+interact
+#expect eof
