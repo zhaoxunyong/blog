@@ -9,44 +9,44 @@ npm run dev
 
 ----------------vue----------------------
 cd app
-# Í¨¹ıvue-cli½¨Á¢Ò»¸öÃû×ÖÎªfrontendµÄ¹¤³Ì
+# é€šè¿‡vue-cliå»ºç«‹ä¸€ä¸ªåå­—ä¸ºfrontendçš„å·¥ç¨‹
 vue init webpack frontend
 cd frontend
 
-#°²×°ËùÓĞÒÀÀµ
-# ÕâÀïÍÆ¼ö°²×°TaobaoµÄCNPM(https://npm.taobao.org/)£¬ËÙ¶È¿ìÂï
+#å®‰è£…æ‰€æœ‰ä¾èµ–
+# è¿™é‡Œæ¨èå®‰è£…Taobaoçš„CNPM(https://npm.taobao.org/)ï¼Œé€Ÿåº¦å¿«å˜›
 cnpm install
 
-#´´½¨Ò»¸öpom.xml
+#åˆ›å»ºä¸€ä¸ªpom.xml
 touch pom.xml
 
-#Í¨¹ınpmÃüÁîÆô¶¯node server £ºlocalhost:8080
+#é€šè¿‡npmå‘½ä»¤å¯åŠ¨node server ï¼šlocalhost:8080
 npm run dev
 
-Ò»°ãÀ´Ëµ£¬build¹ıÖ®ºó£¬¸ù¾İvue-cliÉú³ÉµÄ¹¤³Ìapp/frontend/config/index.js
-ÊÇÖ±½Ó´ò°üµ½£º
+ä¸€èˆ¬æ¥è¯´ï¼Œbuildè¿‡ä¹‹åï¼Œæ ¹æ®vue-cliç”Ÿæˆçš„å·¥ç¨‹app/frontend/config/index.js
+æ˜¯ç›´æ¥æ‰“åŒ…åˆ°ï¼š
 index: path.resolve(__dirname, '../dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../dist'),
 
-Ò²¾ÍÊÇÉú³ÉÒ»¸ödistÎÄ¼ş¼Ğ
+ä¹Ÿå°±æ˜¯ç”Ÿæˆä¸€ä¸ªdistæ–‡ä»¶å¤¹
 
-ÎÒÃÇÕâÀïÉÔÎ¢×öÒ»ÏÂĞŞ¸Ä£º
+æˆ‘ä»¬è¿™é‡Œç¨å¾®åšä¸€ä¸‹ä¿®æ”¹ï¼š
 
 <!-- index: path.resolve(__dirname, '../target/dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../target/dist'),
 
-´ÏÃ÷µÄÍ¬Ñ§µ½ÕâÀï£¬¿ÉÄÜ»áÏëµ½¡£¶ÔÅ¶£¬ÎÒÃÇÊÇÕû¸öweb·¢²¼¡£ÊÇ²»ÊÇÓĞ¿ÉÄÜºÍÇ°ºó¶ËÍ³Ò»Ò»¸öwarÓĞ¹ØÏµ¡£ -->
+èªæ˜çš„åŒå­¦åˆ°è¿™é‡Œï¼Œå¯èƒ½ä¼šæƒ³åˆ°ã€‚å¯¹å“¦ï¼Œæˆ‘ä»¬æ˜¯æ•´ä¸ªwebå‘å¸ƒã€‚æ˜¯ä¸æ˜¯æœ‰å¯èƒ½å’Œå‰åç«¯ç»Ÿä¸€ä¸€ä¸ªwaræœ‰å…³ç³»ã€‚ -->
 
-ĞŞ¸Äconfig/index.js:
+ä¿®æ”¹config/index.js:
 proxyTable: {
   '/**': {
-    target: 'http://localhost:8081', // Äã½Ó¿ÚµÄÓòÃû
+    target: 'http://localhost:8081', // ä½ æ¥å£çš„åŸŸå
     secure: false,
     changeOrigin: false,
   }
 },
 
-Ö»ÓĞÔÚdevÊ±ÉúĞ§
+åªæœ‰åœ¨devæ—¶ç”Ÿæ•ˆ
 
 
 https://bootstrap-vue.js.org/docs/
@@ -105,7 +105,7 @@ frontend/config/index.js:
 index: path.resolve(__dirname, '../target/dist/index.html'),
 assetsRoot: path.resolve(__dirname, '../target/dist'),
 
-ĞŞ¸Ä´úÀí£º
+ä¿®æ”¹ä»£ç†ï¼š
 
 
 
