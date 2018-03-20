@@ -26,6 +26,7 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org"
 ### 安装
 
 ```bash
+#http://stevenshi.me/2017/05/23/ubuntu-hexo/
 npm install  hexo-cli -g
 npm install hexo-server -g
 npm install hexo-deployer-git -g
@@ -34,25 +35,24 @@ npm install hexo-deployer-git -g
 ### blog配置
 
 ####  创建
-
+```
+# 初始化
+hexo init 
 ```bash
-#http://stevenshi.me/2017/05/23/ubuntu-hexo/
 npm install
-
-npm rebuild node-sass --force
-
-# ENOSPC错误解决
-#http://hexo.io/docs/troubleshooting.html
-echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
 
 #### 已有的项目
 ```bash
-# 初始化
-hexo init 
 
 # 安装依赖项
 npm install 
+#npm rebuild node-sass --force
+npm uninstall node-sass
+npm install node-sass
+# ENOSPC错误解决
+#http://hexo.io/docs/troubleshooting.html
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
 
 运行：
