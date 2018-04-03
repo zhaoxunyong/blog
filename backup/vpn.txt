@@ -11,7 +11,7 @@ sudo mkdir -p /etc/vpn
 cd /etc/vpn
 sudo wget http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script
 sudo chmod +x /etc/vpn/vpnc-script 
-sudo openconnect -u xxx --script=/etc/vpn/vpnc-script --no-cert-check --no-system-trust --no-dtls ip
+sudo openconnect -u xxx --script=/etc/vpn/vpnc-script --no-cert-check --no-system-trust --no-dtls 14.118.132.74
 
 http://man.linuxde.net/screen
 screen -S vpn
