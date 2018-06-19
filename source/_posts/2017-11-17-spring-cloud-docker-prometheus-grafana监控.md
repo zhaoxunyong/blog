@@ -982,9 +982,273 @@ spring:
       #skip-pattern: .*RedisOperationsSessionRepository
 ```
 
+## jaeger
+
+zipkin的效果不太好，可以考虑使用jaeger，由Uber开源。Jaeger兼容OpenTracing的数据模型和instrumentation库，能够为每个服务/端点使用一致的采样方式。
+
+![jaeger_construnction](/images/jaeger_construnction.png)
+
+分布式系统调用过程:
+
+![jaeger_process](/images/jaeger_process.png)
+
+### opentracing 协议
+
+opentracing是一套分布式追踪协议，与平台，语言无关，统一接口，方便开发接入不同的分布式追踪系统。
+
+![jaeger_opentracing](/images/jaeger_opentracing.png)
+
+简单理解opentracing:
+
+一个完整的opentracing调用链包含 Trace + span + 无限极分类:
+
+Trace：追踪对象，一个Trace代表了一个服务或者流程在系统中的执行过程，如：test.com，redis，mysql等执行过程。一个Trace由多个span组成
+
+span：记录Trace在执行过程中的信息，如：查询的sql，请求的HTTP地址，RPC调用，开始、结束、间隔时间等。
+无限极分类：服务与服务之间使用无限极分类的方式，通过HTTP头部或者请求地址传输到最低层，从而把整个调用链串起来。
+
+### 安装
+
+可以通过docker-compose安装，请参考[docker-compose](/files/jaeger-docker-compose.zip)
+```dompose
+---
+version: '2'
+services:
+  els:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.0.0 
+    restart: always
+    container_name: els
+    hostname: els
+    networks:
+    - elastic-jaeger
+    environment:
+      #- bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.0.0
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://els:9200
+    depends_on:
+    - els
+    networks:
+    - elastic-jaeger
+  jaeger-collector:
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+    image: jaegertracing/jaeger-collector:latest
+    ports:
+      - "14267:14267"
+      - "14268:14268"
+      - "9411:9411"
+    depends_on:
+    - els
+    container_name: jaeger-collector
+    hostname: jaeger-collector
+    restart: unless-stopped
+    networks:
+    - elastic-jaeger
+    command: ["/go/bin/collector-linux", "--span-storage.type=elasticsearch", "--es.server-urls=http://els:9200"]
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent:latest
+    ports:
+      - "5775:5775/udp"
+      - "5778:5778"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+    depends_on:
+    - els
+    - jaeger-collector
+    restart: unless-stopped
+    container_name: jaeger-agent
+    hostname: jaeger-agent
+    networks:
+    - elastic-jaeger
+    command: ["/go/bin/agent-linux", "--collector.host-port=jaeger-collector:14267"]
+
+  jaeger-query:
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+    image: jaegertracing/jaeger-query:latest
+    ports:
+      - 16686:16686
+    depends_on:
+      - els
+      - jaeger-collector
+    restart: unless-stopped
+    container_name: jaeger-query
+    hostname: jaeger-query
+    networks:
+    - elastic-jaeger
+    command: ["/go/bin/query-linux", "--span-storage.type=elasticsearch", "--es.server-urls=http://els:9200", "--es.sniffer=false", "--query.static-files=/go/jaeger-ui/", "--log-level=debug"]
+volumes:
+  esdata1:
+    driver: local
+  eslog:
+    driver: local
+networks:
+  elastic-jaeger:
+    driver: bridge
+```
+
+#### elasticsearch
+
+```bash
+mkdir -p /works/conf/elasticsearch
+tee /works/conf/elasticsearch/elasticsearch.yml << EOF
+xpack.security.enabled: false
+network.host: 0.0.0.0
+thread_pool.bulk.queue_size: 1000
+discovery.zen.minimum_master_nodes: 1
+EOF
+
+docker run -d --name elasticsearch \
+-p 9200:9200 -p 9300:9300 \
+-e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
+-v "/works/conf/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml" \
+docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+#elasticsearch:5.2.1
+```
+
+#### jaeger-collector
+
+```bash
+docker run -d --name jaeger-collector \
+-p 14267:14267 \
+-p 14268:14268 \
+-p 9411:9411 \
+-e "SPAN_STORAGE_TYPE=elasticsearch" \
+jaegertracing/jaeger-collector \
+/go/bin/collector-linux --es.server-urls=http://192.168.108.1:9200
+```
+
+#### jaeger-query
+
+```bash
+docker run -d --name jaeger-query \
+  -p 16686:16686 \
+  -e "SPAN_STORAGE_TYPE=elasticsearch" \
+  jaegertracing/jaeger-query \
+  /go/bin/query-linux --es.server-urls=http://192.168.108.1:9200 --query.static-files=/go/jaeger-ui/
+```
+
+#### kibana
+```bash
+docker run -d --name jaeger-kibana \
+  -p 5601:5601 \
+  -e "ELASTICSEARCH_URL=http://192.168.108.1:9200" \
+  docker.elastic.co/kibana/kibana:6.0.0
+```
+
+#### jaeger-agent
+
+```bash
+docker run -d --name jaeger-agent \
+  -p5775:5775/udp \
+  -p6831:6831/udp \
+  -p6832:6832/udp \
+  -p5778:5778/tcp \
+  jaegertracing/jaeger-agent \
+  /go/bin/agent-linux --discovery.min-peers=1 --collector.host-port=192.168.108.1:14267
+```
+
+#### spark-dependencies
+
+参考： https://github.com/jaegertracing/spark-dependencies
+
+测试好好久，docker不能分析出对应的依赖关系，用jar就可以。找不到问题所在。只能用jar包:
+
+```bash
+git clone https://github.com/jaegertracing/spark-dependencies.git
+cd spark-dependencies
+./mvnw clean install -Dmaven.test.skip=true
+cd ./jaeger-spark-dependencies/target/
+STORAGE=elasticsearch ES_NODES=http://192.168.108.1:9200 java -jar jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar
+```
+
+以下是doker的安装方式：
+
+```bash
+docker run -it --rm --name spark-dependencies \
+-e STORAGE=elasticsearch \
+-e ES_NODES=http://192.168.108.1:9200 \
+-e "JAVA_OPTS=-Xms1g -Xmx1g" \
+jaegertracing/spark-dependencies
+```
+
+也可以自己写Dockerfile
+
+```Dockerfile
+FROM java:8-jdk
+MAINTAINER dave.zhao@aeasycredit.com
+
+RUN mkdir /app
+WORKDIR /app
+
+ENV APPNAME=jaeger-spark-dependencies
+ENV VERSION=0.0.1-SNAPSHOT
+
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+
+COPY ${APPNAME}-${VERSION}.jar /app/
+
+ENTRYPOINT ["sh", "-c", "STORAGE=${STORAGE} ES_NODES=${ES_NODES} java ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app/${APPNAME}-${VERSION}.jar"]
+```
+
+### 客户端集成
+
+以spring-cloud为例，添加以下依赖：
+
+参考：
+> https://github.com/opentracing-contrib/meta
+> https://github.com/opentracing-contrib/java-spring-cloud
+> https://github.com/opentracing-contrib/java-spring-jaeger
+
+普通spring-web项目使用：
+https://github.com/opentracing-contrib/java-spring-web
+
+添加依赖：
+
+```pom.xml
+<dependency>
+  <groupId>io.opentracing.contrib</groupId>
+  <artifactId>opentracing-spring-cloud-starter</artifactId>
+  <version>0.1.13</version>
+</dependency>
+
+<dependency>
+  <groupId>io.opentracing.contrib</groupId>
+  <artifactId>opentracing-spring-jaeger-starter</artifactId>
+  <version>0.1.1</version>
+</dependency>
+```
+
+application.yml:
+
+```yml
+opentracing:
+  jaeger:
+    udp-sender:
+      host: 192.168.108.1
+      port: 6831
+```
+
 ## 参考
 > http://tech.lede.com/2017/04/19/rd/server/SpringCloudSleuth/
 > https://segmentfault.com/a/1190000008629939
 > https://mykite.github.io/2017/04/21/zipkin%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88%E4%B8%80%EF%BC%89/
+> https://github.com/jukylin/blog/blob/master/Uber%E5%88%86%E5%B8%83%E5%BC%8F%E8%BF%BD%E8%B8%AA%E7%B3%BB%E7%BB%9FJaeger%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D%E5%92%8C%E6%A1%88%E4%BE%8B%E3%80%90PHP%20%20%20Hprose%20%20%20Go%E3%80%91.md
+> https://github.com/jaegertracing/jaeger
+> https://github.com/opentracing-contrib/java-spring-cloud
+> https://github.com/opentracing-contrib/java-spring-jaeger
+> https://github.com/opentracing-contrib/java-spring-zipkin
+> https://github.com/jaegertracing/spark-dependencies
+
 
 
