@@ -1239,6 +1239,79 @@ opentracing:
       port: 6831
 ```
 
+## skywalking
+
+### 安装
+
+安装elasticsearch：
+
+```bash
+mkdir -p /works/conf/elasticsearch
+tee /works/conf/elasticsearch/elasticsearch.yml << EOF
+cluster.name: CollectorDBCluster
+network.host: 0.0.0.0
+thread_pool.bulk.queue_size: 1000
+discovery.zen.minimum_master_nodes: 1
+EOF
+
+docker run -d --name elasticsearch \
+-p 9200:9200 -p 9300:9300 \
+-e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
+-v "/works/conf/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml" \
+elasticsearch:5.3
+```
+
+安装Collector与Web：
+
+```bash
+wget http://apache.01link.hk/incubator/skywalking/5.0.0-beta/apache-skywalking-apm-incubating-5.0.0-beta.tar.gz
+tar zxvf apache-skywalking-apm-incubating-5.0.0-beta.tar.gz
+cd apache-skywalking-apm-incubating
+```
+
+### 配置
+
+config/application.yml:
+```bash
+naming:
+  jetty:
+    host: 0.0.0.0
+    port: 10800
+    contextPath: /
+...
+agent_gRPC:
+  gRPC:
+    host: 192.168.108.1
+    port: 11800
+...    
+```
+
+主要需要修改以上两个配置，不然分开部署的话访问不了。另外机器的时间也需要同步。
+
+### 启动Collector与Web
+
+```bash
+cd apache-skywalking-apm-incubating/bin
+./startup.sh
+```
+
+### agent
+
+复制apache-skywalking-apm-incubating目录下的agent，需要保持目录结构不变。修改config/agent.config：
+
+```yml
+...
+agent.application_code=app-gateway
+...
+collector.servers=192.168.108.1:10800
+```
+
+在启动时加入-javaagent即可：
+
+```bash
+java -javaagent:/agent/skywalking-agent.jar -jar xxx.jar
+```
+
 ## 参考
 > http://tech.lede.com/2017/04/19/rd/server/SpringCloudSleuth/
 > https://segmentfault.com/a/1190000008629939
