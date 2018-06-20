@@ -1267,6 +1267,21 @@ docker run -d --name elasticsearch \
 elasticsearch:5.3
 ```
 
+optional: [elasticsearch-head ui](https://github.com/mobz/elasticsearch-head)：
+
+```bash
+docker run -d --name elasticsearch-head -p 9100:9100 mobz/elasticsearch-head:5
+```
+
+optional: kibana ui:
+
+```bash
+docker run -d --name kibana \
+  -p 5601:5601 \
+  -e "ELASTICSEARCH_URL=http://192.168.64.178:9200" \
+  kibana:5.3
+```
+
 安装Collector与Web：
 
 ```bash
