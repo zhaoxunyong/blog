@@ -1312,6 +1312,25 @@ collector.servers=192.168.108.1:10800
 java -javaagent:/agent/skywalking-agent.jar -jar xxx.jar
 ```
 
+默认情况下会收集除了agent.ignore_suffix参数中以这些后缀结尾的链接，但这个不能满足其他的排除条件，可以通过可选插件[apm-trace-ignore-plugin](https://github.com/apache/incubator-skywalking/blob/master/apm-sniffer/optional-plugins/trace-ignore-plugin/README_CN.md):
+
+```bash
+#maven must be > 3.1.0
+git clone https://github.com/apache/incubator-skywalking.git
+cd incubator-skywalking/
+git submodule init
+git submodule update
+mvn clean package -DskipTests
+cd apm-sniffer/optional-plugins/trace-ignore-plugin
+```
+
+1. 将apm-sniffer/optional-plugins/trace-ignore-plugin/apm-trace-ignore-plugin.config 复制到agent/config/ 目录下，加上配置：
+```xml
+trace.ignore_path=/eureka/**,Mysql/JDBI/**,Hystrix/**,/swagger-resources/**
+```
+
+2. 将apm-trace-ignore-plugin-x.jar拷贝到agent/plugins后，重启探针即可生效。
+
 ## 参考
 > http://tech.lede.com/2017/04/19/rd/server/SpringCloudSleuth/
 > https://segmentfault.com/a/1190000008629939
