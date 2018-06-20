@@ -1318,6 +1318,12 @@ collector.servers=192.168.108.1:10800
 java -javaagent:/agent/skywalking-agent.jar -jar xxx.jar
 ```
 
+也可以在启动中覆盖agent.config中的agent.application_code或collector.servers参数，注意：一定要以skywalking.开头，详见[Setting-override](https://github.com/apache/incubator-skywalking/blob/master/docs/cn/Setting-override-CN.md)：
+
+```bash
+java -javaagent:/agent/skywalking-agent.jar -Dskywalking.agent.application_code=app-gateway -jar xxx.jar
+```
+
 默认情况下会收集除了agent.ignore_suffix参数中以这些后缀结尾的链接，但这个不能满足其他的排除条件，可以通过可选插件[apm-trace-ignore-plugin](https://github.com/apache/incubator-skywalking/blob/master/apm-sniffer/optional-plugins/trace-ignore-plugin/README_CN.md):
 
 ```bash
