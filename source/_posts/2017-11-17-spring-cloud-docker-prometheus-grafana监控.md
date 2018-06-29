@@ -1275,9 +1275,12 @@ public AbstractTracerContext createTraceContext(String operationName, boolean fo
     int suffixIdx = operationName.lastIndexOf(".");
     /*if (suffixIdx > -1 && Config.Agent.IGNORE_SUFFIX.contains(operationName.substring(suffixIdx))) {
         context = new IgnoredTracerContext();
-    } else {*/
+    } else {
     if(match(Config.Agent.IGNORE_SUFFIX, operationName)) {
-        context = new IgnoredTracerContext();
+        context = new IgnoredTracerContext();*/
+    boolean needIgnored = Arrays.stream(Config.Agent.IGNORE_SUFFIX.split("[,]")).map(p -> p.trim()).anyMatch(p -> match(p, operationName));
+        if(needIgnored) {
+            context = new IgnoredTracerContext();
     }else {
     ...
 ```

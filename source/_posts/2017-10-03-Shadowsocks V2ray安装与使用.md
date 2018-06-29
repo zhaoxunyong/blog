@@ -1,5 +1,5 @@
 ---
-title: Shadowsocks安装与使用
+title: Shadowsocks V2ray安装与使用
 date: 2017-10-03 20:04:19
 categories: ["Shadowsocks"]
 tags: ["Shadowsocks"]
