@@ -1247,44 +1247,6 @@ opentracing:
 
 ![skywalking-screenshot](/images/skywalking-screenshot.png)
 
-### 源码修改
-5.0.0版本有几个问题：
-1. Trace内容字体为白色，看不清楚
-
-incubator-skywalking/skywalking-ui/src/components/TraceStack/index.less：
-
-```css
-.rectText {
-  ...
-  fill: #52c41a;
-}
-```
-
-2. agent ignore不支持正则表达式
-
-incubator-skywalking/apm-sniffer/apm-agent-core/src/main/java/org/apache/skywalking/apm/agent/core/context/ContextManagerExtendService.java：
-
-```java
-private boolean match(String regex, String str) {
-    Pattern pattern = Pattern.compile(regex);
-    return pattern.matcher(str).matches();
-}
-
-public AbstractTracerContext createTraceContext(String operationName, boolean forceSampling) {
-    AbstractTracerContext context;
-    int suffixIdx = operationName.lastIndexOf(".");
-    /*if (suffixIdx > -1 && Config.Agent.IGNORE_SUFFIX.contains(operationName.substring(suffixIdx))) {
-        context = new IgnoredTracerContext();
-    } else {
-    if(match(Config.Agent.IGNORE_SUFFIX, operationName)) {
-        context = new IgnoredTracerContext();*/
-    boolean needIgnored = Arrays.stream(Config.Agent.IGNORE_SUFFIX.split("[,]")).map(p -> p.trim()).anyMatch(p -> match(p, operationName));
-        if(needIgnored) {
-            context = new IgnoredTracerContext();
-    }else {
-    ...
-```
-
 ### 安装
 
 安装elasticsearch：
