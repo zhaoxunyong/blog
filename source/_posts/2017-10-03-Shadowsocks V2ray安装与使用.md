@@ -242,7 +242,9 @@ https://github.com/shadowsocks/ShadowsocksX-NG/releases/download/v1.6.1/Shadowso
 
 ## v2ray
 
-参考[https://dcamero.azurewebsites.net/v2ray-windows-linux.html](https://dcamero.azurewebsites.net/v2ray-windows-linux.html)
+参考:
+> https://dcamero.azurewebsites.net/v2ray-windows-linux.html
+> https://www.rultr.com/tutorials/proxy/2268.html
 
 ### 安装v2ray-server
 
@@ -253,6 +255,11 @@ curl -L -s https://raw.githubusercontent.com/v2ray/v2ray-core/master/release/ins
 修改配置文件/etc/v2ray/config.json:
 
 ![v2ray-server-config](/images/v2ray-server-config.png)
+
+还可以同时作为V2Ray和Shadowsocks的服务器，响应不同客户端的连接：
+
+![v2ray-shadowsocks-config](/images/v2ray-shadowsocks-config.png)
+
 
 ```bash
 systemctl start v2ray
