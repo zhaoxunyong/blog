@@ -6,4 +6,8 @@ node_modules/
 public/
 .deploy*/
 package.json
+.vscode/
 .history/
+.classpath
+.project
+.settings/

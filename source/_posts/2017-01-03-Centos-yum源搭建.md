@@ -1,8 +1,8 @@
 ---
 title: Centos yum源搭建
 date: 2017-01-03 11:45:45
-categories: ["Centos"]
-tags: ["Centos"]
+categories: ["Linux"]
+tags: ["Linux"]
 toc: true
 ---
 Centos安装软件一些有两种，一种通过二进制编译安装或者rpm安装，一种通过yum安装。个人觉得最好还是通过yum安装，简单、好升级。但有些yum源不稳定，造成安装非常慢，本文介绍怎样将yum源下载并搭建到自己的yum源中。
