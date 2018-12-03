@@ -17,83 +17,24 @@ Elementary OS作为Ubuntu的扩展分之，号称是最美的Linux发行版。�
 ## 系统配置
 
 ### 安装基础包
+
+### docker缩放
+```bash
+sudo add-apt-repository ppa:ricotz/docky
+sudo apt update
+sudo apt upgrade
+killall plank
+```
+
+先更新应用中心，再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
+
 ```bash
 sudo apt-get update
 sudo apt-get install vim
 sudo apt install software-properties-common
 ```
 
-### 安装输入法
-```bash
-sudo apt-get update
-sudo apt-get install im-config fcitx fcitx-config-gtk fcitx-table-wbpy
-#重启系统后
-fcitx-config-gtk3
-```
 
-### 安装Tweaks
-```bash
-sudo add-apt-repository ppa:philip.scott/elementary-tweaks
-sudo apt-get update
-sudo apt-get install elementary-tweaks
-#sudo apt-get install dconf-editor
-sudo apt-get install dconf-tools
-```
-
-另外还需要通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
-
-### docker缩放
-```bash
-#sudo add-apt-repository ppa:ricotz/docky
-sudo apt update
-sudo apt upgrade
-```
-
-### theme
-
-#### 皮肤
-```bash
-#sudo apt-get install docky
-#https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
-unzip Elementary-Pack.zip
-cd Elementary-Pack
-cp -r Icons/* /usr/share/icons
-cp -r Theme/* /usr/share/themes
-cp -r  Plank/* ~/.local/share/plank/themes
-```
-
-macOS High Sierra:
-```bash
-#https://b00merang.weebly.com/macos-mojave.html
-#https://github.com/B00merang-Project/macOS
-cd ~/.themes/
-git clone https://github.com/B00merang-Project/macOS
-gsettings set org.gnome.desktop.interface gtk-theme "macOS High Sierra"
-gsettings set org.gnome.desktop.wm.preferences theme "macOS High Sierra"
-```
-
-macOS Dark Sierra:
-```
-#https://github.com/B00merang-Project/macOS-Dark
-cd ~/.themes/
-git clone https://github.com/B00merang-Project/macOS-Dark
-gsettings set org.gnome.desktop.interface gtk-theme "macOS High Sierra Dark"
-gsettings set org.gnome.desktop.wm.preferences theme "macOS High Sierra Dark"
-```
-
-la-capitaine-icon-theme:
-```bash
-#https://github.com/keeferrourke/la-capitaine-icon-theme.git
-cd ~/.icons
-git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
-```
-
-#### 字体
-```bash
-wget https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip?key=undefined&tmp=1543759995331
-mv YosemiteSanFranciscoFont-master SanFranciscoFont
-cp -a SanFranciscoFont /usr/share/fonts/
-```
 
 ### electron-ssr
 
@@ -107,7 +48,7 @@ sudo apt-get install privoxy
 ```
 
 配置：
-vim /etc/privoxy/config:
+vim /etc/privoxy/config
 ```bash
 listen-address  0.0.0.0:1082
 # shadowsocks 的本地端口
@@ -116,11 +57,11 @@ forward-socks5t / 127.0.0.1:1081 .
 
 启动：
 ```bash
-sudo systemctl start privoxy
+sudo systemctl restart privoxy
 ```
 
 配置环境变量：
-vim ~/.bashrc:
+vim ~/.bashrc
 ```conf
 alias ll='ls -l'
 export LANG=zh_CN.UTF-8
@@ -150,6 +91,86 @@ function proxy_on() {
 ```bash
 . ~/.bashrc
 ```
+
+### 安装git
+```bash
+sudo apt-get install git
+git config --global user.name "dave.zhao"
+git config --global user.email dave.zhao@zerofinance.cn
+git config --global core.autocrlf false
+git config --global core.safecrlf warn
+git config --global core.filemode false
+git config --global core.whitespace cr-at-eol
+git config --global credential.helper store
+```
+
+### 安装输入法
+```bash
+sudo apt-get update
+sudo apt-get install im-config fcitx fcitx-config-gtk fcitx-table-wbpy
+#重启系统后
+fcitx-config-gtk3
+```
+
+### 安装Tweaks
+```bash
+sudo add-apt-repository ppa:philip.scott/elementary-tweaks
+sudo apt-get update
+sudo apt-get install elementary-tweaks
+#sudo apt-get install dconf-editor
+sudo apt-get install dconf-tools
+```
+
+### theme
+
+#### 皮肤
+```bash
+#sudo apt-get install docky
+#https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
+unzip Elementary-Pack.zip
+cd Elementary-Pack
+cp -r Icons/* ~/.icons
+cp -r Themes/* ~/.themes
+#cp -r  Plank/* ~/.local/share/plank/themes
+```
+
+macOS High Sierra:
+```bash
+#https://b00merang.weebly.com/macos-mojave.html
+#https://github.com/B00merang-Project/macOS
+mkdir ~/.themes/
+cd ~/.themes/
+git clone https://github.com/B00merang-Project/macOS
+mv macOS macOS-High-Sierra
+gsettings set org.gnome.desktop.interface gtk-theme "macOS-High-Sierra"
+gsettings set org.gnome.desktop.wm.preferences theme "macOS-High-Sierra"
+```
+
+macOS Dark Sierra:
+```
+#https://github.com/B00merang-Project/macOS-Dark
+cd ~/.themes/
+git clone https://github.com/B00merang-Project/macOS-Dark
+mv macOS-Dark macOS-Dark-Sierra
+gsettings set org.gnome.desktop.interface gtk-theme "macOS-Dark-Sierra"
+gsettings set org.gnome.desktop.wm.preferences theme "macOS-Dark-Sierra"
+```
+
+la-capitaine-icon-theme:
+```bash
+#https://github.com/keeferrourke/la-capitaine-icon-theme.git
+mkdir ~/.icons
+cd ~/.icons
+git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
+```
+
+#### 字体
+```bash
+wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip?key=undefined&tmp=1543759995331"
+mv YosemiteSanFranciscoFont-master SanFranciscoFont
+sudo cp -a SanFranciscoFont /usr/share/fonts/
+```
+San Francisco Text Medium
 
 ### 系统托盘
 
@@ -242,4 +263,18 @@ WINEPREFIX=~/.deepinwine/Deepin-QQ deepin-wine winecfg
 sudo add-apt-repository ppa:noobslab/macbuntu
 sudo apt-get update
 sudo apt-get install slingscold
+```
+
+### vscode
+安装以下插件：
+```bash
+XML Tools
+Debugger for Chrome
+Java Extension Pack
+Local History
+Spring Boot Tools
+Spring Initializr Java Support
+Vetur
+Java Code Generators
+Vue VSCode Snippets
 ```
