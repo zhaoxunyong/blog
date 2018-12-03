@@ -12,7 +12,7 @@ export NVM_DIR="$HOME/.nvm"
 
 ### 安装
 ```bash
-nvm install v6.10.0
+nvm install v8.9.4
 ```
 
 ### 配置
@@ -32,9 +32,21 @@ npm install hexo-server -g
 npm install hexo-deployer-git -g
 ```
 
+### 安装git
+```bash
+sudo apt-get install git
+git config --global user.name "dave.zhao"
+git config --global user.email dave.zhao@zerofinance.cn
+git config --global core.autocrlf false
+git config --global core.safecrlf warn
+git config --global core.filemode false
+git config --global core.whitespace cr-at-eol
+git config --global credential.helper store
+```
+
 ### blog配置
 
-####  创建
+####  新项目时创建
 ```
 # 初始化
 hexo init 
