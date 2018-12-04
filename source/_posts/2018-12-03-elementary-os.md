@@ -133,7 +133,8 @@ sudo apt-get install dconf-tools
 
 #### 皮肤
 ```bash
-#sudo apt-get install docky
+#可以用docky替换掉plank
+sudo apt-get install docky
 #https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
 unzip Elementary-Pack.zip
 cd Elementary-Pack
