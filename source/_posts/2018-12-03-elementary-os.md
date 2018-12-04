@@ -250,7 +250,7 @@ reply_page_bAutoChangeState=0
 reply_page_nTimeCount=30
 ```
 
-如果启动不了，直接删除Accounts目录即可。
+如果启动不了，直接删除Accounts目录即可。如果组织架构出不来，可以把好的机器中的Accounts目录下除User.cfg外所有的文件copy覆盖掉。
 
 ### QQ
 ```bash
