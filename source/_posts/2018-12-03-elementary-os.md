@@ -190,11 +190,11 @@ sudo apt-get install stalonetray
 配置：
 vim ~/.stalonetrayrc
 ```conf
-geometry 1x1+1825+990
+geometry 1x1+1770+1040
 transparent true
 window_layer top
-slot_size 24
-icon_size 16
+slot_size 14
+icon_size 30
 ```
 
 在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可
