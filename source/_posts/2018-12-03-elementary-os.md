@@ -282,6 +282,15 @@ Vue VSCode Snippets
 Eclipse Keymap
 ```
 
+### WPS字体
+```bash
+#https://blog.huzhifeng.com/2017/01/15/WPS/
+#https://www.dropbox.com/s/q6rhaorhsbxbylk/wps_symbol_fonts.zip?dl=0
+sudo mkdir -p /usr/share/fonts/wps_symbol_fonts
+sudo unzip wps_symbol_fonts.zip -d /usr/share/fonts/wps_symbol_fonts
+sudo chmod 755 /usr/share/fonts/wps_symbol_fonts
+```
+
 ### VPN
 ```bash
 sudo apt-get install network-manager-openconnect-gnome
