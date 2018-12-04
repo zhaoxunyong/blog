@@ -291,6 +291,7 @@ Spring Initializr Java Support
 Vetur
 Java Code Generators
 Vue VSCode Snippets
+Eclipse Keymap
 ```
 
 ### VPN
