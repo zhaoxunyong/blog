@@ -16,6 +16,14 @@ Elementary OS作为Ubuntu的扩展分之，号称是最美的Linux发行版。�
 
 ## 系统配置
 
+### 修改操作系统配置
+```bash
+cat /proc/sys/fs/inotify/max_user_watches
+#sudo vim /etc/sysctl.conf
+fs.inotify.max_user_watches=524288
+sudo sysctl -p
+```
+
 ### 安装基础包
 
 ### docker缩放
@@ -192,7 +200,7 @@ icon_size 16
 在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可
 
 ### wingpanel
-好像是要安装elementary-indicators，不是wingpanel。待验证。
+过期，已经不需要安装了。
 
 系统默认的顶部状态条不能显示已经安装的程序图标，需要安装wingpanel:
 ```bash
@@ -211,7 +219,7 @@ https://github.com/mdh34/elementary-indicators
 
 
 ### Cerbere
-好像不用安装。待验证。
+过期，已经不需要安装了。
 ```bash
 git clone https://github.com/elementary/cerbere.git
 cd cerbere
@@ -222,11 +230,16 @@ ninja
 sudo ninja install
 io.elementary.cerbere
 ```
+
 ### deepin-wine-for-ubuntu
 deepin优化了很多wine的包，可以直接拿来使用：
 ```bash
 #https://github.com/wszqkzqk/deepin-wine-ubuntu
-wget -qO- https://raw.githubusercontent.com/wszqkzqk/deepin-wine-ubuntu/master/online_install.sh | bash -e
+#克隆 (git clone https://github.com/wszqkzqk/deepin-wine-ubuntu.git) 或下载到本地。
+git clone https://github.com/wszqkzqk/deepin-wine-ubuntu.git
+#在中国推荐用下面的地址，速度更快： (git clone https://gitee.com/wszqkzqk/deepin-wine-for-ubuntu.git)
+cd deepin-wine-ubuntu
+sudo ./install.sh
 ```
 
 ### weixin
@@ -241,6 +254,7 @@ WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.rtx2015/deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
 sudo dpkg -i deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
+#如果安装报错，先执行一下sudo apt-get install -f，再重新安装即可。
 #配置
 WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine winecfg
 #修改idle时间，只能直接修改文件内容，不然会启动不了
@@ -277,4 +291,15 @@ Spring Initializr Java Support
 Vetur
 Java Code Generators
 Vue VSCode Snippets
+```
+
+### VPN
+```bash
+sudo apt-get install network-manager-openconnect-gnome
+sudo mkdir -p /etc/vpn
+cd /etc/vpn
+sudo wget http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script
+sudo chmod +x /etc/vpn/vpnc-script 
+# execute
+sudo openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x
 ```

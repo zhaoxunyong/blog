@@ -58,7 +58,7 @@ npm install
 ```bash
 
 # 安装依赖项
-npm install 
+npm install
 #npm rebuild node-sass --force
 npm uninstall node-sass
 npm install node-sass
