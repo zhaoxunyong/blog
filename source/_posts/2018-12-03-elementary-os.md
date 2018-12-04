@@ -304,3 +304,16 @@ sudo chmod +x /etc/vpn/vpnc-script
 # execute
 sudo openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x
 ```
+
+### java
+
+sudo vim /etc/profile.d/java.sh
+```bash
+export JAVA_HOME=/Developer/java/jdk1.8.0_152
+export M2_HOME=/Developer/apache-maven-3.3.9
+export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
+```
+使配置生效：
+```bash
+source /etc/profile
+```
