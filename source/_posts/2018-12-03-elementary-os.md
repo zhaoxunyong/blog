@@ -219,8 +219,8 @@ https://github.com/mdh34/elementary-indicators
 
 
 ### Cerbere
-过期，已经不需要安装了。
 ```bash
+#https://elementaryos.stackexchange.com/questions/1951/how-to-disable-plank
 git clone https://github.com/elementary/cerbere.git
 cd cerbere
 meson build --prefix=/usr
@@ -230,6 +230,10 @@ ninja
 sudo ninja install
 io.elementary.cerbere
 ```
+
+禁止plank自动启动：
+通过dconf搜索monitored-processes关键字，把其中的plank删除即可。
+需要删除：io.elementary.desktop.cerbere中的plank才行。
 
 ### deepin-wine-for-ubuntu
 deepin优化了很多wine的包，可以直接拿来使用：
