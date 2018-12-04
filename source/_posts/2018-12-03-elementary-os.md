@@ -245,7 +245,7 @@ sudo dpkg -i deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
 #配置
 WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine winecfg
 #修改idle时间，只能直接修改文件内容，不然会启动不了
-#vim "/home/dave/文档/RTXC File List/c_Program Files_Tencent_RTXC/Accounts/User.cfg"
+#vim "/home/dave/文档/RTXC File List/c_Program Files_Tencent_RTXC/Accounts/dave.zhao/User.cfg"
 reply_page_bAutoChangeState=0
 reply_page_nTimeCount=30
 ```
