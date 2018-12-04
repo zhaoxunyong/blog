@@ -180,6 +180,23 @@ sudo cp -a SanFranciscoFont /usr/share/fonts/
 ```
 San Francisco Text Medium
 
+### Cerbere
+```bash
+#https://elementaryos.stackexchange.com/questions/1951/how-to-disable-plank
+git clone https://github.com/elementary/cerbere.git
+cd cerbere
+meson build --prefix=/usr
+cd build
+ninja
+#To install, use ninja install, then execute with io.elementary.cerbere
+sudo ninja install
+io.elementary.cerbere
+```
+
+禁止plank自动启动：
+通过dconf搜索monitored-processes关键字，把其中的plank删除即可。
+需要删除：io.elementary.desktop.cerbere中的plank才行。
+
 ### 系统托盘
 
 安装stalonetray：
@@ -197,43 +214,8 @@ slot_size 14
 icon_size 30
 ```
 
-在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可
-
-### wingpanel
-过期，已经不需要安装了。
-
-系统默认的顶部状态条不能显示已经安装的程序图标，需要安装wingpanel:
-```bash
-#https://github.com/elementary/wingpanel
-git clone https://github.com/elementary/wingpanel.git
-cd wingpanel
-sudo apt-get install libgala-dev libgee-0.8-dev libglib2.0-dev libgranite-dev libgtk-3-dev meson libmutter-2-dev valac
-meson build --prefix=/usr
-cd build
-ninja
-sudo ninja install
-wingpanel
-```
-
-https://github.com/mdh34/elementary-indicators
-
-
-### Cerbere
-```bash
-#https://elementaryos.stackexchange.com/questions/1951/how-to-disable-plank
-git clone https://github.com/elementary/cerbere.git
-cd cerbere
-meson build --prefix=/usr
-cd build
-ninja
-#To install, use ninja install, then execute with io.elementary.cerbere
-sudo ninja install
-io.elementary.cerbere
-```
-
-禁止plank自动启动：
-通过dconf搜索monitored-processes关键字，把其中的plank删除即可。
-需要删除：io.elementary.desktop.cerbere中的plank才行。
+在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可。
+也可以在dconf中添加：io.elementary.desktop.cerbere中添加stalonetray。如果被kill会自动启动。
 
 ### deepin-wine-for-ubuntu
 deepin优化了很多wine的包，可以直接拿来使用：
