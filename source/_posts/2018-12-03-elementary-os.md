@@ -190,6 +190,7 @@ San Francisco Text Medium
 
 ### Cerbere
 ```bash
+#https://www.omgubuntu.co.uk/2018/01/elementary-desktop-icons-files-app
 #https://elementaryos.stackexchange.com/questions/1951/how-to-disable-plank
 git clone https://github.com/elementary/cerbere.git
 cd cerbere
