@@ -253,6 +253,9 @@ cd deepin-wine-ubuntu
 sudo ./install.sh
 ```
 
+### 截图
+可以在应用中心搜索"深度截图"。在快捷键中设置快捷键：deepin-screenshot->ctrl+alt+Q
+
 ### weixin
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
