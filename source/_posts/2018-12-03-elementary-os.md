@@ -222,6 +222,14 @@ slot_size 14
 icon_size 30
 ```
 
+### 桌面图标
+```bash
+#https://github.com/spheras/desktopfolder
+#download file from https://github.com/spheras/desktopfolder/releases
+sudo apt install ./com.github.spheras.desktopfolder_[version]_amd64.deb
+# logout and login
+```
+
 在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可。
 也可以在dconf中添加：io.elementary.desktop.cerbere中添加stalonetray。如果被kill会自动启动。
 
@@ -320,4 +328,14 @@ export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 使配置生效：
 ```bash
 source /etc/profile
+```
+
+### 其它一些常用工具
+```bash
+#https://www.jianshu.com/p/1e104090ffaa
+sudo apt-get install keepassx
+sudo apt-get install vlc
+#yahei
+wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12/master/install.sh | sudo sh
+
 ```
