@@ -114,10 +114,17 @@ git config --global credential.helper store
 
 ### 安装输入法
 ```bash
-sudo apt-get update
-sudo apt-get install im-config fcitx fcitx-config-gtk fcitx-table-wbpy
+#sudo apt-get update
+#sudo apt-get install im-config fcitx fcitx-config-gtk fcitx-table-wbpy
 #重启系统后
-fcitx-config-gtk3
+#fcitx-config-gtk3
+#https://www.beizigen.com/1934.html
+wget http://ys-o.ys168.com/244626558/o4I4J7G3N5JMVjsSLVU/yong-lin-2.4.0-0.7z
+sudo /opt/yong/yong-tool.sh --install
+/opt/yong/yong-tool.sh --select
+#重启系统后
+#如果希望五笔拼音一起打的话，修改五笔的配置为：mb/pinyin.ini
+#快捷键：CTRL_LSHIFT LSHIFT CTRL_SPACE
 ```
 
 ### 安装Tweaks
