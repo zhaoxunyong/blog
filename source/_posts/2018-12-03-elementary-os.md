@@ -216,9 +216,17 @@ sudo apt-get install stalonetray
 配置：
 vim ~/.stalonetrayrc
 ```conf
-geometry 1x1+1700+1040
+#geometry 1x1+1700+1040
+#transparent true
+#window_layer top
+#slot_size 14
+#icon_size 30
+#http://stalonetray.sourceforge.net/manpage.html
+geometry  1x1+1890-0
 transparent true
 window_layer top
+grow_gravity SE
+icon_gravity SE 
 slot_size 14
 icon_size 30
 ```
