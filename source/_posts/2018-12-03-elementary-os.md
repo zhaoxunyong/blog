@@ -240,7 +240,7 @@ sudo ./install.sh
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
 sudo dpkg -i deepin.com.wechat_2.6.2.31deepin0_i386.deb
-#配置
+#配置，修改显示为160
 WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 ```
 
