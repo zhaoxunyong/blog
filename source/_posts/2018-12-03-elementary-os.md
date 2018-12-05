@@ -254,7 +254,14 @@ sudo ./install.sh
 ```
 
 ### 截图
-可以在应用中心搜索"深度截图"。在快捷键中设置快捷键：deepin-screenshot->ctrl+alt+Q
+可以在应用中心搜索"深度截图"。
+
+### 常用快捷键
+```bash
+xdg-open . -> Win+E
+deepin-screenshot -> ctrl+alt+Q
+deepin-terminal -> ctrl+alt+T
+```
 
 ### weixin
 ```bash
