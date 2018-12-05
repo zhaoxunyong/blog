@@ -224,7 +224,7 @@ vim ~/.stalonetrayrc
 #http://stalonetray.sourceforge.net/manpage.html
 geometry  1x1+1890-0
 transparent true
-window_layer top
+window_layer bottom
 grow_gravity SE
 icon_gravity SE 
 slot_size 14
