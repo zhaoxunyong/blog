@@ -314,6 +314,8 @@ Vetur
 Java Code Generators
 Vue VSCode Snippets
 Eclipse Keymap
+Docker
+npm
 ```
 
 ### WPS字体
