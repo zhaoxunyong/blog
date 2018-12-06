@@ -358,3 +358,14 @@ sudo apt-get install vlc
 wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12/master/install.sh | sudo sh
 
 ```
+
+### 添加打印机
+```bash
+cd /media/dave/DATA/os/LinuxPackages/FS-6525MFP series/64bit/Global/English
+sudo ./install.sh
+sudo apt install system-config-printer
+system-config-printer
+#输入URI
+socket://192.168.101.2:9100
+#选择Kyocera FS-6525MFP驱动即可。
+```
