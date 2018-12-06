@@ -188,6 +188,27 @@ sudo cp -a SanFranciscoFont /usr/share/fonts/
 ```
 San Francisco Text Medium
 
+### wingpanel-indicator-ayatana
+修改wingpanel的颜色：
+```bash
+#http://ubuntuhandbook.org/index.php/2013/10/customize-elementaryos-panel/
+code /usr/share/themes/elementary/gtk-3.0/apps.css
+#修改.panel.color-light.translucent中的background-color为#1d58a5
+```
+
+此步骤不需要安装。
+系统默认的wingpanel只显示几个icon，可以安装wingpanel-indicator-ayatana。
+```bash
+#https://elementaryos.stackexchange.com/questions/16502/missing-icons-in-the-wingpanel
+#https://github.com/elementary/wingpanel-indicator-ayatana
+wget http://ppa.launchpad.net/elementary-os/stable/ubuntu/pool/main/w/wingpanel-indicator-ayatana/wingpanel-indicator-ayatana_2.0.3+r27+pkg17~ubuntu0.4.1.1_amd64.deb
+sudo dpkg -i wingpanel-indicator-ayatana_2.0.3+r27+pkg17~ubuntu0.4.1.1_amd64.deb
+#mkdir -p ~/.config/autostart
+cp /etc/xdg/autostart/indicator-application.desktop ~/.config/autostart/
+sed -i 's/^OnlyShowIn.*/OnlyShowIn=Unity;GNOME;Pantheon;/' ~/.config/autostart/indicator-application.desktop
+#Logout/Login
+```
+
 ### Cerbere
 ```bash
 #https://www.omgubuntu.co.uk/2018/01/elementary-desktop-icons-files-app
@@ -314,6 +335,7 @@ Vetur
 Java Code Generators
 Vue VSCode Snippets
 Eclipse Keymap
+Color Picker
 Docker
 npm
 ```
