@@ -16,6 +16,14 @@ Elementary OS作为Ubuntu的扩展分支，号称是最美的Linux发行版。�
 
 ## 系统配置
 
+### 安装基础包
+
+```bash
+sudo apt-get update
+sudo apt-get install vim
+sudo apt install software-properties-common
+```
+
 ### 修改操作系统配置
 ```bash
 cat /proc/sys/fs/inotify/max_user_watches
@@ -23,8 +31,6 @@ cat /proc/sys/fs/inotify/max_user_watches
 fs.inotify.max_user_watches=524288
 sudo sysctl -p
 ```
-
-### 安装基础包
 
 ### docker缩放
 ```bash
@@ -36,13 +42,30 @@ killall plank
 
 先更新应用中心，再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
 
+### 系统托盘
+
+安装stalonetray：
 ```bash
-sudo apt-get update
-sudo apt-get install vim
-sudo apt install software-properties-common
+sudo apt-get install stalonetray
 ```
 
-
+配置：
+vim ~/.stalonetrayrc
+```conf
+#geometry 1x1+1700+1040
+#transparent true
+#window_layer top
+#slot_size 14
+#icon_size 30
+#http://stalonetray.sourceforge.net/manpage.html
+geometry  1x1+1890-0
+transparent true
+window_layer top
+grow_gravity SE
+icon_gravity SE 
+slot_size 14
+icon_size 30
+```
 
 ### electron-ssr
 
@@ -65,6 +88,7 @@ forward-socks5t / 127.0.0.1:1081 .
 
 启动：
 ```bash
+sudo systemctl enable privoxy
 sudo systemctl restart privoxy
 ```
 
@@ -138,15 +162,24 @@ sudo apt-get install dconf-tools
 
 ### theme
 
-#### 皮肤
+#### docky
 ```bash
 #可以用docky替换掉plank
 sudo apt-get install docky
+```
+
+禁止plank自动启动：
+通过dconf搜索monitored-processes关键字，把其中的plank删除即可。
+需要把：io.elementary.desktop.cerbere中的plank替换为docky。
+
+#### 皮肤
+```bash
 #https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
 unzip Elementary-Pack.zip
 cd Elementary-Pack
-cp -r Icons/* ~/.icons
-cp -r Themes/* ~/.themes
+#/usr/share/icons ~/icons /usr/share/themes ~/themes
+cp -r Icons/* ~/.local/share/icons/
+cp -r Themes/* ~/.local/share/themes/
 #cp -r  Plank/* ~/.local/share/plank/themes
 ```
 
@@ -154,8 +187,8 @@ macOS High Sierra:
 ```bash
 #https://b00merang.weebly.com/macos-mojave.html
 #https://github.com/B00merang-Project/macOS
-mkdir ~/.themes/
-cd ~/.themes/
+#mkdir ~/.local/share/themes/
+cd ~/.local/share/themes/
 git clone https://github.com/B00merang-Project/macOS
 mv macOS macOS-High-Sierra
 gsettings set org.gnome.desktop.interface gtk-theme "macOS-High-Sierra"
@@ -165,7 +198,7 @@ gsettings set org.gnome.desktop.wm.preferences theme "macOS-High-Sierra"
 macOS Dark Sierra:
 ```
 #https://github.com/B00merang-Project/macOS-Dark
-cd ~/.themes/
+cd ~/.local/share/themes//
 git clone https://github.com/B00merang-Project/macOS-Dark
 mv macOS-Dark macOS-Dark-Sierra
 gsettings set org.gnome.desktop.interface gtk-theme "macOS-Dark-Sierra"
@@ -175,14 +208,14 @@ gsettings set org.gnome.desktop.wm.preferences theme "macOS-Dark-Sierra"
 la-capitaine-icon-theme:
 ```bash
 #https://github.com/keeferrourke/la-capitaine-icon-theme.git
-mkdir ~/.icons
-cd ~/.icons
+mkdir ~/.local/share/icons
+cd ~/.local/share/icons
 git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
 ```
 
 #### 字体
 ```bash
-wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip?key=undefined&tmp=1543759995331"
+wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip"
 mv YosemiteSanFranciscoFont-master SanFranciscoFont
 sudo cp -a SanFranciscoFont /usr/share/fonts/
 ```
@@ -207,49 +240,6 @@ sudo dpkg -i wingpanel-indicator-ayatana_2.0.3+r27+pkg17~ubuntu0.4.1.1_amd64.deb
 cp /etc/xdg/autostart/indicator-application.desktop ~/.config/autostart/
 sed -i 's/^OnlyShowIn.*/OnlyShowIn=Unity;GNOME;Pantheon;/' ~/.config/autostart/indicator-application.desktop
 #Logout/Login
-```
-
-### Cerbere
-```bash
-#https://www.omgubuntu.co.uk/2018/01/elementary-desktop-icons-files-app
-#https://elementaryos.stackexchange.com/questions/1951/how-to-disable-plank
-git clone https://github.com/elementary/cerbere.git
-cd cerbere
-meson build --prefix=/usr
-cd build
-ninja
-#To install, use ninja install, then execute with io.elementary.cerbere
-sudo ninja install
-io.elementary.cerbere
-```
-
-禁止plank自动启动：
-通过dconf搜索monitored-processes关键字，把其中的plank删除即可。
-需要删除：io.elementary.desktop.cerbere中的plank才行。
-
-### 系统托盘
-
-安装stalonetray：
-```bash
-sudo apt-get install stalonetray
-```
-
-配置：
-vim ~/.stalonetrayrc
-```conf
-#geometry 1x1+1700+1040
-#transparent true
-#window_layer top
-#slot_size 14
-#icon_size 30
-#http://stalonetray.sourceforge.net/manpage.html
-geometry  1x1+1890-0
-transparent true
-window_layer top
-grow_gravity SE
-icon_gravity SE 
-slot_size 14
-icon_size 30
 ```
 
 ### 桌面图标
@@ -289,7 +279,7 @@ deepin-terminal -> ctrl+alt+T
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
 sudo dpkg -i deepin.com.wechat_2.6.2.31deepin0_i386.deb
 #配置，修改显示为160
-WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
+d
 ```
 
 ### RTX
