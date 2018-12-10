@@ -173,14 +173,14 @@ sudo apt-get install docky
 需要把：io.elementary.desktop.cerbere中的plank替换为docky。
 
 #### 皮肤
+推荐[X-Arc-Collection](https://www.gnome-look.org/p/1167049/)
+
+~~https://github.com/UKeyboard/elementary-2-macos~~
 ```bash
-#https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
-unzip Elementary-Pack.zip
-cd Elementary-Pack
-#/usr/share/icons ~/icons /usr/share/themes ~/themes
-cp -r Icons/* ~/.local/share/icons/
-cp -r Themes/* ~/.local/share/themes/
-#cp -r  Plank/* ~/.local/share/plank/themes
+#https://imcn.me/html/y2017/29453.html
+#https://gitlab.com/LinxGem33/X-Arc-White
+mkdir -p ~/.local/share/themes/
+unzip X-Arc-Collection-v1.4.9.zip -d ~/.local/share/themes/
 ```
 
 macOS High Sierra:
@@ -211,6 +211,17 @@ la-capitaine-icon-theme:
 mkdir ~/.local/share/icons
 cd ~/.local/share/icons
 git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
+```
+
+此步骤不需要安装。
+```bash
+#https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
+unzip Elementary-Pack.zip
+cd Elementary-Pack
+#/usr/share/icons ~/icons /usr/share/themes ~/themes
+cp -r Icons/* ~/.local/share/icons/
+cp -r Themes/* ~/.local/share/themes/
+#cp -r  Plank/* ~/.local/share/plank/themes
 ```
 
 #### 字体
