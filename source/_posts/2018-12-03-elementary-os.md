@@ -20,6 +20,9 @@ Elementary OS作为Ubuntu的扩展分支，号称是最美的Linux发行版。�
 sudo apt-get update
 sudo apt-get install vim
 sudo apt install software-properties-common
+sudo apt-get install unrar
+sudo apt install google-chrome-stable
+sudo apt install electron-ssr
 ```
 
 ## 修改操作系统配置
