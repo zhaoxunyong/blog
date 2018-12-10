@@ -72,6 +72,8 @@ icon_size 30
 从[https://github.com/erguotou520/electron-ssr](https://github.com/erguotou520/electron-ssr)
 中下载最新的版本安装。
 
+如果是chrome浏览器，参考其他教程：安装个SwitchyOmega插件就行。具体可参考[SwitchyOmega.zip](/files/SwitchyOmega.zip)
+
 安装privoxy：
 electron-ssr的http暂时不能用，可能使用privoxy将socks转为http。
 ```bash
