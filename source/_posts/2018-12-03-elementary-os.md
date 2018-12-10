@@ -183,6 +183,7 @@ sudo apt-get install docky
 ```bash
 #https://imcn.me/html/y2017/29453.html
 #https://gitlab.com/LinxGem33/X-Arc-White
+#sudo apt install arc-theme
 mkdir -p ~/.local/share/themes/
 unzip X-Arc-Collection-v1.4.9.zip -d ~/.local/share/themes/
 ```
