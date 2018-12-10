@@ -23,6 +23,7 @@ sudo apt install software-properties-common
 sudo apt-get install unrar
 sudo apt install google-chrome-stable
 sudo apt install electron-ssr
+sudo apt install aria2
 ```
 
 ## 修改操作系统配置
@@ -325,6 +326,9 @@ sudo add-apt-repository ppa:noobslab/macbuntu
 sudo apt-get update
 sudo apt-get install slingscold
 ```
+
+## Mailspring
+从https://getmailspring.com/download下载对应的版本安装即可。
 
 ## vscode
 安装以下插件：
