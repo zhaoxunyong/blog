@@ -162,6 +162,7 @@ sudo apt-get update
 sudo apt-get install elementary-tweaks
 #sudo apt-get install dconf-editor
 sudo apt-get install dconf-tools
+sudo apt install nautilus
 ```
 
 ## theme
@@ -202,6 +203,7 @@ gsettings set org.gnome.desktop.interface gtk-theme 'eOS-Sierra-Gtk'
 git clone https://github.com/vinceliuice/vimix-gtk-themes
 cd vimix-gtk-themes
 ./Install
+cd ..
 git clone https://github.com/vinceliuice/vimix-icon-theme
 cd vimix-icon-theme
 ./Installer.sh
@@ -217,6 +219,14 @@ cd vimix-icon-theme
 git clone https://github.com/vinceliuice/Sierra-gtk-theme.git
 cd Sierra-gtk-theme
 ./install.sh
+```
+
+#### iOS-iCons
+
+```bash
+#https://github.com/USBA/iOS-iCons
+git clone https://github.com/USBA/iOS-iCons.git ~/.local/share/icons/iOS-iCons
+git clone https://github.com/zayronxio/Macos-sierra-CT.git ~/.local/share/icons/Macos-sierra-CT
 ```
 
 #### la-capitaine-icon-theme
@@ -250,8 +260,10 @@ unzip X-Arc-Collection-v1.4.9.zip -d ~/.local/share/themes/
 
 https://www.gnome-look.org/p/1220826/
 https://www.gnome-look.org/p/1102582/
-https://github.com/USBA/iOS-iCons
 https://github.com/USBA/macOS11-theme.git
+git clone https://github.com/USBA/macOS11-theme.git
+cd macOS11-theme
+mv macOS11-* ~/.local/share/themes/
 
 #### Mc-OS-themes
 
