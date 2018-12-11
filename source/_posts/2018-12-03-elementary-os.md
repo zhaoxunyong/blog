@@ -177,7 +177,55 @@ sudo apt-get install docky
 需要把：io.elementary.desktop.cerbere中的plank替换为docky。
 
 ### 皮肤
-推荐[X-Arc-Collection](https://www.gnome-look.org/p/1167049/)
+
+参考[https://vinceliuice.github.io/](https://vinceliuice.github.io/)
+
+推荐几个漂亮的皮肤：
+
+#### eOS-Sierra-Gtk
+
+[eOS-Sierra-Gtk](https://github.com/btd1337/eOS-Sierra-Gtk)
+
+```bash
+git clone https://github.com/btd1337/eOS-Sierra-Gtk ~/.local/share/themes/eOS-Sierra-Gtk
+gsettings set org.gnome.desktop.interface gtk-theme 'eOS-Sierra-Gtk'
+```
+
+最终效果：
+![](/images/elementary_theme.png)
+
+#### vimix-gtk-themes
+
+[vimix-gtk-themes](https://github.com/vinceliuice/vimix-gtk-themes)
+
+```bash
+git clone https://github.com/vinceliuice/vimix-gtk-themes
+cd vimix-gtk-themes
+./Install
+git clone https://github.com/vinceliuice/vimix-icon-theme
+cd vimix-icon-theme
+./Installer.sh
+```
+
+最终效果：
+![](/images/vimix-gtk-themes.png)
+
+#### la-capitaine-icon-theme
+
+```bash
+#https://github.com/btd1337/La-Sierra-Icon-Theme
+#https://github.com/keeferrourke/la-capitaine-icon-theme.git
+mkdir ~/.local/share/icons
+git clone https://github.com/btd1337/La-Sierra-Icon-Theme ~/.local/share/icons/La-Sierra 
+#or
+git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/share/icons/La-Sierra
+```
+
+推荐安装以上几个就可以了。但也有几个效果不错的皮肤：
+
+#### X-Arc-Collection
+
+[X-Arc-Collection](https://www.gnome-look.org/p/1167049/)
 
 ~~https://github.com/UKeyboard/elementary-2-macos~~
 ```bash
@@ -188,7 +236,8 @@ mkdir -p ~/.local/share/themes/
 unzip X-Arc-Collection-v1.4.9.zip -d ~/.local/share/themes/
 ```
 
-macOS High Sierra:
+#### macOS High Sierra
+
 ```bash
 #https://b00merang.weebly.com/macos-mojave.html
 #https://github.com/B00merang-Project/macOS
@@ -200,7 +249,8 @@ gsettings set org.gnome.desktop.interface gtk-theme "macOS-High-Sierra"
 gsettings set org.gnome.desktop.wm.preferences theme "macOS-High-Sierra"
 ```
 
-macOS Dark Sierra:
+#### macOS Dark Sierra
+
 ```
 #https://github.com/B00merang-Project/macOS-Dark
 cd ~/.local/share/themes//
@@ -208,14 +258,6 @@ git clone https://github.com/B00merang-Project/macOS-Dark
 mv macOS-Dark macOS-Dark-Sierra
 gsettings set org.gnome.desktop.interface gtk-theme "macOS-Dark-Sierra"
 gsettings set org.gnome.desktop.wm.preferences theme "macOS-Dark-Sierra"
-```
-
-la-capitaine-icon-theme:
-```bash
-#https://github.com/keeferrourke/la-capitaine-icon-theme.git
-mkdir ~/.local/share/icons
-cd ~/.local/share/icons
-git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
 ```
 
 此步骤不需要安装。
@@ -229,11 +271,12 @@ cp -r Themes/* ~/.local/share/themes/
 #cp -r  Plank/* ~/.local/share/plank/themes
 ```
 
-### 字体
+## 字体
 ```bash
-wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip"
-mv YosemiteSanFranciscoFont-master SanFranciscoFont
-sudo cp -a SanFranciscoFont /usr/share/fonts/
+#wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip"
+#mv YosemiteSanFranciscoFont-master SanFranciscoFont
+#sudo cp -a SanFranciscoFont /usr/share/fonts/
+sudo git clone https://github.com/AppleDesignResources/SanFranciscoFont /usr/share/fonts/
 ```
 San Francisco Text Medium
 
