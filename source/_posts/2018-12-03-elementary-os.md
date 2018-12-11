@@ -218,7 +218,7 @@ cd vimix-icon-theme
 mkdir ~/.local/share/icons
 git clone https://github.com/btd1337/La-Sierra-Icon-Theme ~/.local/share/icons/La-Sierra 
 #or
-git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/share/icons/La-Sierra
+git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/share/icons/la-capitaine-icon-theme
 ```
 
 推荐安装以上几个就可以了。但也有几个效果不错的皮肤：
