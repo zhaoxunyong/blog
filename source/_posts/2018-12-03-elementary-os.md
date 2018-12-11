@@ -210,6 +210,15 @@ cd vimix-icon-theme
 最终效果：
 ![](/images/vimix-gtk-themes.png)
 
+#### Sierra-gtk-theme
+
+```bash
+#https://github.com/vinceliuice/Sierra-gtk-theme
+git clone https://github.com/vinceliuice/Sierra-gtk-theme.git
+cd Sierra-gtk-theme
+./install.sh
+```
+
 #### la-capitaine-icon-theme
 
 ```bash
@@ -223,11 +232,12 @@ git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/s
 
 推荐安装以上几个就可以了。但也有几个效果不错的皮肤：
 
+[https://www.gnome-look.org/search/projectSearchText/macosx/f/tags](https://www.gnome-look.org/search/projectSearchText/macosx/f/tags)
+
 #### X-Arc-Collection
 
 [X-Arc-Collection](https://www.gnome-look.org/p/1167049/)
 
-~~https://github.com/UKeyboard/elementary-2-macos~~
 ```bash
 #https://imcn.me/html/y2017/29453.html
 #https://gitlab.com/LinxGem33/X-Arc-White
@@ -235,6 +245,19 @@ git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/s
 mkdir -p ~/.local/share/themes/
 unzip X-Arc-Collection-v1.4.9.zip -d ~/.local/share/themes/
 ```
+
+#### macOS11-theme
+
+https://www.gnome-look.org/p/1220826/
+https://www.gnome-look.org/p/1102582/
+https://github.com/USBA/iOS-iCons
+https://github.com/USBA/macOS11-theme.git
+
+#### Mc-OS-themes
+
+[Mc-OS-themes](https://github.com/paullinuxthemer/Mc-OS-themes)
+
+把Mc开头的目录复制到~/.themes目录下。
 
 #### macOS High Sierra
 
@@ -276,7 +299,7 @@ cp -r Themes/* ~/.local/share/themes/
 #wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip"
 #mv YosemiteSanFranciscoFont-master SanFranciscoFont
 #sudo cp -a SanFranciscoFont /usr/share/fonts/
-sudo git clone https://github.com/AppleDesignResources/SanFranciscoFont /usr/share/fonts/
+sudo git clone https://github.com/AppleDesignResources/SanFranciscoFont /usr/share/fonts/SanFranciscoFont
 ```
 San Francisco Text Medium
 
