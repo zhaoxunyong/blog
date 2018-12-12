@@ -69,7 +69,7 @@ slot_size 14
 icon_size 30
 ```
 
-### gksu
+## gksu
 
 ```bash
 wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gksu/gksu_2.0.2-9ubuntu1_amd64.deb
@@ -82,7 +82,7 @@ sudo dpkg -i gksu_2.0.2-9ubuntu1_amd64.deb
 #https://www.linuxuprising.com/2018/04/gksu-removed-from-ubuntu-heres.html
 ```
 
-### 修改开机启动画面
+## 修改开机启动画面
 
 ```bash
 #https://tianyijian.github.io/2018/04/05/ubuntu-boot-animation/
