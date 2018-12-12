@@ -69,6 +69,31 @@ slot_size 14
 icon_size 30
 ```
 
+### gksu
+
+```bash
+wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gksu/gksu_2.0.2-9ubuntu1_amd64.deb
+wget http://mirrors.kernel.org/ubuntu/pool/universe/libg/libgksu/libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb
+sudo dpkg -i libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb 
+sudo dpkg -i gksu_2.0.2-9ubuntu1_amd64.deb
+#在需要通过root运行的命令前加gksu或者gksudo
+#sudo vim  '/usr/share/applications/netease-cloud-music.desktop'
+#gksu netease-cloud-music
+#https://www.linuxuprising.com/2018/04/gksu-removed-from-ubuntu-heres.html
+```
+
+### 修改开机启动画面
+
+```bash
+#https://tianyijian.github.io/2018/04/05/ubuntu-boot-animation/
+#https://www.gnome-look.org/browse/cat/109/ord/latest/
+#https://www.gnome-look.org/p/1237117/
+unzip Griffin-Grub-Remix.zip
+cd Griffin-Grub-Remix/
+sudo ./Install.sh
+#reboot
+```
+
 ## electron-ssr
 
 从[https://github.com/erguotou520/electron-ssr](https://github.com/erguotou520/electron-ssr)
