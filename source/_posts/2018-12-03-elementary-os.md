@@ -315,6 +315,14 @@ sudo git clone https://github.com/AppleDesignResources/SanFranciscoFont /usr/sha
 ```
 San Francisco Text Medium
 
+## 添加application菜单
+
+```bash
+#https://elementaryos.stackexchange.com/questions/2883/how-can-i-change-the-icon-of-an-application-in-the-elementary-os
+sudo apt-get install alacarte
+#打开主菜单就可以进行添加与修改了
+```
+
 ## wingpanel-indicator-ayatana
 修改wingpanel的颜色：
 ```bash
