@@ -535,3 +535,16 @@ Lmlr2CjQ1VZ3DySCfBDuKcYmOCeK7jzEWPUnAw+f9360nIiiNEB0YGkwB
 kdtgaKEEik7aNiI3jXvp5r34wViVJCiX7m2y7pqBV9gZIvP9hP9KPnP++++
 --- END LICENSE KEY -----
 
+## XMind 8
+
+```bash
+wget http://dl2.xmind.cn/xmind-8-update8-linux.zip
+unzip xmind-8-update8-linux.zip -d /opt/xmind-8
+#run /opt/xmind-8/XMind_amd64/XMind
+#Put icon into applications, you should create a file:
+cd /opt/xmind-8/XMind_amd64/
+echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
+chmod +x xmind
+#If you want to crack, please see: http://blog.slpro.cn/posts/eb75c5c4/
+```
+
