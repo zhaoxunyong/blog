@@ -7,8 +7,8 @@ title: Just do it
 subtitle:
 description: 平时工作中所遇到的一些问题的总结
 author: zhaoxunyong 
-# language: zh-Hans
-language: zh-CN
+language: zh-Hans
+# language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
@@ -64,9 +64,9 @@ pagination_dir: page
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 ## Themes: http://hexo.io/themes/
-theme: BlueLake
+# theme: BlueLake
 # theme: Anisina
-# theme: next
+theme: next
 
 #since: 2014
 # Deployment
@@ -86,7 +86,7 @@ deploy:
   # git 仓库的地址。
   repo: 
     github: https://github.com/zhaoxunyong/zhaoxunyong.github.io.git
-    #coding: https://git.coding.net/zhaoxunyong/blog.git
+    coding: https://git.coding.net/zhaoxunyong/blog.git
   # 分支名称。
   branch: master
 
