@@ -55,8 +55,8 @@ npm install
 ```
 
 #### 已有的项目
-```bash
 
+```bash
 # 安装依赖项
 npm install
 #npm rebuild node-sass --force
@@ -66,6 +66,28 @@ npm install node-sass
 #http://hexo.io/docs/troubleshooting.html
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
+
+#### Sitemap
+
+```bash
+# Google 
+npm install hexo-generator-sitemap
+# Baidu
+npm install hexo-generator-baidu-sitemap
+```
+
+在config最后新增
+
+```xml
+sitemap:
+  path: sitemap.xml
+  
+baidusitemap:
+  path: baidusitemap.xml
+```
+
+提交sitemap前注意：部分页面不想被收录的需要在front-matter前加sitemap: false与baidusitemap: false，比如404页面，比如站点确认文件等等。
+此外我在config中设置网址为//开头，即没有指明协议，这样生成的sitemap中网址也是//开头，结果不能被google识别，所以需要写上协议才行。
 
 运行：
 ```bash

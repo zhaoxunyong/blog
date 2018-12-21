@@ -89,3 +89,9 @@ deploy:
     #coding: https://git.coding.net/zhaoxunyong/blog.git
   # 分支名称。
   branch: master
+
+sitemap:
+  path: sitemap.xml
+  
+baidusitemap:
+  path: baidusitemap.xml
