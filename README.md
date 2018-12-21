@@ -30,6 +30,10 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org"
 npm install  hexo-cli -g
 npm install hexo-server -g
 npm install hexo-deployer-git -g
+# Google 
+npm install hexo-generator-sitemap
+# Baidu
+npm install hexo-generator-baidu-sitemap
 ```
 
 ### 安装git
@@ -68,13 +72,6 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 ```
 
 #### Sitemap
-
-```bash
-# Google 
-npm install hexo-generator-sitemap
-# Baidu
-npm install hexo-generator-baidu-sitemap
-```
 
 在config最后新增
 
