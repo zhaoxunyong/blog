@@ -42,6 +42,16 @@ sudo apt upgrade
 killall plank
 ```
 
+## 安装Tweaks
+```bash
+sudo add-apt-repository ppa:philip.scott/elementary-tweaks
+sudo apt-get update
+sudo apt-get install elementary-tweaks
+#sudo apt-get install dconf-editor
+sudo apt-get install dconf-tools
+#sudo apt install nautilus
+```
+
 先更新应用中心，再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
 
 ## 系统托盘
@@ -168,16 +178,6 @@ sudo /opt/yong/yong-tool.sh --install
 #重启系统后
 #如果希望五笔拼音一起打的话，修改五笔的配置为：mb/pinyin.ini
 #快捷键：CTRL_LSHIFT LSHIFT CTRL_SPACE
-```
-
-## 安装Tweaks
-```bash
-sudo add-apt-repository ppa:philip.scott/elementary-tweaks
-sudo apt-get update
-sudo apt-get install elementary-tweaks
-#sudo apt-get install dconf-editor
-sudo apt-get install dconf-tools
-sudo apt install nautilus
 ```
 
 ## theme
@@ -334,7 +334,8 @@ sudo ./install.sh
 ```bash
 xdg-open . -> Win+E
 deepin-screenshot -> ctrl+alt+Q
-deepin-terminal -> ctrl+alt+T
+#deepin-terminal -> ctrl+alt+T
+io.elementary.terminal -> ctrl+alt+T
 ```
 
 ## weixin
@@ -342,7 +343,7 @@ deepin-terminal -> ctrl+alt+T
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
 sudo dpkg -i deepin.com.wechat_2.6.2.31deepin0_i386.deb
 #配置，修改显示为160
-d
+WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 ```
 
 ## RTX
