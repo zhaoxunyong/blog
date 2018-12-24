@@ -82,19 +82,9 @@ sudo dpkg -i gksu_2.0.2-9ubuntu1_amd64.deb
 #https://www.linuxuprising.com/2018/04/gksu-removed-from-ubuntu-heres.html
 ```
 
-## 修改开机启动画面
-
-```bash
-#https://tianyijian.github.io/2018/04/05/ubuntu-boot-animation/
-#https://www.gnome-look.org/browse/cat/109/ord/latest/
-#https://www.gnome-look.org/p/1237117/
-unzip Griffin-Grub-Remix.zip
-cd Griffin-Grub-Remix/
-sudo ./Install.sh
-#reboot
-```
-
 ## electron-ssr
+
+不需要翻墙的不需要安装。另外翻墙需要有相应的账户才行。
 
 从[https://github.com/erguotou520/electron-ssr](https://github.com/erguotou520/electron-ssr)
 中下载最新的版本安装。
@@ -265,72 +255,6 @@ git clone https://github.com/btd1337/La-Sierra-Icon-Theme ~/.local/share/icons/L
 git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/share/icons/la-capitaine-icon-theme
 ```
 
-推荐安装以上几个就可以了。但也有几个效果不错的皮肤：
-
-[https://www.gnome-look.org/search/projectSearchText/macosx/f/tags](https://www.gnome-look.org/search/projectSearchText/macosx/f/tags)
-
-#### X-Arc-Collection
-
-[X-Arc-Collection](https://www.gnome-look.org/p/1167049/)
-
-```bash
-#https://imcn.me/html/y2017/29453.html
-#https://gitlab.com/LinxGem33/X-Arc-White
-#sudo apt install arc-theme
-mkdir -p ~/.local/share/themes/
-unzip X-Arc-Collection-v1.4.9.zip -d ~/.local/share/themes/
-```
-
-#### macOS11-theme
-
-https://www.gnome-look.org/p/1220826/
-https://www.gnome-look.org/p/1102582/
-https://github.com/USBA/macOS11-theme.git
-git clone https://github.com/USBA/macOS11-theme.git
-cd macOS11-theme
-mv macOS11-* ~/.local/share/themes/
-
-#### Mc-OS-themes
-
-[Mc-OS-themes](https://github.com/paullinuxthemer/Mc-OS-themes)
-
-把Mc开头的目录复制到~/.themes目录下。
-
-#### macOS High Sierra
-
-```bash
-#https://b00merang.weebly.com/macos-mojave.html
-#https://github.com/B00merang-Project/macOS
-#mkdir ~/.local/share/themes/
-cd ~/.local/share/themes/
-git clone https://github.com/B00merang-Project/macOS
-mv macOS macOS-High-Sierra
-gsettings set org.gnome.desktop.interface gtk-theme "macOS-High-Sierra"
-gsettings set org.gnome.desktop.wm.preferences theme "macOS-High-Sierra"
-```
-
-#### macOS Dark Sierra
-
-```
-#https://github.com/B00merang-Project/macOS-Dark
-cd ~/.local/share/themes//
-git clone https://github.com/B00merang-Project/macOS-Dark
-mv macOS-Dark macOS-Dark-Sierra
-gsettings set org.gnome.desktop.interface gtk-theme "macOS-Dark-Sierra"
-gsettings set org.gnome.desktop.wm.preferences theme "macOS-Dark-Sierra"
-```
-
-此步骤不需要安装。
-```bash
-#https://mega.nz/#!9wJC1KJC!KdcjjV1HIOjaU1nbMsUT5nnHl8ahmuYjcQiv4KmhoMI
-unzip Elementary-Pack.zip
-cd Elementary-Pack
-#/usr/share/icons ~/icons /usr/share/themes ~/themes
-cp -r Icons/* ~/.local/share/icons/
-cp -r Themes/* ~/.local/share/themes/
-#cp -r  Plank/* ~/.local/share/plank/themes
-```
-
 ## 字体
 ```bash
 #wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip"
@@ -356,17 +280,15 @@ code /usr/share/themes/elementary/gtk-3.0/apps.css
 #修改.panel.color-light.translucent中的background-color为#1d58a5
 ```
 
-此步骤不需要安装。
-系统默认的wingpanel只显示几个icon，可以安装wingpanel-indicator-ayatana。
+## wingpanel-indicator-sys-monitor
+
 ```bash
-#https://elementaryos.stackexchange.com/questions/16502/missing-icons-in-the-wingpanel
-#https://github.com/elementary/wingpanel-indicator-ayatana
-wget http://ppa.launchpad.net/elementary-os/stable/ubuntu/pool/main/w/wingpanel-indicator-ayatana/wingpanel-indicator-ayatana_2.0.3+r27+pkg17~ubuntu0.4.1.1_amd64.deb
-sudo dpkg -i wingpanel-indicator-ayatana_2.0.3+r27+pkg17~ubuntu0.4.1.1_amd64.deb
-#mkdir -p ~/.config/autostart
-cp /etc/xdg/autostart/indicator-application.desktop ~/.config/autostart/
-sed -i 's/^OnlyShowIn.*/OnlyShowIn=Unity;GNOME;Pantheon;/' ~/.config/autostart/indicator-application.desktop
-#Logout/Login
+#https://www.linuxslaves.com/2018/10/install-wingpanel-system-monitor-indicator-elementary-os-juno.html
+#https://github.com/PlugaruT/wingpanel-indicator-sys-monitor
+sudo apt-get install git libglib2.0-dev libgtop2-dev libgranite-dev libgtk-3-dev libwingpanel-2.0-dev meson valac
+git clone https://github.com/PlugaruT/wingpanel-indicator-sys-monitor.git && cd wingpanel-indicator-sys-monitor
+meson build --prefix=/usr && cd build/ && ninja
+sudo ninja install
 ```
 
 ## 桌面图标
@@ -375,6 +297,20 @@ sed -i 's/^OnlyShowIn.*/OnlyShowIn=Unity;GNOME;Pantheon;/' ~/.config/autostart/i
 #download file from https://github.com/spheras/desktopfolder/releases
 sudo apt install ./com.github.spheras.desktopfolder_[version]_amd64.deb
 # logout and login
+```
+
+## 修改开机启动画面
+
+可选。如果不想修改开机启动画面的话，可以不用安装。
+
+```bash
+#https://tianyijian.github.io/2018/04/05/ubuntu-boot-animation/
+#https://www.gnome-look.org/browse/cat/109/ord/latest/
+#https://www.gnome-look.org/p/1237117/
+unzip Griffin-Grub-Remix.zip
+cd Griffin-Grub-Remix/
+sudo ./Install.sh
+#reboot
 ```
 
 在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可。
