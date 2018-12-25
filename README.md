@@ -64,23 +64,11 @@ npm install
 # 安装依赖项
 npm install
 #npm rebuild node-sass --force
-npm uninstall node-sass
-npm install node-sass
+#npm uninstall node-sass
+#npm install node-sass
 # ENOSPC错误解决
 #http://hexo.io/docs/troubleshooting.html
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-```
-
-#### Sitemap
-
-在config最后新增
-
-```xml
-sitemap:
-  path: sitemap.xml
-  
-baidusitemap:
-  path: baidusitemap.xml
 ```
 
 提交sitemap前注意：部分页面不想被收录的需要在front-matter前加sitemap: false与baidusitemap: false，比如404页面，比如站点确认文件等等。
@@ -89,21 +77,5 @@ baidusitemap:
 运行：
 ```bash
 hexo s
-```
-
-## 安装remarkable
-linux 下有很多好用的 markdown 博客撰写工具，诸如Atom、Haroopad、Mark My Words、remarkable 等等。
-其中 remarkable 最为流行。 remarkable 是linux下一款免费的 markdown 编辑器。
-
-```bash
-# 安装一些依赖
-sudo apt-get install   python3-markdown   python3-bs4  wkhtmltopdf
-
-# 安装
-wget http://remarkableapp.github.io/files/remarkable_1.87_all.deb
-sudo apt-get install -f
-
-# 运行
-remarkable
 ```
 

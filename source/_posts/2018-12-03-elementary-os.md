@@ -21,8 +21,8 @@ sudo apt-get update
 sudo apt-get install vim
 sudo apt install software-properties-common
 sudo apt-get install unrar
-sudo apt install google-chrome-stable
-sudo apt install electron-ssr
+#sudo apt install google-chrome-stable
+#sudo apt install electron-ssr
 sudo apt install aria2
 ```
 
@@ -142,7 +142,7 @@ function proxy_off(){
 }
 function proxy_on() {
     export no_proxy="127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
-    export http_proxy="socks5://127.0.0.1:1081"
+    export http_proxy="http://127.0.0.1:1080"
     export https_proxy=$http_proxy
     echo -e "已开启代理"
 }
@@ -272,14 +272,6 @@ sudo apt-get install alacarte
 #打开主菜单就可以进行添加与修改了
 ```
 
-## wingpanel-indicator-ayatana
-修改wingpanel的颜色：
-```bash
-#http://ubuntuhandbook.org/index.php/2013/10/customize-elementaryos-panel/
-code /usr/share/themes/elementary/gtk-3.0/apps.css
-#修改.panel.color-light.translucent中的background-color为#1d58a5
-```
-
 ## wingpanel-indicator-sys-monitor
 
 ```bash
@@ -295,7 +287,7 @@ sudo ninja install
 ```bash
 #https://github.com/spheras/desktopfolder
 #download file from https://github.com/spheras/desktopfolder/releases
-sudo apt install ./com.github.spheras.desktopfolder_[version]_amd64.deb
+sudo dpkg -i com.github.spheras.desktopfolder_1.0.10_amd64.deb
 # logout and login
 ```
 
@@ -476,12 +468,12 @@ kdtgaKEEik7aNiI3jXvp5r34wViVJCiX7m2y7pqBV9gZIvP9hP9KPnP++++
 
 ```bash
 wget http://dl2.xmind.cn/xmind-8-update8-linux.zip
-unzip xmind-8-update8-linux.zip -d /opt/xmind-8
+sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
 #run /opt/xmind-8/XMind_amd64/XMind
 #Put icon into applications, you should create a file:
-cd /opt/xmind-8/XMind_amd64/
-echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
-chmod +x xmind
+#cd /opt/xmind-8/XMind_amd64/
+#echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
+#chmod +x xmind
 #If you want to crack, please see: http://blog.slpro.cn/posts/eb75c5c4/
 ```
 
