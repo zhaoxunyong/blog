@@ -380,6 +380,7 @@ XML Tools
 Debugger for Chrome
 Java Extension Pack
 Local History
+Spring Boot Extension Pack
 Spring Boot Tools
 Spring Initializr Java Support
 Vetur
