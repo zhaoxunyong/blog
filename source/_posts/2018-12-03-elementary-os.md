@@ -81,6 +81,8 @@ icon_size 30
 
 ## gksu
 
+不用安装。
+
 ```bash
 wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gksu/gksu_2.0.2-9ubuntu1_amd64.deb
 wget http://mirrors.kernel.org/ubuntu/pool/universe/libg/libgksu/libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb
@@ -475,5 +477,14 @@ sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
 #echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
 #chmod +x xmind
 #If you want to crack, please see: http://blog.slpro.cn/posts/eb75c5c4/
+```
+
+## 网易云音乐
+
+```bash
+#https://www.zhihu.com/question/277330447
+#vim /usr/share/applications/netease-cloud-music.desktop
+#修改Exec为：
+Exec=sh -c "unset SESSION_MANAGER && netease-cloud-music %U"
 ```
 
