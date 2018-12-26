@@ -376,17 +376,18 @@ sudo apt-get install slingscold
 ## vscode
 安装以下插件：
 ```bash
-XML Tools
-Debugger for Chrome
 Java Extension Pack
-Local History
 Spring Boot Extension Pack
 Spring Boot Tools
 Spring Initializr Java Support
-Vetur
 Java Code Generators
-Vue VSCode Snippets
 Eclipse Keymap
+
+XML Tools
+Debugger for Chrome
+Local History
+Vetur
+Vue VSCode Snippets
 Color Picker
 Docker
 npm
