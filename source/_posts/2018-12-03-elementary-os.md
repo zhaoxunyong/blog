@@ -197,6 +197,7 @@ sudo apt-get install docky
 ### 皮肤
 
 参考[https://vinceliuice.github.io/](https://vinceliuice.github.io/)
+https://github.com/vinceliuice/Canta-theme
 
 推荐几个漂亮的皮肤：
 
