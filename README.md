@@ -30,10 +30,6 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org"
 npm install  hexo-cli -g
 npm install hexo-server -g
 npm install hexo-deployer-git -g
-# Google 
-npm install hexo-generator-sitemap
-# Baidu
-npm install hexo-generator-baidu-sitemap
 ```
 
 ### 安装git
@@ -53,9 +49,13 @@ git config --global credential.helper store
 ####  新项目时创建
 ```
 # 初始化
-hexo init 
 ```bash
+hexo init 
 npm install
+# Google 
+npm install hexo-generator-sitemap
+# Baidu
+npm install hexo-generator-baidu-sitemap
 ```
 
 #### 已有的项目
@@ -63,6 +63,10 @@ npm install
 ```bash
 # 安装依赖项
 npm install
+# Google 
+npm install hexo-generator-sitemap
+# Baidu
+npm install hexo-generator-baidu-sitemap
 #npm rebuild node-sass --force
 #npm uninstall node-sass
 #npm install node-sass
