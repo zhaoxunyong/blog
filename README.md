@@ -30,7 +30,6 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org"
 npm install  hexo-cli -g
 npm install hexo-server -g
 npm install hexo-deployer-git -g
-npm shrinkwrap
 ```
 
 ### 安装git
@@ -57,7 +56,6 @@ npm install
 npm install hexo-generator-sitemap
 # Baidu
 npm install hexo-generator-baidu-sitemap
-npm shrinkwrap
 ```
 
 #### 已有的项目
@@ -72,7 +70,6 @@ npm install hexo-generator-baidu-sitemap
 #npm rebuild node-sass --force
 #npm uninstall node-sass
 #npm install node-sass
-npm shrinkwrap
 # ENOSPC错误解决
 #http://hexo.io/docs/troubleshooting.html
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
