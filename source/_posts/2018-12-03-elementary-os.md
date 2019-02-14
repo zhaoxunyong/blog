@@ -383,7 +383,8 @@ Spring Boot Tools
 Spring Initializr Java Support
 Java Code Generators
 Eclipse Keymap
-
+AutoFileName
+koroFileHeader
 XML Tools
 Debugger for Chrome
 Local History
