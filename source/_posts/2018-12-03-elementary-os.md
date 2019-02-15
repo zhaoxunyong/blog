@@ -393,6 +393,11 @@ Vue VSCode Snippets
 Color Picker
 Docker
 npm
+
+#android/ios plugin
+Android iOS Emulator
+React Native Tools
+#see debug:https://github.com/Microsoft/vscode-react-native/blob/master/doc/debugging.md#debugging-on-ios-device
 ```
 
 ## WPS字体
