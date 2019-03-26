@@ -81,6 +81,21 @@ slot_size 25
 icon_size 40
 ```
 
+## gksu
+
+不用安装。
+
+```bash
+wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gksu/gksu_2.0.2-9ubuntu1_amd64.deb
+wget http://mirrors.kernel.org/ubuntu/pool/universe/libg/libgksu/libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb
+sudo dpkg -i libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb 
+sudo dpkg -i gksu_2.0.2-9ubuntu1_amd64.deb
+#在需要通过root运行的命令前加gksu或者gksudo
+#sudo vim  '/usr/share/applications/netease-cloud-music.desktop'
+#gksu netease-cloud-music
+#https://www.linuxuprising.com/2018/04/gksu-removed-from-ubuntu-heres.html
+```
+
 ## electron-ssr
 
 不需要翻墙的不需要安装。另外翻墙需要有相应的账户才行。
@@ -90,22 +105,50 @@ icon_size 40
 
 如果是chrome浏览器，参考其他教程：安装个SwitchyOmega插件就行。具体可参考[SwitchyOmega.zip](/files/SwitchyOmega.zip)
 
+安装privoxy：
+electron-ssr的http暂时不能用，可能使用privoxy将socks转为http。
+```bash
+sudo apt-get install privoxy
+```
+
+配置：
+vim /etc/privoxy/config
+```bash
+listen-address  0.0.0.0:1082
+# shadowsocks 的本地端口
+forward-socks5t / 127.0.0.1:1081 .
+```
+
+启动：
+```bash
+sudo systemctl enable privoxy
+sudo systemctl restart privoxy
+```
+
 配置环境变量：
 vim ~/.bashrc
 ```conf
 alias ll='ls -l'
 export LANG=zh_CN.UTF-8
+#alias proxy_on="export ALL_PROXY=socks5://127.0.0.1:1081"
+#alias proxy_off="unset ALL_PROXY"
+#alias ip="curl -i http://ip.cn"
+#alias no_proxy="export NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
+alias cnpm="npm --registry=https://registry.npm.taobao.org \
+--cache=$HOME/.npm/.cache/cnpm \
+--disturl=https://npm.taobao.org/dist \
+--userconfig=$HOME/.cnpmrc"
 
 function proxy_off(){
     unset http_proxy
     unset https_proxy
-    echo -e "The proxy has been closed!"
+    echo -e "已关闭代理"
 }
 function proxy_on() {
     export no_proxy="127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
     export http_proxy="http://127.0.0.1:1080"
     export https_proxy=$http_proxy
-    echo -e "The proxy has been opened!"
+    echo -e "已开启代理"
 }
 ```
 
@@ -127,9 +170,6 @@ git config --global credential.helper store
 ```
 
 ## 安装输入法
-
-以下是五笔的输入法，如果是拼音的话可以直接搜索搜狗拼音并下载安装即可。
-
 ```bash
 #sudo apt-get update
 #sudo apt-get install im-config fcitx fcitx-config-gtk fcitx-table-wbpy
