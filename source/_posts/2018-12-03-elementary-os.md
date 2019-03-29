@@ -316,6 +316,42 @@ reply_page_bAutoChangeState=0
 reply_page_nTimeCount=30
 ```
 
+英文操作系统不能输入中文解决, 参考[https://blog.csdn.net/deccmtd/article/details/5529736](https://blog.csdn.net/deccmtd/article/details/5529736)
+
+把下面的代码保存为winefont.reg 
+REGEDIT4 
+[HKEY_LOCAL_MACHINE/Software/Microsoft/Windows NT/CurrentVersion/FontSubstitutes] 
+"Arial"="simsun" 
+"Arial CE,238"="simsun" 
+"Arial CYR,204"="simsun" 
+"Arial Greek,161"="simsun" 
+"Arial TUR,162"="simsun" 
+"Courier New"="simsun" 
+"Courier New CE,238"="simsun" 
+"Courier New CYR,204"="simsun" 
+"Courier New Greek,161"="simsun" 
+"Courier New TUR,162"="simsun" 
+"FixedSys"="simsun" 
+"Helv"="simsun" 
+"Helvetica"="simsun" 
+"MS Sans Serif"="simsun" 
+"MS Shell Dlg"="simsun" 
+"MS Shell Dlg 2"="simsun" 
+"System"="simsun" 
+"Tahoma"="simsun" 
+"Times"="simsun" 
+"Times New Roman CE,238"="simsun" 
+"Times New Roman CYR,204"="simsun" 
+"Times New Roman Greek,161"="simsun" 
+"Times New Roman TUR,162"="simsun" 
+"Tms Rmn"="simsun" 
+
+```bash
+WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine regedit winefont.reg
+```
+
+从Windows目录下的Fonts里的simsun.ttc复制到/home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts里面, 重启即可。
+
 如果启动不了，直接删除Accounts目录即可。如果组织架构出不来，可以把好的机器中的Accounts目录下除User.cfg外所有的文件copy覆盖掉。
 
 ## QQ

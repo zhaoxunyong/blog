@@ -86,7 +86,7 @@ deploy:
   # git 仓库的地址。
   repo: 
     github: https://github.com/zhaoxunyong/zhaoxunyong.github.io.git
-    coding: https://git.coding.net/zhaoxunyong/blog.git
+    # coding: https://git.coding.net/zhaoxunyong/blog.git
   # 分支名称。
   branch: master
 
