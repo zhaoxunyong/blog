@@ -14,32 +14,23 @@ Elementary OS作为Ubuntu的扩展分支，号称是最美的Linux发行版。�
 
 从官网[https://elementary.io/zh_CN/](https://elementary.io/zh_CN/)中下载iso文件，下载时输入金额为0即可。用Universal-USB-Installer.exe刻录成U盘进行安装。
 
-## 安装基础包
-
-```bash
-sudo apt-get update
-sudo apt-get install vim
-sudo apt install software-properties-common
-sudo apt-get install unrar
-#sudo apt install google-chrome-stable
-#sudo apt install electron-ssr
-sudo apt install aria2
-```
-
-## 修改操作系统配置
-```bash
-cat /proc/sys/fs/inotify/max_user_watches
-#sudo vim /etc/sysctl.conf
-fs.inotify.max_user_watches=524288
-sudo sysctl -p
-```
-
 ## docker缩放
 ```bash
+sudo apt install software-properties-common
 sudo add-apt-repository ppa:ricotz/docky
 sudo apt update
 sudo apt upgrade
 killall plank
+```
+
+## 安装基础包
+
+```bash
+sudo apt-get install vim
+sudo apt-get install unrar
+#sudo apt install google-chrome-stable
+#sudo apt install electron-ssr
+sudo apt install aria2
 ```
 
 ## 安装Tweaks
@@ -52,7 +43,15 @@ sudo apt-get install dconf-tools
 #sudo apt install nautilus
 ```
 
-先更新应用中心，再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
+## 修改操作系统配置
+```bash
+cat /proc/sys/fs/inotify/max_user_watches
+#sudo vim /etc/sysctl.conf
+fs.inotify.max_user_watches=524288
+sudo sysctl -p
+```
+
+重启系统，然后再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
 
 ## 系统托盘
 
@@ -74,11 +73,17 @@ vim ~/.stalonetrayrc
 geometry  1x1+1890-0
 background "#110e0e"
 transparent true
-window_layer top
+window_layer bottom
 grow_gravity SE
 icon_gravity SE 
 slot_size 25
 icon_size 40
+```
+
+删除多余的网络图标：
+
+```bash
+sudo mv /etc/xdg/autostart/nm-applet.desktop ~/
 ```
 
 ## electron-ssr
@@ -103,7 +108,7 @@ function proxy_off(){
 }
 function proxy_on() {
     export no_proxy="127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
-    export http_proxy="http://127.0.0.1:1080"
+    export http_proxy="http://127.0.0.1:1082"
     export https_proxy=$http_proxy
     echo -e "The proxy has been opened!"
 }
@@ -147,6 +152,9 @@ sudo /opt/yong/yong-tool.sh --install
 ## theme
 
 ### docky
+
+不用安装。
+
 ```bash
 #可以用docky替换掉plank
 sudo apt-get install docky
@@ -201,11 +209,9 @@ cd Sierra-gtk-theme
 ./install.sh
 ```
 
-#### iOS-iCons
+#### Macos-sierra-CT
 
 ```bash
-#https://github.com/USBA/iOS-iCons
-git clone https://github.com/USBA/iOS-iCons.git ~/.local/share/icons/iOS-iCons
 git clone https://github.com/zayronxio/Macos-sierra-CT.git ~/.local/share/icons/Macos-sierra-CT
 ```
 
@@ -391,6 +397,8 @@ Vue VSCode Snippets
 Color Picker
 Docker
 npm
+zerofinance-git
+ES7 React/Redux/GraphQL/React-Native snippets
 
 #android/ios plugin
 Android iOS Emulator
