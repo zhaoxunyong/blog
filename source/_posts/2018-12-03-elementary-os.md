@@ -86,6 +86,14 @@ icon_size 40
 sudo mv /etc/xdg/autostart/nm-applet.desktop ~/
 ```
 
+~~cat /Developer/stalonetray.sh~~
+
+~~#/bin/sh~~
+
+~~sleep 1~~
+
+~~/usr/bin/stalonetray~~
+
 ## electron-ssr
 
 不需要翻墙的不需要安装。另外翻墙需要有相应的账户才行。
@@ -430,6 +438,32 @@ sudo chmod +x /etc/vpn/vpnc-script
 sudo openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x
 ```
 
+也可以通过自动输入密码：
+
+安装spawn：
+
+```bash
+#安装spawn
+sudo apt install spawn
+```
+
+以下为对应的脚本：
+
+```bash
+#!/usr/bin/expect
+
+set timeout -1
+#set PWD vagrant
+#spawn passwd
+spawn openconnect -u 对应的用户 --script=/etc/vpn/vpnc-script --no-dtls ip
+expect "确定"
+send "确定\r"
+expect "Password:"
+send "对应的密码\r"
+interact
+#expect eof
+```
+
 ## java
 
 sudo vim /etc/profile.d/java.sh
@@ -458,6 +492,7 @@ wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12
 ### Linux
 
 ```bash
+#https://www.kyoceradocumentsolutions.co.za/index/service___support/download_center.false.driver.FS6525MFP._.EN.html#
 cd "LinuxPackages/FS-6525MFP series/64bit/Global/English"
 sudo ./install.sh
 sudo apt install system-config-printer
