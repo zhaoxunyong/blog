@@ -305,7 +305,7 @@ io.elementary.terminal -> ctrl+alt+T
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
 sudo dpkg -i deepin.com.wechat_2.6.2.31deepin0_i386.deb
-#配置，修改显示为160
+#配置，修改显示为160dpi
 WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 ```
 
@@ -314,7 +314,7 @@ WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.rtx2015/deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
 sudo dpkg -i deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
 #如果安装报错，先执行一下sudo apt-get install -f，再重新安装即可。
-#配置
+#配置，修改显示为120dpi
 WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine winecfg
 #修改idle时间，只能直接修改文件内容，不然会启动不了
 #vim "/home/dave/文档/RTXC File List/c_Program Files_Tencent_RTXC/Accounts/dave.zhao/User.cfg"
@@ -357,6 +357,10 @@ WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine regedit winefont.reg
 ```
 
 从Windows目录下的Fonts里的simsun.ttc复制到/home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts里面, 重启即可。
+
+```bash
+wget https://github.com/sonatype/maven-guide-zh/raw/master/content-zh/src/main/resources/fonts/simsun.ttc -O /home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts/
+```
 
 如果启动不了，直接删除Accounts目录即可。如果组织架构出不来，可以把好的机器中的Accounts目录下除User.cfg外所有的文件copy覆盖掉。
 
@@ -454,13 +458,13 @@ wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12
 ### Linux
 
 ```bash
-cd /media/dave/DATA/os/LinuxPackages/FS-6525MFP series/64bit/Global/English
+cd "LinuxPackages/FS-6525MFP series/64bit/Global/English"
 sudo ./install.sh
 sudo apt install system-config-printer
 system-config-printer
 #输入URI
 socket://192.168.101.2:9100
-#选择Kyocera FS-6525MFP驱动即可。
+#选择Provide PPD file->Kyocera FS-6525MFP驱动即可。
 ```
 
 ### MAC
