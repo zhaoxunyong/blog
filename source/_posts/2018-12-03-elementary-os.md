@@ -589,3 +589,14 @@ sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
 Exec=sh -c "unset SESSION_MANAGER && netease-cloud-music %U"
 ```
 
+## virtualbox
+
+下载virtualbox与Extension_Pack，直接安装即可。不过安装后虚拟机不能找到usb，是因为没有权限，通过以下命令解决：
+
+```bash
+#https://blog.csdn.net/huohongpeng/article/details/60965563
+cat /etc/group | grep vbox
+sudo usermod -a -G vboxusers dave
+```
+
+重启系统，再次打开虚拟机，USB设备都已经被识别了。
