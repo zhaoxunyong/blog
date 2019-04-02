@@ -16,9 +16,9 @@ Elementary OS作为Ubuntu的扩展分支，号称是最美的Linux发行版。�
 
 ## docker缩放
 ```bash
+sudo apt update
 sudo apt install software-properties-common
 sudo add-apt-repository ppa:ricotz/docky
-sudo apt update
 sudo apt upgrade
 killall plank
 ```
@@ -48,6 +48,7 @@ sudo apt-get install dconf-tools
 cat /proc/sys/fs/inotify/max_user_watches
 #sudo vim /etc/sysctl.conf
 fs.inotify.max_user_watches=524288
+vm.overcommit_memory=1
 sudo sysctl -p
 ```
 
@@ -139,6 +140,14 @@ git config --global core.whitespace cr-at-eol
 git config --global credential.helper store
 ```
 
+gui:
+
+```bash
+#https://www.gitkraken.com/
+wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
+sudo dpkg -i gitkraken-amd64.deb
+```
+
 ## 安装输入法
 
 以下是五笔的输入法，如果是拼音的话可以直接搜索搜狗拼音并下载安装即可。
@@ -149,11 +158,13 @@ git config --global credential.helper store
 #重启系统后
 #fcitx-config-gtk3
 #https://www.beizigen.com/1934.html
-wget http://ys-o.ys168.com/244626558/o4I4J7G3N5JMVjsSLVU/yong-lin-2.4.0-0.7z
+#http://yongim.ys168.com/
+wget http://ys-c.ys168.com/244626543/TJRtkVk4K465F3K6KM6/yong-lin-2.5.0-0.7z
+cp -a yong /opt/
 sudo /opt/yong/yong-tool.sh --install
 /opt/yong/yong-tool.sh --select
 #重启系统后
-#如果希望五笔拼音一起打的话，修改五笔的配置为：mb/pinyin.ini
+#如果希望五笔拼音一起打的话，修改五笔的配置为：mb/wbpy.ini
 #快捷键：CTRL_LSHIFT LSHIFT CTRL_SPACE
 ```
 
@@ -376,7 +387,7 @@ wget https://github.com/sonatype/maven-guide-zh/raw/master/content-zh/src/main/r
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.im/deepin.com.qq.im_8.9.19983deepin23_i386.deb
 sudo dpkg -i deepin.com.qq.im_8.9.19983deepin23_i386.deb
-#配置
+#配置，修改显示为120dpi
 WINEPREFIX=~/.deepinwine/Deepin-QQ deepin-wine winecfg
 ```
 
@@ -395,8 +406,6 @@ sudo apt-get install slingscold
 ```bash
 Java Extension Pack
 Spring Boot Extension Pack
-Spring Boot Tools
-Spring Initializr Java Support
 Java Code Generators
 Eclipse Keymap
 AutoFileName
@@ -444,7 +453,7 @@ sudo openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x
 
 ```bash
 #安装spawn
-sudo apt install spawn
+sudo apt install expect
 ```
 
 以下为对应的脚本：
@@ -468,6 +477,12 @@ interact
 
 sudo vim /etc/profile.d/java.sh
 ```bash
+export ANDROID_HOME=/Developer/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
+
 export JAVA_HOME=/Developer/java/jdk1.8.0_152
 export M2_HOME=/Developer/apache-maven-3.3.9
 export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
@@ -475,6 +490,29 @@ export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 使配置生效：
 ```bash
 source /etc/profile
+```
+
+## nodejs
+
+```bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+. ~/.bashrc
+#显示有远端的版本
+nvm ls-remote
+#安装对应的版本
+nvm install v10.15.3
+```
+
+安装常用工具：
+
+```bash
+npm install  hexo-cli -g
+npm install hexo-server -g
+npm install hexo-deployer-git -g
+npm install yarn -g
+npm install http-server -g
+yarn global add serve
+
 ```
 
 ## 其它一些常用工具

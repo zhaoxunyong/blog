@@ -12,7 +12,7 @@ export NVM_DIR="$HOME/.nvm"
 
 ### 安装
 ```bash
-nvm install v8.9.4
+nvm install v10.15.3
 ```
 
 ### 配置
