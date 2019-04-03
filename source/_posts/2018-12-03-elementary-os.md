@@ -612,7 +612,7 @@ sudo usermod -a -G vboxusers dave
 ```bash
 #https://blog.csdn.net/sinat_27554409/article/details/78227496
 #备份
-tar -cvpzf /Developer/elementary.backup.tgz --exclude=/proc --exclude=/lost+found --exclude=/mnt --exclude=/sys --exclude=/media --exclude=/tmp --exclude=/Developer /
+sudo tar -cvpzf /Developer/elementary.backup.tgz --exclude=/proc --exclude=/lost+found --exclude=/mnt --exclude=/sys --exclude=/media --exclude=/tmp --exclude=/Developer /
 ```
 
 ### 还原
