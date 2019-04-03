@@ -521,6 +521,7 @@ yarn global add serve
 sudo apt-get install keepassx
 sudo apt-get install vlc
 sudo apt install synapse
+#synapse也可以用albert代替：https://github.com/albertlauncher/albert
 #yahei
 wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12/master/install.sh | sudo sh
 #将alt键打造成command键
