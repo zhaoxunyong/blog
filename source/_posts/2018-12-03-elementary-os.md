@@ -520,9 +520,12 @@ yarn global add serve
 #https://www.jianshu.com/p/1e104090ffaa
 sudo apt-get install keepassx
 sudo apt-get install vlc
+sudo apt install synapse
 #yahei
 wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12/master/install.sh | sudo sh
-
+#将alt键打造成command键
+sudo vi /usr/share/X11/xkb/keycodes/evdev
+#找到LCTL和LALT, 将系统默认的LCTL=37, LALT=64的值互相交换即可。
 ```
 
 ## 添加打印机
@@ -600,3 +603,38 @@ sudo usermod -a -G vboxusers dave
 ```
 
 重启系统，再次打开虚拟机，USB设备都已经被识别了。
+
+## 系统备份与还原
+
+### 备份
+
+```bash
+#https://blog.csdn.net/sinat_27554409/article/details/78227496
+#备份
+tar -cvpzf /Developer/elementary.backup.tgz --exclude=/proc --exclude=/lost+found --exclude=/mnt --exclude=/sys --exclude=/media --exclude=/tmp --exclude=/Developer /
+```
+
+### 还原
+
+如果原来的Ubuntu系统已经崩溃，无法进入。则可以使用Ubuntu安装U盘（live USB）进入试用Ubuntu界面。
+
+切换到root用户，找到之前Ubuntu系统的根目录所在磁盘分区（一般电脑上的磁盘分区（假设分区名称为sdaX）均可以在当前Ubuntu系统的根目录下的media目录下（即/media）找到。目录通常为当前根目录下 cd /media/磁盘名称/分区名称）。进入该分区，输入以下指令来删除该根目录下的所有文件：
+
+```bash
+sudo rm -rf /media/磁盘名称/分区名称*
+```
+
+将备份文件”elementary.backup.tgz”拷入该分区：
+```bash
+sudo cp -i elementary.backup.tgz /media/磁盘名/分区名sdaX
+```
+
+进入分区并将压缩文件解压缩，参数x是告诉tar程序解压缩备份文件：
+```bash
+sudo tar xvpfz elementary.backup.tgz
+```
+
+重新创建那些在备份时被排除在外的目录：
+```bash
+sudo mkdir proc lost+found mnt sys media tmp Developer
+```
