@@ -259,6 +259,8 @@ San Francisco Text Medium
 ```bash
 #https://elementaryos.stackexchange.com/questions/2883/how-can-i-change-the-icon-of-an-application-in-the-elementary-os
 sudo apt-get install alacarte
+#Icon=/home/dave/.local/share/icons/hicolor/512x512/apps/appimagekit-balena-etcher-electron.png
+#rm ~/.config/menus/gnome-applications.menu
 #打开主菜单就可以进行添加与修改了
 ```
 
@@ -404,23 +406,28 @@ sudo apt-get install slingscold
 ## vscode
 安装以下插件：
 ```bash
+#java
 Java Extension Pack
 Spring Boot Extension Pack
 Java Code Generators
 Eclipse Keymap
+Docker
+#vue
+Vetur
+Vue VSCode Snippets
+#react
+ES7 React/Redux/GraphQL/React-Native snippets
+#git
+GitLens
+zerofinance-git
+#其他公共插件
+Color Picker
+npm
+Debugger for Chrome
+Local History
 AutoFileName
 koroFileHeader
 XML Tools
-Debugger for Chrome
-Local History
-Vetur
-Vue VSCode Snippets
-Color Picker
-Docker
-npm
-zerofinance-git
-ES7 React/Redux/GraphQL/React-Native snippets
-
 #android/ios plugin
 Android iOS Emulator
 React Native Tools
@@ -612,7 +619,7 @@ sudo usermod -a -G vboxusers dave
 ```bash
 #https://blog.csdn.net/sinat_27554409/article/details/78227496
 #备份
-sudo tar -cvpzf /Developer/elementary.backup.tgz --exclude=/proc --exclude=/lost+found --exclude=/mnt --exclude=/sys --exclude=/media --exclude=/tmp --exclude=/Developer /
+sudo tar -cvpzf /media/dave/DATA/elementary.backup.tgz --ignore-failed-read --exclude=/proc --exclude=/lost+found --exclude=/mnt --exclude=/sys --exclude=/media --exclude=/tmp --exclude=/Developer / > /dev/null
 ```
 
 ### 还原
