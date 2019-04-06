@@ -646,3 +646,9 @@ sudo tar xvpfz elementary.backup.tgz
 ```bash
 sudo mkdir proc lost+found mnt sys media tmp Developer
 ```
+
+- https://blog.daliansky.net/Intel-FB-Patcher-tutorial-and-insertion-pose.html
+- https://www.bilibili.com/video/av46767597?from=search&seid=18234894269411097533
+- https://github.com/acidanthera/AppleALC
+
+inject id=3
