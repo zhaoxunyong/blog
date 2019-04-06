@@ -650,5 +650,8 @@ sudo mkdir proc lost+found mnt sys media tmp Developer
 - https://blog.daliansky.net/Intel-FB-Patcher-tutorial-and-insertion-pose.html
 - https://www.bilibili.com/video/av46767597?from=search&seid=18234894269411097533
 - https://github.com/acidanthera/AppleALC
+- https://bitbucket.org/RehabMan/os-x-acpi-battery-driver/downloads/
+- https://github.com/fishrong/ASUS-FL5500L-EFI/tree/master/EFI/CLOVER/kexts/Other/ApplePS2SmartTouchPad.kext
+- https://www.jianshu.com/p/955ce6706ae2
 
 inject id=3
