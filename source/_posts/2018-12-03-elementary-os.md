@@ -405,11 +405,6 @@ sudo apt-get install slingscold
 
 ## vscode
 
-```bash
-#for mac
-sudo ln -s '/Applications//Visual Studio Code.app/Contents/Resources/app/bin/code' /usr/bin/code
-```
-
 安装以下插件：
 ```bash
 #java
@@ -499,6 +494,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export JAVA_HOME=/Developer/java/jdk1.8.0_152
 #export JAVA_HOME=$(/usr/libexec/java_home)
 export M2_HOME=/Developer/apache-maven-3.3.9
+export GRADLE_USER_HOME=Developer/.gradle
 export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 ```
 使配置生效：
