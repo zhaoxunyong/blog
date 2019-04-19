@@ -404,6 +404,12 @@ sudo apt-get install slingscold
 从https://getmailspring.com/download下载对应的版本安装即可。
 
 ## vscode
+
+```bash
+#for mac
+sudo ln -s '/Applications//Visual Studio Code.app/Contents/Resources/app/bin/code' /usr/bin/code
+```
+
 安装以下插件：
 ```bash
 #java
@@ -491,6 +497,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/emulator
 
 export JAVA_HOME=/Developer/java/jdk1.8.0_152
+#export JAVA_HOME=$(/usr/libexec/java_home)
 export M2_HOME=/Developer/apache-maven-3.3.9
 export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 ```
