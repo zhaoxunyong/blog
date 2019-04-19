@@ -523,6 +523,11 @@ npm install yarn -g
 npm install http-server -g
 yarn global add serve
 
+npm config set registry https://registry.npm.taobao.org --global
+npm config set disturl https://npm.taobao.org/dist --global
+yarn config set registry https://registry.npm.taobao.org --global
+yarn config set disturl https://npm.taobao.org/dist --global
+
 ```
 
 ## 其它一些常用工具
