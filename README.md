@@ -81,6 +81,8 @@ yarn install
 # ENOSPC错误解决
 #http://hexo.io/docs/troubleshooting.html
 #echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+#RPC failed; curl 55 SSL_write() returned SYSCALL, errno = 32
+git config http.postBuffer 524288000
 ```
 
 #提交sitemap前注意：部分页面不想被收录的需要在front-matter前加sitemap: false与baidusitemap: false，比如404页面，比如站点确认文件等等。
