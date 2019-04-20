@@ -559,16 +559,6 @@ socket://192.168.101.2:9100
 #选择Provide PPD file->Kyocera FS-6525MFP驱动即可。
 ```
 
-### MAC
-
-```bash
-#https://warwick.ac.uk/fac/soc/wbs/central/issu/help/kb/hardware/printers/kyoceramac-win/
-wget https://warwick.ac.uk/fac/soc/wbs/central/issu/help/kb/hardware/printers/kyoceramac-win/macphase4.0_2018.01.19-eu.zip
-#install Kyocera OS X 10.8+ Web build 2018.01.05.dmg
-#参考上面的网址配置即可。如果是windows smb的话，地址为：smb://192.168.100.105/Kyocera02
-#驱动选择Kyocera FS-6525MFP
-```
-
 ## Beyond Compare
 
 ```bash
