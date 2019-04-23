@@ -407,28 +407,33 @@ sudo apt-get install slingscold
 
 安装以下插件：
 ```bash
-#java
-Java Extension Pack
-Spring Boot Extension Pack
-Java Code Generators
+#javascript
+eslint
+Color Picker
+npm
+Debugger for Chrome
 Eclipse Keymap
-Docker
-#vue
-Vetur
-Vue VSCode Snippets
 #react
 ES7 React/Redux/GraphQL/React-Native snippets
 #git
 GitLens
 zerofinance-git
 #其他公共插件
-Color Picker
-npm
-Debugger for Chrome
 Local History
+XML Tools
+
+#以下前端不作安装
+#vue
+Vetur
+Vue VSCode Snippets
+#java
+Java Extension Pack
+Spring Boot Extension Pack
+Java Code Generators
+Docker
+#其他公共插件
 AutoFileName
 koroFileHeader
-XML Tools
 #android/ios plugin
 Android iOS Emulator
 React Native Tools
