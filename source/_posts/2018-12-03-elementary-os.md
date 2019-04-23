@@ -421,6 +421,7 @@ zerofinance-git
 #其他公共插件
 Local History
 XML Tools
+Prettier
 
 #以下前端不作安装
 #vue
