@@ -1,3 +1,10 @@
+<!--
+ * @Author: dave.zhao@zerofinance.cn
+ * @LastEditors: dave.zhao@zerofinance.cn
+ * @Description: 
+ * @Date: 2019-04-23 09:53:41
+ * @LastEditTime: 2019-04-23 17:32:56
+ -->
 ---
 title: elementary os
 date: 2018-12-03 10:06:39
@@ -425,6 +432,10 @@ zerofinance-git
 Local History
 XML Tools
 Prettier
+#https://zhuanlan.zhihu.com/p/54031899
+koroFileHeader
+AutoFileName
+Import Cost
 
 #以下前端不作安装
 #java
@@ -432,13 +443,76 @@ Java Extension Pack
 Spring Boot Extension Pack
 Java Code Generators
 Docker
-#其他公共插件
-AutoFileName
-koroFileHeader
+
+
 #android/ios plugin
 Android iOS Emulator
 React Native Tools
 #see debug:https://github.com/Microsoft/vscode-react-native/blob/master/doc/debugging.md#debugging-on-ios-device
+```
+
+koroFileHeader添加注释，在settings.json中添加：
+
+```json
+  "editor.fontSize": 14,
+  // https://code.visualstudio.com/docs/editor/emmet
+  // https://www.cnblogs.com/summit7ca/p/6944215.html
+  "emmet.triggerExpansionOnTab": true,
+  "emmet.includeLanguages": {
+      "javascript": "javascriptreact",
+      "vue-html": "html",
+      "razor": "html",
+      "plaintext": "jade"
+  },
+  // 注释
+  "fileheader.configObj": {
+    // 将该选项设置为true即可开启
+    "autoAdd": true
+  },
+  // 头部注释
+  "fileheader.customMade": {
+      "Author": "dave.zhao@zerofinance.cn",
+      "Date": "Do not edit",
+      "LastEditors": "dave.zhao@zerofinance.cn",
+      "LastEditTime": "Do not edit",
+      "Description": ""
+  },
+  // 函数注释
+  "fileheader.cursorMode": {
+      "Date": "Do not edit",
+      "description": "",
+      "param": ""
+  }
+```
+
+注意：Author和LastEditors填写自己的名字
+
+文件头注释快捷键：window：ctrl+alt+i,mac：ctrl+cmd+i
+
+函数注释快捷键：window：ctrl+alt+t,mac：ctrl+cmd+t
+
+其他settings.json配置：
+
+```json
+{
+    "eslint.validate": ["javascript", "javascriptreact"],
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    // 代码缩进修改成4个空格
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+    // 每次保存的时候将代码按eslint格式进行修复
+    "eslint.autoFixOnSave": true,
+    // 让prettier使用eslint的代码格式进行校验
+    "prettier.eslintIntegration": true,
+    // 去掉代码结尾的分号
+    "prettier.semi": false,
+    // 使用带引号替代双引号
+    "prettier.singleQuote": true,
+    "prettier.tabWidth": 4,
+    // 让函数(名)和后面的括号之间加个空格
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": true
+}
 ```
 
 ## WPS字体
