@@ -1,10 +1,3 @@
-<!--
- * @Author: dave.zhao@zerofinance.cn
- * @LastEditors: dave.zhao@zerofinance.cn
- * @Description: 
- * @Date: 2019-04-23 09:53:41
- * @LastEditTime: 2019-04-23 17:32:56
- -->
 ---
 title: elementary os
 date: 2018-12-03 10:06:39
@@ -467,13 +460,13 @@ koroFileHeader添加注释，在settings.json中添加：
   // 注释
   "fileheader.configObj": {
     // 将该选项设置为true即可开启
-    "autoAdd": true
+    "autoAdd": false
   },
   // 头部注释
   "fileheader.customMade": {
-      "Author": "dave.zhao@zerofinance.cn",
+      "Author": "dave.zhao",
       "Date": "Do not edit",
-      "LastEditors": "dave.zhao@zerofinance.cn",
+      "LastEditors": "dave.zhao",
       "LastEditTime": "Do not edit",
       "Description": ""
   },
