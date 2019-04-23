@@ -415,6 +415,9 @@ Debugger for Chrome
 Eclipse Keymap
 #react
 ES7 React/Redux/GraphQL/React-Native snippets
+#vue
+Vetur
+Vue VSCode Snippets
 #git
 GitLens
 zerofinance-git
@@ -424,9 +427,6 @@ XML Tools
 Prettier
 
 #以下前端不作安装
-#vue
-Vetur
-Vue VSCode Snippets
 #java
 Java Extension Pack
 Spring Boot Extension Pack
