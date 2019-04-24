@@ -403,7 +403,7 @@ sudo apt-get install slingscold
 ## Mailspring
 从https://getmailspring.com/download下载对应的版本安装即可。
 
-## vscode
+## VSCODE
 
 安装以下插件：
 ```bash
