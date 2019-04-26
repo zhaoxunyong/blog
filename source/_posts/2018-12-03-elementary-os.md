@@ -446,10 +446,13 @@ React Native Tools
 
 koroFileHeader添加注释，在settings.json中添加：
 
+参考：
+- https://code.visualstudio.com/docs/editor/emmet
+- https://www.cnblogs.com/summit7ca/p/6944215.html
+
 ```json
   "editor.fontSize": 14,
-  // https://code.visualstudio.com/docs/editor/emmet
-  // https://www.cnblogs.com/summit7ca/p/6944215.html
+  "terminal.integrated.fontSize": 14,
   "emmet.triggerExpansionOnTab": true,
   "emmet.includeLanguages": {
       "javascript": "javascriptreact",
