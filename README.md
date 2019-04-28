@@ -15,12 +15,6 @@ export NVM_DIR="$HOME/.nvm"
 nvm install v10.15.3
 ```
 
-### 配置
-编辑： ~/.bashrc，加入：
-```bash
-alias cnpm="npm --registry=https://registry.npm.taobao.org"
-```
-
 ## 安装hexo
 
 ### 安装
@@ -50,6 +44,7 @@ git config --global core.safecrlf warn
 git config --global core.filemode false
 git config --global core.whitespace cr-at-eol
 git config --global credential.helper store
+git config http.postBuffer 524288000
 ```
 
 ### blog配置
@@ -82,7 +77,6 @@ yarn install
 #http://hexo.io/docs/troubleshooting.html
 #echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 #RPC failed; curl 55 SSL_write() returned SYSCALL, errno = 32
-git config http.postBuffer 524288000
 ```
 
 #提交sitemap前注意：部分页面不想被收录的需要在front-matter前加sitemap: false与baidusitemap: false，比如404页面，比如站点确认文件等等。
