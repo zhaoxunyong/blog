@@ -474,34 +474,6 @@ source /etc/profile
 
 将[settings.xml](/files/settings.xml)放到~/.m2/目录下。注意修改localRepository与password为自己的配置。
 
-## nodejs
-
-```bash
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-. ~/.bashrc
-#显示有远端的版本
-nvm ls-remote
-#安装对应的版本
-nvm install v10.15.3
-```
-
-安装常用工具：
-
-```bash
-npm install  hexo-cli -g
-npm install hexo-server -g
-npm install hexo-deployer-git -g
-npm install yarn -g
-npm install http-server -g
-yarn global add serve
-
-npm config set registry https://registry.npm.taobao.org --global
-npm config set disturl https://npm.taobao.org/dist --global
-yarn config set registry https://registry.npm.taobao.org --global
-yarn config set disturl https://npm.taobao.org/dist --global
-
-```
-
 ## 其它一些常用工具
 ```bash
 #https://www.jianshu.com/p/1e104090ffaa
