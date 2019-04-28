@@ -452,6 +452,7 @@ interact
 ## java
 
 sudo vim /etc/profile.d/java.sh
+
 ```bash
 export ANDROID_HOME=/Developer/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools
@@ -462,13 +463,16 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export JAVA_HOME=/Developer/java/jdk1.8.0_152
 #export JAVA_HOME=$(/usr/libexec/java_home)
 export M2_HOME=/Developer/apache-maven-3.3.9
-export GRADLE_USER_HOME=Developer/.gradle
+export GRADLE_USER_HOME=/Developer/.gradle
 export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 ```
+
 使配置生效：
 ```bash
 source /etc/profile
 ```
+
+将[settings.xml](/files/settings.xml)放到~/.m2/目录下。注意修改localRepository与password为自己的配置。
 
 ## nodejs
 
