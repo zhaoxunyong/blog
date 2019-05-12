@@ -401,7 +401,7 @@ sudo apt-get install slingscold
 ```
 
 ## Mailspring
-从https://getmailspring.com/download下载对应的版本安装即可。
+从[https://getmailspring.com/download](https://getmailspring.com/download)下载对应的版本安装即可。
 
 ## WPS字体
 ```bash
