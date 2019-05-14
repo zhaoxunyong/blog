@@ -315,6 +315,12 @@ acme.sh --ecc --install-cert -d www.a.com \
 --reloadcmd     "service nginx force-reload"
 ```
 
+使用acme.sh会到期前自动更新，查看crontab -l看看是否有加入，没有的话使用crontab -e添加一下：
+
+```bash
+52 0 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
+```
+
 ### sprov-ui
 
 一个web ui的v2ray服务端，也很方便。
