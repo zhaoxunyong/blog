@@ -315,6 +315,19 @@ acme.sh --ecc --install-cert -d www.a.com \
 --reloadcmd     "service nginx force-reload"
 ```
 
+### sprov-ui
+
+一个web ui的v2ray服务端，也很方便。
+
+- https://github.com/sprov065/sprov-ui
+- https://blog.sprov.xyz/2019/02/09/sprov-ui/
+- https://blog.sprov.xyz/2019/05/06/crt-or-pem-to-jks/
+
+使用使用[KeyManager](https://keymanager.org/)，将www.a.com.key与fullchain.cer转换成jks。
+
+
+
+
 ### 安装v2ray-server
 
 建议使用multi-v2ray安装，不使用v2ray-server。
