@@ -246,7 +246,78 @@ https://github.com/shadowsocks/ShadowsocksX-NG/releases/download/v1.6.1/Shadowso
 > https://dcamero.azurewebsites.net/v2ray-windows-linux.html
 > https://www.rultr.com/tutorials/proxy/2268.html
 
+### multi-v2ray
+
+#### 安装
+
+```bash
+#https://github.com/Jrohy/multi-v2ray.git
+#new install
+source <(curl -sL https://git.io/fNgqx)
+#keep profile to update
+source <(curl -sL https://git.io/fNgqx) -k
+#uninstall
+source <(curl -sL https://git.io/fNgqx) --remove
+```
+
+#### TLS配置
+
+参考：
+
+- https://blog.atomur.com/2017-01-18/use-the-acme-sh-to-issue-the-letsencrypt-certificate-for-the-domain-name-without-80-port/
+- https://boxjan.com/2018/11/use_acme_sh_to_set_up_rsa_and_ecc.html
+- https://github.com/Neilpang/acme.sh/wiki
+
+如果开启tls证书的话，因为80端口不能使用，需要使用acme.sh的dns方式生成证书。修改/usr/lib/python3.6/site-packages/v2ray_util/util_core/utils.py文件：
+
+```bash
+#get_ssl_cmd = "bash /root/.acme.sh/acme.sh  --issue -d " + domain + "   --standalone  --keylength ec-256"
+get_ssl_cmd = "bash /root/.acme.sh/acme.sh  --issue --dns dns_dp -d " + domain + " --keylength ec-256"
+```
+
+首先登陆DNSPod，在“用户中心”——“安全设置”中为acme.sh添加独立的Token, 生成你的 api id 和 api key, 都是免费的. 然后先执行：
+
+```bash
+export DP_Id=""
+export DP_Key=""
+```
+
+然后执行v2ray->3.更改配置->6.更改TLS设置->1.开启 TLS，输入对应的域名即可自动完成。
+
+还可以添加ss服务：
+
+```bash
+v2ray add ss
+```
+
+也可以先手动生成证书，然后再手动指定证书路径。不过只需要用上面的方面就可以了，不需要使用以下的方式，以下只作记录：
+
+```bash
+export DP_Id=""
+export DP_Key=""
+#ras
+#acme.sh --issue --dns dns_dp -d www.a.com
+#acme.sh --renew -d www.a.com
+#ras
+#mkdir -p /etc/ssl/www.a.com
+#acme.sh --ecc --install-cert -d www.a.com \
+#--key-file       /etc/ssl/www.a.com/keyFile.key  \
+#--fullchain-file /etc/ssl/www.a.com/fullchain.cer \
+#--reloadcmd     "service nginx force-reload"
+
+#ecc
+acme.sh --issue --dns dns_dp -d www.a.com --keylength ec-256
+#ecc
+mkdir -p /etc/ssl/www.a.com
+acme.sh --ecc --install-cert -d www.a.com \
+--key-file       /etc/ssl/www.a.com_ecc/keyFile.key  \
+--fullchain-file /etc/ssl/www.a.com_ecc/fullchain.cer \
+--reloadcmd     "service nginx force-reload"
+```
+
 ### 安装v2ray-server
+
+建议使用multi-v2ray安装，不使用v2ray-server。
 
 ```bash
 curl -L -s https://raw.githubusercontent.com/v2ray/v2ray-core/master/release/install-release.sh | sudo bash
@@ -267,6 +338,8 @@ systemctl enable v2ray
 ```
 
 ### 安装v2ray-client
+
+命令行方式使用，不建议。
 
 下载v2ray-core：
 
@@ -289,15 +362,20 @@ wget https://github.com/v2ray/v2ray-core/releases/download/v3.25.1/v2ray-windows
 
 ### windows客户端
 
-安装v2rayP：
+安装v2rayN：
 
 ```bash
-#from https://github.com/PoseidonM4A4/v2rayP/releases
-wget https://github.com/PoseidonM4A4/v2rayP/releases/download/v0.1.3/v2rayP-v0.1.3.zip
+https://github.com/2dust/v2rayN/releases
 ```
 
 解压后进行相关的配置即可。
 
+### Mac客户端
+
+```bash
+#https://github.com/yanue/V2rayU
+https://github.com/yanue/V2rayU/releases/
+```
 
 
 
