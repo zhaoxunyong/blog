@@ -266,7 +266,7 @@ source <(curl -sL https://git.io/fNgqx) --remove
 
 - https://blog.atomur.com/2017-01-18/use-the-acme-sh-to-issue-the-letsencrypt-certificate-for-the-domain-name-without-80-port/
 - https://boxjan.com/2018/11/use_acme_sh_to_set_up_rsa_and_ecc.html
-- https://github.com/Neilpang/acme.sh/wiki
+- https://github.com/Neilpang/acme.sh/wiki/dnsapi
 
 如果开启tls证书的话，因为80端口不能使用，需要使用acme.sh的dns方式生成证书。修改/usr/lib/python3.6/site-packages/v2ray_util/util_core/utils.py文件：
 
