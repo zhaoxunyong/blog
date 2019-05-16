@@ -283,8 +283,86 @@ export DP_Key=""
 ```
 
 然后执行v2ray->3.更改配置->6.更改TLS设置->1.开启 TLS，输入对应的域名即可自动完成。
+不过建议通过nginx配置TLS，v2ray不需要开启TLS并绑定127.0.0.1：
 
-还可以添加ss服务：
+nginx代理转发：
+
+```bash
+server {
+  listen 443;
+  server_name  www.a.com;
+  server_tokens off;
+  client_max_body_size 0;
+  charset utf-8;
+
+  ssl on;
+  ssl_certificate      /root/.acme.sh/www.a.com_ecc/fullchain.cer;
+  ssl_certificate_key  /root/.acme.sh/www.a.com_ecc/www.a.com.key;
+  ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers ECDH:AESGCM:HIGH:!RC4:!DH:!MD5:!aNULL:!eNULL;
+
+  ## Individual nginx logs for this GitLab vhost
+  access_log  /var/log/nginx/www_access.log main;
+  error_log   /var/log/nginx/www_error.log;
+
+  #/qYDx3Nrl/必须与config.json中的path一样，包含最后的/
+  location /qYDx3Nrl/ {
+    proxy_redirect off;
+    #config.json中的ws的地址
+    proxy_pass https://127.0.0.1:5817;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $http_host;
+  }
+
+#   location / {
+#     #deny all;
+#     proxy_pass http://127.0.0.1:8082;
+#   }
+
+  # location ^~ /api/ {
+  #   proxy_pass http://127.0.0.1:8062;
+  # }
+}
+```
+
+v2ray/config.json配置：
+
+```conf
+  "inbounds": [
+    {
+      "port": 15817,
+      "listen":"127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "11111111111",
+            "level": 0,
+            "alterId": 100
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "tcpSettings": {},
+        "kcpSettings": {},
+        "httpSettings": {},
+        "wsSettings": {
+          "connectionReuse": true,
+          "path": "/qYDx3Nrl/",
+          "headers": {
+            "Host": "www.a.com"
+          }
+        },
+        "quicSettings": {}
+      }
+    }
+  ],
+```
+
+另外，还可以添加ss服务：
 
 ```bash
 v2ray add ss
@@ -319,6 +397,31 @@ acme.sh --ecc --install-cert -d www.a.com \
 
 ```bash
 52 0 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
+```
+
+如果不使用了nginx代理转发，则需要添加config.json中的tls配置，以下配置只作参考：
+
+```config
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/root/.acme.sh/www.a.com_ecc/fullchain.cer",
+              "keyFile": "/root/.acme.sh/www.a.com_ecc/www.a.com.key"
+            }
+          ]
+        },
+        "wsSettings": {
+          "connectionReuse": true,
+          "path": "/qYDx3Nrl/",
+          "headers": {
+            "Host": "www.a.com"
+          }
+        },
+        "quicSettings": {}
+      }
 ```
 
 ### sprov-ui
