@@ -183,13 +183,14 @@ export HTTPS_PROXY=http://127.0.0.1:1080
 function proxy_off(){
     unset http_proxy
     unset https_proxy
-    echo -e "已关闭代理"
+    echo -e "The proxy has been closed!"
 }
 
 function proxy_on() {
-    export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com,www.a.com"
+    export no_proxy="127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
     export http_proxy="http://127.0.0.1:1080"
     export https_proxy=$http_proxy
+    echo -e "The proxy has been opened!"
 
  }
  ```
@@ -434,9 +435,6 @@ acme.sh --ecc --install-cert -d www.a.com \
 
 使用使用[KeyManager](https://keymanager.org/)，将www.a.com.key与fullchain.cer转换成jks。
 
-
-
-
 ### 安装v2ray-server
 
 建议使用multi-v2ray安装，不使用v2ray-server。
@@ -452,7 +450,6 @@ curl -L -s https://raw.githubusercontent.com/v2ray/v2ray-core/master/release/ins
 还可以同时作为V2Ray和Shadowsocks的服务器，响应不同客户端的连接：
 
 ![v2ray-shadowsocks-config](/images/v2ray-shadowsocks-config.png)
-
 
 ```bash
 systemctl start v2ray
