@@ -371,13 +371,13 @@ REGEDIT4
 "Times New Roman CYR,204"="simsun" 
 "Times New Roman Greek,161"="simsun" 
 "Times New Roman TUR,162"="simsun" 
-"Tms Rmn"="simsun" 
+"Tms Rmn"="simsun"
 
 ```bash
 WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine regedit winefont.reg
 ```
 
-从Windows目录下的Fonts里的simsun.ttc复制到/home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts里面, 重启即可。
+从Windows目录下的Fonts里的simsun.ttc复制到/home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts里面, 重启即可。注意选择Font为simsun。
 
 ```bash
 wget https://github.com/sonatype/maven-guide-zh/raw/master/content-zh/src/main/resources/fonts/simsun.ttc -O /home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts/
