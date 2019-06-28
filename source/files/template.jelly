@@ -80,6 +80,9 @@
     <body>
       <div class="header">
         <j:set var="spc" value="&amp;nbsp;&amp;nbsp;" />
+        <j:set var="buildenv" value="${build.getEnvironment(listener)}"/>
+        <j:set var="platform" value="${buildenv.get('PLATFORM')}"/>
+        <j:set var="joburl" value="${buildenv.get('JOB_URL')}"/>
         <!-- GENERAL INFO -->
         <table>
           <tr class="gray">
@@ -107,6 +110,22 @@
               <a href="${rooturl}${build.url}">${rooturl}${build.url}</a>
             </td>
           </tr>
+          <j:if test="${platform=='android' || platform=='both'}">
+          <tr>
+            <td>Android热更新包</td>
+            <td>
+              <a href="${joburl}ws/android/app/src/main/Android.bundle.zip">${joburl}ws/android/app/src/main/Android.bundle.zip</a>
+            </td>
+          </tr>
+          </j:if>
+          <j:if test="${platform=='ios' || platform=='both'}">
+          <tr>
+            <td>IOS热更新包</td>
+            <td>
+              <a href="${joburl}ws/ios/IOS.bundle.zip">${joburl}ws/ios/IOS.bundle.zip</a>
+            </td>
+          </tr>
+          </j:if>
           <tr>
             <td>Project:</td>
             <td>${project.name}</td>
