@@ -83,6 +83,8 @@
         <j:set var="buildenv" value="${build.getEnvironment(listener)}"/>
         <j:set var="platform" value="${buildenv.get('PLATFORM')}"/>
         <j:set var="joburl" value="${buildenv.get('JOB_URL')}"/>
+        <j:set var="qrcodebaseurl" value="${buildenv.get('QRCODE_BASE_URL')}"/>
+        <j:set var="env" value="${buildenv.get('ENV')}"/>
         <!-- GENERAL INFO -->
         <table>
           <tr class="gray">
@@ -111,7 +113,18 @@
             </td>
           </tr>
           <j:if test="${platform=='android' || platform=='both'}">
-          <tr>
+            <tr>
+	    <td>Android二维码地址</td>
+            <td>
+            <j:if test="${env=='uat'}">
+            <a href="${qrcodebaseurl}/oawin2">${qrcodebaseurl}/oawin2</a>
+            </j:if>
+            <j:if test="${env!='uat'}">
+            <a href="${qrcodebaseurl}/gd2v8q">${qrcodebaseurl}/gd2v8q</a>
+            </j:if>
+            </td>
+            </tr>
+	    <tr>
             <td>Android热更新包</td>
             <td>
               <a href="${joburl}ws/android/app/src/main/Android.bundle.zip">${joburl}ws/android/app/src/main/Android.bundle.zip</a>
@@ -119,6 +132,17 @@
           </tr>
           </j:if>
           <j:if test="${platform=='ios' || platform=='both'}">
+          <tr>
+            <td>IOS二维码地址</td>
+            <td>
+            <j:if test="${env=='uat'}">
+            <a href="${qrcodebaseurl}/gdkwty">${qrcodebaseurl}/gdkwty</a>
+            </j:if>
+            <j:if test="${env!='uat'}">
+            <a href="${qrcodebaseurl}/x2cys2">${qrcodebaseurl}/x2cys2</a>
+            </j:if>
+            </td>
+            </tr>
           <tr>
             <td>IOS热更新包</td>
             <td>
