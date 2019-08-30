@@ -167,69 +167,266 @@ A guide to english grammar.
    =It's about 1000 km from A to B.
    ```
 
-   ### 动词的种类及其用法
+### 动词的种类及其用法
 
-   是否及物动词的判断, 以下翻译成中文若无毛病，就是及物动词，否则就是不及物动词，准确率高达99%：
-   ```
-   我___他(主动)
-   他被我__(被动)
-   ```
-   
-   ```
-   He wrote the book.
-   The book was written by him.
-   Something happened.
-   ```
+是否及物动词的判断, 以下翻译成中文若无毛病，就是及物动词，否则就是不及物动词，准确率高达99%：
+```
+我___他(主动)
+他被我__(被动)
+```
 
-   1. be动词
+```
+He wrote the book.
+The book was written by him.
+Something happened.
+```
 
-   ```
-   He is a great hero.
-   The problem is whether he can join us.
-   The question is when to set out.
-   My hobby is collecting stamps.
-   My purpose here is to see him.
-   I am interested in the story.
-   The story is interesting.
-   The book is of great value.
-   The machine is of no use.
-   The machine is useless.
-   She is there.
-   Is he home now?
-   They are upstairs.
-   She is in town.
-   They are at home now.
-   ```
+1. be动词
 
-   2. become
-   形容词、过去分词、现在分词。
-   ```
-   After failing, he became depressed.
-   ```
+```
+He is a great hero.
+The problem is whether he can join us.
+The question is when to set out.
+My hobby is collecting stamps.
+My purpose here is to see him.
+I am interested in the story.
+The story is interesting.
+The book is of great value.
+The machine is of no use.
+The machine is useless.
+She is there.
+Is he home now?
+They are upstairs.
+She is in town.
+They are at home now.
+```
 
-   3. turn
-   接形容词，多与颜色或情绪有关。
-   ```
-   His face turned pale when he heard the news.
-   ```
+2. become
+形容词、过去分词、现在分词。
+```
+After failing, he became depressed.
+```
 
-   4. get
-   生气或者激动。或者形容词的比较级。
-   ```
-   He got mad.
-   She is getting more and more beautiful.
-   Things are getting better and better.
-   ```
+3. turn
+接形容词，多与颜色或情绪有关。
+```
+His face turned pale when he heard the news.
+```
 
-   5. seem
-   =appear，用不定式作表语。
-   ```
-   He seems to know it.
-   He seems to be happy.=He seems happy.(to be可以省略掉)
-   ```
+4. get
+生气或者激动。或者形容词的比较级。
+```
+He got mad.
+She is getting more and more beautiful.
+Things are getting better and better.
+```
 
-   6. 感观动词
-   ...起来: look/sound/smell/taste/feel
-   ```
-   
-   ```
+5. seem
+=appear，用不定式作表语。
+```
+He seems to know it.
+He seems to be happy.=He seems happy.(to be可以省略掉)
+```
+
+6. 感观动词
+...起来: 
+look/sound/smell/taste/feel + adj
+look/sound/smell/taste/feel + like + noun
+look/sound/smell/taste/feel + noun
+```
+His idea sounds good.
+I feel tired now.
+It looks interesting.
+
+It sounds like a good idea.
+```
+
+feel like + noun: 感觉像
+feel like + 动名词: 想要
+
+```
+I feel like taking a walk today=I'd like to take a walk today.
+```
+
+look/sound/smell/taste/feel + noun
+```
+Don't taste that food.
+```
+
+愿望、企图之意：用不定式： want+hope+desire + to ...
+
+动名词作宾语的：considered/imagined/fancy/risked/avoided/escaped/suggested/recommended/enjoy/resent/practiced/stopped/quit/mind
+
+```
+I refused to do it.=I resisit doing it.
+I expect to travel around the world with him.
+```
+
+continue/start/begin/like/hate+不定式或者动名词，意思一样。
+
+7. 名词性从句作及物动词的宾语：
+```
+I don't know where he lives.
+He thinks (that) the book is worth reading.
+```
+
+whether从句作及物动词的宾语时，可用if取代whether:
+```
+I don't know whether the typhoon will come=I don't know if the typhoon will come.
+```
+
+但whether从句若作主语、介词的宾语或者be动词后的表语时，不能用if:
+```
+Whether he can go is not yet know.
+He is worried about whether he can pass the exam.
+The problem is whether he has enough money for the trip.
+```
+
+8. 名词短语：
+```
+I know how to handle the problem.
+I don't know whom to talk to.
+```
+
+9. 不完全及物动词：
+```
+He made me happy.
+```
+
+使役动词：
+叫：
+make/have + 宾语 + 原形动词
+get + 不定式
+```
+I made him wash the car.
+I had John report to me.
+I got him to wash the car.
+```
+
+只有make可使用被动，其他被动时使用过去分词：
+```
+He was made to wash the car.=He made the car washed.
+```
+
+让：let
+```
+I let him wash the car.
+I let Peter try it.
+He let me in.
+His performance let me down.
+```
+
+强迫/要求/怂恿/催促：force/ask/encourage/tell+不定式
+```
+I forced him to recite the lesson.
+I asked him to write the letter.
+He told me to finish the work by ten.(10点前)
+I asked him to write the letter=He was asked to write the letter.
+```
+
+10. 知觉动词：
+see/observe/watch/look at/notice/hear/listen to/feel
+```
+#...了
+I saw him do it.=He was seen to to it.
+#...正在...
+I saw him dancing.=He was seen daning.
+#...被
+I saw him killed.
+I heard the door closed.
+```
+
+变被动时，除原型动词要变成不定式短语外，其余不变。
+
+11. 认定动词：
+
+视...为：与as或for连用：
+
+We <u>regard</u>(look upon/think of/see/view) him as a genius.
+
+I mistook the long-haired boy for a girl.
+
+find/believe/think/deem/consider it + 不定式...: think/deem/consider译成：认为...是
+
+```
+I think it fun to climb mountains.
+I find it necessary to do the work.
+```
+
+make: 使...成为...:
+
+```
+He make it a rule to get up early.
+Hard work made it possible for him to win the honor.
+```
+
+12. 转变动词：
+
+使...变成...: change/turn，与into连用：
+
+```
+The experience turned/changed him into a good student.
+```
+
+13. 授予动词：
+
+```
+I'll give you this watch.
+Please lend me your book.
+I gave him the book.=I gave the book to him.
+
+#代劳
+I bought him the book.=I bought the book for him.
+
+#从...中
+I asked him a question.=I asked a question of him.
+
+#表提供：offer/provide/supply/furnish/present, 除offer外，要与with连用
+He offered me all I needed.=He provided me with all I needed.
+
+#explan/introduce/propose/recommend/express要与to连用
+He recommended the method to me.
+
+#我拍了一张他的照片
+I took a picture of him.
+#我为他拍了一张照片
+I took a picture for him.
+```
+
+14. 其他：
+
+```
+Never try it.=Don't ever try it.
+#How之后只能与单数名词, what没有限制. 只记how+adj，what+noun就可以
+What a great man he is!=How great he is!=How great a man he is!
+How hard he studied!
+```
+
+## 两句的连接方式
+
+两句可能用以下的符号连接：- : ; 并列连词 副词连词 关系词
+
+### 并列连词
+
+```
+and -> both...and..            一方面...同时也...
+or  -> either...or...          要不就是...要不就是...
+       neither...nor...        既非...亦非...
+but -> not...but...            并非...而是...
+       not only...but also...  不仅...而且...
+as well as...                  以及
+rather than...                 而非
+```
+
+```
+He is not kind but cruel.
+He will either stay or leave.
+Not only can she sing, but she can (also) dance.
+We as well as John like it.
+He is happy rather than sad.
+He is interested in music rather than in painting.
+```
+
+### 
+
+
