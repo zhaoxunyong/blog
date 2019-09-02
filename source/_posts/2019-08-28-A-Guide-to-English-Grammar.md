@@ -424,9 +424,132 @@ He will either stay or leave.
 Not only can she sing, but she can (also) dance.
 We as well as John like it.
 He is happy rather than sad.
+
+# as well as或rather than连接主语时，动词始终随第一个主语做变化
 He is interested in music rather than in painting.
+He came here to learn English as well as to know more about life.
+He as well as I is interested in music.
+He rather than I is interested in music.
+=He instead of me is interested in music.
+=He,not I, is interested in music.
+I like this book, not that one.
+=I like this book rather than that one.
+
+#除both用复数外，其它随最近的主语变化：
+#他和我都...(不可连接句子)
+Both he and I are happy about it.
+#不是他就是我...(不可连接句子)
+Either he or I am wrong.
+既不是你也不是他...(不可连接句子)
+Neither you nor he is to blame.
+#不是他而是我...(不可连接句子)
+Not he but I am to be responsible for it.
+#不仅...而且...(可连接句子，引导句子时要倒装)
+Not only the but(also) John has passed the exam.
+Not only can she sing, but she can also dance.
+Not only does she sing well, but she dances beatifully.
+She is not only beautiful but (also) kind.
+=She is not only beautiful bot kind as well.
 ```
 
-### 
+### 副词连词
+
+```
+when:当                 +一般现在时(或现在完成时)动词，主语+will+原形动词。
+if:如果 
+once/as soon as:一旦 
+unless:除非
+
+When I am rich, I will buy a car.
+As soon as(Once) I have done it, I'll let you know.
+Unless he comes back tomorrow, I will leave.
+How long will it be before he comes?
+```
+
+however: 然而(有but的意思): 后面要加逗号，句中两旁用逗号相隔。
+
+therefore/thus：因此(有so的意思): 后面要加逗号，句中两旁用逗号相隔。(thus不用加逗号)
+
+moreover/furthermore/in addition：此外（有and的意思）: 后面要加逗号，句中两旁用逗号相隔。
+
+besides：此外，用于否定或者消极的句中。
+
+while:   
+```
+#句首时：当... 
+While I was writing a letter, she was doing the sishes.
+#连接并列句时：而...
+He is nice, while(whereas) his brother is bad.
+While he is nice, his brother is bad.
+```
+
+as: 当、虽然、因为
+```
+#当我...
+As I was young, I was quite happy.
+As rich as he is, he isn't happy.
+#虽然...
+=Thouth he is rich, he isn't happy.
+=Rich as he is, he isn't happy.
+#因为...
+As he has apologized to me, I'm going to forgive him.
+Because he...
+```
+
+where: 在...的地方
+```
+=in the place where.=in the place in which
+Where I live, people are very nice.
+in the place where I live, people are very nice.
+Put the book where I can see it.
+=Put the book in the place where I can see it.
+```
+
+once、as soon as: 一旦
+
+or: 否则
+```
+You must work hard, or I'll fire you.
+=You must work hard; otherwise I'll fire you.
+```
+
+nor: 也不, nor之后的分句要倒装
+```
+She can't sing, nor can she dance.
+He isn't clever, nor is he diligent.
+```
+
+so that: 这样的话、也便, 从句中应有助动词may/wll/can等
+```
+I got up early so that(in order that) I could get to school on time.
+=I got up early so I could get to school on time.
+```
+
+so...that...: 如此...以致于...
+```
+He is so nice that we all like him.
+=He is so nice, we all like him.
+```
+
+in that: because。置于主句之后
+```
+He is great in that he speaks five different languages.
+```
+
+except that: 只可惜、只不过是
+```
+He is nice except that he is a little shy.
+```
+
+since: 因为、自从
+```
+#由于...
+Since you've finished the work, you may leave anytime.
+#自从...
+He has been studying quite hard since he went to college.
+```
+
+## 关系词
+
 
 
