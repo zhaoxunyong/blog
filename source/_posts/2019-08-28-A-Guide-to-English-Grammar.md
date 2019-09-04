@@ -578,7 +578,9 @@ He has been studying quite hard since he went to college.
 
 ## 关系词
 
-### 关系代词种类及功能
+### 关系代词
+
+#### 关系代词种类及功能
 
 ```
 人： who/whom
@@ -587,7 +589,7 @@ He has been studying quite hard since he went to college.
 
 a. 关系代词之前要有先行词
 b. 关系代词在引导的定语从句中要作主语、宾语或表语
-c. 否则关系代词之前一定要有介词
+c. 否则关系代词之前一定要有介词, 介词可移到句尾
 ```
 
 ```
@@ -602,7 +604,7 @@ The house in which we live is very large.
 He smokes three packs of cigarettes a day, which definitely does harm to his health.
 ```
 
-### 非限制性定语从句
+#### 非限制性定语从句
 
 该关系代词前一定要有逗号，按顺序翻译即可。
 
@@ -612,7 +614,7 @@ Here comes my father, who is an English teacher.
 I went to the train station this morning, which was crowded with passengers.
 ```
 
-### 限制性定语从句
+#### 限制性定语从句
 
 该关系代词前不要有逗号，翻译成"...的"
 
@@ -623,7 +625,7 @@ This is my mother, who loves me very much.(对)
 This is my mother who loves me very much.（错）
 ```
 
-### 关系代词的省略
+#### 关系代词的省略
 
 限制性定语从句中，若关系代词为及物动词的宾语，则该关系代词可省略。若关系代词为介词的宾语，介词移到定语从句的句尾时，则该关系代词可省略。
 
@@ -639,7 +641,7 @@ This is the house in which he lives.
 =This is the house he lives in.
 ```
 
-### that关系代词
+#### that关系代词
 
 a. that之前不能有逗号
 
@@ -655,4 +657,201 @@ This is the knife whth which he killed Marry.(有with，不能用that取代which
 
 下列情况下，只能用that
 
-充数词：
+序数词：the first/second.../last
+```
+Gambling is the last thing that I would do.
+He was the first man that came up with such an idea.
+```
+
+最高级后，只能用that：
+```
+He is the best student that I've ever taught.
+The most beautiful scene that I've everseen is Guilin.
+```
+
+all后，只能用that：
+```
+All the students (that) are studying here are hardworking.
+All (that) he said is true.
+Everything (that) he said is true.
+#以上时，that可以省略掉
+```
+
+the only后，只能用that：
+```
+He is the only friend that I have.
+```
+
+关系代词在be动词后作表语，只能用that：
+```
+#他已不是当年的他了
+He is not the man that he once was.
+```
+
+其他：
+```
+Who that lies can win our trust?
+What is it that you want?
+```
+
+#### 限制性定语从句可化简为分词适语
+
+```
+The girl who danced here yesterday is my sister.
+=The girl dancing here yesterday is my sister.
+
+Who is that boy that is standing over there?
+that is->being->省略
+=Who is that boy standing over there?
+
+I like the car which is parked in front of the post office.
+which is>being->省略
+=I like the car parked in front of the post office.
+```
+
+非限制性定语从句不能化简为分词短语。但Who/which + be + n可以化简为同位语
+```
+I met John, who is a good friend of mine.
+who is->being->省略
+=I met John, a good friend of mine.
+
+He works hard, which is a fact that is known to all of us.
+=He works hard, a fact that is know to all of us.
+
+John, a good friend of mine, came to see me yesterday.
+=A good friend of mine, John came to see me yesterday.
+```
+
+#### 定语从句与插入语的关系
+
+```
+I believ(我相信)
+I think/consider(我相信)
+I feel(我觉得)
+I know(我知道)
+I find(我发瑞)
+```
+
+```
+#他是个从不食言的人
+He is a man who never breaks his word.
+He is a man who I think never breaks his word.
+
+He is the man whom I believe I met yesterday.
+He is a man who I think never breaks his word.
+```
+
+```
+I think that he is nice.
+=I think him to be nice.
+
+He is a man who I think is nice.
+=He is a man whom I think to be nice.
+```
+
+#### 定语从句可简化为不定式短语
+
+关系代词所引导的定语从句中，若该关系代词之前有介词时，可将该从句换成不定式短语。有点“...目的”的意思：
+
+```
+He has no house in which he can live.
+=He has no house in which to live.
+=He has no house to live in.
+
+Lend me your pen whith which I can write my address.
+=Lend me your pen with which to write my address.
+=Lend me your pen to write my address with.
+```
+
+### 关系代词所有格
+
+his/your/their/our/its...变化而成：
+
+```
+whose
+
+a. 关系代词所有格之前要有先行词
+b. 关系代词所有格在引导的定语从句中要作主语、宾语或表语
+c. 否则关系代词所有格之前一定要有介词, 介词可移到句尾
+```
+
+```
+She has an uncle. His name is Peter.
+=She has an uncle whose name is Peter.
+```
+
+whose+n.=the+n.+of which=of which+the+n.:
+```
+This is a fancy car, whose color I like very much.
+=This is a fancy car, the color of which I like very much.
+=This is a fancy car, of which the color I like very much.
+```
+
+### 关系副词
+
+关系副词用以修饰名词
+
+介词+关系代词+which:
+```
+where=in which/on which/at which: 修饰表地方的名词
+when=in which/on which/at which: 修饰表时间的名词
+why=for which: 修饰的reason
+how=in which: how和the way只能用其中之一
+```
+
+```
+This is the city where(in which) I met Marry.
+He came on Friday, when(on which) it was raining very hard.
+I don't know the reason why he cried.
+That's how(the way) he handled the thing.
+```
+
+#### where
+
+在...地方(在...内/上或其他)
+
+```
+This is the city in which I met Mary.
+=This is the city where I met Mary.
+
+Do you see the desk on which there is a book.
+=Do you see the desk where there is a book.
+```
+
+#### when
+
+那时、那天、那年...
+
+年月：in 日子：on 时间：at
+```
+He came on Friday, on which it was raining hard.
+=He came on Friday, where it was raining hard.
+
+That's the year when he graduated.
+The sun rose at 5:30, when most people were still in their dreams.
+```
+
+#### why
+
+只作修饰the reason，the reason可以省略掉
+
+```
+I don't know the reason for which he cried.
+=I don't know the reason why he cried.
+=I don't know why he cried.
+```
+
+#### how
+
+how和the way只能用其中之一，表...的方式/方法
+
+```
+That's the way in which he handled the problem.
+=That's the way he handled the problem.
+=That's how he handled the problem.
+
+I am sick of the way he looks at me.
+=I am sick of how he looks at me.
+```
+
+#### 
