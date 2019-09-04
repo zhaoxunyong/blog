@@ -23,17 +23,17 @@ A guide to english grammar.
 
 ### 可作主语的词类
 
-1. 名词
+#### 名词
    ```
    Gold is of much value.
    ```
 
-2. 代词
+#### 代词
    ```
    It's a lot of fun to climb mountains.
    ```
 
-3. 动名词或不定式短语
+#### 动名词或不定式短语
    ```
    Seeing him makes me angry.
    To see him is my purpose of coming here.
@@ -41,28 +41,34 @@ A guide to english grammar.
 
    动名词作主语，通常用以表示已知的事实或曾经做过的经历。 
    ```
-   Collecting stamps is one of his hobbies=It's one of his hobbies (to collect stamps真正主语).
-   Listening to music makes me happy=It makes me happy to listen to music.
-   It's interesting learning English(可)=It's interesting to learn English.(佳)
+   Collecting stamps is one of his hobbies
+   =It's one of his hobbies (to collect stamps真正主语).
+
+   Listening to music makes me happy.
+   =It makes me happy to listen to music.
+
+   It's interesting learning English.(可)
+   =It's interesting to learn English.(佳)
    ```
 
    不定式作主语通常表示一种意愿、目的或未完成的事。
    ```
-   To study abroad is my greatest desire=It's my greatest desire to study abroad.
+   To study abroad is my greatest desire.
+   =It's my greatest desire to study abroad.
    ```
 
-4. 名词性从句作主语
+#### 名词性从句作主语
 
    可作主语、宾语或在be动词之后作表语。
 
-   1. that从句
+   ##### that从句
 
    任何一个主语起首的句子：
    ```
    he doesn't study makes me angry. -> That he doesn't study makes me angry.
    ```
 
-   2. whether从句
+   ##### whether从句
 
    可用yes/no回答的问句变化而成：
    ```
@@ -72,7 +78,7 @@ A guide to english grammar.
    Does he like it? -> whether he likes it.
    ```
 
-   3. 疑问词所引导的从句
+   ##### 疑问词所引导的从句
 
    由when/what/how/where/why等引导的问句变化而成：
    ```
@@ -81,6 +87,7 @@ A guide to english grammar.
    What did he write? -> what he wrote.
    When did he come? -> when he came.
    How does he do it? -> how he does it.
+
    # who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变
    Who came here? -> who came here.
    What happended last night? -> what happended last night.
@@ -91,8 +98,12 @@ A guide to english grammar.
    ```
    That honesty is the best policy is a proverb (which) we should always keep in mind.
    =It's a proverb we should always keep in mind that honesty is the best policy.
-   Where he lives is still in doubt.=It's still in doubt where he lives.
-   Whether he can do it remains to be seen.=It remains to be seen whether he can do it.
+
+   Where he lives is still in doubt.
+   =It's still in doubt where he lives.
+
+   Whether he can do it remains to be seen.
+   =It remains to be seen whether he can do it.
    ```
 
    作及物动词的宾语：
@@ -142,7 +153,7 @@ A guide to english grammar.
    except that: 只可惜、除了
    notwithstanding that=despite the fact that=in spite of the fact that
 
-   5. 名词短语作主语：
+   ##### 名词短语作主语：
 
    疑问副词：
    ```
@@ -181,7 +192,7 @@ The book was written by him.
 Something happened.
 ```
 
-1. be动词
+#### be动词
 
 ```
 He is a great hero.
@@ -201,19 +212,19 @@ She is in town.
 They are at home now.
 ```
 
-2. become
+#### become
 形容词、过去分词、现在分词。
 ```
 After failing, he became depressed.
 ```
 
-3. turn
+#### turn
 接形容词，多与颜色或情绪有关。
 ```
 His face turned pale when he heard the news.
 ```
 
-4. get
+#### get
 生气或者激动。或者形容词的比较级。
 ```
 He got mad.
@@ -221,19 +232,22 @@ She is getting more and more beautiful.
 Things are getting better and better.
 ```
 
-5. seem
+#### seem
 =appear，用不定式作表语。
 ```
 He seems to know it.
 He seems to be happy.=He seems happy.(to be可以省略掉)
 ```
 
-6. 感观动词
+#### 感观动词
 ...起来: 
+
 look/sound/smell/taste/feel + adj
 look/sound/smell/taste/feel + like + noun
 look/sound/smell/taste/feel + noun
+
 ```
+
 His idea sounds good.
 I feel tired now.
 It looks interesting.
@@ -242,6 +256,7 @@ It sounds like a good idea.
 ```
 
 feel like + noun: 感觉像
+
 feel like + 动名词: 想要
 
 ```
@@ -249,6 +264,7 @@ I feel like taking a walk today=I'd like to take a walk today.
 ```
 
 look/sound/smell/taste/feel + noun
+
 ```
 Don't taste that food.
 ```
@@ -264,39 +280,45 @@ I expect to travel around the world with him.
 
 continue/start/begin/like/hate+不定式或者动名词，意思一样。
 
-7. 名词性从句作及物动词的宾语：
+#### 名词性从句作及物动词的宾语
 ```
 I don't know where he lives.
 He thinks (that) the book is worth reading.
 ```
 
 whether从句作及物动词的宾语时，可用if取代whether:
+
 ```
 I don't know whether the typhoon will come=I don't know if the typhoon will come.
 ```
 
 但whether从句若作主语、介词的宾语或者be动词后的表语时，不能用if:
+
 ```
 Whether he can go is not yet know.
 He is worried about whether he can pass the exam.
 The problem is whether he has enough money for the trip.
 ```
 
-8. 名词短语：
+#### 名词短语
 ```
 I know how to handle the problem.
 I don't know whom to talk to.
 ```
 
-9. 不完全及物动词：
+#### 不完全及物动词
 ```
 He made me happy.
 ```
 
-使役动词：
+#### 使役动词
+
 叫：
+
 make/have + 宾语 + 原形动词
+
 get + 不定式
+
 ```
 I made him wash the car.
 I had John report to me.
@@ -304,11 +326,13 @@ I got him to wash the car.
 ```
 
 只有make可使用被动，其他被动时使用过去分词：
+
 ```
 He was made to wash the car.=He made the car washed.
 ```
 
 让：let
+
 ```
 I let him wash the car.
 I let Peter try it.
@@ -317,6 +341,7 @@ His performance let me down.
 ```
 
 强迫/要求/怂恿/催促：force/ask/encourage/tell+不定式
+
 ```
 I forced him to recite the lesson.
 I asked him to write the letter.
@@ -324,8 +349,10 @@ He told me to finish the work by ten.(10点前)
 I asked him to write the letter=He was asked to write the letter.
 ```
 
-10. 知觉动词：
+#### 知觉动词
+
 see/observe/watch/look at/notice/hear/listen to/feel
+
 ```
 #...了
 I saw him do it.=He was seen to to it.
@@ -338,7 +365,7 @@ I heard the door closed.
 
 变被动时，除原型动词要变成不定式短语外，其余不变。
 
-11. 认定动词：
+#### 认定动词
 
 视...为：与as或for连用：
 
@@ -360,7 +387,7 @@ He make it a rule to get up early.
 Hard work made it possible for him to win the honor.
 ```
 
-12. 转变动词：
+#### 转变动词
 
 使...变成...: change/turn，与into连用：
 
@@ -368,7 +395,7 @@ Hard work made it possible for him to win the honor.
 The experience turned/changed him into a good student.
 ```
 
-13. 授予动词：
+#### 授予动词
 
 ```
 I'll give you this watch.
@@ -393,7 +420,7 @@ I took a picture of him.
 I took a picture for him.
 ```
 
-14. 其他：
+#### 其他
 
 ```
 Never try it.=Don't ever try it.
@@ -551,5 +578,81 @@ He has been studying quite hard since he went to college.
 
 ## 关系词
 
+### 关系代词种类及功能
 
+```
+人： who/whom
+物： which/which
+句子:which/which
 
+a. 关系代词之前要有先行词
+b. 关系代词在引导的定语从句中要作主语、宾语或表语
+c. 否则关系代词之前一定要有介词
+```
+
+```
+He is a good student who studies hard.
+He is a boy whom everyone loves.
+He is a man for whom I enjoy working.
+=He is a man whom I enjoy working for.
+The house in which we live is very large.
+=The house which we live in is very large.
+
+#which代替smokes three packs of cigarettes a day
+He smokes three packs of cigarettes a day, which definitely does harm to his health.
+```
+
+### 非限制性定语从句
+
+该关系代词前一定要有逗号，按顺序翻译即可。
+
+```
+I met John, who is my classmate.
+Here comes my father, who is an English teacher.
+I went to the train station this morning, which was crowded with passengers.
+```
+
+### 限制性定语从句
+
+该关系代词前不要有逗号，翻译成"...的"
+
+```
+He is a boy who works hard.
+I like the book which he bought yesterday.
+This is my mother, who loves me very much.(对)
+This is my mother who loves me very much.（错）
+```
+
+### 关系代词的省略
+
+限制性定语从句中，若关系代词为及物动词的宾语，则该关系代词可省略。若关系代词为介词的宾语，介词移到定语从句的句尾时，则该关系代词可省略。
+
+```
+This is the boy whom I saw yesterday.(vt)
+=This is the boy I saw yesterday.
+
+This is a question which you should pay attention to.(prep)
+=This is a question you should pay attention to.
+
+This is the house in which he lives.
+=This is the house which he lives in.
+=This is the house he lives in.
+```
+
+### that关系代词
+
+a. that之前不能有逗号
+
+b. that之前不可有介词
+
+以上满足时可取代who、whom、which.
+
+```
+I like the girl that(who) is sitting there.
+This is the knife whth which he killed Marry.(有with，不能用that取代which)
+=This is the knife that(which) he killed Marry with. 
+```
+
+下列情况下，只能用that
+
+充数词：
