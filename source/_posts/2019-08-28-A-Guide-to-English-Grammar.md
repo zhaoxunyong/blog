@@ -848,10 +848,192 @@ how和the way只能用其中之一，表...的方式/方法
 ```
 That's the way in which he handled the problem.
 =That's the way he handled the problem.
-=That's how he handled the problem.
+
+I don't like the way he talks.
 
 I am sick of the way he looks at me.
 =I am sick of how he looks at me.
 ```
 
-#### 
+#### 关系副词使用要点
+
+在be动词后作表语时，可省略该名词，只保留关系副词
+
+```
+That is the place where he was born.
+=That's where he was born.
+That is the day when he'll come.
+=That's when he'll come.
+That is the reason why he left.
+=That's why he left.
+That is the way he did it.
+=That's how he did it.
+```
+
+where/when/why/how可视为疑问代词，引导名词从句，此时可作及物动词的宾语
+
+```
+I konw where he is.
+I wonder why he left.
+I don't know how he'll do it.
+```
+
+where可作副词
+
+```
+Put it where you found it.
+=Put it in the place where yound it.
+=Put it in the place in which yound it.
+
+Where there is smoke, there is fire.
+```
+
+the moment(when)... 一...就...
+
+```
+#他一听到这个悲伤的消息就哭了起来
+As soon as he heard the sad news, he burst into tears.
+#他来的时候，我正在睡觉
+The time(when) he came, I was sleeping.
+=When he came, I was sleeping.
+#他离开的那一天，正在下雨
+The day(when) he left, it was rainning.
+=When he left, it was rainning.
+```
+
+### 复合关系代词
+
+#### 复合关系代词种类
+
+由两个词类复合而成：先行词(名词)+关系代词
+
+```
+#代替人
+whoever(凡...的人)、任何...的人
+=anybody who
+whomever(宾格)
+=anybody whom
+
+#代替人或物
+whichever(三者以上)
+=any one which(/who): 同一类的任何一个...
+whichever(二者)
+-either which(/who): 同一类的任何一个...
+
+#代替物
+what=the thing(s) which: 所...的东西
+whatever=anything which: ...的任何东西
+```
+
+#### whoever
+
+whoever=anybody who
+
+```
+Anybody should be punished.
+who makes such a mistake.
+
+Anybody who makes such a mistake should be punished.
+=Whoever makes such a mistake should be punished.
+
+I hate anybody.
+who tells lies.
+
+I hate anybody who tells lies.
+=I hate whoever tells lies.
+```
+
+#### whomever
+
+```
+Give it to anybody.
+whom you like.
+
+Give it to anybody whom you like.
+Give it to whomever you like.
+```
+
+#### whichever
+
+是指同一类的任何东西
+
+```
+There are many book here. You may take any one which you like.
+There are many book here. You may take whichever you like.
+```
+
+#### what
+
+the thing/the things which. 所...的(东西/事/话...):
+
+前面不要有先行词(名词)
+
+可作主语、宾语或在be动词后作表语
+
+```
+What he said is true.
+=The words which he said is true.
+I am interested in what he is doing.
+
+What bothers me is that I have no time.
+I don't believe what he said.
+```
+
+#### whatever
+
+与whichever类似，不同在于whatever指不同类的任何东西，whichever指同一类的任何东西
+
+```
+Whatever he said is true.
+=Anything which he said is true.
+
+I am interesting in whatever he is doing.
+=I am interesting in anything that he is doing.
+```
+
+#### whatever及whoever作副词连词
+
+```
+whatever=no matter what: 不论什么
+whoever=no matter who: 不论谁
+
+Whatever he says, I don't believe him.
+=No matter what he says, I don't believe him.
+
+Whoever does it, he should finish it by ten.
+No matter who does it, he should finish it by ten.
+```
+
+whatever及whoever作副词连词, 引导的状语从句与主句中间有逗号相隔，而复合关系代词时没有。
+
+```
+#他所说的任何话都是谎言
+Whatever he says is a lie.
+#不论他说什么，那都是谎言
+Whatever(No matter what) he says, it is a lie.
+
+Whoever makes the mistake should be punished.
+Whoever(No matter who) makes the mistake, he should be punished.
+```
+
+#### however
+
+连接性副词: 然而
+
+```
+He is nice; however, I don't like him.
+=He is nice. however, I don't like him.
+=He is nice. I, however, don't like him.
+```
+
+副词连词：无论如何
+
+```
+No matter how nice he is, I don't like him.
+=However nice he is, I don't like him.
+
+No matter how hard he works, I don't respect him.
+=However hard he works, I don't respect him.
+```
+
+#### whether
