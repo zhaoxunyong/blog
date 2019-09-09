@@ -17,7 +17,8 @@ A guide to english grammar.
 
    可以省略主语：
    ```
-   Work hard.=(You should) work hard.
+   Work hard.
+   =(You should) work hard.
    Don't fool around.
    ```
 
@@ -65,33 +66,55 @@ A guide to english grammar.
 
    任何一个主语起首的句子：
    ```
-   he doesn't study makes me angry. -> That he doesn't study makes me angry.
+   he doesn't study makes me angry. 
+   -> That he doesn't study makes me angry.
    ```
 
    ##### whether从句
 
    可用yes/no回答的问句变化而成：
    ```
-   Is he happy? -> whether he is happy
-   Can he do it? -> whether he can do it.
-   Did he come? -> whether he came.
-   Does he like it? -> whether he likes it.
+   Is he happy? 
+   -> whether he is happy
+
+   Can he do it? 
+   -> whether he can do it.
+
+   Did he come? 
+   -> whether he came.
+
+   Does he like it? 
+   -> whether he likes it.
    ```
 
    ##### 疑问词所引导的从句
 
    由when/what/how/where/why等引导的问句变化而成：
    ```
-   What is he doing? -> what he is doing.
-   Where can he find it? -> where he can find it.
-   What did he write? -> what he wrote.
-   When did he come? -> when he came.
-   How does he do it? -> how he does it.
+   What is he doing? 
+   -> what he is doing.
+
+   Where can he find it? 
+   -> where he can find it.
+
+   What did he write? 
+   -> what he wrote.
+
+   When did he come? 
+   -> when he came.
+
+   How does he do it? 
+   -> how he does it.
 
    # who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变
-   Who came here? -> who came here.
-   What happended last night? -> what happended last night.
-   Which was bought? -> which was bought.
+   Who came here? 
+   -> who came here.
+
+   What happended last night? 
+   -> what happended last night.
+
+   Which was bought? 
+   -> which was bought.
    ```
 
    作主语时：
@@ -149,9 +172,13 @@ A guide to english grammar.
    I am worried that he plays around all day.
    ```
 
-   in that=because
+   in that
+   =because
+
    except that: 只可惜、除了
-   notwithstanding that=despite the fact that=in spite of the fact that
+
+   notwithstanding that
+   =despite the fact that=in spite of the fact that
 
    ##### 名词短语作主语：
 
@@ -174,6 +201,7 @@ A guide to english grammar.
    ```
    Where we should meet him is not decided yet.
    =Where to meet him is not decided yet.
+
    From A to B is about 1000 km.
    =It's about 1000 km from A to B.
    ```
@@ -236,7 +264,11 @@ Things are getting better and better.
 =appear，用不定式作表语。
 ```
 He seems to know it.
-He seems to be happy.=He seems happy.(to be可以省略掉)
+
+He seems to be happy.
+=He seems happy.(to be可以省略掉)
+
+He seems a nice man.
 ```
 
 #### 感观动词
@@ -271,10 +303,16 @@ Don't taste that food.
 
 愿望、企图之意：用不定式： want+hope+desire + to ...
 
-动名词作宾语的：considered/imagined/fancy/risked/avoided/escaped/suggested/recommended/enjoy/resent/practiced/stopped/quit/mind
+动名词作宾语的：
+```
+considered/imagined/fancy/risked/avoided/escaped/suggested/
+recommended/enjoy/resent/practiced/stopped/quit/mind
+```
 
 ```
-I refused to do it.=I resisit doing it.
+I refused to do it.
+=I resisit doing it.
+
 I expect to travel around the world with him.
 ```
 
@@ -289,7 +327,8 @@ He thinks (that) the book is worth reading.
 whether从句作及物动词的宾语时，可用if取代whether:
 
 ```
-I don't know whether the typhoon will come=I don't know if the typhoon will come.
+I don't know whether the typhoon will come
+=I don't know if the typhoon will come.
 ```
 
 但whether从句若作主语、介词的宾语或者be动词后的表语时，不能用if:
@@ -346,7 +385,8 @@ His performance let me down.
 I forced him to recite the lesson.
 I asked him to write the letter.
 He told me to finish the work by ten.(10点前)
-I asked him to write the letter=He was asked to write the letter.
+I asked him to write the letter
+=He was asked to write the letter.
 ```
 
 #### 知觉动词
@@ -355,9 +395,12 @@ see/observe/watch/look at/notice/hear/listen to/feel
 
 ```
 #...了
-I saw him do it.=He was seen to to it.
+I saw him do it.
+=He was seen to to it.
+
 #...正在...
 I saw him dancing.=He was seen daning.
+
 #...被
 I saw him killed.
 I heard the door closed.
@@ -400,16 +443,20 @@ The experience turned/changed him into a good student.
 ```
 I'll give you this watch.
 Please lend me your book.
-I gave him the book.=I gave the book to him.
+I gave him the book.
+=I gave the book to him.
 
 #代劳
-I bought him the book.=I bought the book for him.
+I bought him the book.
+=I bought the book for him.
 
 #从...中
-I asked him a question.=I asked a question of him.
+I asked him a question.
+=I asked a question of him.
 
 #表提供：offer/provide/supply/furnish/present, 除offer外，要与with连用
-He offered me all I needed.=He provided me with all I needed.
+He offered me all I needed.
+=He provided me with all I needed.
 
 #explan/introduce/propose/recommend/express要与to连用
 He recommended the method to me.
@@ -423,9 +470,12 @@ I took a picture for him.
 #### 其他
 
 ```
-Never try it.=Don't ever try it.
+Never try it.
+=Don't ever try it.
+
 #How之后只能与单数名词, what没有限制. 只记how+adj，what+noun就可以
-What a great man he is!=How great he is!=How great a man he is!
+What a great man he is!
+=How great he is!=How great a man he is!
 How hard he studied!
 ```
 
@@ -459,6 +509,7 @@ He as well as I is interested in music.
 He rather than I is interested in music.
 =He instead of me is interested in music.
 =He,not I, is interested in music.
+
 I like this book, not that one.
 =I like this book rather than that one.
 
@@ -1127,4 +1178,102 @@ He is as good a man as John.
 as=as the man that
 ```
 
+```
+Such a man like him is bad.(x)
+Such a man as he is bad.
+
+the same...as...:   和...相同的...(两个人或物)
+the same...that...: 就是同一个...(一个人或物) 
+
+#我有一本书，与他正在看的那一本相同
+I have the same book as he is reading.
+#我借了一本书，就是他上周借的那一本
+I borrowed the same book that the borrowed last week.
+```
+
+as等于which，用以代替整个主句, as可以移到句首，但which不能
+
+```
+He is nice, which we all know.
+=He is nice, as we all know.
+=As we all know, he is nice.
+```
+
+```
+He was drunk, as usual.
+His conditions are as follows.
+His listed the names as follows.
+```
+
+只能与单数可数名词使用的结构：
+
+```
+as good a student as...
+as diligent a man as...
+```
+
+```
+#以下都只能用单数
+#so...that...: 如此...以致
+He is so good a boy that I like him.
+
+#as...as...: 和...一样地...
+He is as handsome a man as Peter.
+This music is as good as that.
+
+#too...to...: 太...而不...
+He is too old a man to do it.
+This work is too difficult to do.
+THis is too difficult a job to do.
+
+#how...: 多么地...
+How great a man he is!
+#what可接任何名词
+What good students they are!
+
+He has so many things to do that he can't go picnicking with us.
+There is so much work to do that I don't think I can go to bed early.
+He has too little money left to buy a car.
+I have as much money as he.
+I don't know how much time you can give me for that job.
+```
+
+such...that可置任何名词
+
+```
+This is such good music that I love it.
+They are such good students that I like them.
+```
+
 #### but
+
+作准关系代词时，只用于"no+名词"之后，等于who(whom/wich)...not。
+
+```
+There is no+名词+who(whom/which/that)...not
+=There is no+名词+but...
+
+#没有...是不...
+
+#没有人不对它感兴趣
+There is no one who is not interested in it.
+=There is no one but interested in it.
+
+#没有什么东西是他不喜欢的
+There is nothing which he is not found of.
+=There is nothing but he is fond of.
+
+There is nothing but he can do.
+There is no book but he likes to read.
+=There was no noe but he hated.
+```
+
+## 非谓语动词
+
+不定式、分词、动名词
+
+### 不定式
+
+### 分词
+
+### 动名词
