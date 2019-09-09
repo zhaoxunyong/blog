@@ -1037,3 +1037,94 @@ No matter how hard he works, I don't respect him.
 ```
 
 #### whether
+
+表无论是否只需whether即可，不可使用no matter whether，引导状语从句，以逗号分隔。
+
+引导名词性从句，无逗号相隔，表是否。
+
+```
+Whether he is rich(or not), Jane will marry him.
+
+#他是否富有都没关系
+Whether he is rich(or not) doesn't matter.(无逗号相隔)
+=It doesn't matter whether he is rich(or not).
+```
+
+#### however
+
+```
+However poor he is, he doesn't wnat anyone to help him.
+=However poor he may be, he doesn't want...
+```
+
+### 准关系代词
+
+that/as/but
+
+```
+I have more money than you(do).
+He has as much money as I(do).
+There is nothing but he knows.
+```
+
+#### that
+
+that + the 前面的动词 + 关系代词(who/whom/which), 可作主语、宾语、be动词后的表语
+
+```
+#主语
+I have more mony than is needed.
+that=that the money which，所以that中已经包含了主语，不用再添加主语
+More guests that were invited came.
+There are more books that are needed.
+
+#宾语
+I have more money than he needs.
+I have more books than you do.
+
+more...that=比...多
+
+#be词语后的表语
+He is a better student than you.
+```
+
+#### as
+
+```
+#像...那样的...
+such+n.+as...
+#主语
+I have such car as you.
+I don't like such a man as tells lies.
+#宾语
+I respect such an honest man as you described.
+#be动词后的表语
+In our company there is not such a man as David(is).
+Such a lazy student as John will get nowhere.
+
+#和...相同的...
+the same+n.+as...
+#主语
+I have the same book as is laid on the desk.
+as=as the book which
+#宾语
+I have the same dictionary as you bought yesterday.
+#be动词后的表语
+I have the same dictionary as this one(is).
+
+#和...一样的...
+as+adj.+n.+as...
+#主语
+#他是有史以来最勤奋的人
+He is as diligent a man as ever lived.
+as=as any man that
+#宾语
+#我有一本和你一样好的词典
+I have as good a dictionary as you(do).
+#be动词后的表语
+#他是个和John一样好的人
+He is as good a man as John.
+as=as the man that
+```
+
+#### but
