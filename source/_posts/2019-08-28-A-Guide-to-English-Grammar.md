@@ -1274,6 +1274,76 @@ There is no book but he likes to read.
 
 ### 不定式
 
+#### 不定式的功能
+
+```
+#主语
+To take a trip around the world has been my dream.
+
+#形容词
+I have something to do(to do修饰something).
+
+#副词
+I came to see her.
+```
+
+#### 名词不定式的用法
+
+当作主语时，可用It is...to V替代
+```
+It is my goal to marry her.
+It is difficult to learn English.
+```
+
+want/desire/intend/expect+to+V，但anticipate+动名词。
+
+注意：think也有想要的意思，但只用以表示“想到某一件事”，通常用that引导名词性从句作宾语
+```
+I think that he is great.
+I thought of Mary a while ago.
+I have been thinking of buying a car.
+=I have been considering buying a car.
+```
+
+```
+S + find(发现)   + it + 名词/形容词(作补语) + 名词不定式(真正宾语)
+    think(认为)
+    believe(相信)
+    consider(认为)
+    deem(认为)
+    feel(觉得)
+    make(使)
+
+I find it interesting to climb mountains.
+#我习惯早起
+I make it a rule to get up early.
+```
+
+在be动词表意愿、企图的名词
+```
+My plan is to see him.
+His goal is simply to become a teacher.
+```
+
+#### 形容词不定式的用法
+
+```
+I have some work to do.
+There is one thing to be done.
+```
+
+形容词不定式可以等于关系代词作主语所引导的定语从句。
+```
+I have on friend to advise me.
+=I have no friend who can advise me.
+
+There is one thing to be done.
+=There is one thing which should be done.
+
+I want something to eat.
+I have something to do.
+```
+
 ### 分词
 
 ### 动名词
