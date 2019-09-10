@@ -372,6 +372,15 @@ v2ray add ss
 也可以先手动生成证书，然后再手动指定证书路径。不过只需要用上面的方面就可以了，不需要使用以下的方式，以下只作记录：
 
 ```bash
+#install acme.sh
+curl https://get.acme.sh | sh
+
+#Create alias for: acme.sh=~/.acme.sh/acme.sh.
+#cat ~/.bash_profile
+alias acme.sh=~/.acme.sh/acme.sh
+#active
+. ~/.bash_profile
+
 export DP_Id=""
 export DP_Key=""
 #ras
@@ -429,9 +438,102 @@ acme.sh --ecc --install-cert -d www.a.com \
 
 一个web ui的v2ray服务端，也很方便。
 
-- https://github.com/sprov065/sprov-ui
-- https://blog.sprov.xyz/2019/02/09/sprov-ui/
+- https://github.com/sprov065/v2-ui
+- https://blog.sprov.xyz/2019/08/03/v2-ui/
 - https://blog.sprov.xyz/2019/05/06/crt-or-pem-to-jks/
+
+```bash
+#https://www.jianshu.com/p/2de3c13cde89
+
+#修改时区
+ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime
+
+#关闭内核安全
+sed -i 's;SELINUX=.*;SELINUX=disabled;' /etc/selinux/config
+setenforce 0
+getenforce
+
+#关闭防火墙
+systemctl disable iptables
+systemctl stop iptables
+systemctl disable firewalld
+systemctl stop firewalld
+
+#优化内核
+cat /etc/security/limits.conf|grep 65535 > /dev/null
+if [[ $? != 0 ]]; then
+cat >> /etc/security/limits.conf  << EOF
+*               soft    nofile             65535
+*               hard    nofile             65535
+*               soft    nproc              65535
+*               hard    nproc              65535
+EOF
+fi
+
+#打开端口转发
+#永久修改：/etc/sysctl.conf中的net.ipv4.ip_forward=1，生效：sysctl -p
+#临时修改：echo 1 > /proc/sys/net/ipv4/ip_forward，重启后失效
+
+cat /etc/sysctl.conf|grep "net.ipv4.ip_forward" > /dev/null
+if [[ $? != 0 ]]; then
+cat >> /etc/sysctl.conf  << EOF
+net.ipv4.tcp_fin_timeout = 30
+net.ipv4.tcp_keepalive_time = 300
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.ip_forward = 1
+EOF
+sysctl -p
+fi
+
+yum -y install epel-release
+yum install vim lsof nginx -y
+
+export DP_Id=""
+export DP_Key=""
+
+acme.sh --issue --dns dns_dp -d www.a.com --keylength ec-256
+
+#/etc/nginx/conf.d/ssl.conf
+server {
+  listen 443;
+  server_name  www.a.com;
+  server_tokens off;
+  client_max_body_size 0;
+  charset utf-8;
+
+  ssl on;
+  ssl_certificate      /root/.acme.sh/www.a.com_ecc/fullchain.cer;
+  ssl_certificate_key  /root/.acme.sh/www.a.com_ecc/www.a.com.key;
+  ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers ECDH:AESGCM:HIGH:!RC4:!DH:!MD5:!aNULL:!eNULL;
+
+  ## Individual nginx logs for this GitLab vhost
+  access_log  /var/log/nginx/www_access.log main;
+  error_log   /var/log/nginx/www_error.log;
+
+  #/qYDx3Nrl/必须与config.json中的path一样，包含最后的/
+  location /qYDx3Nrl/ {
+    proxy_redirect off;
+    #config.json中的ws的地址
+    proxy_pass http://127.0.0.1:56805;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $http_host;
+  }
+
+#   location / {
+#     #deny all;
+#     proxy_pass http://127.0.0.1:8082;
+#   }
+
+  location ^~ / {
+    proxy_pass http://127.0.0.1:65432;
+  }
+}
+```
 
 使用使用[KeyManager](https://keymanager.org/)，将www.a.com.key与fullchain.cer转换成jks。
 
