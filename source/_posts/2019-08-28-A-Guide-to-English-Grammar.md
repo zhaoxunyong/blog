@@ -1276,24 +1276,28 @@ There is no book but he likes to read.
 
 #### 不定式的功能
 
+当名词、形容词、副词：
+
 ```
-#主语
+#名词
 To take a trip around the world has been my dream.
 
 #形容词
 I have something to do(to do修饰something).
 
 #副词
-I came to see her.
+I came to see her.(to see her当副词修饰came)
 ```
 
 #### 名词不定式的用法
 
-当作主语时，可用It is...to V替代
+当作主语时，可用It is...to V替代:
 ```
 It is my goal to marry her.
 It is difficult to learn English.
 ```
+
+名词不定式作及物动词的宾语：
 
 want/desire/intend/expect+to+V，但anticipate+动名词。
 
@@ -1319,7 +1323,7 @@ I find it interesting to climb mountains.
 I make it a rule to get up early.
 ```
 
-在be动词表意愿、企图的名词
+在be动词表意愿、企图的名词：
 ```
 My plan is to see him.
 His goal is simply to become a teacher.
@@ -1327,12 +1331,15 @@ His goal is simply to become a teacher.
 
 #### 形容词不定式的用法
 
+置于名词的后面，作形容词用，修饰其前面的名词：
+
 ```
 I have some work to do.
 There is one thing to be done.
 ```
 
-形容词不定式可以等于关系代词作主语所引导的定语从句。
+形容词不定式可以等于关系代词作主语所引导的定语从句：
+
 ```
 I have on friend to advise me.
 =I have no friend who can advise me.
@@ -1340,10 +1347,305 @@ I have on friend to advise me.
 There is one thing to be done.
 =There is one thing which should be done.
 
+#形容词不定式也可等于关系代词作宾语所引导的定语从句：
 I want something to eat.
+=I want something which I can eat.
 I have something to do.
+=I have something which I must do.
+```
+
+此类句型中，被修饰的名词一定要作不定式短语中动词的宾语，否则就要作为介词的宾语：
+
+```
+He is a nice man to work with.
+Give me a chair to sit in.
+```
+
+be动词后加的形容词不定式有下列意义：
+
+1). 主动形式：
+  a). 表将来=will
+  ```
+  He is to come tomorrow.
+  =He is going to come tomorrow.
+  =He will come tomorrow.
+  ```
+
+  b). 表义务=should
+  ```
+  You are to do it.
+  You should do it.
+
+  What am I to do?
+  =What should I do?
+  ```
+
+2). 被动形式：
+  a). 表当然=should
+  ```
+  Such a lazy man is to be fired.
+  =Such a lazy man should be fired.
+  ```
+
+  b). 表可能=can
+  ```
+  My hat was nowhere to be found.
+  =My hat could not be fould anywhere.
+  ```
+
+#### 副词不定式的用法
+
+修饰动词：
+```
+He came to see me.
+He as agreed to do it.
+He sang a song to please her.
+He tends to lie.
+You'll soon get to know him.
+```
+
+修饰形容词：一定置于该形容词之后：
+```
+He is able to handle the problem.
+He os apt to lie.=He tends to lie.
+This book is good to read.
+```
+
+修饰副词，一定置于该副词之后：
+```
+He is toold old to swim.
+He is old enough to go swimming alone.
+```
+
+疑问词+不定式=名词短语：
+```
+where to go
+when to do it
+how to swim
+what to do
+which to buy
+whom to see
+```
+
+```
+What to do was the question.
+He is learning how to do it.
+The problem is where to start.
+```
+
+#### that从句化简为不定式
+P157：
+
+单一动词:
+```
+It seems that he works hard.
+=He semms(appears) to work hard.
+
+#我刚巧在那里
+It happended that I was there.
+=I happended to be there.
+```
+
+be+过去分词:
+```
+It is said: 据说         + that he is good.
+It is reported: 据报道
+It is rumored: 谣传
+It is known: 据了解
+It is thought: 一般认为
+It is believed: 一般相信
+=He is said(reported/...) to be good.
+```
+
+如何变化：时态相同时, to之后加原型动词：
+```
+It seems that he works hard.
+=He seems to work hard.
+
+It appears that they are nice.
+=they appear to be nice.
+
+It was said that he loved music very much.
+=He was said to love music very much.
+
+It is said they love music very much.
+=they are said to love music very much.
+```
+
+时态不同时，to之后加“have(曾经、已经)+过去分词”：
+```
+It seems that he worked hard.
+=He seems to have worked hard.
+
+It is said that he was a thug(流氓) in the past.
+=He is said to have been a thug in the past.
+```
+
+to be的省略：
+```
+He seems to be nice.
+=He seems nice.
+```
+
+prove+to be:
+```
+#表证明：接名词或名词性从句作宾
+The investigation proved his guilt.
+=The investigation proved that he was guilty.
+
+#to be: 表显示、结果是：
+#他的话竟然是真的
+What he said proved to be true.
+
+#这份报告结果是错的
+The report proved to be false.
+=The report proved false.
+=The report turned out to be false.
+=The report turned out false.
+```
+
+#### 使役动词加不定式短语作宾语补语
+
+P160: 注意与P35的区别，叫、让之类的直接接动词原型。
+```
+cause/get: 促使...
+lead: 引导...
+allow/permit: 允许...
+advise: 劝告...
+persuade: 说服...
+enable: 使能够...
+tell: 告诉...
+beg/ask: 请求...
+order: 命令...
+want/wish/expect/intend: 期望...
+
+The sad story caused him to cry.
+His speech led me to understand the importance of learning English.
+He advised me not to smoke again.
+```
+
+不定式短语作主语时，若短语中最后一个词为宾语，该宾语可移置句首作主语，其余部分则移到句尾：
+
+```
+To please my father is hard.
+=My father is hard to please.
+
+To get along with him is easy.
+=He is easy to get along with.
+```
+
+#### 原型不定式
+
+```
+can/could/shall/should/will/would/may/might/ought to/must + 原型动词
+
+I can do it.
+He should finish it.
+```
+
+#### 知觉动词与原型不定式的关系
+
+看、听、感觉+原型动词
+
+```
+看：see/watch/observe/look at
+听：hear/listen to
+感觉：feel
+
+#...了
+I saw him enter the room.
+I never heard him speak English.
+I felt the house shake.
+```
+
+#### 使役动词与原型不定式的关系
+
+P164：
+```
+let(让)、make(使)、bid(叫)、have(叫)+原型动词、当get(叫)+to+原形动词：
+
+Let me try it.
+=Allow me to try it.
+
+I made him wash the car.
+
+I had him wash the car.
+=I got him to wash the car.
+
+#make/let被动时，要改为to+原形动词
+I let him leave.
+=He was allowed to leave.
+
+The made John clean the window.
+=John was made to clean the window.
+```
+
+#### 原形不定式的特殊结构
+
+```
+#do nothing but + 原形不定式
+He did nothing but eat all day.
+
+#choose(expect/want/disire) nothing but + to + 原形动词
+#He wanted to sleep
+He wanted nothing but to sleep.
+
+#be interested in nothing but+动名词/名词
+He is interested in nothing but singing.
+
+#enjoy nothing but+动名词/名词
+I enjoy nothing but dancing.
+
+#cannot but+原形不定式
+When I heard the story, I couldn't but laugh.
+=When I heard the story, I couldn't help laughing.
+When I heard the story, I couldn't help but laugh.
 ```
 
 ### 分词
+
+分词包括现在分词与过去分词：
+
+```
+#进行： be+现在分词
+He is dong the work.
+
+#完成：have+过去分词
+He has done the work.
+
+#被动：be+过去分词
+The job was done.
+```
+
+#### 分词作形容词
+
+```
+#表主动/被动的概念
+令人...的：现在分词
+感到...的：过去分词
+受到...的：过去分词
+
+#表进行/完成的概念
+正在...的：现在分词
+即将...的：现在分词
+已经...的：过去分词
+
+#现在分词作形容词：令人...的
+The student raised a confusing question.
+
+#现在分词作形容词：即将...的
+The retiring teacher walked into the classroom.
+
+#过去分词作形容词：已经...的
+The retired teacher walked into the classroom.
+
+
+#过去分词作形容词：置于be动词后作表语：感到...的
+The teacher was confused.
+
+#过去分词作形容词：受到...的: 
+#受伤的士兵被急忙送到医院
+The wounded soldier was rushed to hospital.
+```
 
 ### 动名词
