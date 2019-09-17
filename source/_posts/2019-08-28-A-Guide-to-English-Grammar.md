@@ -1639,13 +1639,151 @@ The retiring teacher walked into the classroom.
 #过去分词作形容词：已经...的
 The retired teacher walked into the classroom.
 
-
 #过去分词作形容词：置于be动词后作表语：感到...的
 The teacher was confused.
 
 #过去分词作形容词：受到...的: 
 #受伤的士兵被急忙送到医院
 The wounded soldier was rushed to hospital.
+
+He is gone.
+=He has gone.
+
+We're closed
+=We've closed.
+
+He is retired.
+=He has retired.
+
+We are finished with the work.
+=We have finished the work.
+
+We are sold out of this book.
+=We have sold out of this book.
+```
+
+#### 分词作表语
+
+a. be动词(或remain/become/appear/seem等系动词)后的表语：
+```
+He is interested in it.
+The bady is tiring.
+He seems tired.
+```
+
+b. 及物动词后的宾语补语：
+```
+I found him killed.
+They found him tired.
+```
+
+动词若为及物动词，有两种形态：
+```
+#现在分词+宾语
+I found him killing cockroaches.
+#过去分词
+I found the cockroaches killed.
+I found him killed.
+```
+
+动词若为不及物动词作宾语补语时，一律变成现在分词：
+```
+I found him trembling.
+I kept John waiting.
+```
+
+c. with复合结构中的宾语补语：
+```
+He talked to me with his legs shaking.
+He stood with his arms folded.
+
+He talked to me with a pipe in his mouth.
+=He talked to me pipe in mouth.
+```
+
+#### 分词作名词
+
+```
+The young should learn to cherish life.
+=Young people should learn to cherish life.
+
+The wounded were rushed to the hospital.
+=Wounded people were rushed to the hospital.
+```
+
+#### 分词作副词
+
+```
+It's freezing cold today.
+The tea is boiling hot.
+
+An estimated 54 people were killed in the air crash.
+=It's estimated that 54...
+
+A great many students are more and more interested in learning English.
+
+He is dead(completely) wrong.
+It's awful(awfully/very) hot day.
+```
+
+#### 分词结构-动词变化
+
+a. 若两个动词无连词相连时，动作同时发后，第二个动词变成现在分词, 若为be动词，变成being后省略：
+
+```
+He came home cried.(x)
+He came home cring.
+
+He sat in the corner reading a newspaper.
+
+He came home was tired.(x)
+He came home tired.
+```
+
+b. 若两个动词无连词相连时，动作有先后顺序，第二个动词变成to+原形动词, 若为be动词，变成being后省略：
+
+```
+He came here saw me.(x)
+He came here to see me.
+
+He stood up to smoke a cigarette.
+```
+
+c. 若两个动词有逗号相隔，而无连接时，不必考虑动作的先后顺序，第二个动词一定变成现在分词：
+
+```
+He left home at six in the moring, arrived here about four in the afternoon.(x)
+He left home at six in the moring, arriving here about four in the afternoon.
+
+He ran away quickly,looked as if something terrible had happened.
+He ran away quickly,looking as if something terrible had happened.
+```
+
+#### 分词结构-单句化简法
+
+两句在一起，若无连词相连时，往往第一个句子要化简，变成分词短语：
+
+```
+He has nothing to do, he feels bored.(x)
+having nothing to do, he feels bored.
+
+He was sick of studying, he ran away from here.(x)
+Sick of studying, he ran away from here.
+
+The sun set, the cowboys rode back to the ranch.(x)
+The sun setting, the cowboys rode back to the ranch.
+
+He was not satisfied with the result, he decided to try again.(x)
+Not satisfied with the result, he decided to try again.
+
+He didn't intend to see her, he left early.(x)
+Not intending to see her, he left early.
+
+He had done the work, he felt happy.(x)
+Having done the work, he elft happy.
+
+I have not seen her for ages, I miss her.(x)
+Not having seen her for ages, I miss her.
 ```
 
 ### 动名词
