@@ -1763,6 +1763,10 @@ He ran away quickly,looking as if something terrible had happened.
 
 两句在一起，若无连词相连时，往往第一个句子要化简，变成分词短语：
 
+a. 两句主语相同时，被简化的主语要删除，若主语主同时则要保留
+b. 之后的动词要变成现在分词
+c. 若该动词为be动词，变成现在分词being后，可以省略，但亦可不省略以强调因为的意思。
+
 ```
 He has nothing to do, he feels bored.(x)
 having nothing to do, he feels bored.
@@ -1784,6 +1788,131 @@ Having done the work, he elft happy.
 
 I have not seen her for ages, I miss her.(x)
 Not having seen her for ages, I miss her.
+
+#也可以消灭第二个句子，变成分词结构
+He was reading a book, his wife knitting(编织) beside him.
+=He was reading a book, and his wife was knitting beside him.
+We will go picnicking tomorrow, weather permitting.
+=We will go picnicking torrow if weather permits.
+```
+
+#### 分词短语-定语从句化简法
+
+P184
+
+a. 删除关系词
+b. 其后动词变成现在分词
+c. 若be动词变成being省略
+d. 非限定修饰的定语从句(关系代词前有逗号的)，通常不得化简为分词短语. 如果为关系代词+be+名词时，仍可化简
+
+```
+The man who is talking to Mary over there is my father.
+=The man talking to Mary over there is my father.
+
+Who is the body that is locked behind the door?
+=Who is the body locked behind the door?
+
+I like Tom, who is talking to Mary.(ok)
+=I like Tom, talking to Mary.(x)
+
+John, who is a good friend of mine, studies hard.
+=John, a good friend of mine, studies hard.
+```
+
+#### 分词结构-状语从句化简法
+
+once/when/while/if/unless/though等所引导的状语从句中，若主语与主句中的主语相同时，亦可化简为分词结构
+
+once/if/unless只限：主语+be+分词/形容词
+
+```
+If I am free, I will go with you.
+=If free, I will go with you.
+
+In those days, when he didn't know how to proceed in an emergency, he would consult his father.
+=In those days, when not knowing to prceed in an emergency, he would consult his father.
+
+He will do it if he is properly encouraged.
+=He will do it if properly encouraged.
+
+#除非另有指示,你应照我的话去做
+Unless you are otherwise instructed, you should do as I said.
+=Unless otherwise instructed, you should do as I said.
+```
+
+#### 身体组织的名词可变成过去分词当形容词用
+
+```
+The girl has big eyes.
+I love the big-eyed girl.
+
+She has red hair.
+Do you see the red-haired girl there?
+```
+
+#### 少数现在分词当介词
+
+```
+including(包括)
+excluding(除外)
+considering(考虑)
+regaring(关于)
+concerning(关于)
+
+Everyone likes the movie, including John.
+=Everyone likes the movie, John excluded.
+
+Considering his performance, he can be a good teacher.
+=His performance considered, he can be a good teacher.
+
+He wrote an article regarding(concerning/about/on) environmental pollution.
+```
+
+#### 独立分词短语
+
+P189
+
+```
+Generally speaking... 一般而言
+Strictly speaking... 严格说来
+Frankly speaking... 老实说
+Judging from his appearance... 从他的外表看来
+Talking of novels... 谈到小说
+According to John... 根据John的说法
+Seeing that... 既然...
 ```
 
 ### 动名词
+
+可在句中作主语、宾语及表语。
+
+### 作主语
+
+```
+Working with him is fun.
+
+Not knowing what to do was an embarrassment for him.
+```
+
+### be动词后的表语
+
+```
+Seeing is believing.
+
+#动名词
+His hobby is collecting stamps.
+#不定式
+My hope(goal/desire/wish/intention/plan/purpose) is to fullfill the mission.
+
+She is dancing.
+```
+
+### 动词的宾语
+
+P195
+
+```
+I remember seeing him.
+He considered traveling abroad next year.
+He recommended doing it soon.
+```
