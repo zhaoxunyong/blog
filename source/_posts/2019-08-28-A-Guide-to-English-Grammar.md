@@ -1886,7 +1886,7 @@ Seeing that... 既然...
 
 可在句中作主语、宾语及表语。
 
-### 作主语
+#### 作主语
 
 ```
 Working with him is fun.
@@ -1894,7 +1894,7 @@ Working with him is fun.
 Not knowing what to do was an embarrassment for him.
 ```
 
-### be动词后的表语
+#### be动词后的表语
 
 ```
 Seeing is believing.
@@ -1907,7 +1907,7 @@ My hope(goal/desire/wish/intention/plan/purpose) is to fullfill the mission.
 She is dancing.
 ```
 
-### 动词的宾语
+#### 动词的宾语
 
 P195
 
@@ -1915,4 +1915,131 @@ P195
 I remember seeing him.
 He considered traveling abroad next year.
 He recommended doing it soon.
+
+#allow/permit/forbid(禁止)
+He allowed(permitted) me to smoke.
+He allowed(permitted) smoking.
+
+#禁止
+He forbade me to smoke.
+He forbade smoking.
+
+#remember/forget/regret
+remember(记得曾) + 动名词
+forget(忘记曾)
+regret(后悔曾)
+
+I remember seeing her before.
+I remember having seen her before.
+#我后悔做了此事
+I regret doing it.
+I regret having done it.
+
+remember(记得要) + to V
+forget(忘记要)
+regret(遗憾要)
+
+I remember to see him tomorrow.
+I forgot to mail this letter.
+#我很遗憾...
+I regret to tell you the bad news.
+=I'm sorry to tell you the bad news.
+```
+
+下面动词用不定式或动名词作宾语，意思不变：
+
+like/love/hate/continued/gegan/started, dislike只能用动名词。
+
+```
+I like to do it.
+I like doing it.
+```
+
+#### 介词的宾语
+
+```
+He is fond of taking a walk.
+His illness prevented us from starting our own business.
+None would have dreamed of there being such a place.
+The book is worth reading.
+```
+
+worth: prep. 值得
+
+```
+#is worth+名词或动名词(recommended)
+The issue is worth paying attention to.
+The car is worth a fortune.
+```
+
+worthy: adj. 值得的(与of连用)
+
+```
+The issue is worthly of everyone's attention.
+```
+
+worthwhile: adj. 值得的(置于名词前，亦可置于it it之后)
+
+```
+That's a worthwhile book to read.
+It is worthwhile to read that book
+It pays to read that book.
+```
+
+#### 所有格与动名词的关系
+
+P199
+
+```
+#that引导的名词性从句
+That he teches well is something that pleases me.
+=His teching well is something that pleases me.
+
+That John refused to do his homework made his father angry.
+John's refusing to do his homework made his father angry.
+
+That he didn't finish the work on time disappointed me.
+His not finishing the work on time disappointed me.
+
+That they had helped John with the work won our great admiration.
+There having helping John with the work won our great admiration.
+```
+
+like/diske/enjoy/mind后不可直接接that从句
+
+```
+I dont like his smoking here.
+I dont enjoy John's joining us.
+
+#如果我开窗你介意吗？
+Would you mind that I open the windows?(x)
+Would you mind my opening the windows?
+=Would you mind if I opened the windows.
+#请你开窗子，你介意吗？
+Would you mind opening the windows.
+```
+
+#### 常用的动名词惯用语
+
+```
+#There is no V-ing: 不可能
+=It is impossible to V
+There is no reasoning with such a stubborn man.
+It is impossible to reason with such a stubborn man.
+
+#It is no use V-ing: ...是无用的
+=It is of no use to V
+It is no use trying to escape.
+It is of no use to tryto escape.
+
+#cannot help(resist/stop) + V-ing: 忍不住...
+=cannot but V
+=cannot help but V
+He couldn't help crying when he saw her.
+He couldn't but cry when he saw her.
+
+#on V-ing: 一...就...
+=As soon as/once/The moment/The instant
+On(Upon) hearing it, he cried.
+As soon as he heard it, he cried.
 ```
