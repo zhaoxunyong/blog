@@ -2043,3 +2043,160 @@ He couldn't but cry when he saw her.
 On(Upon) hearing it, he cried.
 As soon as he heard it, he cried.
 ```
+
+## 助动词及易用错的动词
+
+### shall/will
+
+征求对方意见时：
+```
+Shall I open the door?
+=Would you like me to open the door?
+```
+
+请求对方合作时：
+```
+Shall we go for a walk?
+=Let's go for a walk, shall we?
+```
+
+命令对方时：
+```
+You shall obey the law.
+=You must obey the law.
+```
+
+### should
+
+主要功能就是表示一种义务，后面接原型动词：应当，=ought to
+```
+We should be kind to others.
+```
+但也会有以下的其他意思。
+
+#### 会
+```
+It is natural(自然的)       that...should   ....会...
+      proper(适当的/合理的)
+      right(正当的)
+      advisable(恰当的)
+      desirable(较好的)
+      no wonder(无疑的)
+
+#他会生气是很自然的事
+It is natural that he should get angry.
+
+#努力的人会成功，这个是合理的
+It is proper that one who works hard should be successful.
+
+It is no wonder that such a naughty boy should be punished.
+=No wonder such a naughty boy should be punished.
+```
+
+#### 应当
+```
+It is necessary that...should...  ...应当...是有必要的
+      imerative
+      essential
+      important
+      urgent
+
+#should可以省略
+It is necessary that he (should) finish the work before leaving.
+
+It is important that he finish the job before leaving.
+```
+
+#### 居然
+```
+It is surprising that...should(居然)...  令人惊异的是...居然
+      amazing
+it is surprising that he should be so kind.
+
+It is a pity that...should(居然)...  令人遗憾的是...居然...
+      a regret
+      regrettable
+It is a pity that he should be so rude.
+```
+
+#### 意志动词
+
+表建议(propose/recommend/suggest)、要求(ask/demand/desire/require/insist/request)、命令(order/command)、规定(rule/regulate)等后有that从句时，that从句中亦使用should，should往往省略:
+```
+#他建议我们立刻离去
+He suggested that we(should) leave at once.
+#他们要求他安静
+They demanded that he(should) be quiet.
+```
+
+#### 以免
+
+```
+He came early lest he(should) be late.
+=He came early for fear that he might be late.(might不可省略)
+```
+
+#### 万一
+
+```
+If you should be late again, you will spoil the plan.
+```
+
+#### should have+过去分词
+
+表示与过去事实相反的虚拟语气：早应.../应该早点...
+```
+#你当时要是没救我，我就死了
+If you had not helped me, I should have died.
+
+#你应该早点做好的
+You should have done it earlier.
+
+#这么好的景色，你当时真该看看的
+It was such a fine sight. You should have seen it.
+```
+
+表示"居然已经":
+```
+#令人惊讶的是他居然已通过了考试
+It is surprising that he should have passed the examination.
+#真遗憾他竟然做了这么愚蠢的事
+It is a pity that he should have done such a stupid thing. 
+```
+
+### would
+
+would是will的过去式，用以表示过去将来时
+```
+He said, "I will try again."
+He said that he would try again.
+Did you know when he would come?
+```
+
+#### would虚拟语气
+
+would+原形动词： (如果...)就会...
+would have+过去分词
+
+与现在事实相反：
+```
+#如果我现在有钱，我会买部车(但我现在没有钱)
+If I had money now, I would buy a car.
+```
+
+与过去事实相反：
+```
+#当时我要是有钱，早就买车了
+If I had had money then, I would have bought a car.
+```
+
+#### would rather+原形动词
+
+宁愿...
+```
+#我宁愿走也不要留在这儿
+I would rather go than stay here.
+=I would sonner go than stay here.
+=I would as soon go as stay here.
+```
+
