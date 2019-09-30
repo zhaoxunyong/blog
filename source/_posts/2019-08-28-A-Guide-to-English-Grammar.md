@@ -2200,3 +2200,37 @@ I would rather go than stay here.
 =I would as soon go as stay here.
 ```
 
+#### I would rather that
+
+我多么希望.... = I wish + that从句，属于虚拟语气，若与现在事实相反，that从句用一般过去式，若与过去事实相反，则用过去完成式：
+
+与现在事实相反：
+```
+#我多么希望他现在在这里
+I would rather (that) he were here.
+=I wish (that) he were here.
+```
+
+与过去事实相反：
+```
+#我多么希望他昨天就在这里
+I would rather he had been here yesterday.(But he wasn't here.)
+```
+
+#### would you mind
+
+加Ving或if从句： 您介不介意...
+=Do you mind...
+
+```
+Would you mind doing it for me?
+               if you did it for me?
+=Do you mind...
+```
+
+would you mind会比较客气。yould you mind从句中用过去式，do you mind从句中用现在式。
+
+### can/could
+
+
+
