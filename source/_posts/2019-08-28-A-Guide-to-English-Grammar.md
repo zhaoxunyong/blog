@@ -2232,5 +2232,40 @@ would you mind会比较客气。yould you mind从句中用过去式，do you min
 
 ### can/could
 
+1.表"能力"：be able to，译成：能够
+```
+He can cope with the problem.
+=He is able to cope with the problem.
+```
 
+2.表可能性，译成：有可能
+```
+#他要是这么说就可能错了
+He can be wrong to say so.
+                if he says so.
+```
+
+3.表许可，译成：可以
+```
+#你可以现在回家了
+You can go home now.
+#你不可以在这儿抽烟
+You can't smoke here.
+```
+
+4.在疑问句或否定句中，表可能性，译成：有可能或不可能
+```
+#这可能是真的吗？
+Can it he true? No, it can't be true.
+```
+
+5.表对过去事实的否定推理
+```
+can't have+去过分词    不可能曾...
+#他这么老实不可能昨天会偷你的钱
+He is so honest that he can't have stolen your money yesterday.
+
+#can仅用以表示对过去事物的否定推论，无法做肯定推论。无下列用法
+he can have stolen your money.(x)
+```
 
