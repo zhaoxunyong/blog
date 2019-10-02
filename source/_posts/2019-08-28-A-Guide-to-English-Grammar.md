@@ -2269,3 +2269,36 @@ He is so honest that he can't have stolen your money yesterday.
 he can have stolen your money.(x)
 ```
 
+6.对过去事实的肯定推论，有两种句型：
+```
+must have+过去分词    一定曾经...
+#他看过来紧张兮兮，一定是偷了你的钱
+He looks nervous; he must have stolen your money.
+
+may have+过去分词    可能曾经...
+#他看过来紧张兮兮，很可能偷了你的钱
+He looks nervous; he may have stolen your money.
+
+Can+S+have+过去分词    有可能...吗？
+#他有可能偷了你的钱吗？
+Can he have stolen your money?
+```
+
+7.would/could用在问句中表客气
+```
+Could(would) you please do it for me?
+```
+
+8.could=was/were able to
+
+9.can的惯用语
+```
+#我只能这么做
+I can but do so.
+=I can only do so.
+#我忍不住大笑
+I cannot but laugh.
+=I cannot help bu laugh.
+=I cannot help laughing.
+```
+
