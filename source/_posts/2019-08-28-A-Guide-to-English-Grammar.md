@@ -2225,7 +2225,8 @@ I would rather he had been here yesterday.(But he wasn't here.)
 ```
 Would you mind doing it for me?
                if you did it for me?
-=Do you mind...
+=Do you mind doing it for me?
+             if you do it for me?
 ```
 
 would you mind会比较客气。yould you mind从句中用过去式，do you mind从句中用现在式。
@@ -2245,7 +2246,7 @@ He can be wrong to say so.
                 if he says so.
 ```
 
-3.表许可，译成：可以
+3.表许可，=may，译成：可以
 ```
 #你可以现在回家了
 You can go home now.
@@ -2255,8 +2256,8 @@ You can't smoke here.
 
 4.在疑问句或否定句中，表可能性，译成：有可能或不可能
 ```
-#这可能是真的吗？
-Can it he true? No, it can't be true.
+#这可能是真的吗？不，这不可能是真的
+Can it be true? No, it can't be true.
 ```
 
 5.表对过去事实的否定推理
@@ -2300,5 +2301,196 @@ I can but do so.
 I cannot but laugh.
 =I cannot help bu laugh.
 =I cannot help laughing.
+
+#cannot be too...: 再...也不会过
+#我们在择友时同志小心也不为过
+We cannot be too careful in choosing friends.
+
+#我一点儿也不在乎(我不能低于比现在不在乎的程度了)
+I couldn't care less.
+
+#我同意极了(我不能比现在更加地同意了)
+I couldn't agree more.
 ```
 
+### may/might
+
+1.表许可，译成：可以
+```
+You may take whatever you like.
+May I go home?
+#might与would/could一样，在问句中有客气的语气
+Might I make a suggestion?
+```
+
+2.表推测，译成可能，=can
+```
+It may be true.
+He may come, or he may not(come).
+=Perhaps he will come;perhaps he will not(come).
+```
+
+3.may not有两种意思：
+
+a.可能不会
+```
+It's getting late; he may not come.
+```
+
+b.不可以=must not
+```
+You may not cheat during exams.
+    must not
+```
+
+4.might表过去的状况
+```
+He said, "You may go"
+He said that I might go.
+```
+
+5.might+原形动词        也许会...
+  might have+过去分词   当时也许会...
+
+a.与现在事实相反
+```
+If he tried hard, he might succeed.(But he doesn't try hard.)
+```
+
+b.与过去事实相反
+```
+If he had tried hard, he might have succeeded.(But he didn't try hard.)
+```
+
+6.may的管用语
+
+a.may well+原形动词    大可/足可以...
+```
+#genius:天才
+He knows so many things that he may well be called a genius.
+```
+
+b.may as well+原形动词    不妨...(语气缓和)
+  had better+原形动词     最好...(语气较强)
+```
+#你不妨留在家中
+You may as well stay home.
+#你最好留在家中
+You had better stay home.
+```
+
+c.may as well+原形动词+as+原形动词    与其...倒不好...
+=had better+原型动词+than+原形动词
+```
+#你倒不如留在家里，与其各他们出去。
+You may as well stay home as go out with them.
+```
+
+may as well...as...表较大的可能性，might as well...as...表较小的可能性
+```
+You might as well die as make friends with Mary.
+```
+
+### must
+
+1.must接原形动词
+
+2.表义务，表“必须”
+```
+You must finish the work before leaving.
+```
+
+3.must表一种义务上强制的必须，have to，有勉强的意味，表“有必要”
+```
+You must love your country.
+```
+
+must只用于表示现在或将来，而have to则可用于表过去、现在及将来的状况
+```
+#现在
+You must come now.
+#将来
+You must come tomorrow.
+#过去
+He will have to come tomorrow.
+```
+
+否定式：
+
+1) must not=may not    不可以
+```
+#你绝不可以做这事
+You must not do it.
+```
+
+2) don't have to=need not    不必
+```
+#你不必做这事
+You don't have to do it.
+```
+
+口语中，have to被have got to或gotta取代
+```
+I have to tell you the truth.
+I've got to tell you the truth.(I've可以直接读成I)
+I gotta tell you the truth.
+但:
+He has got to tell you the truth.
+=He's totta tell you the truth.(s不能去掉)
+```
+
+4.must对现在状况或过去状况的推论
+
+a.对现在状况的推论：must+原形动词    一定...
+```
+#这一定是真的
+It must be true.
+但否定时，不能用It must not be true.(x)，还用：
+It can't be true.(它不可能是真的)
+```
+
+b.对过去状况的推论：must+have+过去分词    一定曾经...
+```
+It must have rained last night.
+```
+
+
+### ought to
+
+与should使用相同
+
+### need
+
+1.需要
+```
+He needs to go.
+The car needs to be cleaned.
+The car needs cleaning.
+```
+
+2.否定：need not+原形动词    不必
+```
+#need not为固定，need第3人称不用加s
+He need not go.
+=He doesn't need to go.
+```
+
+### dare
+
+1.助动词
+```
+dare not+原形动词    不敢...
+Dare one+原形动词    某人敢...吗？
+
+#他不敢去
+He dare not go.
+#他敢去吗?
+Dare he go?
+```
+
+2.How dare+一般陈述句？    ...怎敢...?
+```
+How dare you say such a thing to me?
+```
+
+3.
