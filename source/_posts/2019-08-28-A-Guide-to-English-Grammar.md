@@ -2725,4 +2725,114 @@ regret + Ving    后悔曾...
 
 ## 时态
 
+### 种类
+
+#### 一般时
+
+```
+1. 一般现在时
+He writes a letter every day.
+
+2. 一般过去时
+He wrote a letter yesterday.
+
+3. 一般将来时
+He will write a letter tomorrow.
+```
+
+#### 完成时
+
+```
+1. 现在完成时
+He has written the letter.
+
+2. 过去完成时
+He had written the letter when I came.
+
+3. 将来完成时
+He will have written the letter before I come.
+```
+
+#### 进行时
+
+```
+1. 现在进行时
+He is writing a letter now
+
+2. 过去进行时
+He was writing a letter when I came.
+
+3. 将来进行时
+He will be writing a letter when I come.
+```
+
+#### 完成进行时
+
+```
+1. 现在完成进行时
+He has been writing a letter for two hours.
+
+2. 过去完成进行时
+When I called, he had been writing a letter for two hours.
+```
+
+### 使用现在完成时的时机
+
+主语+have+过去分词(have译成“已经”或“曾经”)：
+
+```
+
+a. 用以表示到现在为止完成的动作：
+I have just finished my homework.
+
+b. 用以表示到现在为止的经验：
+#我见过他几次
+I have met him several times.
+#我从未见过像他这样的人
+I have never met such a man as he.
+
+c. 表曾去过的经历用：have been，表已经到了某个地方：have gone
+#他已经到香港去了(还没有回来)
+He has gone to Hong Kong.
+#他曾去过香港
+He has been to Hong Kong.
+```
+
+### 使用过去完成时的时机
+
+```
+主语+had+过去分词(had译成“已经”或“曾经”)，用以表示截至过去某时为止所完成的动作或经历：
+
+He had studied English for 10 years before he left for the States.
+
+He had already left when I came.
+```
+
+过去完成时不能单独存在，要与另一个一般过去时从句或表过去的副词短语连用：
+
+先发生的动作--->用过去完成时表示
+后发生的动作--->用一般过去时表示
+
+```
+I lost the book which my father had given me.
+```
+
+### 使用过去完成进行时的时机
+
+主语+had been+现在分词(had been译成“一直都在”)，与过去完成时一样，过去完成进行时不能单独存在，须与一般过去时连用。
+
+```
+I had been sleeping when he came.
+He told us that he had been studying German since 2001.
+```
+
+### 使用将来完成进行时的时机
+
+主语+will have been+现在分词(will have been译成“将一直在”)，表一直继续到将来某时，而仍将继续进行的动作：
+
+```
+到今年年底，我教英语将已有10年了
+I will have been teaching English for ten years by the end of this year.
+```
+
 ## 虚拟语气
