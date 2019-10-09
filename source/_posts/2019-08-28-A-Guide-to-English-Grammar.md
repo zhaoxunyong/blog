@@ -2046,7 +2046,9 @@ As soon as he heard it, he cried.
 
 ## 助动词及易用错的动词
 
-### shall/will
+### 助动词
+
+#### shall/will
 
 征求对方意见时：
 ```
@@ -2066,7 +2068,7 @@ You shall obey the law.
 =You must obey the law.
 ```
 
-### should
+#### should
 
 主要功能就是表示一种义务，后面接原型动词：应当，=ought to
 ```
@@ -2074,7 +2076,7 @@ We should be kind to others.
 ```
 但也会有以下的其他意思。
 
-#### 会
+##### 会
 ```
 It is natural(自然的)       that...should   ....会...
       proper(适当的/合理的)
@@ -2093,7 +2095,7 @@ It is no wonder that such a naughty boy should be punished.
 =No wonder such a naughty boy should be punished.
 ```
 
-#### 应当
+##### 应当
 ```
 It is necessary that...should...  ...应当...是有必要的
       imerative
@@ -2107,7 +2109,7 @@ It is necessary that he (should) finish the work before leaving.
 It is important that he finish the job before leaving.
 ```
 
-#### 居然
+##### 居然
 ```
 It is surprising that...should(居然)...  令人惊异的是...居然
       amazing
@@ -2119,7 +2121,7 @@ It is a pity that...should(居然)...  令人遗憾的是...居然...
 It is a pity that he should be so rude.
 ```
 
-#### 意志动词
+##### 意志动词
 
 表建议(propose/recommend/suggest)、要求(ask/demand/desire/require/insist/request)、命令(order/command)、规定(rule/regulate)等后有that从句时，that从句中亦使用should，should往往省略:
 ```
@@ -2129,20 +2131,20 @@ He suggested that we(should) leave at once.
 They demanded that he(should) be quiet.
 ```
 
-#### 以免
+##### 以免
 
 ```
 He came early lest he(should) be late.
 =He came early for fear that he might be late.(might不可省略)
 ```
 
-#### 万一
+##### 万一
 
 ```
 If you should be late again, you will spoil the plan.
 ```
 
-#### should have+过去分词
+##### should have+过去分词
 
 表示与过去事实相反的虚拟语气：早应.../应该早点...
 ```
@@ -2164,7 +2166,7 @@ It is surprising that he should have passed the examination.
 It is a pity that he should have done such a stupid thing. 
 ```
 
-### would
+#### would
 
 would是will的过去式，用以表示过去将来时
 ```
@@ -2173,7 +2175,7 @@ He said that he would try again.
 Did you know when he would come?
 ```
 
-#### would虚拟语气
+##### would虚拟语气
 
 would+原形动词： (如果...)就会...
 would have+过去分词
@@ -2190,7 +2192,7 @@ If I had money now, I would buy a car.
 If I had had money then, I would have bought a car.
 ```
 
-#### would rather+原形动词
+##### would rather+原形动词
 
 宁愿...
 ```
@@ -2200,7 +2202,7 @@ I would rather go than stay here.
 =I would as soon go as stay here.
 ```
 
-#### I would rather that
+##### I would rather that
 
 我多么希望.... = I wish + that从句，属于虚拟语气，若与现在事实相反，that从句用一般过去式，若与过去事实相反，则用过去完成式：
 
@@ -2217,7 +2219,7 @@ I would rather (that) he were here.
 I would rather he had been here yesterday.(But he wasn't here.)
 ```
 
-#### would you mind
+##### would you mind
 
 加Ving或if从句： 您介不介意...
 =Do you mind...
@@ -2231,7 +2233,7 @@ Would you mind doing it for me?
 
 would you mind会比较客气。yould you mind从句中用过去式，do you mind从句中用现在式。
 
-### can/could
+#### can/could
 
 1.表"能力"：be able to，译成：能够
 ```
@@ -2313,7 +2315,7 @@ I couldn't care less.
 I couldn't agree more.
 ```
 
-### may/might
+#### may/might
 
 1.表许可，译成：可以
 ```
@@ -2391,7 +2393,7 @@ may as well...as...表较大的可能性，might as well...as...表较小的可�
 You might as well die as make friends with Mary.
 ```
 
-### must
+#### must
 
 1.must接原形动词
 
@@ -2455,11 +2457,11 @@ It must have rained last night.
 ```
 
 
-### ought to
+#### ought to
 
 与should使用相同
 
-### need
+#### need
 
 1.需要
 ```
@@ -2475,7 +2477,7 @@ He need not go.
 =He doesn't need to go.
 ```
 
-### dare
+#### dare
 
 1.助动词
 ```
@@ -2493,4 +2495,234 @@ Dare he go?
 How dare you say such a thing to me?
 ```
 
-3.
+3.在whether从句中，dare可作助动词
+```
+#我怀疑他敢不敢做这事
+I wonder whether he dare do it.
+```
+
+4.在肯定中，dare为一般动词
+```
+#他敢去
+He dares to go.
+#他当时敢去
+He dared to go.
+```
+
+5.dare not+原形动词    不敢...
+```
+=do not dare(to)+原形动词
+#他不敢接电话
+He dare not answer the phone.
+=He doesn't dare(to) answer the phone.
+
+#我从来不敢与他说话
+I have never dared(to) speak to him.
+```
+
+6.dare可作及物动词，表“向某人挑战”
+```
+dare sb to+原形动词
+=challenge sb to+原形动词
+
+#他向我挑战跳过这条小溪
+He dared me to jump the stream.
+```
+
+7.I daresay+that从句    我敢说...
+```
+#我敢说他又会迟到
+I daresay he will be late again.
+```
+
+#### used to
+
+1.used to+原形动词    过去曾经...
+```
+#他以前住过这儿
+He used to live here.
+
+#这座园子以前有个池塘
+There used to be a pond in this garden.
+
+He used to work hard.
+Did he use to work hard?
+```
+
+2.人+be used to+名词或动名词=accustomed    某人习惯于...
+```
+He is used to working alone.
+
+#他还不习惯都市生活
+He hasn't beed used to city life yet.
+
+#他习惯大声说话
+He is used to speaking alone.
+=He is accustomed to speaking aloud.
+```
+
+物+be used to+原形动词    被用来...
+```
+#这本书可用来教我们英语写作
+The book can be used to teach us English writing.
+```
+
+物+be used as+名词    被用作...
+```
+#这把刀被用来当武器
+The knife was used as a weapon.
+```
+
+### 易用错的动词
+
+P233
+
+#### fly/flow
+```
+fly的变化：fly/flew/flown/flying.
+flow的变化：flow/flowed/flowed/flowing.(流)
+```
+
+#### take/bring
+
+```
+take  (从此处)拿走
+bring (从别处)拿来
+
+Take the book to the library, please.
+Bring them back here.
+```
+
+#### refuse
+
+```
+refuse+名词
+#他拒绝我的建议
+He refused my suggestion.
+
+refuse to+原形动词
+He refused to go with me.
+
+reject(排斥)+名词或者动名词
+He rejected working with Mary because he thought she was too selfish.
+
+refuse后不能接that从句
+#他拒绝承认做错事
+He refused toadmit that he had done something wrong.
+=He denied that he had done something wrong.
+```
+
+#### take/cost
+
+```
+It takes+人+时间+to V
+It costs+人+金钱+to V
+
+It takes(one) about two hours to go from here to Paris.
+It cost(me) five dollars to buy that book.
+```
+
+#### reach/get to/arrive in(at)
+
+```
+I |reached    |Chicago at 12.
+  |arrived in |
+  |got to     |
+```
+
+#### prefer
+
+```
+prefer+名词(或动名词)+to+名词(或动名词): 比较喜欢...胜过...
+
+I prefer coffee to tea.
+I prefer going to the movies to watching TV.
+
+prefer to+原形动词+|instead of+动名词   |
+                  | rather that+原形动词|
+ I prefer to go to the movies instead of watching TV.
+=I prefer to go to the movies rather than watch TV.
+=I prefer going to the movies to watching TV.                  
+```
+
+#### mind
+
+```
+mind + if从句
+=mind + 动名词
+
+#你介不介意我把门打开？
+Would you mind If I opened the door?
+=Would you mind my opening the door?
+
+#你介不介意去把门打开？
+Would you mind if you opened the door?
+=Would you mind opening the door?
+```
+
+#### resemble sb/sth
+
+像...
+```
+#你很像你哥哥
+ You resemble your brother.
+=You look like your brother.
+```
+
+#### succeed/fail
+
+```
+succeed in+名词/动名词    在...获得成功/成功地...
+#经过多年的努力，John经商成功了
+John succeeded in business after years of hard work.
+How many of you have succeeded in passing the test.
+
+succeed+人+as    继承某人担任...的职位
+John succeeded his father as president of this company.
+
+fail: 失败
+He failed to pass the test.
+
+fail: 未通过考试、使某人不及格
+He failed the test.
+
+#老师让三分之一的学生不及格
+The teacher failed one-third of his students.
+            flunked
+
+#不要辜负我
+You are the only person I trust. Don't fail me.
+```
+
+#### 设计、企图
+
+```
+try      + to + 原形动词  设法要...
+attempt  + to + 原形动词  企图要...
+manager  + to + 原形动词  设法要...
+endeavor + to + 原形动词  努力要...
+
+I'll try to study harder.
+=I'll attempt to study harder.
+=I'll manager to study harder.
+
+#我们努力拯救公司免于破产
+We'll endeavor to save our company from going bankrupt.
+```
+
+#### remember/forget/regret
+
+```
+remember to V    记得要...
+remember +Ving   记得曾...
+
+forget to V      忘了要...
+foret + Ving     忘了曾...
+
+regret to V      抱歉/遗憾要...
+regret + Ving    后悔曾...
+```
+
+## 时态
+
+## 虚拟语气
