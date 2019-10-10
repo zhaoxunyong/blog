@@ -2928,8 +2928,108 @@ He has married Jane for twenty years.(x)
 =He has married Jane.
 =It is twenty years since he married Jane.
 =Twenty years have passed since he married Jane.
+```
 
+### 语态
 
+语态有两种：主动与被动。形成被动语态一定是及物动词：
+
+```
+原句的宾语作主语+be动词+过去分词
+Everyone loves him.
+He is loved by everyone.
 ```
 
 ## 虚拟语气
+
+```
+a. 纯条件的虚拟语气---用现在式
+如果他在这儿，我会揍他
+If he is here, I will beat him.
+
+b. 与现在事实相反的虚拟语气---用过去时
+如果他现在在这儿，我会揍他
+If he were here, I would beat him.(But he is not here.)
+
+c. 与过去事实相反的虚拟语气---用过去完成时
+如果他当时在这儿，我会揍他
+If he had been here, I would have beaten him.(But he was not here.)
+
+d. 与将来状况相反的虚拟语气---if从句要用助动词should，译成“万一”，主句则用过去时或现在时助动词
+万一他在这儿，我会揍他
+If he should be here, I would(或will) beat him.
+```
+
+### 纯条件虚拟语气
+
+```
+If+主语+一般时动词，主语+will(may/can/should/shall/must/ought to)+原形动词
+
+If he comes, you should tell him the truth.
+
+once/when/before/as soon as/unless等副词也可以构成条件句，与if用法相同
+
+One I have money, I will buy a car.
+When he finishes it, he may come.
+I will not do anything before he arrives.
+```
+
+### 与现在事实相反的虚拟语气
+
+```
+If+主语+一般过去时动词， 主语+would(could/might/should/ought to)+原形动词
+
+If he lived in my town, I could see him every day.
+
+be动词统一使用were
+If I were rich, I would help you.
+因为我不是很有钱，所以我不能帮你
+=As I am not rich, I can't help you.
+
+主句中的助动词一定为过去时助动词
+will->would
+may->might
+can->could
+shall->should或者ought to
+must只能表示现在或将来的状况，只用于纯条件的虚拟语气中。
+```
+
+### 与过去事实相反的虚拟语气
+
+```
+If+主语+had+过去分词，主语+would(could/might/should/ought to)+have+过去分词
+
+要是他当时听了你的劝告，就可能会避免这个错误了
+If he had taken your advice, he might have avoided the mistake.
+
+If he had had money, he would have bought a car.
+```
+
+### 与将来状况相反的虚拟语气
+
+```
+译成"万-..."
+
+a. 低可能性：主句要用过去时助动词
+If+主语+should+原形动词，主语 would(could/could/might/should/ought to)+原形动词
+
+万一你生病，会议将延期---你不太可能生病，会议不太可能延期
+If you should fall ill, the meeting would be put off
+
+If it should rain, I would stay home.
+
+b. 高可能性：主句要用现在时助动词
+If+主语+should+原形动词，主语+will(can/may/should/ought to)+原形动词
+
+万一你生病，会议将延期---你可能会生病，而会议也可能延期
+If you should fall ill, the meeting will be put off.
+
+If it should rain, I will stay home.
+
+也可能与祈祷句形成的主句连用
+万一我迟到，务必要等我---我可能会迟到
+If I should be late, be sure to wait for me.
+```
+
+### 使用虚拟语气的注意事项
+
