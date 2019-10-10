@@ -2776,6 +2776,28 @@ He has been writing a letter for two hours.
 When I called, he had been writing a letter for two hours.
 ```
 
+### 使用过去时的时机
+
+主语+一般过去时动词
+
+```
+1. 表过去的动作、习惯、状态：
+I saw him yesterday.
+He always rose early in the morning.
+He was born in 1970
+
+2. 表过去的经验，也可用现在完成时表示：
+ Did you ever see her before?
+=Have you ever seen her before?
+
+3. 句中若有after/until/before等连词引导的从句，由于时间先后很清楚，可用一般过去时代替过去完成时：
+ After I had finished the work, I went home.
+=After I finished the work, I went home.
+#我搬来这里之前曾在日本住过很长一段时间
+ Before I moved here, I had lived in Japan for a long time.
+=Before I moved here, I lived in Japan for a long time. 
+```
+
 ### 使用现在完成时的时机
 
 主语+have+过去分词(have译成“已经”或“曾经”)：
@@ -2817,6 +2839,39 @@ He had already left when I came.
 I lost the book which my father had given me.
 ```
 
+### 使用将来完成时的时机
+
+主语+will+have+过去分词(will have译成“将已经”), 用以表示到将来某时为止所完成或仍在继续的动作或经历等：
+
+```
+#他将已抵达芝加哥
+He will have arrived in Chicago by this time tomorrow.
+#他就在此住满10年了
+He will have lived here for 10 years by the end of this month.
+```
+
+### 使用现在进行时的时机
+
+主语+be动词+现在分词(正在...)，不过也可以表示即将发生的动作，常与表将来的副词连用：此时be动词译成：即将...
+
+```
+#他即将于今天来
+ He is coming today.
+=He will be coming today. 
+#他们很快就要离开
+ They are leaving soon.
+=They will be leaving soon.
+```
+
+### 使用现在完成进行时的时机
+
+主语+have/has been+现在分词(have/has been译成“一直都在...”), 用以表示一直继续到现在且仍将继续下去的运作：
+
+```
+She has been working with this company for 5 years.
+They have been standing here since 7 this morning.
+```
+
 ### 使用过去完成进行时的时机
 
 主语+had been+现在分词(had been译成“一直都在”)，与过去完成时一样，过去完成进行时不能单独存在，须与一般过去时连用。
@@ -2833,6 +2888,48 @@ He told us that he had been studying German since 2001.
 ```
 到今年年底，我教英语将已有10年了
 I will have been teaching English for ten years by the end of this year.
+```
+
+### “for+一段时间”与完成时的关系
+
+```
+for            the |past| five years    过去5年来
+during             |last|
+in
+through
+down through
+over
+=since five years ago    自从5年前起
+这些短语与现在完成时或现在完成进行时连用
+#过去两个星期来，我都一直在学英语
+I have been studying English for the past two weeks.
+```
+
+### since与完成时的关系
+
+since与"for+一段时间"使用差不多，不过注意：
+
+since之后须接明确的某段时间作宾语，不要接一段时间作宾语，若之后有一段时间，则须在一段时间之后接ago:
+```
+Peter has lived here since 2002.
+Peter has lived here since two years ago.
+```
+
+现在完成时或现在完成进行时的动词与“for+一段时间”连用时，该动词所表示的动作必须可接续进行，否则就不可与“for+一段时间”连用：
+```
+I have lived here for five years.
+
+He has died for two months.(x)
+=He has died.
+=It is two months since he died.
+=Two months have passed since he died.
+
+He has married Jane for twenty years.(x)
+=He has married Jane.
+=It is twenty years since he married Jane.
+=Twenty years have passed since he married Jane.
+
+
 ```
 
 ## 虚拟语气
