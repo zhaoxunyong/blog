@@ -3003,6 +3003,14 @@ If+主语+had+过去分词，主语+would(could/might/should/ought to)+have+过�
 If he had taken your advice, he might have avoided the mistake.
 
 If he had had money, he would have bought a car.
+
+如果if从句与过去事实相反，用过去完成时；主句与现在事实相反，则置助动词过去时：
+If+主语+had+过去分词，主语+would(could/might/should/ought to)+原形动词+now(today)
+
+If I had started saving then, I would be able to buy a car now.
+If I had started saving then, I would have been able to buy a car now(x)
+
+If I had met her five years ago, she might be my wife today.
 ```
 
 ### 与将来状况相反的虚拟语气
@@ -3033,3 +3041,199 @@ If I should be late, be sure to wait for me.
 
 ### 使用虚拟语气的注意事项
 
+1. 表示强烈与真理相反的虚拟语气句型：
+```
+If the cat were to smile, I would pass out.
+The cat can't smile.
+```
+
+2. if的省略：
+```
+if从句中，若有过去完成时助动词had/should/were(何秀华)时，可将这3个词置于主语前，而将if省略
+
+a. had
+ If he had done it, he would have felt sorry.
+=Had he done it, he would have felt sorry.
+
+b. should
+ If he should tell lies, I would punish him.
+=Should he tell lies, I would punish him.
+
+c. were
+ If he were lazy, he might fail.
+=Were he lazy, he might fail. 
+```
+
+3. 可取代if的其他连词：
+```
+in case(that): 万一
+on condition that: 如果
+provided/providing(that): 如果
+so long as/as long as: 只要
+
+只要书有趣，哪本书都可以
+Any book will do as long as it is interesting.
+
+in case +that从句    万一...
+in case of+名词      万一...
+ In case an accident happens, don't panic.
+=In case of an accident happens, don't panic.
+```
+
+4. but for
+```
+=without 若非/要不是...
+
+a. 与现在事实相反：若非...就...
+ If it were not+that从句(一般现在时)，主语+could(would/might/should/ought to)+原形动词
+=But for+名词，
+
+要不是他努力工作，我才不会喜欢他
+ If it were not that he works hard, I wouldn't like him.
+=If it were not for his hard work, I...
+=Were it not for his hard work, I...
+=But for his hard work, I.. 
+
+b. 与过去事实相反：若非当时...就...
+ If had not been that从句(一般过去时)，主语+could(would/might/should/ought to)+have+过去分词
+=But for+名词，
+
+ If it had not been that he lent me the money, I could not have bought that book.
+=If it had not been for the money (which) he lent me, I...  
+=Had it not been for the money (which) he lent me, I...  
+=But for the money (which) he lent me, I...  
+
+ But for his help, I couldn't have done it.
+=Without his help, I couldn't have done it.
+
+若非他及时警告，我可能已经没命了
+ But for his timely warning, I might have been killed.
+=Without his timely warning, I might have been killed. 
+```
+
+5. lest...(should)...
+```
+以免...
+=for fear that+主语+may+原形动词(表现在或者将来的状况)
+                   might+原形动词(表过去的状况) 
+=for fear of+动名词
+
+你必须努力学习，以免考试不及格
+ You must study hard lest you (should) fail the exam.
+=You must study hard for fear that you may fail the exam.
+=You must study hard for fear of failing the exam.
+
+ He did it carefully lest you make the same mistake again.
+=He did it carefully for fear that you might make the same mistake again.
+=He did it carefully for fear of making the same mistake again. 
+```
+
+6. as if
+```
+=as though...    仿佛...(副词)
+
+a. 表极大的可能->动词使用一般时态
+
+看过来好像要下雨了
+It looks as if it is going to rain.
+
+b. 表与现在事实相反->动词使用一般过去时
+Mr. Wang loves me as if I were his own child.
+
+c. 表与过去事实相反->动词使用过去完成时
+It looks as if nothing had happended.
+```
+
+7. What if...should...?
+```
+要是...的话会怎样/要怎么办？ 表示对将来状况存疑的虚拟语气，if从句多置助动词should
+
+要是他来了，会怎样/怎么办？
+ What if he should come?
+=What might happen if he should come?
+=What could I do   if he should come?
+
+要是下雨了，怎么办？
+What if should rain?
+
+What也可以用一般现在时：
+
+ What if he comes?
+=What shall we do if he comes?
+
+ What if rains?
+=What may happen if it rains?
+```
+
+8. It's time+that从句的一般过去时
+```
+It's time(about time/hight time) + that从句的一般过去时    该时...的时候了
+
+该是他上床睡觉的时间了
+It's time he went to bed.
+
+该是我们行动的时候了
+It's time we did it.
+
+也可以改为不定式形式：
+ It's time he went to bed.
+=It's time for him to go to bed.
+=It's time to go to bed.
+```
+
+9. If only...
+```
+要是...就好了
+
+只用于与现在事实或者过去事实相反的虚拟语气中，只能用一般过去时或者过去完成时：
+
+要是他在现在在这里就好了
+ If Only he were here.
+=I wish he were here.
+
+要是我早点知道这事就好了
+ If only I had known it earlier.
+=I wish I had known it earlier. 
+```
+
+10. wish的用法
+```
+a. 接that从句，一定要用虚拟语气，若与现在事实相反，用一般过去时若与过去事实相反，用过去完成时：
+
+I wish (that) he is here(x)
+I wish he were here.
+=It's too bad that he is not here.
+
+b. I wish that... 真希望...就好了
+=I would rather(that)...
+
+真希望我当时更用功就好了
+I wish I had studied harder when young.
+=I would rather I had studied harder when young.
+```
+
+11. hope的用法
+```
+接that从句，使用一般时态，表示极大的可能性：
+
+a. 表示现在的状况
+I hope he is safe.
+
+b. 表示将来的状况
+I hope he will back.
+
+c. 表示进行的状况
+I hope they are having a good time.
+
+d. 表示完成的状况
+I hope they have finished the work.
+
+祈使句：
+
+祝你长命百岁
+ I hope he may live long.
+=May he live long!
+
+ I hope you may pass the exam.
+=May you pass the exam. 
+```
