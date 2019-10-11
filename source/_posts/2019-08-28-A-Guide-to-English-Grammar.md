@@ -3236,4 +3236,51 @@ I hope they have finished the work.
 
  I hope you may pass the exam.
 =May you pass the exam. 
+
+上帝保佑你
+ May God bless you!
+=God bless you!
+
+国王万岁
+ May the king live long!
+=Long live the king!
+```
+
+12. wish和hope的异同
+```
+ I wish to travel abroad.
+=I hope to travel abroad.
+
+与for连用，表“期望获得”
+#我希望能有机会尝试一下
+I wish for a chance to try it.
+
+表祝福时，只能用wish，接两个名词或代词作宾语
+
+我祝你们玩的愉快
+I wish you a good time.
+I wish my parents longevity.
+
+I hope that you have a good time.
+I hope my partents can live long.
+```
+
+13. 对过去事物的猜测的三种句型
+```
+a. must have+过去分词    一定曾经...
+他博学多才，一定受过良好的教育
+He is learned; he must have received a good education.
+
+b. may have+过去分词    可能曾经...
+他看起来很疲惫，可能昨晚熬夜很晚
+He looks tired; he may have stayed up late last night.
+
+c. cannot have+过去分词    不可能曾经...
+他是老实人，不可能偷了玛丽的钱
+He is honest; he cannot have stolen Mary's money.
+
+若表示猜测的结构为疑问句，要用“Can...have...?”
+他可能做了这样的事吗？
+May he have done it?(x)
+Can he have done it?
 ```
