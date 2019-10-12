@@ -3284,3 +3284,124 @@ He is honest; he cannot have stolen Mary's money.
 May he have done it?(x)
 Can he have done it?
 ```
+
+## 副词
+
+### 副词的功能
+
+1. 修饰动词：
+```
+置于动词之后：
+He studies hard.
+I love you very much.
+```
+
+2. 修饰形容词：
+```
+置于形容词之前：
+He is very kind.
+It is extremely dangerous to swim alone.
+This is probably true.
+```
+
+3. 修饰副词：
+```
+置于该副词之前：
+He studies very diligently.
+He does things too carefully.
+```
+
+4. 修饰全句：
+```
+置于句首：
+Fortunately, he did not die.
+这答案显然是对的
+Evidently, this answer is right.
+```
+
+### 副词的位置
+
+#### 一般规则
+
+1. 有be动词时，置于be动词之后:
+```
+He is always kind.
+They are really able to do it.
+```
+
+2. 有助动词时，置于助动词之后：
+```
+He can hardly walk.
+He has never been to the US before.
+```
+
+3. 有一般动词时，置于该动词之前，但修饰的动词的副词表示某种状态时，则置于动词之后：
+```
+The often go fishing.
+He really cares about you.
+
+修饰的动词的副词表示某种状态时，则置于动词之后：
+She dances beautifully.
+He droves his car fast.
+
+修饰动词的副词表示肯定、否定或频率的意味，则置于动词之前：
+肯定意味的动词：surely/certainly/absolutely/probably/really
+They certainly hope to win the game.
+
+否定意味的动词：never/seldom/hardly ever(几乎不曾)/always/often
+He often comes to school late.
+```
+
+4. 状态副词在被动语态中的位置：
+```
+置于过去分词前：
+He did the job well.
+The job was well done.
+```
+
+5. 时间副词：
+```
+句子短时，置于句尾，句子长时，置于句首
+Yesterday I saw him chatting very pleasantly with a blonde girl in the park.
+I saw him in the park yesterday.
+```
+
+6. 地点副词：
+```
+置于动词之后：here/there/home/downtown/upstairs/downstairs in/out/up/down
+He come here.
+
+in/out/up/down等之后有宾语，则为介词
+He sat in the corner.
+He looked out of the windows.
+
+in/out/up/down等之后若无宾语，则为副词
+He come in.
+```
+
+7. 副词短语
+
+置于句尾，修饰句中的动词
+
+He loves her <u>with all his heart</u>.
+he came <u>by bus</u>.
+
+8. 不定式短语当副词
+
+除修饰动词外，还可置于形容词或副词后，修饰该形容词或副词:
+
+You will soon come <u>to realize that you are mistaken</u>.
+
+She went to Italy in order <u>to sutdy music</u>.
+
+I am sorry <u>to have kept you waiting</u>.
+
+9. 名词性从句修饰形容词
+
+I am sorry <u>that I cannot attend your party</u>.
+
+I am not sure <u>whether he'll come</u>.
+
+### 重要的副词用法
+
+1. 
