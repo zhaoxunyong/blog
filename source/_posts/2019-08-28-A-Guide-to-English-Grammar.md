@@ -3404,4 +3404,125 @@ I am not sure <u>whether he'll come</u>.
 
 ### 重要的副词用法
 
-1. 
+1. very/much 很/非常
+
+比较极的形容词或副词中，只能用much:
+
+```
+He walked much more slowly than I.
+He is much happier than Peter.
+修饰too时只能用much
+He is much too young.
+```
+
+2. little/a little
+
+```
+little作副词，视为否定：一点儿都不，等于no:
+病人的情况并没比昨天好到哪儿去
+The patient's condition is little better than (it was) yesterday.
+
+a little作副词，译成：有点儿
+The patient's condition is getting a little better.
+```
+
+3. no longer
+
+```
+不再：
+=no more
+=not...any longer
+=not...anymore
+他不再在这儿了
+ He is no longer here.
+=No longer is he here.
+=He is not here any longer.
+=He is not here any more.
+```
+
+4. sometimes/sometime/some time/some times
+
+```
+a. sometime 有时候
+他有时候会来这儿走一下
+Sometimes he comes here for a visit.
+
+b. sometime 某时(不知何时)
+可用于一般过去时或一般将来时，使用时通常与另一明确的时间副词或副词短语连用：
+
+一般过来时：
+我昨天早上某个时间见过他
+I saw hime sometime yesterday morning.
+
+一般将来时：
+我明天某个时间会在这里
+I'll be here sometime tomororw.
+
+c. some time 一段时间
+我会在这儿待一阵子
+I'll stay here (for) some time.
+不久前他还在这里
+He was here some time ago.
+
+d. some times 有几次
+=a few times
+=several times.
+建议使用a few times或several times.
+我曾去过泰国几次
+I have been to Thailand a few times.
+```
+
+5. ago/before/since/after
+```
+a. ago表“距现在若干时间以前”，时态用一般过去时
+
+他几一前来过这儿
+He came here a few days ago.
+
+How long ago did he come?
+
+b. before表“距过去某时若干时间以前”，时态用过去完成时:
+When I met Jim last week, He told me he had just gotten back from a trip to Lake Placid two days before.
+注意：
+ago只能用在一般过去时的结构。ago不能单独使用，但before可以作为单独副词单独使用：
+I met him ago(x)
+I me him two hours ago(ok)
+I met him before(ok)
+I have met him befoe(ok)
+I told him that I had met him before.(ok)
+
+c. since  自从...
+
+I have studied English Since I moved here in 2001.
+He told me that he had written two books since he moved here in 2001.
+
+since作副词，译成之后，置于句尾或have/has/had之后，修饰现在完成、进行时或者过去完成、进行时：
+我于2001年搬到此处，之后就一直在学习英文
+ I moved here in 2001 and have studied English since.
+=I moved here in 2001 and have since studied English.
+
+d. after  之后
+作副词译成“之后”，与since不同，since修饰完成时，而after则修饰过去时，此时等于later或afterwards.
+He fell ill on Monday and died three days after(later).
+The war ended in 1945, and they lived happily ever after.
+```
+
+6. quite  十分地
+   rather 相当...地
+```
+此二词可修饰原级之副词或形容词。
+
+他相当老了
+He is quite old.
+他蛮老的
+He is rather old.
+他相当用功
+He studies quite hard.
+
+修饰“形容词+单数名词”时，应在a或an之前：
+他是一个相当不错的学生
+He is quite a good student.
+They are quite good students.
+```
+
+7. someday/one day/the other day/some other day
