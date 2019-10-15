@@ -3526,3 +3526,119 @@ They are quite good students.
 ```
 
 7. someday/one day/the other day/some other day
+```
+a. someday  将来有一天(用于未来时)
+Keep on working hard, and someday you will be successful.
+
+b. one day  某日
+表前几天时，等于the other day，也可指几年前的某一天，两者均用过去时
+有一天我在城里看到他
+ I saw him downtown one day.
+=I saw him downtown the other day.
+
+表将来总有一天，等于someday，用于将来时
+总有一天你会后悔的
+ One day you'll be sorry.
+=Someday you'll be sorry.
+
+c. the other day  前些时间，用于一般过去时
+前几天我到公园玩了一趟
+I went to the park for a visit the other day.
+
+d. some other day  改天，用于一般将来时
+我现在很忙，改天再拜访你
+I'm busy now, I'll visit you some ther day.
+```
+
+8. somewhat/somehow/anyhow
+```
+a. somewhat  有一点儿，副词，置于形容词或副词前，以修饰形容词或副词：
+ It's somewhat cold today.
+=It's a little cold today.
+=It's a bit cold today.
+他这件事做得有些粗心
+ He did the job somewhat carelessly.
+=He did the job a little(bit) carelessly. 
+
+b. somehow  不知怎的，=for some unknown reason.
+            设法，=by some means.
+1) 表不知怎的，作独立副词，置于句首，修饰全句
+他人不错，但不知怎的，我就是不喜欢他
+He is nice; but somehow I don't like him.
+
+2) 表设法，作一般副词，修饰句中的动词，置于句尾
+我们必须设法找到这笔钱
+We must find the money somehow.
+
+c. anyhow  况且，而且，=besides/in addition
+           不管如何，=anyway/at any rate
+我没有时间去年电影，况且电影也太贵了
+I don't have time to go to the movie last year, they're too expensive anyhow.
+
+表“不管如何”时，anyhow为独立副词，通常置于句首，之后有逗号，修饰逗号之后整个主句：
+不管怎样，我们可以试试看
+Anyhow, we can try.
+anyway,
+at any rate,
+```
+
+9. enough 
+```
+a. 形容词，表足够/充分的，修饰名词
+他有足够的钱买一辆拉风的车
+He has enough money |to buy| a fance car.
+                    |for   |
+b. 副词，表足以，修饰形容词或副词，置于形容词或副词之后
+他条件好，足以担任些职位
+He is good enough to fill the position.
+He is good enough for the position.
+他跑得够快而赶上了火车
+He ran fast enough to catch the train.
+```
+
+10. likely/probably/possibly  可能地
+```
+likely/probaly表示“很可能”，而possibly则表示“有可能但不确定”
+很有可能他会来: likely作副词时，之前可用very或most加以修饰
+He will(very/most) likely come.
+
+她很可能将要离开
+She will probaly leave.
+
+他们说不定会帮他
+They will possibly help him.
+
+likely也可以用形容词：probable不能修饰人
+ He is likely to come.
+=It's likely that he will come.
+=It's probable that he will come.
+```
+
+11. Short Response
+```
+你是...， 我也是/你不是...，我也不是.
+a. 肯定句
+1). be动词，主语与be动词倒装
+他人很好，她也很好
+He is nice, and so is she.
+            and she is, too.
+
+2). 助动词，主语与助动词倒装
+他要来，她也要来
+He will come, and so will she.
+              and she will, too.
+
+3). 一般动词，主语与do/does/did倒装
+他来了，她也来了
+He came, and so did she.
+         and she did, too.
+他有一本书，她也有
+He has a book, and so does she.
+               and she does, too.
+
+同一个人时，不倒装
+He is stupid. So he is(=Indeed he is.)
+You can't do it. So I can't.
+
+b. 否定句用neither(或nor，使用neither或nor采用倒装句)或either
+```
