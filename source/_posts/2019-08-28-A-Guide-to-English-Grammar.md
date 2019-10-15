@@ -3640,5 +3640,205 @@ He has a book, and so does she.
 He is stupid. So he is(=Indeed he is.)
 You can't do it. So I can't.
 
-b. 否定句用neither(或nor，使用neither或nor采用倒装句)或either
+b. 否定句用neither(或nor，使用neither或nor采用倒装句)或either. neither前要加and,当nor不用：
+1). be动词，主语与be动词倒装
+他不好，她也不好
+He is not nice, and neither is she.
+                nor is she.
+                and she isn't, either.
+他没有回家，她也没有回家
+He wasn't going home, and neither was she.
+                      nor was she.
+                      and she wasn't, either.
+
+2). 助动词，主语与助动词倒装
+他不来，她也不来
+He won't come, and neither will she.
+               nor will she.
+               and she won't, either.
+他没去，她也没去
+He hasn't gone, and neither has she.
+                nor has she.
+                and she hasn't, either.
+
+3). 一般动词，主语与do/does/did倒装
+他绝不说谎，她绝不说谎
+He never tells a lie, and neither does he.
+                      nor does he.
+                      and she doesn't, either.
+他没有书，她也没有
+He has no book, and neither does she.
+                nor does she.
+                and she doesn't, either.
+
+also只能又在肯定式中，置于be动词之后，或者一般动词之前：
+他很亲切，她也是
+He is kind, and she is also kind.
+He has a pen, and she also has one.
+```
+
+12. 常见“名词+介词+名词”短语
+```
+手拉手: hand in hand
+肩并肩: shoulder to shoulder/slide by slide
+臂挽着臂: arm in arm
+逐字地: word for word
+天天: day by day
+夜夜: night after night
+渐渐地: little by little
+一个一个地: one by one
+陆续地: one after another
+面对面地: face to face
+
+他们手牵手沿着那条路走下去
+They walked hand in hand down the road.
+他们陆续地走进去
+They came in one after another.
+```
+
+13. not要置于不定式短语、分词、动名词之前
+```
+由于有很多事要办，我决定不去旅行
+Since having a lot of work to do, I decided not to go on a trip.
+
+他假装不认识我
+He pretended not to know me.
+
+工作没完成，我决定留下来
+I don't have finished the work, I decided to stay.
+=Not having finished the work, I decided to stay.
+
+他很失望没把工作完成
+He was disappointed at not having finished the work.
+```
+
+14. 助动词＋副词十本动词
+```
+我以前从没见过他
+I have never seen him before.
+```
+
+15. 副词修饰被动语态时，通常置于过去分词之前
+```
+他演说得很好
+His speech was well presented.
+
+那件事终于解决了
+That case was finally settled.
+```
+
+16. more than与倍数的关系
+```
+more than应置于倍数之前:
+
+a. 先造一个含有“倍数词＋as ⋯ as ⋯ ”的句子
+他的钱是你的三倍:
+He has three times as much money as you do.
+
+b．再于“倍数词十as ⋯ as ⋯ ”的结构前置人more than，即告完成。
+He has more than three times as much money as you do．
+（他的钱超过你的三倍。）
+
+c. more than亦可置于动词double（增加一倍）之前。
+Our income has more than doubled in one year.
+（一年之内我们的收人增加了一倍多。）
+```
+
+17. more than与over的关系
+```
+over作介词表“超过”时，可用rnore than代替:
+他已待在此地一年多
+He has stayed here over a year.
+He has stayed here more than a year.
+
+这里的学生超过5人
+Over five students are here.
+More than five students are here.
+```
+
+18. 避免双重否定
+```
+not ever=never
+他从来没去过日本
+ He has not ever been to Japan before.
+=He has never been to Japan before.
+
+scarcely = hardly = almost not为否定副词:
+他几乎不会做这工作
+He can scarcely do this work.
+He can hardly do this work.
+
+他几乎没有钱
+He has hardly any money.
+```
+
+19. 关系副词when/why/how/where
+```
+这就是我们该出发的时候
+This is the time when we should set out.
+=This is when we should set out.
+
+这就是他为何迟到的理由
+This is the reason why he was late.
+=This is why he was late.
+
+这就是他成功的方法
+This is the way he succeeded.
+This is how he succeeded.
+
+那是我出生的地方
+That is the place where I was born.
+That is where I was born.
+```
+
+20. I think so
+```
+think 、 hope 、 believe 、 be afraid 、 imagine等动词之后加so，可代替肯定句，加not则代替否定句:
+A: 15 he nice?
+B: Yes, I think so.
+   No, 1 think not.
+
+Will he come?
+B: I'm afraid not.
+   I'm afraid so.
+```
+
+21. all（三人以上一起）、both（两人一起）
+```
+约翰、保罗和彼得明天都要来这里庆祝杰克的生日
+John、Paul and peter will all come here to celebrate Jack's birthday.
+
+这五位都是好学生
+These five students are all good.
+
+这两位人选都有资格做此工作
+The two candidates are both qualified for this work.
+
+他和我明天都要去美国
+He and I will both go to the American tomorrow.
+```
+
+22. 容易混淆的副词
+```
+a . close（近）、 closely（仔细地，严密地）
+我住在他家附近
+I live close to his house.
+=I live near his house.
+好好盯着他
+Watch him closely.
+
+b . most（最）、 mostly（大部分，大都）
+在这些书中，这本最有趣
+Of all these books, This one is the most interesting.
+
+这些书大部分都过时了
+These books are mostly out of date.
+
+c. near（近）、 nearly(=almost，几乎）
+他住附近，不在远处
+He lives near, not far.
+他差点淹死了
+He was nearly drowned.
+
+
 ```
