@@ -3840,5 +3840,46 @@ He lives near, not far.
 他差点淹死了
 He was nearly drowned.
 
+near虽可作介词，但在下列短语中，near之后仍应置人to，形成固定短语
+come near to + V - ing差一点就⋯
+他差点淹死了
+ He came near to being drowned.
+=He came close to being drowned.
+=He was nearly drowned.
 
+d. high  表实际空间(可以测量)的 高
+   deep                        深
+   wide                        宽
+   highly 表程度而不指空间的     高
+   deeply                      深
+   widely                      宽
+
+飞机高高在天上飞着
+The airplane flew high in the sky.
+他大大地受到赞扬
+He was highly praised.
+我们赞扬他
+We spoke highly of him.
+我们很看重他
+We think highly of him.
+他潜人河中深处
+He dove deep into the river
+他伤得很重
+He was deeply hurt.
 ```
+
+23. greatly与highly之区别
+```
+a . greatly表示"大量地，大大地"
+他大大地吃了一惊
+He was greatly surprised.
+车祸次数大幅增加
+The number of traffic accidents has increased greatly.
+
+b. highly表“高高地”，通常与“表扬” 、 “奖励” 、 “推荐”等动词（如praise 、recommend）连用:
+我们很看重他
+We think highly of him.
+```
+
+## 倒装结构
+
