@@ -3473,6 +3473,7 @@ I have been to Thailand a few times.
 ```
 
 5. ago/before/since/after
+
 ```
 a. ago表“距现在若干时间以前”，时态用一般过去时
 
@@ -3509,6 +3510,7 @@ The war ended in 1945, and they lived happily ever after.
 
 6. quite  十分地
    rather 相当...地
+
 ```
 此二词可修饰原级之副词或形容词。
 
@@ -3526,6 +3528,7 @@ They are quite good students.
 ```
 
 7. someday/one day/the other day/some other day
+
 ```
 a. someday  将来有一天(用于未来时)
 Keep on working hard, and someday you will be successful.
@@ -3551,6 +3554,7 @@ I'm busy now, I'll visit you some ther day.
 ```
 
 8. somewhat/somehow/anyhow
+
 ```
 a. somewhat  有一点儿，副词，置于形容词或副词前，以修饰形容词或副词：
  It's somewhat cold today.
@@ -3583,6 +3587,7 @@ at any rate,
 ```
 
 9. enough 
+
 ```
 a. 形容词，表足够/充分的，修饰名词
 他有足够的钱买一辆拉风的车
@@ -3597,6 +3602,7 @@ He ran fast enough to catch the train.
 ```
 
 10. likely/probably/possibly  可能地
+
 ```
 likely/probaly表示“很可能”，而possibly则表示“有可能但不确定”
 很有可能他会来: likely作副词时，之前可用very或most加以修饰
@@ -3615,6 +3621,7 @@ likely也可以用形容词：probable不能修饰人
 ```
 
 11. Short Response
+
 ```
 你是...， 我也是/你不是...，我也不是.
 a. 肯定句
@@ -3678,6 +3685,7 @@ He has a pen, and she also has one.
 ```
 
 12. 常见“名词+介词+名词”短语
+
 ```
 手拉手: hand in hand
 肩并肩: shoulder to shoulder/slide by slide
@@ -3697,6 +3705,7 @@ They came in one after another.
 ```
 
 13. not要置于不定式短语、分词、动名词之前
+
 ```
 由于有很多事要办，我决定不去旅行
 Since having a lot of work to do, I decided not to go on a trip.
@@ -3713,12 +3722,14 @@ He was disappointed at not having finished the work.
 ```
 
 14. 助动词＋副词十本动词
+
 ```
 我以前从没见过他
 I have never seen him before.
 ```
 
 15. 副词修饰被动语态时，通常置于过去分词之前
+
 ```
 他演说得很好
 His speech was well presented.
@@ -3728,6 +3739,7 @@ That case was finally settled.
 ```
 
 16. more than与倍数的关系
+
 ```
 more than应置于倍数之前:
 
@@ -3745,6 +3757,7 @@ Our income has more than doubled in one year.
 ```
 
 17. more than与over的关系
+
 ```
 over作介词表“超过”时，可用rnore than代替:
 他已待在此地一年多
@@ -3757,6 +3770,7 @@ More than five students are here.
 ```
 
 18. 避免双重否定
+
 ```
 not ever=never
 他从来没去过日本
@@ -3773,6 +3787,7 @@ He has hardly any money.
 ```
 
 19. 关系副词when/why/how/where
+
 ```
 这就是我们该出发的时候
 This is the time when we should set out.
@@ -3792,6 +3807,7 @@ That is where I was born.
 ```
 
 20. I think so
+
 ```
 think 、 hope 、 believe 、 be afraid 、 imagine等动词之后加so，可代替肯定句，加not则代替否定句:
 A: 15 he nice?
@@ -3804,6 +3820,7 @@ B: I'm afraid not.
 ```
 
 21. all（三人以上一起）、both（两人一起）
+
 ```
 约翰、保罗和彼得明天都要来这里庆祝杰克的生日
 John、Paul and peter will all come here to celebrate Jack's birthday.
@@ -3819,6 +3836,7 @@ He and I will both go to the American tomorrow.
 ```
 
 22. 容易混淆的副词
+
 ```
 a . close（近）、 closely（仔细地，严密地）
 我住在他家附近
@@ -3869,6 +3887,7 @@ He was deeply hurt.
 ```
 
 23. greatly与highly之区别
+
 ```
 a . greatly表示"大量地，大大地"
 他大大地吃了一惊
