@@ -3900,5 +3900,305 @@ b. highly表“高高地”，通常与“表扬” 、 “奖励” 、 “推�
 We think highly of him.
 ```
 
+24. nowhere（二in noplace）在任何地方都不
+
+```
+此亦为否定副词，置于句首要采倒装句:
+这种人我在任何地方都找不到
+Nowhere could I find such a man.
+```
+
 ## 倒装结构
+
+1. 否定倒装句：
+
+```
+我没见过像她这么美的女孩
+I have never seen such a pretty girl as she (is).
+Never have I seen such a pertty girl as she.
+```
+
+2. so/much倒装句：
+
+```
+他人很好，值得我尊敬
+He is so kind that he deserves all my respect.
+So kind she that he deserves all my respect.
+```
+
+3. 地方副词倒装句：
+
+```
+那儿站着一个男孩
+A boy stood there.
+There stood a boy.
+```
+
+4. 完全倒装句：
+
+```
+助人的人值得称赞
+It worth to praise for those who help others.
+Those who help others are praiseworthy.
+Praiseworthy are those who help others.
+```
+
+5. as取代though的倒装句：
+
+```
+他虽然很好，我却不喜欢他
+Though he is nice, I don't like him.
+Nice as he is, I dislike him.
+As nice as he is, I dislike him.
+```
+
+### 否定倒装句
+
+```
+常用的否定副词：
+never: 从不
+hardly: 几乎不 = scarely
+rarely: 很少
+seldom: 很少
+little: 一点儿也不
+
+常用的否定副词短语：
+by no means: 绝对不
+in no way: 绝对不
+on no accout: 绝对不
+under no circumstances: 绝对不
+in no situation:  绝对不
+
+常用的否定状语从句：
+not until+S+V: 直到...
+only when+S+V: 只有到...的时候
+only after+S+V: 只有到...之后
+```
+
+1. 如何倒装：
+```
+先将否定副词、否定副词短语或否定状语从句移到句首,再检查原结构主语之后的动词，采问句倒装。
+
+a. be动词
+be动词与主语倒装
+
+他从不快乐
+He is never happy.
+Never is he happy.
+
+他几乎从未安静过
+He is hardly ever quiet.
+Hardly is he ever quiet.
+
+他绝非我们需要的人
+You are by no means the person we need.
+By no means are you the person we need.
+
+直到他来，我才发现这件事
+I was not aware of it until he came.
+No until he came was I awae of it.
+
+只有玛丽跟他在一起的时候，他才快乐
+He is happy only when Mary is with him.
+
+b. 助动词
+助动词与主语要倒装
+
+他几乎不能动
+He can hardly move.
+Hardly can he move.
+
+他从来没做过这件事
+He has never done it before.
+Never has he done it before.
+
+c. 一般动词
+与疑问句一样，变成do/does/did+原形动词
+
+他很少唱歌
+He seldom sings.
+Seldom does he sing.
+
+他一点儿也没有想到玛丽的英语这么好
+He little knew that Mary's English could be so good.(x, 没有He little knew的说法)
+Little did he konw that Mary's English could be so good.
+```
+
+2. only+介词短语及only+then
+
+```
+only then: 唯有在那时
+均视为否定副词短语，置于句首时，采倒装：
+只有这么做你才会成功
+Only by doing so can you succeed.
+有了他的帮忙，我才能克服困难
+Only with his help will be able to weather the fifficulties.
+
+到那时我才离开
+|Only then        |did I leave.
+|Only at that time|
+```
+
+3. not+a+单数可数名词    连一个...都没有
+
+我在那儿一个人也没有看到
+I didn't see a soul(=a person) over there.
+Not a soul did I see over there.
+
+I was not able to discover a clue to the murder.
+No a clue to the murder was I able to discover.
+这件谋杀案我连一点蛛丝马迹也没法找到
+
+4. nowhere=in no place    在任何地方都不
+
+这种人我在任何地方都找不到
+Nowhere could I find such a man.
+
+5. 一...就...的句型
+
+```
+a. 同时态的状语从句
+ As soon as she saw me, she passed out.
+=Once she saw me, she passed out.
+=The instant she...
+=The moment she ...
+
+b. On/Upon+N/V-ing, S+V
+upon或on之后加名词或动名词，也表示"一...就..."的意思
+
+主语相同：
+我一做完工作就回家
+ As soon as I finished the job, I went home.
+=Upon/On finishing the job, I went home.
+
+不同主语：
+Upon/On用所有格
+他一到我就走了
+ As soon as he arrived, I left.
+=Upon/On his arriving, I left. 
+```
+
+### so/such倒装句
+
+so...that或such...that倒装结构时，so或much及所引导的词类置于句首，与否定结构句完全相同
+
+1. 有be动词时：
+
+```
+他这么乐于助人，因此我们都喜欢他
+ He is so helpful that we all like him.
+=So helpful is he that we all like him.
+```
+
+2. 有助动词时：
+
+```
+他做得这么好，所以值得我们尊敬
+ He has done so well that deserves our respect.
+=So well has he done that deserves our respect.
+```
+
+3. 有一般动词时：
+
+```
+他太晚到，而没有赶上火车
+ He came so late that missed the train.
+=So late did he come that missed the train.
+```
+
+### 地方副词倒装句
+
+#### 三种倒装句型
+
+地方副词(there/here)或地方副词短语(in the room/at the station/by the window)置于句首时，亦可形成倒装：
+
+1. 第一型
+
+```
+主语+不及物动词+地方副词
+               地方副词短语
+->
+地方副词    +不及物动词+主语
+地方副词短语
+
+ A girl sat there.
+=There sat a girl.
+
+ A girl sat by the door.
+=By the door sat a girl.
+
+ A book is on the desk.
+=On the desk is a book.
+
+玛丽站在门口
+ Mary stood in the doorway.
+=In the doorway stood Mary. 
+```
+
+2. 第二型
+
+```
+主语+be动词+过去分词+地方副词或地方副词短语
+->
+地方副词或地方副词短语+be动词+过去分词+主语
+
+门后锁着一个人
+ A man was locked behind the door.
+=Behind the door was locked a man.
+
+那里坐落着一所学校
+ A school is located there.
+=There is located a school.
+```
+
+3. 第三型
+
+```
+主语+be动词+现在分词+地方副词或地方副词短语
+->
+现在分词+地方副词或地方副词短语+be动词+主语
+
+那儿有一个女孩在唱歌，她是我女友
+#A girl is singing over there, she is my girlfriend.
+Singing over there is a girl, who is my girlfriend.
+
+玛丽与大卫坐在大门前
+ Mary and David were sitting in front of the gate.
+=Sitting in front of the gate were Mary and David.
+=In front of the gate were sitting Mary and David.
+```
+
+#### 主语必为普通名词或专有名词
+
+```
+若主语为代词时，地方副词可放在句首，但句子不倒装：
+
+他站在那儿
+ He stood there.
+=There he stood.
+
+他站在房子前面
+ He stood in front of the house.
+=In front of the house he stood.
+
+他被锁在那里
+ He was locked in there.
+=There he was locked in.
+```
+
+#### here与there的习惯用语
+
+置于句首为代词，不倒装：
+
+```
+Here we are: 到了
+
+Here you are/Here you go: 拿去吧
+
+There you go again: 你又来这一套了
+
+There you are/There it is: 在那里
+```
+
+## 比较结构
 
