@@ -4202,3 +4202,259 @@ There you are/There it is: 在那里
 
 ## 比较结构
 
+1. 原级比较：as
+
+```
+他和彼得一样用功
+He work as hard as Peter.
+He is as diligent as Peter.
+
+他没有Peter那么用功
+He doesn't study so hard as Peter.
+```
+
+2. 一般比较：than
+
+```
+他比彼得用功
+He is more diligent than Peter.
+
+他没有彼特更用功
+He doesn't study harder than Peter.
+```
+
+### 一般比较结构
+
+1. 造句方式：
+
+```
+a. 先造一个含有形容词或副词的句子：
+
+他很小心
+He is prudent.
+他工作很热心
+He works enthusiastically.
+
+b. 再将句中形容词或副词变成比较级：
+他比较小心
+He is more prudent.
+他工作比较不热心
+He works less enthusiastically.
+
+c. 再设定比较对象，并在该比较对象之前置副词连词than：
+He is more prudent than Peter.
+He works less enthusiastically than Peter.
+```
+
+2. than引导的状语从句结构变化：
+
+```
+若有be动词、助动词可保留，若有一般动词以do/does/did代替，当然这些也可以省略。
+
+a. be动词
+他没有你负责任
+He is less responsible than you (are).
+
+b. 助动词
+他唱歌比你悦耳
+He can sing more beautifully than you (can).
+
+c. 一般动词
+他工作比你仔细
+He worked more carefully than you (did).
+```
+
+3. less之后的副词或形容词均使用原级：
+
+```
+他没有John勤奋
+He is less hardworking than John.
+
+他没有John那么常来看我们
+He visits us less often than John.
+
+他做事没有John那么小心
+He does things less carefully than John.
+```
+
+4. 与本身作比较：
+
+```
+他比以前用功
+He studies hander than he did before.
+
+她看来比较实际年轻
+She looks younger than she is.
+
+a. 自行比较时，句中的时态若不同：
+1). be动词
+他比以前健康(不同时态)
+He is healthier than he was.
+
+2). 助动词
+他比以前唱歌好(不同时态)
+He can sing better than he could.
+
+3). 一般动词
+
+他比以前努力
+He work hander than he did.
+                    he used to.
+
+b. 此类中若有对等的介词短语,than之后的主语及动词或助动词都可以省略：
+1) 介词短语
+他和玛丽在一起比和简在一起快乐
+ He is happier with Mary than He is with Jane.
+=He is happier with Mary than with Jane.
+
+他对英文比对日文有兴趣
+He is more interesting in English than (he is) in Janpanese. 
+2) when从句
+他比我十年前看见他时瘦多了
+He is thinner than (he was) when I saw him ten years ago.
+```
+
+5. 比较结构中相同动词的化简
+
+```
+我比他爱你
+ I love you more than he loves you.
+=I love you more than he does you.
+=I love you more than he does.
+```
+
+6. 数量形容词的比较级变化：
+   数量形容词：much/little/many/few
+
+```
+a. much(很多的)及little(很少的)修饰不可数名词：
+原级    比较级  最高级
+much    more   the most
+little  less   the least
+
+他有很多钱
+ He has very much money.
+=He has a lot of money.(佳)
+肯定式中用very much或a lot of，否定式中则使用much
+
+他比John有钱
+He has more money than John (does).
+
+他是所有人中最有钱的
+He has the most money of all.
+
+他的时间很少
+He has little time.
+
+他做这工作的时间比我的少
+He has less time than I (do) for the job.
+
+他的时间最少
+He has the least time of all.
+
+b. many(很多的)及few(很少的)修饰可数的复数名词：
+他有很多朋友
+He has many friends.
+
+他的朋友比John的多
+He has more friends than John.
+
+他的朋友最多
+He has the most friends of all.
+
+他的朋友很少
+He has few friends.
+
+他的朋友比John的少
+He has fewer friends than John.
+
+他的朋友最少
+He has the fewest friends of all.
+```
+
+7. 避免错误比较
+
+```
+这个篮子里的苹果比桌子上的那些要甜(与介词短语those比较)
+The apples in this basket are sweeter than those on the table.
+
+他的车子比他的朋友的好
+His car better than his friend's.
+```
+
+8. 本身最高级意味的形容词：
+
+```
+已经是最高级的意味，不能使用比较级：
+perfect: 完美的
+sublime: 卓越的
+noble: 高贵的
+extreme: 极度的
+superb: 极好的
+excellent: 特优的
+```
+
+9. 变得愈来愈...
+
+```
+ be getting more and more + adj.
+=be getting 比较级adj+and+比较级adj.
+=be getting increasingly+adj.
+
+那儿的生活越来越不容易
+Life over there are getting more and more difficult.
+                            increasingly difficult.
+
+那个男孩越来越胖了
+The boy is getting fatter and fatter.
+                   increasingly fat.
+```
+
+10. 修饰比较级的副词
+
+```
+置于被修饰的副词或形容词前：far/much/a lot/a great deal/still/even，其中far/much/a lot最常用
+
+这问题比那个要难多了/甚至更难
+This question is (far/much/a lot) more fifficult than than one.
+
+他比他们之中任何一个都用功得多
+He studies much harder than anyone of them.
+
+far/much/a lot可修饰副词too：
+他太老了，无法做这差事
+He is far/much/a lot too old to do the work.
+```
+
+11. 最高级的副词
+
+```
+有两个：most及least
+
+a. 形容词
+
+她是我见过最美的女孩
+She is the most beautiful girl that I've never seen.
+
+三个女孩中，她最不好看
+Of the three girls, she is the least beautiful.
+
+b. 副词
+
+他待人最有礼貌
+He treats people most politely.
+
+c. 动词
+
+我最需要你
+I need you most.
+```
+
+12. 最高级一定要是三者以上：
+
+```
+Of/among the three/four... 在这三个/四个...之中
+
+这五本书中，我最喜欢那本
+Of five books, I like that one best.
+```
