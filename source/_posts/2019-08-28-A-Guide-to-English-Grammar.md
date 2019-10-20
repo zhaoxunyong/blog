@@ -4453,8 +4453,74 @@ I need you most.
 12. 最高级一定要是三者以上：
 
 ```
-Of/among the three/four... 在这三个/四个...之中
+a. Of/among the three/four... 在这三个/四个...之中
 
 这五本书中，我最喜欢那本
 Of five books, I like that one best.
+
+他是所有学生中最好的一个
+He is the best student of all.
+
+of the two则使用比较级
+这两个学生中，John比较好
+Of the two students, John is the better.
+
+这两本书中，我比较喜欢那本
+Of the two books, I like that one better.
+
+b. 最高级形容词+n+关系代词that(不可使用who/whom/which)+定语从句完成时：
+在我所认识的人中，John是最有责任感的一位
+John is the most responsible man (that) I've ever known.
+
+在我教过的学生中，他是最好的一位
+He is the best students that I've ever taught.
+```
+
+13. the与最高级的关系：
+
+```
+最高级副词修饰动词或副词时，不一定要加the，但最高级形容词修饰名词时，则须加the:
+
+a. 副词
+这四个学生中，他待人最有礼
+Of the four students, he treats people (the) most politely.
+
+b. 动词
+我所认识的人中，我最尊敬他
+Of all the people I know, I respect him (the) most.
+I respect him most that I've ever known.
+
+c. 名词
+他是所有学生当中最好的一个
+He is the best student of all.
+```
+
+14. most可作very解：
+
+```
+加形容词修饰名词时，不必于most之前加the:
+她真是个很美的女孩子
+She is a most/very beautiful girl.
+```
+
+15. by far可修饰最高级：
+
+```
+by far及much修饰the+最高级副词或形容词：
+她是镇上最美的女孩子
+She is by far/much the most beautiful girl in town.
+```
+
+## 原级比较结构
+
+1. 造句方式：
+
+```
+as...as...: 和...一样地...
+
+a. 先造一个含有形容词或副词的句子：
+He is prudent.
+He runs fast.
+
+b. 再于句子的形容词或
 ```
