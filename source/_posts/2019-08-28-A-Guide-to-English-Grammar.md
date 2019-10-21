@@ -4738,4 +4738,47 @@ three-fourths  四分之三
 
 我的年龄只有你的一半
 I am half as old as you.
+
+我的用功程度仅及他的三分之一
+I study only one-third as hard as he.
+
+她的体重有我的两倍
+She is twice my weight.
+
+g. 特殊结构：
+1. twice as⋯as⋯（常用）是⋯ ⋯的两倍
+他的年纪是我的两倍
+He is twice as old as I.
+
+2. one and a half times as⋯as...   是⋯的一倍半
+He 15 eight years old, and I am one and a half times as old as he·
+
+3. as many as＋数词＋复数名词    多达⋯
+这次空难中多达100人丧生
+As many as one hundred people were killed in the air crash.
+桌上的苹果有5个之多
+There are as many as five apples on the table.
+as much as+金钱名词: 他身上有50块钱之多
+He has as much as fifty dollars with him.
+
+as long  as＋数词十名词    长达...
+as wide  as＋数词十名词    宽达...
+as high  as＋数词十名词    高达...
+as early as＋数词＋名词    早在...
+as late  as＋数词＋名词    迟至...
+
+我学英文已有25年之久
+I've been learning English as long as 25 years.
+这条河宽达100米
+This river is as wide as 100 meters.
+我早在星期五就把信寄了
+I mailed the letter as early as Friday.
+他迟至清晨两点才回家
+he came home as late as two in the morning.
+```
+
+8. the+比较级..., the+比较级...    愈...就愈...
+
+```
+
 ```
