@@ -4522,5 +4522,220 @@ a. 先造一个含有形容词或副词的句子：
 He is prudent.
 He runs fast.
 
-b. 再于句子的形容词或
+b. 再于句中的形容词或副词之前置as一词as为副词，译成“一样地” ：
+他一样地小心
+He is as prudent.
+He runs as fast.
+
+c. 再设定比较对象，并在该比较对象之前置副词连接词as即告完成；此as译成
+“和” ：
+他和约翰一样小心
+He is as prudent as John.
+他跑得和约翰一样快
+He runs as fast as John.
+```
+
+2. as从句的变化
+
+```
+a. be动词
+他和约翰一样小心
+He is as prudent as John (is)
+
+b. 助动词
+他唱得和约翰一样好
+He can sing as well as John (can)
+
+c. 一般动词
+他跑得和约翰一样快
+He runs as fast as John.
+```
+
+3. as从句或than从句也可采倒装结构：
+
+```
+他比我的好友约翰谨慎
+He is as prudent is John, who is a good friend of mine.
+
+他和我妹妹玛丽一样用功
+He studies as hand as does Mary, who is my sister. 
+
+他比我妹妹玛丽用功多了
+He studies much hander than does Mary, who is my sister.
+```
+
+4. "as...as..."用于肯定或否定句，而"so...as..."则只能用在否定句中
+
+```
+肯定句：
+He studies as hard as Mary.
+他和栏杆一样瘦
+He is as thin as a rail.
+
+否定句：
+He doesn't study as(so) hard as Mary.
+He isn't as(so) polite as John.
+```
+
+## 其他有关as/than的重要用法
+
+1. "as...as..."可与单数可数名词连用：
+
+```
+#将第一个as置于动词之后：
+He is as handsome a boy as John.
+I have as fancy a car as that one.
+
+1). 类似此种只能与单数名词连用的结构还有：
+
+so...that...:  如此...以致/所以...
+too...to...    太...而不...
+how...         多么地...
+
+a. so...that...
+他是个这么好的男孩子，所以我非常喜欢他
+ He is so a good boy that I like him very much.
+=He is such a good boy that I like him very much.
+
+b. too...to...
+他年纪太大，没法做此事
+He is too old to do it.
+
+c. how...
+他是个伟大的人物
+ What a great man he is!
+=How great man he is!
+
+2) what与such之后可修饰单复数或不可数名词：
+
+他真是个伟大的人物
+What a greate man he is!
+这真是好听的音乐(不可数)
+What beautiful music it is!
+他们真是好孩子(复数)
+What good boys they are!
+He is such a good boy that I like him.
+They are such good boys that I like them.
+
+这类只能与单数可数名词连用的结构记忆法：
+从前有个书呆子(so...that...)，他有两个朋友，一个叫阿西(as...as...),
+一个叫土土(too...to...)，三人相聚时，最爱念一个字：好(how...)
+```
+
+2. as...as one can 尽可能地...
+   =as...as possible
+
+```
+a. 造句方法：
+1) 先造一个含有形容词或副词的句子：
+他一定要用功
+You must study hard.
+他保持沉默
+He remained quiet.
+
+2). 在hard或quiet之前置入第一个as(用副词，中文译为"一样地")：
+You must study as hard.
+He remained as quite.
+
+3). 句尾添加as one(you/he...) can或possible:
+你要尽可能地用功
+You must study as hard as you can.
+                       as possible.
+He remained as quiet as he could.
+                     as possible.
+```
+
+3. as...as any  与任何人一样...
+
+```
+他和任何其他人一样快乐
+He is as happy a man as any. 
+```
+
+4. as...as ever  与往常一样...
+
+```
+虽然我和他分开已久，但他还是和以前一样年轻
+Though it has been a long time since I parted for him, he is as young as ever.
+```
+
+5. as...as ever lived  古今最...之一
+  =one of the+最高级...that ever lived
+```
+他是古今最伟大的英雄之一
+ He is as great a heo as ever lived.
+=He is one of the greatest heroes that ever lived.
+```
+
+6. 两个形容词的相互比较：
+
+```
+more...that结构中两个形容词比较，一律用原级：
+ He is more good than bad.
+=He is not so bad as good.
+=He is good rather than bad.
+```
+
+7. 倍数词造句法：
+
+```
+a. 本结构一共有四种：
+倍数词＋as⋯as⋯                           是⋯的几倍
+morethan＋倍数词＋as⋯as⋯                 是⋯的几倍还不止
+倍数词＋the（或所有格）＋名词是⋯ ⋯的几倍
+more than＋倍数词＋the（或所有格）＋名词    是...的几倍还不止
+
+他的体重是我的三倍
+ He is three times as heavy as I.
+=He is three times my weight.
+他的体重是我的三倍还不止
+ He is more than three times as heavy as I.
+=He is more than three times my weight.
+
+b. 倍数词+as...as...    是...的几倍
+含有as...as...的短语，句中必须要用形容词或副词：
+他用功的程度是的3倍
+He studies hard.
+He studies as hard as I.
+将倍数词置于as...as...之前
+He studies three times as hard as I.
+
+I am three times as old as he.
+
+c. more than+倍数词+as...as...    是...的几倍还不止
+  =倍数词+more...than...
+他的用功是我的三倍还不止
+He studies hard.
+He studies as hard as I.
+He studies three times as hard as I.
+He studies more than three times as hard as I.
+He studies three times harer than I.
+
+ He is more than three times as diligent as I.
+=he is three times more diligent than I.
+
+ I am more than three times as old as he.
+=I am three times more older than he. 
+
+d. 倍数词+the(that/his/those/these/所有格)+名词    是...的几倍
+   本结构必须要与名词连用
+他是钱是我的两倍
+1. 先译"他有我的钱"
+He has my money.
+2. 再将倍数置于所有格之前
+He has twice my money.
+
+3. more than+倍数词+the(或所有格)+名词    是...的几倍还不止
+他的钱是我的两位还不止
+1. He has my money.
+2. He has twice my money.
+3. He has more than twice my money.
+
+f. 下列词类均视为倍数词：
+one-third      三分之一
+two-thirds     三分之二
+three-fourths  四分之三
+
+我的年龄只有你的一半
+I am half as old as you.
 ```
