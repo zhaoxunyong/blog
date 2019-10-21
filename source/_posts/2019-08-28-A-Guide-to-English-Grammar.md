@@ -4780,5 +4780,53 @@ he came home as late as two in the morning.
 8. the+比较级..., the+比较级...    愈...就愈...
 
 ```
+使用本句型的先决条件为：句中要有副词或形容词：
+a. 造句法：
+你愈用功，你就愈能成为一个好学生
+1. 加入The..., the...:
+   The____..., the____...
+2. 将中文句子中的“愈”去掉，变成：
+   你用功，你就能成为一个好学生：
+   You study hard, you'll become a good student.(x)
+3. 将第二步中的英文句子置于第一步中的空格后：
+   The____you study hard, the____you'll become a good student.
+4. 将第三步中的形容词或副词移位到空格中，并变成比较级。若形容词之后有名词，该名词也要移位，
+   而原有的a或an则删除：
+   The harder you study, the better student you'll become.
 
+你愈谨慎，你犯的错就愈少
+1. The___..., the___...
+2. You are careful, you'll make few mistakes.(x)
+3. The___you are careful, the___you'll make few mistakes.
+4. The more careful you are, the fewer mistakes you'll make.
+
+b. 使用“愈...就愈...”的结构时，要注意两点：
+1. 若句中没有副词或形容词时，则在The或the之后置副词more或less:
+你愈爱我，我就对你愈好
+The___you love me, the___I'll be nice to you.
+The more you love me, the nicer I'll be to you.
+
+d. 比较级+and+比较级    愈来愈...
+It is getting warmer and warmer every year.
+The girl became more and more beautiful.
+```
+
+9. no more...than.../no less...than...
+   no more...than...    ...不是...正如...不是...
+   no less...than...    和...一样。。。
+
+```
+a. 此类结构一共有四种：
+1. no more...than...    ...不是...正如...不是...
+他不是学生，正如我也不是学生一样
+He is no more a student than I (am).
+2. no less...than...    和...一样...
+他和约翰一样精通英文
+He is no less good at English than John (is).
+3. not more...than...    没有比...更...
+她没有比玛丽更漂亮
+She is not more beautiful than Mary (is).
+4. not less...than...    至少与...一样...
+她至少与玛丽一样美
+She is not less beautiful than Mary (is).(罕)
 ```
