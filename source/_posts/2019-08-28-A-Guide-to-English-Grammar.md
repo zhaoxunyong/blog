@@ -4811,22 +4811,19 @@ It is getting warmer and warmer every year.
 The girl became more and more beautiful.
 ```
 
-9. no more...than.../no less...than...
-   no more...than...    ...不是...正如...不是...
-   no less...than...    和...一样。。。
+## 代词
+
+1. 代替不定式
 
 ```
-a. 此类结构一共有四种：
-1. no more...than...    ...不是...正如...不是...
-他不是学生，正如我也不是学生一样
-He is no more a student than I (am).
-2. no less...than...    和...一样...
-他和约翰一样精通英文
-He is no less good at English than John (is).
-3. not more...than...    没有比...更...
-她没有比玛丽更漂亮
-She is not more beautiful than Mary (is).
-4. not less...than...    至少与...一样...
-她至少与玛丽一样美
-She is not less beautiful than Mary (is).(罕)
+ It is good to study.
+=To study is good.
+```
+
+2. 代替that名词性从句
+
+```
+他想读书，这是件好事
+It's good that he wants to study.
+That he wants to study is good.
 ```
