@@ -4813,6 +4813,8 @@ The girl became more and more beautiful.
 
 ## 代词
 
+### it作形式主语
+
 1. 代替不定式
 
 ```
@@ -4827,3 +4829,240 @@ The girl became more and more beautiful.
 It's good that he wants to study.
 That he wants to study is good.
 ```
+
+3. 代替动名词
+
+```
+整天看小说是没用的
+ It's no use/good reading novels all day long.
+=It's of no use to read novels all day long.
+=There is no use (in) reading novels all day long.
+```
+
+### it作形式宾语
+
+1. 但动词虽加宾语，意思却不完整，而需要补充说明，谓不完全及物动词，其补充语一定是名词或形容词（包括分词变成的形容词）：
+
+```
+我认为他人很好
+I consider him good.
+I consider him a good man.
+I consider her beautiful.
+```
+
+2. 不定式或that从句有名词的功能，可作主语，亦可作宾语:
+
+```
+I think that he is good.
+
+To sutdy abroad has always been my dream.
+I want to go.
+That he doesn't study is true.
+
+但两者却不能直接作不完全及物动词之宾语，必须用it代替:
+I think that he is good true.(x)
+I think it true that he is good.
+
+I think to get up early good.(x)
+I think it good to get up early.
+
+以下是常用的不完全及物动词：
+think    认为⋯ ⋯是⋯ ⋯
+consider 认为⋯ ⋯是⋯ ⋯
+deem     认为⋯ ⋯是⋯ ⋯
+believe  相信⋯ ⋯是⋯ ⋯
+find     发现⋯ ⋯是⋯ ⋯
+
+I consider it necessary to excercise on a daily basis.
+```
+
+3. it亦可用以强调介词短语或状语从句：
+
+```
+我是在1974年开始学英文的
+It was in 1974 that I began to study English.
+
+他是因为懒惰的关系而失败的
+It was because he was lazy that he failed.
+```
+
+4. 数量代词的用法：
+
+```
+most of the(或my/your...)+不可数名词+单数动词
+all                       复数名词+复数动词
+some
+half
+part
+the rest
+one-third
+two-thirds
+none
+
+大部分的钱都被窃了(money前不得加the)
+Most of money was stolen.
+部分学生在这儿
+Some of the students are here.
+所有学生都在这儿
+All of the students are here.
+他所有的演播都在这儿
+All of his students are here.
+有三分之一的学生通过了测验
+One third of the students have passed the test.
+70％的水被污染了
+Seventy percent of the water is contaminated.
+70％的学生没考及格
+Seventy percent of the students have failed the test.
+```
+
+5.  almost/most/all的关系：
+
+```
+almost  为副词表“几乎”, 不能作代词。
+most    为形容词（大多数的，最多的）、副词（最），亦可作代词，表“大多数”
+all     为形容词（所有的），亦可作代词（全部），可用almost修饰。
+
+大多数学生在这儿(代词)
+Most of the students are here.
+所有的学生都在这儿(代词)
+All of the students are here.
+几乎所有的学生都在这儿(adv)
+Almost all of the students are here.
+大多数学生都喜欢音乐(adj)
+Most students love music.
+所有学生都喜欢音乐(adj)
+All students love music.
+```
+
+6. 人称代词
+
+![Grammar_it.png](/images/Grammar_it.png)
+![Grammar_it2.png](/images/Grammar_it2.png)
+
+```
+她自杀了
+She killed herself.
+她的书和我的一样有趣
+her books are as interesting as mine.
+```
+
+7. 反身代词的强势用法
+
+```
+他亲自做这件事
+He himself did it.
+He did it himself.
+```
+
+8. a friend of mine/this book of hers的用法
+
+![Grammar_it3.png](/images/Grammar_it3.png)
+
+```
+他是我的一位朋友
+He is a friend of mine.
+你的这位朋友是个好人
+This friend of yours is good.
+
+上述结构使用到“ of十所有格代词”时，均可与不定冠词（a 、 an）、指示代词( this 、 that 、 these 、 those 、which）或数词（some 、 a few 、 ten 、 many 、most ⋯）连用，但不可与定冠词the连用，换言之，无下列用法：
+他是我最好的朋友
+He is the best of mine.(x)
+He is my best friend.
+他是我最好的朋友其中一个
+He is one of my best friends.
+```
+
+9. those who/those whom
+
+```
+叫那些迟到的人来见我
+Tell those who are late to come and see me.
+虚无主义者对伊凡的画感兴趣
+Evan's paintings are interesting to those who believe in nihilism.
+```
+
+10. each other/one another
+
+```
+a. each other    两者彼此
+   one another   三者或三者以上彼此
+
+这两位同学彼此都很喜欢对方
+The two students like each other.
+这五位同学彼此互相讨厌
+The five student hate on another.
+
+b. one after the other    两者相继地
+   one after another      三者或三者以上相继地
+
+他相继地举起左右手
+He raised his hands one after the other.
+所有学生一个接一个地进来
+All the students came in one after another.
+```
+
+11. either/neither/both/all/any/none作代词的用法
+
+```
+either（两者中任一）    any（三者或以上任一）
+neither（两者皆不）     none（三者或以上皆不）
+both（两者皆）          all（三者或以上皆）
+
+你上咖啡也好，茶也好，我都不在乎随便哪样都行
+I don't care whether you serve coffee or tea; either will do.
+这四把椅子没有一把是我喜欢的
+I don't like any of the four chairs.
+这两本书都不好
+Neither of the two books is good.
+三个学生中没有一个是用功的
+None of the three students is(或are) diligent.
+那两个学生都懒惰
+Both of the two students are lazy.
+这五个苹果都烂掉了
+All of the five apples are rotten.
+```
+
+12. one...the other...    一个...另一个...(限定的两者)
+
+```
+他有两个儿子。一个是老师, 另一个则是军人。
+He have two sons. One is a teacher, and the other is a soldier.
+```
+
+13. one...another...the other...    一个...一个...另一个...(限定的三者)
+
+```
+他有三个儿子。一个是老师，一个是军人，另一个则是律师
+He have three sons. One is a teacher, another is a soldier, and the other is a lawyer.
+```
+
+14. one...another...    一个...另一个...(非限定的两者)
+
+```
+嗜好因人而异。某甲可能喜欢游泳，某乙则可能喜欢远足
+Hobbies vary with people. One may enjoy swimming, while another may love hiking. 
+```
+
+15. some...others...    一些...另一些...(非限定的两群)
+
+```
+嗜好因人而异。有些人可能喜欢游泳，有些人则可能喜欢远足
+Hobbies vary with people. Some may enjoy swimming, while others may love hiking. 
+```
+
+16. some...others...still others...    一些...一些...另一些...
+
+```
+嗜好因人而异。有些人可能喜欢游泳，有些人可能喜欢蹦极，也有些人则喜欢远足
+Hobbies vary with people. Some may enjoy swimming, others may be fond of bungee jumping, and still others may love hiking.
+```
+
+17. 明确数词...the others/the rest...    若干...其他/其余
+
+```
+我班上只有两个学生通过考试，其余全不及格
+Only two students in my class passed the test. The others failed.
+```
+
+## 复合形容词
+
