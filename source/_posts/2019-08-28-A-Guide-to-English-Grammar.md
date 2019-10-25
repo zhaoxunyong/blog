@@ -5285,7 +5285,7 @@ Come back by ten
 十点以前要回来
 ```
 
-## for
+### for
 
 1. 与表“动身”之意的动词连用，表“前往（某地）”
 
@@ -5389,7 +5389,7 @@ The flight for Chicago will depart at 2:30.
 I bought this book for only $10.
 ```
 
-## from
+### from
 
 1. 表"从...":
 
@@ -5433,7 +5433,7 @@ The prince protected the princess from being attacked by the bandit.
 Our teacher forbid us to bring comic books to school.
 ```
 
-## in
+### in
 
 1. 表“穿/戴着...”
 
@@ -5499,7 +5499,7 @@ My monther stared at Tom and talked in a bitter tone.
 The man spoke with a heavy Japanese accent. 
 ```
 
-## on
+### on
 
 1. 与表“距离”的名词连用：
 
@@ -5640,7 +5640,7 @@ The firefighters are on call for emergenies.
 The guard is on duty from 7:00 a.m. to 9:00 p.m.
 ```
 
-## to
+### to
 
 1. 通常表“到达、往”之意：
 
@@ -5725,7 +5725,7 @@ lt's up to sb.   则表“由某人做决定”
 It's up to you.
 ```
 
-## with
+### with
 
 1. 表“使用（某物）”之意：
 
@@ -5776,5 +5776,212 @@ Something's wrong with her.
 What's the matters with you?
 ```
 
-## about
+### about
 
+1. 表“有关”，相当于on/concerning/regarding:
+
+```
+写一往篇有关空气污染的文章
+ write an article about air pollution
+=write an article on/concerning/regarding air pollution.
+about多为口语用法，on则在文笔中使用
+```
+
+### after
+
+1. 在“追逐”，通常与动词连用
+
+```
+ be after 人    追逐/追捕某人
+=run after 人
+=chase (after) 人
+警方仍在追缉这句小偷
+The police are still after the thief.
+                     running after the thief.
+                     chasing the thief.
+```
+
+2. 表“像、模仿”
+
+```
+ take after    像...
+=resemble...
+=look like...
+他长得像他爸爸
+ He takes after his father.
+=He resembles his father.
+=He looks like his father. 
+```
+
+### toward
+
+1. 表“朝向”
+
+```
+toward sb             朝某人的方向
+toward the station    朝车站的方向
+toward evening        快傍晚时
+
+那个女孩带着灿烂的笑容跑向他
+The gril ran toward him with a bright smile.
+
+forward    往前(adv)
+backward   往后、倒退(adv)
+wayward    任性的、四面八方的(adj)
+
+那个小孩子正摇摇晃晃地向前走
+The little child is todding forward.
+学生们被要求倒退着跑
+The students were asked to run backward.
+她是个任性的女孩，从不会为别人着想
+She is a wayward girl, who never thinks about others.
+```
+
+2. 表“对于”
+
+```
+one's attitude toward/to...    某人对...的态度
+你对于安乐死的看法如何？
+What's your attitude toward mercy killing?
+```
+
+### except
+
+1. 除了...之外
+
+```
+除了他之外，所有的人都会去
+ All except him will go.
+=All save him will go.
+
+Everybody can do it except Peter.
+
+ He enjoys nothing except music.
+=He enjoys nothing but music.
+```
+
+2. except+ that从句(或for+名词)，表示“只可惜...”或“只不过是...”
+
+```
+他人蛮不错，只不过是脾气不好
+She is quite nice except that he is bad-tempered.
+                         for his bad-tempered.
+```
+
+### behind
+
+1. 在...之后
+
+```
+房子后面有一棵树
+There is a tree behind the house.
+他正坐在我后面
+He is sitting behind me.
+```
+
+2. 落后
+
+```
+behind schedule    比预定时间落后
+他总是比预定时间落后完成工作
+He always finished his work behind schedule.
+
+on shedule        按预定时间
+ahead of shedule  比预定时间提前
+我们会尽量使每件事按预定时间进行
+We'll try to keep everything running on schedule.
+火车比预定时间提前到达
+The train arrived ahead of shedule.
+```
+
+### into
+
+1. 进入
+
+```
+walk into the classroome  走进教室
+run into the room         跑进房间
+
+ run into+人    与某人巧遇
+=bump into+人
+```
+
+2. 转变成
+
+```
+change/transform/turn A into B    将A转变成B
+translate A into B     将A翻译成B
+
+那个女巫把自己变成了一个小女孩
+The witch changed herself into a little girl.
+```
+
+3. 与be动词连用，形成"be into"的短语，表“热衷于...”
+
+```
+他热衷于古典音乐
+He is into classical music.
+```
+
+### within
+
+1. 表“在...之内”，尤其指在某空间或某时间之内，相当于in
+
+```
+ within the country
+=in the country
+ within an hour    在一小时之内
+=in an hour
+```
+
+2. 也可指范围，表“在...范围内”
+
+```
+act within the law     在法律范围内行事
+守法的公民应该依法行事
+A law-abiding citizen should act within the law.
+```
+
+### without
+
+1. 表“没有/无...”
+
+```
+coffee without sugar    无糖的咖啡
+without his help        没有他的帮助
+
+Robert likes to drink coffee without sugar.
+若没有他的帮助，我当时就无法成功
+I couldn't have succeeded without his help.
+```
+
+2. 与without有关的短语
+
+```
+can do without...                  没有...也行
+cannot do without...               没有...就不行
+It goes without saying+that从句     不用说，...
+
+我可以没有钱，但不能没有你的爱
+I can do without money, but I cannot do without your love.
+不用说，金钱不能买到每一样的东西
+It goes without saying that money can't buy everything.
+```
+
+### above
+
+1. 表“在...上方”
+
+```
+Some birds are flying above(或over) the city.
+Nanjing is located above Hangzhou on the map.
+```
+
+### over
+
+1. 表“在...这上”，相当于above，但通常为悬空的状态
+
+```
+ be over the city
+=be above the city
+```
