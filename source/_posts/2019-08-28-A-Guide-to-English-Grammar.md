@@ -13,198 +13,191 @@ A guide to english grammar.
 ## 句子的形成
 
 1. S+V
+
 2. 祈使句：
 
-   可以省略主语：
-   ```
-   Work hard.
-   =(You should) work hard.
-   Don't fool around.
-   ```
+可以省略主语：
+```
+Work hard.
+=(You should) work hard.
+Don't fool around.
+```
 
 ### 可作主语的词类
 
 #### 名词
-   ```
-   Gold is of much value.
-   ```
+
+```
+Gold is of much value.
+```
 
 #### 代词
-   ```
-   It's a lot of fun to climb mountains.
-   ```
+
+```
+It's a lot of fun to climb mountains.
+```
 
 #### 动名词或不定式短语
-   ```
-   Seeing him makes me angry.
-   To see him is my purpose of coming here.
-   ```
 
-   动名词作主语，通常用以表示已知的事实或曾经做过的经历。 
-   ```
-   Collecting stamps is one of his hobbies
-   =It's one of his hobbies (to collect stamps真正主语).
+```
+Seeing him makes me angry.
+To see him is my purpose of coming here.
 
-   Listening to music makes me happy.
-   =It makes me happy to listen to music.
+动名词作主语，通常用以表示已知的事实或曾经做过的经历。 
+ Collecting stamps is one of his hobbies.
+=It's one of his hobbies (to collect stamps真正主语).
 
-   It's interesting learning English.(可)
-   =It's interesting to learn English.(佳)
-   ```
+ Listening to music makes me happy.
+=It makes me happy to listen to music.
 
-   不定式作主语通常表示-种意愿、目的或未完成的事。
-   ```
-   To study abroad is my greatest desire.
-   =It's my greatest desire to study abroad.
-   ```
+ It's interesting learning English.(可)
+=It's interesting to learn English.(佳)
+
+不定式作主语通常表示-种意愿、目的或未完成的事。
+ To study abroad is my greatest desire.
+=It's my greatest desire to study abroad.
+```
 
 #### 名词性从句作主语
 
-   可作主语、宾语或在be动词之后作表语。
+可作主语、宾语或在be动词之后作表语。
 
-   ##### that从句
+##### that从句
 
-   任何-个主语起首的句子：
-   ```
-   he doesn't study makes me angry. 
-   -> That he doesn't study makes me angry.
-   ```
+```
+任何-个主语起首的句子：
 
-   ##### whether从句
+he doesn't study makes me angry.
+-> That he doesn't study makes me angry.
+```
 
-   可用yes/no回答的问句变化而成：
-   ```
-   Is he happy? 
-   -> whether he is happy
+##### whether从句
 
-   Can he do it? 
-   -> whether he can do it.
+```
+可用yes/no回答的问句变化而成：
 
-   Did he come? 
-   -> whether he came.
+Is he happy? 
+-> whether he is happy
 
-   Does he like it? 
-   -> whether he likes it.
-   ```
+Can he do it? 
+-> whether he can do it.
 
-   ##### 疑问词所引导的从句
+Did he come? 
+-> whether he came.
 
-   由when/what/how/where/why等引导的问句变化而成：
-   ```
-   What is he doing? 
-   -> what he is doing.
+Does he like it? 
+-> whether he likes it.
+```
 
-   Where can he find it? 
-   -> where he can find it.
+##### 疑问词所引导的从句
 
-   What did he write? 
-   -> what he wrote.
+```
+由when/what/how/where/why等引导的问句变化而成：
 
-   When did he come? 
-   -> when he came.
+What is he doing? 
+-> what he is doing.
 
-   How does he do it? 
-   -> how he does it.
+Where can he find it? 
+-> where he can find it.
 
-   # who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变
-   Who came here? 
-   -> who came here.
+What did he write? 
+-> what he wrote.
 
-   What happended last night? 
-   -> what happended last night.
+When did he come? 
+-> when he came.
 
-   Which was bought? 
-   -> which was bought.
-   ```
+How does he do it? 
+-> how he does it.
 
-   作主语时：
-   ```
-   That honesty is the best policy is a proverb (which) we should always keep in mind.
-   =It's a proverb we should always keep in mind that honesty is the best policy.
+who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变:
 
-   Where he lives is still in doubt.
-   =It's still in doubt where he lives.
+Who came here? 
+-> who came here.
 
-   Whether he can do it remains to be seen.
-   =It remains to be seen whether he can do it.
-   ```
+What happended last night? 
+-> what happended last night.
 
-   作及物动词的宾语：
-   ```
-   I wonder whether he has finished the work.
-   I don't know how he'll handle it.
-   ```
+Which was bought? 
+-> which was bought.
 
-   作介词的宾语：
-   ```
-   I am worried about whether he can do it.
-   I am curious about how he'll cope with the problem.
-   ```
-   注意：介词后不能直接接that从句，补救方法如下：
-   ```
-   #建议使用
-   I am sure of that the team has won the game.(x)
-   I am sure of the fact that the team has won the game.(the fact that).
-   ```
+作主语时：
+That honesty is the best policy is a proverb (which) we should always keep in mind.
+=It's a proverb we should always keep in mind that honesty is the best policy.
 
-   或者不用the fact:
-   ```
-   I am worried about that he plays around all day.(x)
-   I am worried about the fact that he plays around all day.
-   I am worried about his(or him) playing around all day.
-   ```
+ Where he lives is still in doubt.
+=It's still in doubt where he lives.
 
-   当有do/does/did或者will/would时，予以去掉即可。
-   ```
-   may -> be likely to
-   can -> be able to
-   I am happy about that he may come.(x)
-   I am happy about his being likely to come.
+ Whether he can do it remains to be seen.
+=It remains to be seen whether he can do it.
 
-   I am sure of that he can do it.(x)
-   I am surce of his being able to do it.
-   ```
+作及物动词的宾语：
+I wonder whether he has finished the work.
+I don't know how he'll handle it.
 
-   直接去掉介词：
-   ```
-   #建议使用
-   I am worried about that he plays around all day.(x)
-   I am worried that he plays around all day.
-   ```
+作介词的宾语：
+I am worried about whether he can do it.
+I am curious about how he'll cope with the problem.
 
-   in that
-   =because
+注意：介词后不能直接接that从句，补救方法如下：
+建议使用
+I am sure of that the team has won the game.(x)
+I am sure of the fact that the team has won the game.(the fact that).
 
-   except that: 只可惜、除了
+或者不用the fact:
+I am worried about that he plays around all day.(x)
+I am worried about the fact that he plays around all day.
+I am worried about his(or him) playing around all day.
 
-   notwithstanding that
-   =despite the fact that=in spite of the fact that
+当有do/does/did或者will/would时，予以去掉即可。
+may -> be likely to
+can -> be able to
+I am happy about that he may come.(x)
+I am happy about his being likely to come.
 
-   ##### 名词短语作主语：
+I am sure of that he can do it.(x)
+I am surce of his being able to do it.
 
-   疑问副词：
-   ```
-   where to live
-   whether to try again
-   when to talk to him
-   how to do it
-   ```
-   
-   疑问代词：
-   ```
-   what to do
-   whom to see
-   which to buy
-   whom to talk to
-   ```
+直接去掉介词：
+建议使用
+I am worried about that he plays around all day.(x)
+I am worried that he plays around all day.
 
-   ```
-   Where we should meet him is not decided yet.
-   =Where to meet him is not decided yet.
+in that
+=because
 
-   From A to B is about 1000 km.
-   =It's about 1000 km from A to B.
-   ```
+except that: 只可惜、除了
+
+notwithstanding that
+=despite the fact that=in spite of the fact that
+```
+
+##### 名词短语作主语
+
+疑问副词：
+
+```
+where to live
+whether to try again
+when to talk to him
+how to do it
+```
+
+疑问代词：
+
+```
+what to do
+whom to see
+which to buy
+whom to talk to
+```
+
+```
+ Where we should meet him is not decided yet.
+=Where to meet him is not decided yet.
+
+ From A to B is about 1000 km.
+=It's about 1000 km from A to B.
+```
 
 ### 动词的种类及其用法
 
