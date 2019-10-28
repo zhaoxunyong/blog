@@ -5977,11 +5977,422 @@ Some birds are flying above(或over) the city.
 Nanjing is located above Hangzhou on the map.
 ```
 
+2. 在下列短语中，above表“不屑”之意：
+
+```
+be above＋动名词不屑／不愿（做）⋯
+他不屑于诈骗别人
+He is above cheating.
+
+但be not above＋动名词愿意（做）⋯
+他总是不耻下问
+He is not above asking questions.
+```
+
 ### over
 
-1. 表“在...这上”，相当于above，但通常为悬空的状态
+1. 表“在...这上”，相当于above，但通常为悬空的状态:
 
 ```
  be over the city
 =be above the city
 ```
+
+2. 表“覆盖在⋯ ⋯之上”，为有接触物体的状态：
+
+```
+put one's hands over one's faee    把某人的手放在某人的脸上
+他把手放在她的脸上，告诉她不要担心
+He puts his hands over her face, telling her not to worry.
+```
+
+3. 表“（悬空）略过”，尤与动词iump连用：
+
+```
+jump over the wall    跳过这座墙
+那名窃贼跳过墙跑到街上去了
+The thief jumped over the wall and ran down the street.
+```
+
+4. 与地方名词连用，表“在某地方的另一头”:
+
+```
+somewhere over there    在那儿的某处
+我住在马路那头
+I live over the road.
+```
+
+5. 与数词连用表“超过”之意：
+
+```
+ over+数词    超过某数词
+=more than+数词
+在这场车祸中有超过20个人受到重伤
+ Over twenty people were seriously injured in the traffic accident.
+=More than twenty were seriously injured in the traffic accident.
+```
+
+6. 与表“驾驭”同义之名词或动词连用：
+
+```
+have authority/control/power over...    有支配、指挥⋯ ⋯的权力
+rule over...    统治...
+总统有权指挥军队
+The president has authority over the army.
+
+这个国王已经统治人民十年了
+The king has ruled over the people for ten years.
+```
+
+7. 与咖啡、茶、三餐等连用，表“吃／喝⋯ ⋯了一段时间”，常与talk连用:
+
+```
+我们谈了一杯茶的光景
+We talked over a cup of tea.
+他们聊了一顿晚饭的时间
+They talked over dinner.
+```
+
+8. 词辨
+
+```
+a. 当描述某物的位置高于另一物时，above与over均可使用:
+房子上方有一个阁楼
+ There is an attic above the house.
+=There is an attic over the house.
+
+b. 但若表“从某物的一边移动到另一边”之动态动作，则只可用over:
+那个小孩把球丢到墙外
+The child threw the ball over the wall.
+
+c. 另外above与over均可表“超越”，但above多与表示最小等级或一固定点之名词连用，over则与数词、时间、年龄、金钱等连用:
+玉山的高度为海拔3952米
+Mt. Jade is 3952 meters above seal level.
+这个男孩身高超过同年龄其他小孩
+The boy is above average height for his age.
+这个男人30多岁了
+The man is over thirty.
+我花了500多元买这本书
+I spent over five hundred dollars buying this book.
+```
+
+### below
+
+1. 表“在（某物体）的下方” :
+
+```
+write below the line    写在横线下方
+这家百货公司下面有一家超市
+There is a supermarket ablow the department store.
+离桥下远处有个瀑布
+There is a waterfall far below the bridge.
+```
+
+2. 表“（数量等）少于...；（地位等）低于...”:
+
+```
+他是个不到50岁的男子
+He is a man below fifty.
+```
+
+### beneath
+
+1. 表‘在（某空间）之正下方”:
+
+```
+他们住在同一个屋檐下
+The live beneath the same roof.
+```
+
+2. 表“（身份、地位、智力等）低于⋯”，相当于below：
+
+```
+法兰克的智力远不及丹尼尔
+Frank is far beneath Daniel in intelligence.
+```
+
+### under
+
+1. 表“在（某物体）的下面”:
+
+```
+under the tree    在树下
+under the bed     在床下
+
+我在床底下找到我的乌龟
+I found my turtle under the bed.
+```
+
+2. 表“低于⋯；少于⋯”:
+
+```
+under seven years old    7岁以下
+在美国，21岁以下的人不可以买酒
+People under 21 are not allowed to buy alcohol in America.
+```
+
+3. 表“在⋯ ⋯支配/控制/影响下”：
+
+```
+under the president             由总统统治
+under the influence of drugs    在药物的影响下
+这个国家现在由一位仁慈的皇后所统治
+The country is now under a benevolent queen.
+他在酒醉后吐露了实情
+He told the truth under the influnnce of wine.
+```
+
+4. 表“承受着（重担，压力等）；在⋯的情况/状态下”:
+
+```
+under the heavy pressure of work    在沉重的工作压力下
+under any cireumstances             在任何情况下
+under construction                  施工中
+
+在任何情况下都不要告诉别人这个秘密
+Don't tell others the secret under any circumstances.
+这座桥仍在施工中
+The bridge is still under construction.
+```
+
+5. 表“接受（考验、刑罚、手术等）”:
+
+```
+under an eye operatinn    接受眼部手术
+under penalty             受到处罚
+
+他在那家医院接受眼部手术
+He is under an eye operation at that hospital.
+凡是违反规定的人就会受到处罚
+People who disobey the regulations will be under penalty.
+```
+
+7. 表“依照/根据（约定、法令等）”：
+
+```
+根据美国宪法，人皆生而平等
+All people are equal under the U.S. comstitution.
+```
+
+8. 表“属于⋯项目” :
+
+```
+小说属于文学类
+Novels come under literature.
+```
+
+### underneath
+
+表“在...之下”，相当于under或beneath：
+
+```
+ underneath the table    在桌子下
+=under the table
+=beneath the table
+
+那只猫正在桌子底下睡觉
+The cat is sleeping underneath the table.
+```
+
+### against
+
+1. 表“对抗、抵制、反对” :
+
+```
+be against a plan    反对一个计划
+所有的成员都反对他提出的计划
+All members were against the plan he brought forward.
+```
+
+2. 表“顶着”：
+
+```
+lean against the wall    靠墙站
+小心那个靠墙站着的男子
+Be careful of the man leaning against the wall.
+```
+
+3. 表“以...为背景”:
+
+```
+那个颜色在你皮肤的衬托下看起来不错
+That color looks good against your skin.
+```
+
+### along
+
+1. 表“沿着⋯”:
+
+```
+walk along the river    沿着河走
+沿着街走,你会看到很多书店
+Walk along the stree and you'll see many bookstores.
+```
+
+2. 表“顺畅”：
+
+```
+get along with 人    某人相处得很好
+辛西亚和她的同学相处得很好
+Cindy gets along with her classmates.
+```
+
+### before
+
+表“在⋯ ⋯之前”，之后可接表空间或时间的名词：
+
+```
+stand before the car    站在车前
+before June             在6月之前
+
+站在那辆黑色汽车前的男孩是我哥哥。
+The boy standing before the black car is my brother.
+```
+
+### beyond
+
+表“超越”之意：
+
+```
+be beautiful beyond description    美得难以形容
+beyond one's imagination           超乎某人的想象
+beyond one's expectation           出乎某人意料之外
+
+那里的风景美得难以形容
+The scenery there is beautiful beyond description.
+他的聪明超乎我们的想像
+His is so smart beyond our imagination.
+珍妮出人意料地赢得了比赛
+Jenny won the competition beyond everyone's expectation.
+```
+
+### during
+
+表“在（一段时间）期间” :
+
+```
+during his stay here    在他待在这里期间
+during the two months   在这两个月中
+
+这两个月期间我都不会在这里
+I won't be here during the two months.
+```
+
+### through
+
+1. 表“经过”：
+
+```
+walk through the crowd    穿过人群
+那位歌手穿过人群离开了
+The singer walked through the crowd and left.
+```
+
+2. 表“取道／通过”:
+
+```
+travel through Hong Kong    取道香港去旅游
+我们取道香港去加拿大
+We went to Canada through Hong Kong.
+```
+
+3. 表“经由”：
+
+```
+through one's help      经由某人的帮助
+through the magazine    透过这本杂志
+
+吉娜经由琳达的帮忙而获得这份工作
+Gina got the job through Linda's help.
+我是透过这本杂志认识汤姆的
+I knew Tom through the magazine.
+```
+
+4. 表“从（活动、场合等）开始到结束”:
+
+```
+through the whole meeting    会议开始到结束
+
+从会议开始到结束经理一句话都没说
+The manager didn't say a word through the whole metting.
+```
+
+5. 表“整段时间”:
+
+```
+through the day    一整个白天
+through thei nght  一整个晚上
+他白天一整天都在街上游荡
+He wandered around on the street through the day.
+```
+
+### besides
+
+表“除了...之外”，相当于“in addition to”：
+
+```
+ besides +（代）名词/动名词    除了⋯之外
+=in addition to +（代）名词/动名词
+
+除了游泳，他也会溜冰
+ Besides swimming, he can also roller-skate.
+=In addition to swimming, ... 
+```
+
+### till/untill
+
+表“直到...”:
+
+```
+till与until可互通使用，不过until较till正式。
+ stay here till ten    在这里待到十点
+=stay here until ten
+
+until另常与not连用，形成：
+not...ntil...    直到...才...
+
+他直到九点才来
+ He didn't come until nine o'clock.
+=Not until nine o'clock did he come.
+
+till有时与from连用，形成：
+ from...till    从⋯到⋯
+=from...to...
+那场电影我们从8点看到10点
+ We watched the movie from eight till ten.
+=We watched the movie from eight to ten.
+```
+
+### since
+
+表“自从...”，通常与完成时连用：
+
+```
+since+时间名词/动名词    自从⋯
+他从星期二就开始生病了
+He has been ill since Tuesday.
+自从大学毕业之后，她就一直在这家公司工作
+Since graduating from college, she has been working in this company.
+```
+
+### beside
+
+1. 表“在...之旁”．相当于by之意：
+
+```
+ sit beside me    坐在我旁边
+=sit by my side
+
+凯伦，过来坐在我旁边
+Come and site beside me, Karen.
+```
+
+2. 表“与⋯相较”，相当于“compared with”或“in comparison with”：
+
+```
+跟他相比，我便微不足道了
+Beside him, I'm nothing.
+Comparedd with him, I'm nothing.
+In comparison with him, I'm nothing.
+```
+
