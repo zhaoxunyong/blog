@@ -6396,3 +6396,120 @@ Comparedd with him, I'm nothing.
 In comparison with him, I'm nothing.
 ```
 
+## 反意疑问句
+
+1. 反意疑问句的使用规则:
+
+```
+陈述句为肯定时，接否定反意疑问句，陈述句为否定时，接肯定反意疑问句:
+
+a. 陈述句有匕e动词，反意疑问句沿用be动词:
+
+他人不错，是不是？
+He is nice, isn't he?
+我没病，是不是?
+I wasn't sick, was I?
+
+b. 陈述句有助动词，反意疑问句沿用助动词:
+
+他会来，是不是?
+He will come, won't he?
+他们不能做这件事，是不是?
+They can't do it, can they?
+你做完了，是不是？
+You have done it, haven't you?
+
+c. 陈述句有一般动词，反意疑问句则使用do、does、did:
+
+他来了，是不是？
+He came, didn't he?
+
+他起得很早，是不是？
+He gets up early, doesn't he?
+
+他没来，是不是？
+He didn't come, did he?
+
+d. 与祈使句使用时，反意疑问句一律用wili you:
+
+来这里，好不好?
+Come here, will you?
+别再抽烟，好不好?
+Stop smoking, will you?
+
+e. 与祈使句“ Let's...”（咱们⋯句型使用，反意疑问句一律用shall we:
+
+咱们走吧，好不好?
+Let's go, shall we?
+
+咱们别做那件事，好不好?
+Let's not do it, shall we?
+
+但：请你让我们／他们／他／⋯ ⋯／约翰走吧，好不好？
+let us/them/him/.../John go, will you?
+```
+
+2. 句中有否定副词
+
+```
+陈述句含有scarcely/hardly/rarely/no doubt/little/never/by no means等否定副词．陈述句视为否定句，须接肯定反问句:
+
+他很少抽烟是不是？
+He |scarcely ever| smokes, does he?
+   |hardly ever  | 
+   |rarely       |
+
+毫无疑问他是个好孩子，是不是？
+He is no doubt a good boy, is he?
+```
+
+3. 句中有助动词短语:
+
+```
+陈述句含有would rather、had better等助动词短语．反意疑问句中用其第一个词:
+
+你宁愿去，是不是？
+You would rather go? wouldn't you?
+
+你最好做这事，是不是？
+You had better do it? hadn't you?
+
+他应当来，是不是？
+He ought to come, shouldn't he?
+```
+
+4. 反意疑问句须用人称代词:
+
+```
+反意疑问句一定要用人称代词，但叙述句首为Thereis/are/was/were等时，则须用there
+
+John is fine, isn't he?
+This is not good, is it?
+That is good, isn't it?
+These are not good, are those?
+Those are good, aren't they?
+那里有个人，是不是？
+There is a man there, isn't there?
+```
+
+5. 陈述句中，主语若为第一人称单数I表示意见或观点时，不可能对自己反问，应以其后的that从句形成反问:
+
+```
+我认为大卫人不错，是不是？
+I think that David is nice, isn't he?
+
+但主语若为I以外的主语，则反问句仍以主句为依据形成反问句:
+我们认为这个新老师很好，是不是？
+We think that the new teacher is nice, don't we?
+```
+
+6. need作一般动词及助动词的反问句：
+
+```
+need可作一般动词，也可作为助动词（仅限于否定句，须与not并用，无论第几人称need之后都不加s）:
+
+他需要过去，是不是？
+He needs to go,doesn't he?
+他不需要过去，是不是？
+He need not go, need he?
+```
