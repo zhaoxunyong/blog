@@ -14,13 +14,38 @@ A guide to english grammar.
 
 1. S+V
 
+任何一个句子一定由主语又subject，简写成S）及动词（verb简写成V）形成。
+
+```
+约翰工作很努力
+John works hard.
+
+他钢琴弹得很好
+He plays the piano well.
+
+玛丽似乎喜欢学英文
+Mary seems to like learn English.
+Mary seems to be fond of learning English.
+```
+
 2. 祈使句：
 
-可以省略主语：
+有时主语可以省略，而形成祈使句。这种祈使句句首为原形动词，之前省略了You should（你应当）。
+
 ```
+努力工作
 Work hard.
 =(You should) work hard.
+
+安静
+Be quiet.
+=You should be quiet.
+
+别游手好闲
 Don't fool around.
+
+别傻了
+Don't be silly.
 ```
 
 ### 可作主语的词类
@@ -28,47 +53,89 @@ Don't fool around.
 #### 名词
 
 ```
+这孩子喜欢说谎
+The child is apt to tell lies.
+
+黄金很值钱
 Gold is of much value.
 ```
 
 #### 代词
 
 ```
+他总是信守承诺
+He always keeps his promise.
+
+爬山蛮好玩的
 It's a lot of fun to climb mountains.
 ```
 
 #### 动名词或不定式短语
 
 ```
+看到他就令我生气
 Seeing him makes me angry.
-To see him is my purpose of coming here.
 
-动名词作主语，通常用以表示已知的事实或曾经做过的经历。 
+我来这儿是为了看他
+I come here to see him.
+To see him is my purpose of coming here.
+```
+
+1. 动名词作主语，通常用以表示已知的事实或曾经做过的经历
+
+```
+集邮是他的爱好之一
  Collecting stamps is one of his hobbies.
 =It's one of his hobbies (to collect stamps真正主语).
 
+听音乐使我快乐
  Listening to music makes me happy.
 =It makes me happy to listen to music.
 
  It's interesting learning English.(可)
 =It's interesting to learn English.(佳)
+```
 
-不定式作主语通常表示-种意愿、目的或未完成的事。
+2. 不定式作主语通常表示-种意愿、目的或未完成的事
+
+```
+出国念书是我最大的愿望。
  To study abroad is my greatest desire.
 =It's my greatest desire to study abroad.
+
+到日本游玩是我今年的计划
+ To go to Janpan for a visit is my plan for this year.
+=It's my plan for this year to visit Japan.
+
+覆水难收
+It no use crying over spilt milk.
+向他求救是没有用的
+It no use asking him for help.
 ```
 
 #### 名词性从句作主语
 
-可作主语、宾语或在be动词之后作表语。
+可作主语、宾语或在be动词之后作表语。名词性从句的种类:
+
+```
+名词性从句包括宾语从句、主语从句、表语从句、同位语从句。名词性从句一共有三种:
+l ) that从句
+2 ) whether从句
+3）疑问词所引导的从句
+```
 
 ##### that从句
 
 ```
 任何-个主语起首的句子：
 
+他不读书令我生气
 he doesn't study makes me angry.
 -> That he doesn't study makes me angry.
+他不相信我说的话
+That he doesn't believe my words.
+有很多工作要做
+That there is lot of work to do.
 ```
 
 ##### whether从句
@@ -76,74 +143,147 @@ he doesn't study makes me angry.
 ```
 可用yes/no回答的问句变化而成：
 
+a）问句有be动词时：
+他是否快乐
 Is he happy? 
 -> whether he is happy
 
+b）问句有一般助动词（Can、will、may、should、ought to、must、have）时，主语与助动词还原，前面冠以whether：
+
+他是否能做这件事
 Can he do it? 
 -> whether he can do it.
 
+他是否已做好此事
+Has he done it?
+-> Whether he has done it.
+
+c）问句有do、does、did等助动词时主语与助动词还原，再将do、does、did去掉，后面的动词依人称和时态变化:
+
+他是否来了
 Did he come? 
 -> whether he came.
 
+他是否喜欢它
 Does he like it? 
 -> whether he likes it.
 ```
 
 ##### 疑问词所引导的从句
 
-```
-由when/what/how/where/why等引导的问句变化而成：
+本从句系由疑问词（when、what、how、where、why）等引导的问句变化而成，这种由疑问词引导的问句称为特殊疑问句。
 
+1. 问句有be动词时：
+
+```
+主语与be动词还原，前面保留疑问词。
+
+他正在做什么
 What is he doing? 
 -> what he is doing.
+```
 
+2. 问句有一般助动词时：
+
+```
+主语与助动词还原，前面保留疑问词。
+
+他在哪里能找到它
 Where can he find it? 
 -> where he can find it.
+```
 
+3. 问句有do、does、did等助动词时：
+
+```
+主语与助动词还原前面保留疑问词，再将do、does、did去掉，动词依人称和时态变化。
+
+他写什么
 What did he write? 
 -> what he wrote.
 
+他何时来
 When did he come? 
 -> when he came.
 
+他怎么做这件事
 How does he do it? 
 -> how he does it.
 
 who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变:
 
+谁来这儿
 Who came here? 
 -> who came here.
 
+昨晚发生什么事
 What happended last night? 
 -> what happended last night.
 
+哪个被买走
 Which was bought? 
 -> which was bought.
+```
 
-作主语时：
+名词性从句的功能:
+
+1. 名词性从句作主语：
+
+```
+“诚实为上策”是一句我们应时刻谨记在心的蔑言
 That honesty is the best policy is a proverb (which) we should always keep in mind.
 =It's a proverb we should always keep in mind that honesty is the best policy.
 
+他住哪里仍不确定
  Where he lives is still in doubt.
 =It's still in doubt where he lives.
 
+他能胜任与否仍有待观察
  Whether he can do it remains to be seen.
 =It remains to be seen whether he can do it.
+```
 
-作及物动词的宾语：
+2. 名词性从句作及物动词的宾语：
+
+及物动词在英文中称作transitive veth，简写为vt.；宾语则称作object，简写为o．
+
+```
+我知道他最近即将出国
+I know that he will go abroad in the near future.
+
+我想知道他是否已做完这份工作
 I wonder whether he has finished the work.
-I don't know how he'll handle it.
 
-作介词的宾语：
+我不知道他将如何处理这件事
+I don't know how he'll handle it.
+```
+
+3. 作介词的宾语：
+
+介词在英文中称作preposition，简写成prep.
+
+```
+a）此时仅能用whether从句或疑问词引导的名词性从句作宾语· that从句不可作介词的宾语。
+我很担心他是否能做这件事
 I am worried about whether he can do it.
+
+我很好奇他将如何应付这问题
 I am curious about how he'll cope with the problem.
 
-注意：介词后不能直接接that从句，补救方法如下：
-建议使用
+b）遇有介词，且非要使用that从句时其补救方法如下：
+
+(1) 介词+the fact+that从句:
+建议使用:
+我确定这一队赢了这场比赛
 I am sure of that the team has won the game.(x)
 I am sure of the fact that the team has won the game.(the fact that).
 
-或者不用the fact:
+我担心他不念书
+I am worry about that he doesn't study.(x)
+I am worry about the fact that he doesn't study.
+
+(2) 保留介词，不加the fact但介词之后的that从句要做下列变化:
+建议使用:
 I am worried about that he plays around all day.(x)
 I am worried about the fact that he plays around all day.
 I am worried about his(or him) playing around all day.
