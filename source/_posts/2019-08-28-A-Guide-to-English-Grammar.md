@@ -283,63 +283,118 @@ I am worry about that he doesn't study.(x)
 I am worry about the fact that he doesn't study.
 
 (2) 保留介词，不加the fact但介词之后的that从句要做下列变化:
-建议使用:
+第一步：除去that;
+第二步：that后的主语变成所有格；
+第三步：动词变成动名词。
+不常用:
 I am worried about that he plays around all day.(x)
 I am worried about the fact that he plays around all day.
 I am worried about his(or him) playing around all day.
 
-当有do/does/did或者will/would时，予以去掉即可。
+(a) that从句若有助动词do、does、did时，予以去掉即可。
+I am worried about that he doens't study.(x)
+I am worried about his not study.
+
+(b) that从句若有助动词will或would时，予以去掉即可。
+我确信这一队会赢得这场比赛。
+I am sure of that the team will win the game.(x)
+I am sure of the team's winning the game.
+
+(c) 从句若有以下助动词时，做下列变化：
 may -> be likely to
 can -> be able to
+我很高兴他可能会来。
 I am happy about that he may come.(x)
 I am happy about his being likely to come.
-
+我确定他能做这件事。
 I am sure of that he can do it.(x)
 I am surce of his being able to do it.
 
-直接去掉介词：
+(3) be + adj. + that从句：
+也就是去掉介词，将that从句放在形容词后面，作其宾语。
 建议使用
 I am worried about that he plays around all day.(x)
 I am worried that he plays around all day.
 
-in that
-=because
+有时介词之后亦可直接接that从句而不需the fact，形成惯用语，亦应牢记。
+in that=because    因为
+他很有才华，因为他能说五种语言。
+He is talented in that he can speak five different languages.
 
-except that: 只可惜、除了
+except that    只可惜、除了
+他人很不错，只可惜有时会说谎。
+He is nice except that sometimes he tell lies.
 
-notwithstanding that
-=despite the fact that=in spite of the fact that
+=despite the fact that    尽管
+=in spite of the fact that
+尽管他人好，我却不喜欢他。
+Despite the fact that he is nice, I don't like him.
 ```
 
 ##### 名词短语作主语
 
-疑问副词：
+名词短语系由“疑问词＋不定式短语”形成。
+
+1. 疑问副词
 
 ```
-where to live
-whether to try again
-when to talk to him
-how to do it
+where to live           住哪里
+whether to try again    是否再试一次
+when to talk to him     什么时候和他谈
+how to do it            如何做那事
 ```
 
-疑问代词：
+2. 疑问代词
 
 ```
-what to do
-whom to see
-which to buy
-whom to talk to
+what to do      做什么
+whom to See     看谁
+whlch to buy    买哪一个
+whom to talk to 与谁谈
 ```
 
 ```
+在哪里见他还未决定。
  Where we should meet him is not decided yet.
 =Where to meet him is not decided yet.
 
+我们如何处理这问题要视我们能募集到多少钱而定。
+How we can handle the problem depends on how much money we can collect.
+How to handle the problem depends on how much money we can collect.
+```
+
+##### 表距离的地方副词短语作主语
+
+from+地方名词+to+地方名词:
+此为表距离的地方副词短语，亦可作主语，与单数的be动词连用。
+
+```
  From A to B is about 1000 km.
 =It's about 1000 km from A to B.
+
+从上海到北京大约1000公里
+From Shanghai to Beijing about 1000 kilometers.
+It's about 1000 kilometers From Shanghai to Beijing. 
 ```
 
 ### 动词的种类及其用法
+
+#### 动词（verb）基本上可分为五大类
+
+```
+a．完全不及物动词：
+(complete Intransitive veth，简写：c.vi.)
+b．不完全不及物动词：
+(incomplete Intransitive veth，简写：i.vi.)
+c．完全及物动词：
+(complete transitive verb，简写：c.vt.)
+d．不完全及物动词；
+(incomplete tra力sitive verb，简写：i.vt.)
+e．授与动词：
+(dative verb简写：d.v.)
+```
+
+#### 如何判断完全不及物动词
 
 是否及物动词的判断, 以下翻译成中文若无毛病，就是及物动词，否则就是不及物动词，准确率高达99%：
 ```
@@ -356,51 +411,153 @@ Something happened.
 #### be动词
 
 ```
+1）名词：
+他是大英雄
 He is a great hero.
+
+2）名词性从句：
+我的麻烦是缺钱。
+My trouble is that I lack money.
+问题是他是否能加人我们。
 The problem is whether he can join us.
+
+3）名词短语：
+问题是何时出发
 The question is when to set out.
+
+4）作名词用的动名词短语：
+我的兴趣是集邮
 My hobby is collecting stamps.
+
+5）作名词用的不定式短语：
+我来这里的目的是要见他。
 My purpose here is to see him.
-I am interested in the story.
+
+6）形容词：
+她很美。
+She is beautiful.
+
+7）作形容词用的现在分词：
+这故事真有趣。
 The story is interesting.
-The book is of great value.
-The machine is of no use.
-The machine is useless.
+
+8）作形容词用的过去分词：
+我对这故事感兴趣。
+I am interested in the story.
+
+9）作形容词用的介词短语：
+此类介词短语由“ of＋抽象名词”形成。
+这本书很有价值。
+ The book is of great value.
+=The book is valuable.
+那部机器毫无用处。
+ The machine is of no use.
+=The machine is useless.
+
+10）地方副词：
+她在那儿。
 She is there.
-Is he home now?
+他们在楼上。
 They are upstairs.
+他现在在家吗？
+Is he home now?
+
+11）地方副词短语：
+她人在城里。
 She is in town.
+他们现在在家。
 They are at home now.
+她有危险。
+She is in danger.
+```
+
+be动词之后的现在分词有两种词性：
+
+一作形容词，一作动词进行时的现在分词。换言之，同学遇到v-ing；可译成"⋯的"时，就是作形容词的现在分词，否则就是表“进行状态”的现在分词，要译成“正在⋯”，而不视为形容词。
+
+```
+这女孩很迷人
+The girl is charming.
+这女孩在唱歌。
+The girl is singing.
+```
+
+be动词之后的过去分词亦有两个词性：
+
+一作形容词用，可译成“感到⋯的”；一作及物动词的被动语态，译成“被而不视为形容词。
+
+```
+这个人很累
+The man is tired.
+这男的被杀了
+The man was killed.
 ```
 
 #### become
-形容词、过去分词、现在分词。
+
+become可用任何名词、形容词或可作形容词用的现在分词或过去分词（即可以译成“ ⋯ ⋯的”之类的分词）作表语。
+
 ```
+他生气了。
+He become angry.
+如果你用功，就可成为好学生。
+If you study hard, you will become a good student.
+她愈来愈迷人。
+She is becoming more and more charming.
+失败后，他变得意志消沉。
 After failing, he became depressed.
 ```
 
 #### turn
-接形容词，多与颜色或情绪有关。
+
+turn通常只用形容词作表语，而且所能使用的形容词多与颜色或情绪有关。
+
 ```
-His face turned pale when he heard the news.
+听到那消息时，他脸色变得苍白起来。
+His face turns pale when he heard the news.
+树叶变黄了。
+The leaves were turning yellow.
+看到玛丽时，他气得脸都红了。
+His face turned red with angry when he saw Mary.
+她变漂亮了
+She become beautiful.
 ```
 
 #### get
-生气或者激动。或者形容词的比较级。
+
+get通常用表“生气”或“激动”的形容词作表语。若用其他形容词时，宜用become 。
+
 ```
+他生气了。
 He got mad.
+她愈来愈美丽。
 She is getting more and more beautiful.
+事情愈来愈顺利。
 Things are getting better and better.
+她变漂亮了
+She become beautiful.
+
+  get+p.p（被动语态）
+=be+p.p（被动语态）
+他在车祸中丧生
+ He got killed in the accident.
+=He was killed in the accident.
+你如果不小心点，就会受伤。
+If you are not careful, you will get hurt.
 ```
 
 #### seem
-=appear，用不定式作表语。
+
+=appear，之后用不定式作表语。
 ```
+他似乎知道此事。
 He seems to know it.
 
+但在seem to be+名词/形容词结构中，to be可省略，直接用名词或形容词作表语。
+他似乎很快乐
 He seems to be happy.
 =He seems happy.(to be可以省略掉)
-
+他似乎是个好人
 He seems a nice man.
 ```
 
