@@ -562,61 +562,207 @@ He seems a nice man.
 ```
 
 #### 感观动词
-...起来: 
 
-look/sound/smell/taste/feel + adj
-look/sound/smell/taste/feel + like + noun
-look/sound/smell/taste/feel + noun
+感官动词一共有五个，一律译成“⋯起来”，之后一律用形容词（或可作形容词用的分词）作表语。
 
 ```
+1. look/sound/smell/taste/feel + adj
 
+他的主意听起来不错
 His idea sounds good.
+His idea sounds like a good idea.
+这食物闻起来很香
+The food smells good.
+我现在觉得很疲倦
 I feel tired now.
 It looks interesting.
-
+它看起来很有趣
 It sounds like a good idea.
-```
 
-feel like + noun: 感觉像
+2. look/sound/smell/taste/feel + like + noun
 
-feel like + 动名词: 想要
-
-```
-I feel like taking a walk today=I'd like to take a walk today.
-```
-
-look/sound/smell/taste/feel + noun
+like为介词译成“像”，之后的名词为其宾语。
 
 ```
-Don't taste that food.
+听起来像是个好主意
+It sounds like a good idea.
+那质料摸起来像丝
+The material fells like silk.
+这食物尝起来像鱼肉
+The food tastes like fish.
 ```
 
-愿望、企图之意：用不定式： want+hope+desire + to ...
+3. feel like + noun: 感觉像
+   feel like + 动名词: 想要
 
-动名词作宾语的：
+当简说她要嫁给我时，我觉得我就像个新生儿一样。
+When Jane said she would marry me, I feel like a newborn baby
+我今天想散散步
+I feel like taking a walk today.
+I would like to take a walk today.
+
+4. feel、taste、smell亦可当完全及物动词，可用名词作宾语。
+   此时feel、taste、smell的意思均有改变。
+  
+feel/taste/smell + noun.
+
+医生摸我的额头说我发烧了
+The doctor feel my forehead and said I had a fever.
+别尝那食物，它已经馒了
+Don't taste the food, it has spoiled.
+他闻到有东西烧焦了
+He smells something burning.
+
+5. like与介词连用时，可形成短语动词，视为及物动词。
+
+look into = investigate    调查
+look over = examine        检查
+look at = watch            看
+
+他愉快地看着我
+He looked me happily.
+He looked happily at me.
+他仔细地调查这件案子
+He looked into the case carefully.
+He looked carefully into the case.
+```
+
+### 不完全不及物动词的重要相关短语
+
+```
+fell ill(fall ill)
+约翰病了，因此今天无法上学
+John fell ill and couldn't attendd school today.
+fell asleep(fall asleep)
+他很快就睡着了。
+He soon fell asleep.
+我不知道他怎么会变得如此受人欢迎。
+I don't kown how he became to be so popular.
+```
+
+### 完全及物动词的用法
+
+完全及物动词的宾语，计有名词、代词、不定式、动名词、名词性从句及名词短语等。同学稍加注意，就可发现这些词类、短语或从句均有名词的特性，故亦可用作主语。
+
+1. 名词当及物动词的宾语
+
+```
+他没有买那部车
+He didn't buy that car.
+```
+
+2. 代词当及物动词的宾语
+
+```
+我不喜欢约翰。事实上，我讨厌他
+I don't like John. In fact, I hate him.
+```
+
+3. 不定式当及物动词的宾语
+
+这些动词皆有表示某种愿望、企图之意，常用的此类动词如：want（想要）、hope（希望）、 desire（想要）等。
+
+```
+我现在就要见他
+I want to see him now.
+我希望有一天能出国留学
+I hope to study abroad someday.
+```
+
+4. 动名词当及物动词的宾语
+
+并非所有及物动词均可用动名词作宾语。常以动名词作宾语的动词有下列几个：
+
 ```
 considered/imagined/fancy/risked/avoided/escaped/suggested/
 recommended/enjoy/resent/practiced/stopped/quit/mind
-```
 
-```
+他考虑出国念书
+He considered studying abroad.
+我曾想像和他去约会
+I once imagined going on a date with him.
+他冒险做这事
+He risked dong it.
+他建议去国外旅行
+He recommended traveling abroad.
+我喜欢跳舞
+I enjoying dancing.
+我讨厌要做这么多工作
+I resent having to do so much work.
+我练过钢琴了
+I practiced playing the piano.
+他戒烟了
+He stopped/quit smoking.
+你介意为我打开窗户吗？
+Would you mind opening the window for me?
+
+resist V-ing    抗拒...
+refuse to V     拒绝...
+我拒绝做此事
 I refused to do it.
-=I resisit doing it.
+I resist doing it.
+我忍不住要再吃些冰淇淋
+I couldn't resist having some more ice cream.
 
+expect to V    期望
+=anticipate V-ing
+我期望和他一起环游世界
 I expect to travel around the world with him.
-```
+I anticipate traveling around the world with him.
 
-continue/start/begin/like/hate+不定式或者动名词，意思-样。
+stop V-ing    停止
+=quit V-ing
+他结婚后就不再写作了
+He stopped writing after he got married.
+他决定戒烟
+He decided to quit smoking.
+
+stop to V    停下来而去...
+他看见我时，便停下来和我说话
+He stop to talk to me when he saw me.
+
+continue（继续）、start（开始）、bogin（开始）、like（喜欢）
+love（爱）、hate（恨），可用不定式或动名词作宾语意思不变:
+他继续在赌场里试他的手气。
+He continued trying(/to try) his luck at the casino.
+他们开始建这栋房子
+They start building(/to build) the house.
+```
 
 #### 名词性从句作及物动词的宾语
+
 ```
+名词性从句有三种：
+1) that引导的名词性从句
+that he can't do it   （他不能做此事）
+2) whether引导的名词性从句
+whether he will come  （他是否会来）
+3) 疑问词引导的名同性从句
+when he will do it    （他何时做）
+what he is doing      （他正在做什么）
+how he'll handle it   （他如何处理此事）
+
+为了方便记忆起见，我们可将名词性从句记成“戴慧怡” 。
+戴：即that之讹音
+慧：即whether第一音节之讹音
+怡：即疑问词从句“疑”之同音词
+
+由于名词性从句具有名词的功能，故亦可作及物动词的宾语。
+
+我相信他是个言而有信的人
+He believ that he is a man of his word.
+我不知道他是否能够做此事
+I don't know whether he can do it.
+我不知道他住哪里
 I don't know where he lives.
-He thinks (that) the book is worth reading.
-```
 
-whether从句作及物动词的宾语时，可用if取代whether:
+that从句作及物动词的宾语时，名词性从句连接词that通常予以省略。
+他们觉得不可能赢这场比赛
+They feel (that) it's impossible to win the game.
+他认为这本书值得一读
+He think (that) the book is worth reading.
 
-```
+whether从句作及物动词的宾语时，名词性从句连接词whether亦可被if取代。
 I don't know whether the typhoon will come
 =I don't know if the typhoon will come.
 ```
