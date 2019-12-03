@@ -583,7 +583,6 @@ It sounds like a good idea.
 
 like为介词译成“像”，之后的名词为其宾语。
 
-```
 听起来像是个好主意
 It sounds like a good idea.
 那质料摸起来像丝
