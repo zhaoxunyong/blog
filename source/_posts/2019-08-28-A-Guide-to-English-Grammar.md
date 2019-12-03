@@ -763,100 +763,251 @@ They feel (that) it's impossible to win the game.
 He think (that) the book is worth reading.
 
 whether从句作及物动词的宾语时，名词性从句连接词whether亦可被if取代。
+我不知道台风是否会来。
 I don't know whether the typhoon will come
 =I don't know if the typhoon will come.
+我不知道这个人是否有足够的能力处理此事。
+I don't know if the man has enough ability to handle the it.
+I doubt if the man is competent enough to handle it.
 ```
 
 但whether从句若作主语、介词的宾语或者be动词后的表语时，不能用if:
 
 ```
+a. whether从句作主语：
+他是否能去还不知道。
 Whether he can go is not yet know.
+b. whether从句作介词的宾语：
+他很担心是否能通过这次考试。
 He is worried about whether he can pass the exam.
+c. whether从句作be动词后的表语：
 The problem is whether he has enough money for the trip.
 ```
 
 #### 名词短语
 ```
+我知道如何处理这问题。
 I know how to handle the problem.
+我不知道该向谁说。
 I don't know whom to talk to.
 ```
 
 #### 不完全及物动词
+
 ```
+本句意思不完全，故需补语。
+他使玛丽快乐。
 He made me happy.
 ```
 
 #### 使役动词
 
-叫：
+1. 叫
 
 make/have + 宾语 + 原形动词
 
-get + 不定式
+```
+我叫他洗车
+I made him wash the car.
+I had him wash the car.
+I got him to wash the car.
+我叫约翰向我报到。
+I had John report to me.
+```
+
+get亦可表“叫⋯ ”之意，但只能用不定式短语作宾语补语，句型如下：
+get sb to V    叫某人从事⋯
 
 ```
-I made him wash the car.
-I had John report to me.
+我叫他洗车。
+I got him wash the car.
+```
+
+make可使用于被动语态中但have及get则不可。
+
+主动语态：
+```
+I made(had) him wash the car.
 I got him to wash the car.
 ```
 
-只有make可使用被动，其他被动时使用过去分词：
+被动语态:
+
+变被动语态时，原形动词wash就要变成不定式短语to wash，而成to wash the car。
+have、get无被动用法。
+```
+他被要求洗车
+He was made to wash the car.
+```
+
+
+2. 让
+
 
 ```
-He was made to wash the car.=He made the car washed.
-```
-
-让：let
-
-```
+a. let＋宾语＋原形动词（作宾语补语）
+我让他洗车
 I let him wash the car.
+我让彼得试试看
 I let Peter try it.
+
+b. let＋宾语＋作副词用的介词（in、out、down)
+他让我进来
 He let me in.
+别让他出去
+Don't let him out.
+他的表演令我失望
 His performance let me down.
+
+上述介词由于其后无宾语，可单独存在作副词用，因此称为介副词。与
+地方副词（如there 、 here 、 home）一样，介副词可作be动词之后的
+表语:
+他在家
+He is in
+He is out
+He is there.
+He is here.
+He is home.
+He is downtown.
+He is in the house.
 ```
 
-强迫/要求/怂恿/催促：force/ask/encourage/tell+不定式
+3. 强迫/要求/怂恿/催促
+
+此类动词＋宾语＋不定式短语（作宾语补语）
+force/ask/encourage/tell+不定式
 
 ```
+我强迫他背这课
 I forced him to recite the lesson.
-I asked him to write the letter.
-He told me to finish the work by ten.(10点前)
-I asked him to write the letter
-=He was asked to write the letter.
+我要求他写这封信
+I asked him to write the lettle.
+我鼓励他更努力些
+I encouraged him to work harder.
+他强迫我做违反意愿的事
+He forced me to do it against my will.
+他叫我10点钟以前做完这件工作
+He told me to finish the work by 10.
+
+此类动词尚有许多个，兹将常出现的此类动词列举如下：
+push one to...    （催促某人去⋯ ⋯）
+expect one to...  （期望某人去⋯ ⋯）
+want one to...    （要某人去⋯ ⋯）
+```
+
+4. 使...成为
+
+此类动词只有make一个，加了宾语之后，要用形容词或名词作补语:
+
+主语+make+宾语+形容词(或名词)（作宾语补语）
+```
+他的老师使他成为好学生
+His teacher made him a good student.
+这次旅行使他很愉快
+The trip made him happy.
 ```
 
 #### 知觉动词
 
-see/observe/watch/look at/notice/hear/listen to/feel
+此类动词有三类：
+看：see、observe（观察）、watch（看）、lookat（注视）、notice（注意）
+听：hear、listen to
+感觉：feel
+
+1. 此类动词可作完全及物动词，加了宾语之后无须另加补语
 
 ```
-#...了
-I saw him do it.
-=He was seen to to it.
+你看见他没有
+Did you see him?
+他正在听音乐
+he was listening music.
+我觉得背痛
+I felt a pain in my back.
+```
 
-#...正在...
-I saw him dancing.=He was seen daning.
+2. 但此类动词亦可作不完全及物动词，加了宾语之后，须另加宾语补语。用法如下：
 
-#...被
+```
+a. 表事实时，用原形动词作补语，译成“...了”
+我看见他跳舞了
+I saw him dance.
+我听见他唱歌了
+I heard him sing.
+我感觉到他动了
+I felt him move.
+
+b. 表进行状态时，用现在分词作补语，译成“...正在...”
+我进来时，看见他正在跳舞
+I saw him dancing when I walked in.
+我推开门时，听见他正在唱歌
+I heard him singing when I pushed the door open.
+As I pushed the door open, I heard him singing.
+门铃响时，我感觉到我的双腿正在发抖。
+When the doorbell rang, I felt my legs trembling.
+
+c. 表被动状态时，要用过去分词作补语，译成"...被..."
+我看见他被杀死了
 I saw him killed.
+我听见门被关起来了
 I heard the door closed.
+我感觉到自己被举起来了
+I felt myself lifted.
 ```
-
-变被动时，除原型动词要变成不定式短语外，其余不变。
 
 #### 认定动词
 
+此类动词均表“视⋯为”之意，加了宾语之后，用名词或形容词作宾语补语。
+
+1. 与介词连用者：
 视...为：与as或for连用：
 
-We <u>regard</u>(look upon/think of/see/view) him as a genius.
-
+```
+我们都把他视为天才
+We regard(look upon/think of/see/view) him as a genius.
+我误将那长发的男孩视作女孩
 I mistook the long-haired boy for a girl.
+```
 
-find/believe/think/deem/consider it + 不定式...: think/deem/consider译成：认为...是
+2. 与to be连用者：
 
 ```
-I think it fun to climb mountains.
-I find it necessary to do the work.
+我们认为他是天才／人很好。
+We consider/deem/think him to be a genius.
+We consider/deem/think him a genius.
+We consider/deem/think him to be nice.
+We consider/deem/think him nice.
+
+a. 一般介词之后只能用名词、代词或动名词作宾语
+我很讨厌他粗鲁的态度
+I am sick of his rude attitude.
+我讨厌与他为伍
+I am sick of associating with him.
+
+但表“视...为”的动词与as或for连用时，它们之后除可接名词外，亦可直接接形容词作补语。
+我认为他的行为不当
+I regard his behavior as inappropriate.
+
+b. think、believe、find、deem、consider等五个动词作不完全及物动词时，
+不得直接用不定式短语作宾语，一定要用形式宾语it取代。此时think
+译成"认为⋯是⋯"、 deem译成“认为...是..."、consider译成“认为...是...” 
+主语+think(believe/find/deem/consider)+it+宾语补语(n. or adj.)+to V.
+我认为爬山是很有趣的―我认为爬山很有趣。
+I think it fun to climb the mountains.
+我发觉做这件事是有必要的―我发觉做这事有必要
+I find it necesssary to do the work.
+我相信用功是值得的―我相信用功很值得。
+I believe it worthwhile to study hard.
+
+但find、believe、think、deem、consider也可作完全及物动词
+此时要用that引导的名词性从句作宾语。此时find、believe、thlnk、
+deem、consider分别译成“发现、相信、认为，认为、认为” 。
+我认为爬山很有趣
+I think that it's interesting to climb the mountains.
+我相信用功是值得的
+I believee that it's worthwhile to study hard.
+
+c. make表“使...成为...”时，亦为不完全及物动词，其后不得用不定式
+短语作宾语，一定要用形式宾语it取代。
 ```
 
 make: 使...成为...:
