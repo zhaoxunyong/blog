@@ -565,9 +565,9 @@ He seems a nice man.
 
 感官动词一共有五个，一律译成“⋯起来”，之后一律用形容词（或可作形容词用的分词）作表语。
 
-```
 1. look/sound/smell/taste/feel + adj
 
+```
 他的主意听起来不错
 His idea sounds good.
 His idea sounds like a good idea.
@@ -578,9 +578,11 @@ I feel tired now.
 It looks interesting.
 它看起来很有趣
 It sounds like a good idea.
+```
 
 2. look/sound/smell/taste/feel + like + noun
 
+```
 like为介词译成“像”，之后的名词为其宾语。
 
 听起来像是个好主意
@@ -594,15 +596,18 @@ The food tastes like fish.
 3. feel like + noun: 感觉像
    feel like + 动名词: 想要
 
+```
 当简说她要嫁给我时，我觉得我就像个新生儿一样。
 When Jane said she would marry me, I feel like a newborn baby
 我今天想散散步
 I feel like taking a walk today.
 I would like to take a walk today.
+```
 
 4. feel、taste、smell亦可当完全及物动词，可用名词作宾语。
    此时feel、taste、smell的意思均有改变。
-  
+
+```  
 feel/taste/smell + noun.
 
 医生摸我的额头说我发烧了
@@ -611,9 +616,11 @@ The doctor feel my forehead and said I had a fever.
 Don't taste the food, it has spoiled.
 他闻到有东西烧焦了
 He smells something burning.
+```
 
 5. like与介词连用时，可形成短语动词，视为及物动词。
 
+```
 look into = investigate    调查
 look over = examine        检查
 look at = watch            看
@@ -784,6 +791,7 @@ The problem is whether he has enough money for the trip.
 ```
 
 #### 名词短语
+
 ```
 我知道如何处理这问题。
 I know how to handle the problem.
@@ -812,12 +820,10 @@ I had him wash the car.
 I got him to wash the car.
 我叫约翰向我报到。
 I had John report to me.
-```
 
 get亦可表“叫⋯ ”之意，但只能用不定式短语作宾语补语，句型如下：
 get sb to V    叫某人从事⋯
 
-```
 我叫他洗车。
 I got him wash the car.
 ```
@@ -839,9 +845,7 @@ have、get无被动用法。
 He was made to wash the car.
 ```
 
-
 2. 让
-
 
 ```
 a. let＋宾语＋原形动词（作宾语补语）
@@ -958,6 +962,7 @@ I felt myself lifted.
 此类动词均表“视⋯为”之意，加了宾语之后，用名词或形容词作宾语补语。
 
 1. 与介词连用者：
+
 视...为：与as或for连用：
 
 ```
@@ -975,8 +980,11 @@ We consider/deem/think him to be a genius.
 We consider/deem/think him a genius.
 We consider/deem/think him to be nice.
 We consider/deem/think him nice.
+```
 
 a. 一般介词之后只能用名词、代词或动名词作宾语
+
+```
 我很讨厌他粗鲁的态度
 I am sick of his rude attitude.
 我讨厌与他为伍
@@ -985,10 +993,13 @@ I am sick of associating with him.
 但表“视...为”的动词与as或for连用时，它们之后除可接名词外，亦可直接接形容词作补语。
 我认为他的行为不当
 I regard his behavior as inappropriate.
+```
 
 b. think、believe、find、deem、consider等五个动词作不完全及物动词时，
 不得直接用不定式短语作宾语，一定要用形式宾语it取代。此时think
 译成"认为⋯是⋯"、 deem译成“认为...是..."、consider译成“认为...是...” 
+
+```
 主语+think(believe/find/deem/consider)+it+宾语补语(n. or adj.)+to V.
 我认为爬山是很有趣的―我认为爬山很有趣。
 I think it fun to climb the mountains.
@@ -1004,29 +1015,49 @@ deem、consider分别译成“发现、相信、认为，认为、认为” 。
 I think that it's interesting to climb the mountains.
 我相信用功是值得的
 I believee that it's worthwhile to study hard.
-
-c. make表“使...成为...”时，亦为不完全及物动词，其后不得用不定式
-短语作宾语，一定要用形式宾语it取代。
 ```
 
-make: 使...成为...:
+c. make表“使...成为...”时，亦为不完全及物动词，其后不得用不定式短语作宾语，一定要用式宾语it取代。
 
 ```
-He make it a rule to get up early.
+努力工作使他有可能赢得此荣誉
 Hard work made it possible for him to win the honor.
+```
+
+d. find、believe、think、deem、consider乍不完全及物动词时，亦不得直接用that引导的名词性从句作宾语一定要用形式宾语it取代。
+
+```
+我发觉他歌唱得这么好真是太棒了
+I find it wonderful that he sings so well.
+我相信他努力用功是有必要的
+I believe it necessary that he should work hard.
 ```
 
 #### 转变动词
 
-使...变成...: change/turn，与into连用：
+此类动词均表"使⋯变成⋯"之意常用的有change与加rn两个。通常要与介词into连用。
 
 ```
+这个经验使他变成好学生了。
 The experience turned/changed him into a good student.
+```
+
+#### 其他重要的不完全及物动词
+
+```
+我将门漆成绿色
+
+他们给小宝宝取名为汤姆
+
+别让门敞开着
+
+你一定要让你的牙齿保持干净
+
+
 ```
 
 #### 授予动词
 
-```
 I'll give you this watch.
 Please lend me your book.
 I gave him the book.
@@ -1088,7 +1119,7 @@ Not only can she sing, but she can (also) dance.
 We as well as John like it.
 He is happy rather than sad.
 
-# as well as或rather than连接主语时，动词始终随第-个主语做变化
+#as well as或rather than连接主语时，动词始终随第-个主语做变化
 He is interested in music rather than in painting.
 He came here to learn English as well as to know more about life.
 He as well as I is interested in music.
