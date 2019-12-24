@@ -537,7 +537,7 @@ Things are getting better and better.
 她变漂亮了
 She become beautiful.
 
-  get+p.p（被动语态）
+get+p.p（被动语态）
 =be+p.p（被动语态）
 他在车祸中丧生
  He got killed in the accident.
@@ -996,8 +996,8 @@ I regard his behavior as inappropriate.
 ```
 
 b. think、believe、find、deem、consider等五个动词作不完全及物动词时，
-不得直接用不定式短语作宾语，一定要用形式宾语it取代。此时think
-译成"认为⋯是⋯"、 deem译成“认为...是..."、consider译成“认为...是...” 
+不得直接用不定式短语作宾语，一定要用形式宾语it取代。
+此时think译成"认为⋯是⋯"、 deem译成“认为...是..."、consider译成“认为...是...” 
 
 ```
 主语+think(believe/find/deem/consider)+it+宾语补语(n. or adj.)+to V.
@@ -1024,7 +1024,8 @@ c. make表“使...成为...”时，亦为不完全及物动词，其后不得�
 Hard work made it possible for him to win the honor.
 ```
 
-d. find、believe、think、deem、consider乍不完全及物动词时，亦不得直接用that引导的名词性从句作宾语一定要用形式宾语it取代。
+d. find、believe、think、deem、consider乍不完全及物动词时，
+亦不得直接用that引导的名词性从句作宾语一定要用形式宾语it取代。
 
 ```
 我发觉他歌唱得这么好真是太棒了
@@ -1046,41 +1047,86 @@ The experience turned/changed him into a good student.
 
 ```
 我将门漆成绿色
-
+1 painted the door green.
 他们给小宝宝取名为汤姆
-
+They named the baby Tom.
 别让门敞开着
-
+Don't leave the door open.
 你一定要让你的牙齿保持干净
-
-
+You must keep your teeth clean.
 ```
 
 #### 授予动词
 
+```
+我要送你这只表
 I'll give you this watch.
+请把你的书借我
 Please lend me your book.
+```
+
+1. 表“给予”的概念要用to：
+```
+我给他这本书
 I gave him the book.
 =I gave the book to him.
+```
 
-#代劳
+2. 表“代劳”的概念要用for：
+```
+我为他买了这本书
 I bought him the book.
 =I bought the book for him.
+```
 
-#从...中
+3. 表“从⋯中”的概念，要用of：
+```
+我问他一个问题
 I asked him a question.
 =I asked a question of him.
+我对他不抱很大的期望
+I didn't except much of him.
+他对我毫无所求
+He required nothing of me.
+他抢了我的钱
+He robbed me of my money.
+我的钱被抢了
+I was robbed of my money.
+我无法摆脱这段痛苦的回忆
+I cannot get rid of the painful memory.
+你应该戒除抽烟的恶习
+You should (get rid of|break yourself|rid yourself) the bad habit of smoking.
+医生治好了他的病
+The doctor cured him of his disease.
+```
 
-#表提供：offer/provide/supply/furnish/present, 除offer外，要与with连用
+4. 表提供：offer/provide/supply/furnish/present, 除offer外，要与with连用:
+```
+他提供我所需要的东西
 He offered me all I needed.
 =He provided me with all I needed.
+他送我一块表
+He presented me with a watch.
+=He presented a watch to me.
+```
 
-#explan/introduce/propose/recommend/express要与to连用
+5. explan/introduce/propose/recommend/express要与to连用:
+```
+他向我解释理由
+He explained the reson to me.
+他把那位女孩介绍给我
+He introduced the girl to me.
+他建议我用这个方法
 He recommended the method to me.
+他向委员会提了一个提议
+He proposed a motion to the committee.
+```
 
-#我拍了-张他的照片
+6. take a picture
+```
+#我拍了一张他的照片
 I took a picture of him.
-#我为他拍了-张照片
+#我为他拍了一张照片
 I took a picture for him.
 ```
 
