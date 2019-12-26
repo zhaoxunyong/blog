@@ -1144,12 +1144,21 @@ How hard he studied!
 
 ## 两句的连接方式
 
-两句可能用以下的符号连接：- : ; 并列连词 副词连词 关系词
+两句可能用以下的符号连接：
+
+```
+1. 破折号 
+2. 冒号 
+3. 分号 
+4. 并列连词 
+5. 副词连词 
+6. 关系词
+```
 
 ### 并列连词
 
 ```
-and -> both...and..            -方面...同时也...
+and -> both...and..            一方面...同时也...
 or  -> either...or...          要不就是...要不就是...
        neither...nor...        既非...亦非...
 but -> not...but...            并非...而是...
@@ -1159,34 +1168,52 @@ rather than...                 而非
 ```
 
 ```
+他非但不仁慈，反而很残忍
 He is not kind but cruel.
+他不是走就是留
 He will either stay or leave.
+她不仅会唱歌，她也会跳舞
 Not only can she sing, but she can (also) dance.
+我们和约翰都喜欢它
 We as well as John like it.
+他很快乐，而不是伤心
 He is happy rather than sad.
 
-#as well as或rather than连接主语时，动词始终随第-个主语做变化
+#as well as或rather than连接主语时，动词始终随第一个主语做变化
+他对音乐有兴趣，而非对绘画有兴趣
 He is interested in music rather than in painting.
+他来此地学英文并了解更多有关生活的事情
 He came here to learn English as well as to know more about life.
+他和我都对音乐有兴趣
 He as well as I is interested in music.
+他对音乐有兴趣，而我则不
 He rather than I is interested in music.
 =He instead of me is interested in music.
 =He,not I, is interested in music.
 
+我喜欢这本书，而不喜欢那本
 I like this book, not that one.
 =I like this book rather than that one.
 
 #除both用复数外，其它随最近的主语变化：
+他与我对此事都高兴
 #他和我都...(不可连接句子)
 Both he and I are happy about it.
+
+不是他就是我错
 #不是他就是我...(不可连接句子)
 Either he or I am wrong.
+
+既不是你也不是他该负责
 既不是你也不是他...(不可连接句子)
 Neither you nor he is to blame.
+
+不是他而是我应对此事负责
 #不是他而是我...(不可连接句子)
 Not he but I am to be responsible for it.
+
 #不仅...而且...(可连接句子，引导句子时要倒装)
-Not only the but(also) John has passed the exam.
+Not only they but(also) John has passed the exam.
 Not only can she sing, but she can also dance.
 Not only does she sing well, but she dances beatifully.
 She is not only beautiful but (also) kind.
@@ -1195,28 +1222,72 @@ She is not only beautiful but (also) kind.
 
 ### 副词连词
 
+常用的的副词连接词：
 ```
-when:当                 +-般现在时(或现在完成时)动词，主语+will+原形动词。
+because（因为）
+though（虽然）
+if（如果）
+unless（除非）
+as soon as（一旦）
+once（一旦）等
+```
+
+1. 条件句与主句的时态
+
+```
+when:当                 一般现在时(或现在完成时)动词，主语+will+原形动词。
 if:如果 
 once/as soon as:-旦 
 unless:除非
 
+我有钱时就会买辆车
 When I am rich, I will buy a car.
+他若有时间就会来
+If he has time, he'll come here.
+我一做完就会让你知道
 As soon as(Once) I have done it, I'll let you know.
+我一旦有空就会出国旅行
+Once I am free, I will take a trip abroad.
+除非他明天回来，否则我就要走了
 Unless he comes back tomorrow, I will leave.
+他还要两年才毕业
+It will be another two years before he graduates.
+他还要多久才来？
 How long will it be before he comes?
 ```
 
-however: 然而(有but的意思): 后面要加逗号，句中两旁用逗号相隔。
+2. 连接性副词
 
-therefore/thus：因此(有so的意思): 后面要加逗号，句中两旁用逗号相隔。(thus不用加逗号)
-
-moreover/furthermore/in addition：此外（有and的意思）: 后面要加逗号，句中两旁用逗号相隔。
-
-besides：此外，用于否定或者消极的句中。
-
-while:   
 ```
+however: 然而(有but的意思): 
+后面要加逗号，句中两旁用逗号相隔。
+他人很好，然而我却不喜欢他
+He is nice; however, I don't like him.
+He is nice, but I don't like him.
+He is nice. However, I don't like him.
+He is nice. I, however, don't like him.
+
+therefore/thus：因此(有so的意思): 
+后面要加逗号，句中两旁用逗号相隔。(thus不用加逗号)
+他很仁慈因此我们全都喜欢他
+He is kind; therefore, we all like him.
+He is kind, so we all like him.
+He is kind. Therefore, we all like him.
+He is kind. We, therefore, like him.
+
+moreover/furthermore/in addition：
+此外（有and的意思）: 后面要加逗号，句中两旁用逗号相隔。
+她舞跳得好，而且也擅长唱歌
+She dances well; furthermore, she is good at singing.
+She dances well, and she is good at singing.
+
+besides与in addition均表“此外”，不过前者多用于有否定或消极意味的句中，
+而in addition则用于肯定句或积极意味的句中。
+我想我不会跟你去看电影了，约翰。我太累了；此外，我也没钱。
+I don't think I will go to the movies with you, John. I'm too tired; 
+besides, I have no money.
+
+while: 
 #句首时：当... 
 While I was writing a letter, she was doing the sishes.
 #连接并列句时：而...
