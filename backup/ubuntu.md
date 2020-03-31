@@ -1,0 +1,286 @@
+---
+title: ubuntu os
+date: 2020-03-30 14:14:00
+categories: ["Linux"]
+tags: ["Linux"]
+toc: true
+---
+
+Ubuntu。
+
+<!-- more -->
+
+## 安装操作系统
+
+## apt
+
+```
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+sudo vi /etc/apt/sources.list
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+```
+
+```
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+## 安装基础包
+
+```
+#sudo apt install software-properties-common
+#sudo apt install aria2
+sudo add-apt-repository ppa:apt-fast/stable
+sudo apt-get install apt-fast
+sudo apt-fast install vim
+sudo apt-get install unrar
+sudo apt-get install gdebi
+sudo apt install curl
+sudo apt-fast install screen
+#Downloading https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+#albert
+sudo add-apt-repository ppa:noobslab/macbuntu
+sudo apt-get update
+sudo apt-get install albert
+sudo apt-get install alacarte
+sudo apt-get install keepassx
+sudo apt-get install vlc
+```
+
+## 修改操作系统配置
+```bash
+cat /proc/sys/fs/inotify/max_user_watches
+#sudo vim /etc/sysctl.conf
+fs.inotify.max_user_watches=524288
+vm.overcommit_memory=1
+sudo sysctl -p
+```
+
+## 搜狗输入法 for linux
+
+```
+#https://pinyin.sogou.com/linux/?r=shouji
+sudo dpkg -i sogoupinyin_2.3.1.0112_amd64.deb
+#Resolved depencies:
+sudo apt install -f
+sudo dpkg -i sogoupinyin_2.3.1.0112_amd64.deb
+#wubipinying
+sudo apt install fcitx-table-wubi fcitx-table-wbpy
+设置->区域与语言->管理已安装的语言->键盘输入法系统->fcitx
+#reboot to take affect
+```
+
+## v2rayL
+
+```
+安装
+bash <(curl -s -L http://dl.thinker.ink/install.sh)
+
+更新
+bash <(curl -s -L http://dl.thinker.ink/update.sh)
+
+卸载
+bash <(curl -s -L http://dl.thinker.ink/uninstall.sh)
+```
+
+配置环境变量：
+
+vim ~/.bashrc
+```
+alias ll='ls -l'
+export LANG=zh_CN.UTF-8
+
+function proxy_off(){
+    unset http_proxy
+    unset https_proxy
+    echo -e "The proxy has been closed!"
+}
+function proxy_on() {
+    export no_proxy="127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
+    export http_proxy="http://127.0.0.1:1082"
+    export https_proxy=$http_proxy
+    echo -e "The proxy has been opened!"
+}
+
+source ~/.bashrc
+```
+
+## ubuntu gnome-shell
+
+```
+#https://linux.cn/article-9447-1.html
+sudo apt install -y gnome-tweak-tool gnome-shell-extensions chrome-gnome-shell gtk2-engines-pixbuf libxml2-utils
+#sudo apt install gnome-shell-extensions gnome-menus gir1.2-gmenu-3.0
+#open with firefox
+https://extensions.gnome.org
+#Click: Click here to install browser extension
+
+#https://yangbingdong.com/2017/ubuntu-todo-after-install/
+#Poppy Menu
+#Blyr
+#Frippery Applications Menu
+#Panel Date Format
+#Gnome Blobal Application Menu
+#Keep awake
+#Remove Accessibility
+#Tray Icons
+#Tweaks in System Menu
+User Themes: https://extensions.gnome.org/extension/19/user-themes/
+dash-to-dock: https://extensions.gnome.org/extension/307/dash-to-dock/
+dash-to-panel: https://extensions.gnome.org/extension/1160/dash-to-panel/
+arc menu: https://extensions.gnome.org/extension/1228/arc-menu/
+Topicons Plus: https://extensions.gnome.org/extension/1031/topicons/
+Coverflow Alt-Tab: https://extensions.gnome.org/extension/97/coverflow-alt-tab/
+Applications Menu: https://extensions.gnome.org/extension/6/applications-menu/
+OpenWeather: https://extensions.gnome.org/extension/750/openweather/
+Sound Input & Output Device Chooser: https://extensions.gnome.org/extension/906/sound-output-device-chooser/
+
+Appfolders Management extension: https://extensions.gnome.org/extension/1217/appfolders-manager/
+Bing Wallpaper Changer: https://extensions.gnome.org/extension/1262/bing-wallpaper-changer/
+System-monitor: sudo apt install gir1.2-gtop-2.0 gir1.2-nm-1.0 gir1.2-clutter-1.0
+System-monitor: https://extensions.gnome.org/extension/120/system-monitor/
+Frippery Move Clock: https://extensions.gnome.org/extension/2/move-clock/
+System Menu: https://extensions.gnome.org/extension/1204/system-menu/
+```
+
+## deepin-wine
+
+```
+#https://github.com/zq1997/deepin-wine
+wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
+sudo apt-fast install deepin.com.qq.im.light
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-QQLight deepin-wine winecfg
+sudo apt-fast install deepin.com.wechat
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
+sudo apt-fast install deepin.com.thunderspeed
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-ThunderSpeed deepin-wine winecfg
+sudo apt-fast install deepin.com.weixin.work
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-WXWork deepin-wine winecfg
+
+sudo apt-fast install deepin-screenshot
+sudo apt-fast install deepin-terminal
+xdg-open . -> Win+E
+deepin-screenshot -> ctrl+alt+Q
+deepin-terminal -> ctrl+alt+T
+```
+
+## VPN
+
+```
+sudo apt-get install openconnect
+sudo apt-get install network-manager-openconnect
+sudo apt-get install network-manager-openconnect-gnome
+```
+
+## Font
+
+```
+wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12/master/install.sh | sudo sh
+https://github.com/AppleDesignResources/SanFranciscoFont
+```
+
+## theme
+
+```
+https://yangbingdong.com/2017/ubuntu-todo-after-install/
+#https://www.gnome-look.org/browse/page/1/ord/latest/
+Matcha-azul/Numix-Circle
+
+#theme
+Arc:
+https://github.com/horst3180/arc-theme
+sudo add-apt-repository ppa:noobslab/icons 
+sudo apt update 
+sudo apt install arc-theme
+
+eOS-Sierra-Gtk:
+https://libraries.io/github/btd1337/eOS-Sierra-Gtk
+git clone https://github.com/btd1337/eOS-Sierra-Gtk ~/.local/share/themes/eOS-Sierra-Gtk
+gsettings set org.gnome.desktop.interface gtk-theme 'eOS-Sierra-Gtk'
+
+#McOS-CTLina:
+#https://github.com/paullinuxthemer/Mc-OS-themes
+
+Sierra-gtk-theme:
+https://github.com/vinceliuice/Sierra-gtk-
+git clone https://github.com/vinceliuice/Sierra-gtk-theme.git
+cd Sierra-gtk-theme
+./install.sh
+
+Ant:
+git clone https://github.com/EliverLara/Ant.git ~/.local/share/themes/Ant
+gsettings set org.gnome.desktop.interface gtk-theme "Ant"
+gsettings set org.gnome.desktop.wm.preferences theme "Ant"
+
+Matcha: 
+https://github.com/vinceliuice/Matcha-gtk-theme
+https://github.com/vinceliuice/Qogir-icon-theme
+
+sudo apt-get install gtk2-engines-murrine gtk2-engines-pixbuf
+git clone https://github.com/vinceliuice/Matcha-gtk-theme.git
+cd Matcha-gtk-theme
+./install.sh
+
+git clone https://github.com/vinceliuice/Qogir-icon-theme.git
+cd Qogir-icon-theme
+./install.sh
+
+Numix：
+https://github.com/numixproject/numix-gtk-theme
+https://github.com/numixproject/numix-icon-theme-circle
+sudo add-apt-repository ppa:numix/ppa
+sudo apt update
+sudo apt-fast install numix-gtk-theme numix-icon-theme-circle numix-icon-theme-square
+
+
+
+#Icon
+#La-capitaine-icon-theme:
+#git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/share/icons/la-capitaine-icon-theme
+#
+#La-Sierra:
+#git clone https://github.com/btd1337/La-Sierra-Icon-Theme ~/.local/share/icons/La-Sierra
+##or
+#
+#Macos-sierra-CT:
+#git clone https://github.com/zayronxio/Macos-sierra-CT.git ~/.local/share/icons/Macos-sierra-CT
+
+Papirus:
+https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
+sudo add-apt-repository ppa:papirus/papirus
+sudo apt-get update
+sudo apt-get install papirus-icon-theme
+
+Paper:
+https://github.com/snwh/paper-icon-theme
+sudo add-apt-repository -u ppa:snwh/ppa
+sudo apt install paper-icon-theme
+
+Cupertino-iCons:
+git clone https://github.com/USBA/Cupertino-iCons.git ~/.local/share/icons/Cupertino-iCons
+#git clone https://github.com/USBA/Cupertino-Mobile-iCons.git ~/.local/share/icons/Cupertino-Mobile-iCons
+git clone https://github.com/USBA/Cupertino-Catalina-iCons.git ~/.local/share/icons/Cupertino-Catalina-iCons
+```
+
+## 开机画面
+
+#https://www.gnome-look.org/browse/cat/109/ord/latest/
+git clone https://github.com/vinceliuice/grub2-themes
+cd grub2-themes
+./install.sh
