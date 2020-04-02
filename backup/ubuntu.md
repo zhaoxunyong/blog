@@ -153,6 +153,7 @@ System-monitor: sudo apt install gir1.2-gtop-2.0 gir1.2-nm-1.0 gir1.2-clutter-1.
 System-monitor: https://extensions.gnome.org/extension/120/system-monitor/
 Frippery Move Clock: https://extensions.gnome.org/extension/2/move-clock/
 System Menu: https://extensions.gnome.org/extension/1204/system-menu/
+hide-dash: https://extensions.gnome.org/extension/805/hide-dash/
 ```
 
 ## deepin-wine
