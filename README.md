@@ -38,7 +38,7 @@ yarn config set disturl https://npm.taobao.org/dist --global
 ```bash
 sudo apt-get install git
 git config --global user.name "dave.zhao"
-git config --global user.email dave.zhao@zerofinance.cn
+git config --global user.email dave.zhao@zerofinance.com
 git config --global core.autocrlf false
 git config --global core.safecrlf warn
 git config --global core.filemode false

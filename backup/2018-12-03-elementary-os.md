@@ -14,32 +14,23 @@ Elementary OS作为Ubuntu的扩展分支，号称是最美的Linux发行版。�
 
 从官网[https://elementary.io/zh_CN/](https://elementary.io/zh_CN/)中下载iso文件，下载时输入金额为0即可。用Universal-USB-Installer.exe刻录成U盘进行安装。
 
+## docker缩放
+```bash
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ricotz/docky
+sudo apt upgrade
+killall plank
+```
+
 ## 安装基础包
 
 ```bash
-sudo apt-get update
 sudo apt-get install vim
-sudo apt install software-properties-common
 sudo apt-get install unrar
 #sudo apt install google-chrome-stable
 #sudo apt install electron-ssr
 sudo apt install aria2
-```
-
-## 修改操作系统配置
-```bash
-cat /proc/sys/fs/inotify/max_user_watches
-#sudo vim /etc/sysctl.conf
-fs.inotify.max_user_watches=524288
-sudo sysctl -p
-```
-
-## docker缩放
-```bash
-sudo add-apt-repository ppa:ricotz/docky
-sudo apt update
-sudo apt upgrade
-killall plank
 ```
 
 ## 安装Tweaks
@@ -52,7 +43,16 @@ sudo apt-get install dconf-tools
 #sudo apt install nautilus
 ```
 
-先更新应用中心，再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
+## 修改操作系统配置
+```bash
+cat /proc/sys/fs/inotify/max_user_watches
+#sudo vim /etc/sysctl.conf
+fs.inotify.max_user_watches=524288
+vm.overcommit_memory=1
+sudo sysctl -p
+```
+
+重启系统，然后再通过应用中心下载：Eddy与GNOME Tweaks，GNOME Tweaks可以设置屏幕缩放。
 
 ## 系统托盘
 
@@ -74,27 +74,26 @@ vim ~/.stalonetrayrc
 geometry  1x1+1890-0
 background "#110e0e"
 transparent true
-window_layer top
+window_layer bottom
 grow_gravity SE
 icon_gravity SE 
 slot_size 25
 icon_size 40
 ```
 
-## gksu
-
-不用安装。
+删除多余的网络图标：
 
 ```bash
-wget http://mirrors.kernel.org/ubuntu/pool/universe/g/gksu/gksu_2.0.2-9ubuntu1_amd64.deb
-wget http://mirrors.kernel.org/ubuntu/pool/universe/libg/libgksu/libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb
-sudo dpkg -i libgksu2-0_2.0.13~pre1-9ubuntu2_amd64.deb 
-sudo dpkg -i gksu_2.0.2-9ubuntu1_amd64.deb
-#在需要通过root运行的命令前加gksu或者gksudo
-#sudo vim  '/usr/share/applications/netease-cloud-music.desktop'
-#gksu netease-cloud-music
-#https://www.linuxuprising.com/2018/04/gksu-removed-from-ubuntu-heres.html
+sudo mv /etc/xdg/autostart/nm-applet.desktop ~/
 ```
+
+~~cat /Developer/stalonetray.sh~~
+
+~~#/bin/sh~~
+
+~~sleep 1~~
+
+~~/usr/bin/stalonetray~~
 
 ## electron-ssr
 
@@ -105,50 +104,22 @@ sudo dpkg -i gksu_2.0.2-9ubuntu1_amd64.deb
 
 如果是chrome浏览器，参考其他教程：安装个SwitchyOmega插件就行。具体可参考[SwitchyOmega.zip](/files/SwitchyOmega.zip)
 
-安装privoxy：
-electron-ssr的http暂时不能用，可能使用privoxy将socks转为http。
-```bash
-sudo apt-get install privoxy
-```
-
-配置：
-vim /etc/privoxy/config
-```bash
-listen-address  0.0.0.0:1082
-# shadowsocks 的本地端口
-forward-socks5t / 127.0.0.1:1081 .
-```
-
-启动：
-```bash
-sudo systemctl enable privoxy
-sudo systemctl restart privoxy
-```
-
 配置环境变量：
 vim ~/.bashrc
 ```conf
 alias ll='ls -l'
 export LANG=zh_CN.UTF-8
-#alias proxy_on="export ALL_PROXY=socks5://127.0.0.1:1081"
-#alias proxy_off="unset ALL_PROXY"
-#alias ip="curl -i http://ip.cn"
-#alias no_proxy="export NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
-alias cnpm="npm --registry=https://registry.npm.taobao.org \
---cache=$HOME/.npm/.cache/cnpm \
---disturl=https://npm.taobao.org/dist \
---userconfig=$HOME/.cnpmrc"
 
 function proxy_off(){
     unset http_proxy
     unset https_proxy
-    echo -e "已关闭代理"
+    echo -e "The proxy has been closed!"
 }
 function proxy_on() {
     export no_proxy="127.0.0.1,localhost,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
-    export http_proxy="http://127.0.0.1:1080"
+    export http_proxy="http://127.0.0.1:1082"
     export https_proxy=$http_proxy
-    echo -e "已开启代理"
+    echo -e "The proxy has been opened!"
 }
 ```
 
@@ -161,7 +132,7 @@ function proxy_on() {
 ```bash
 sudo apt-get install git
 git config --global user.name "dave.zhao"
-git config --global user.email dave.zhao@zerofinance.cn
+git config --global user.email dave.zhao@zerofinance.com
 git config --global core.autocrlf false
 git config --global core.safecrlf warn
 git config --global core.filemode false
@@ -169,24 +140,40 @@ git config --global core.whitespace cr-at-eol
 git config --global credential.helper store
 ```
 
+gui:
+
+```bash
+#https://www.gitkraken.com/
+wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
+sudo dpkg -i gitkraken-amd64.deb
+```
+
 ## 安装输入法
+
+以下是五笔的输入法，如果是拼音的话可以直接搜索搜狗拼音并下载安装即可。
+
 ```bash
 #sudo apt-get update
 #sudo apt-get install im-config fcitx fcitx-config-gtk fcitx-table-wbpy
 #重启系统后
 #fcitx-config-gtk3
 #https://www.beizigen.com/1934.html
-wget http://ys-o.ys168.com/244626558/o4I4J7G3N5JMVjsSLVU/yong-lin-2.4.0-0.7z
+#http://yongim.ys168.com/
+wget http://ys-c.ys168.com/244626543/TJRtkVk4K465F3K6KM6/yong-lin-2.5.0-0.7z
+cp -a yong /opt/
 sudo /opt/yong/yong-tool.sh --install
 /opt/yong/yong-tool.sh --select
 #重启系统后
-#如果希望五笔拼音一起打的话，修改五笔的配置为：mb/pinyin.ini
+#如果希望五笔拼音一起打的话，修改五笔的配置为：mb/wbpy.ini
 #快捷键：CTRL_LSHIFT LSHIFT CTRL_SPACE
 ```
 
 ## theme
 
 ### docky
+
+不用安装。
+
 ```bash
 #可以用docky替换掉plank
 sudo apt-get install docky
@@ -241,11 +228,9 @@ cd Sierra-gtk-theme
 ./install.sh
 ```
 
-#### iOS-iCons
+#### Macos-sierra-CT
 
 ```bash
-#https://github.com/USBA/iOS-iCons
-git clone https://github.com/USBA/iOS-iCons.git ~/.local/share/icons/iOS-iCons
 git clone https://github.com/zayronxio/Macos-sierra-CT.git ~/.local/share/icons/Macos-sierra-CT
 ```
 
@@ -274,6 +259,8 @@ San Francisco Text Medium
 ```bash
 #https://elementaryos.stackexchange.com/questions/2883/how-can-i-change-the-icon-of-an-application-in-the-elementary-os
 sudo apt-get install alacarte
+#Icon=/home/dave/.local/share/icons/hicolor/512x512/apps/appimagekit-balena-etcher-electron.png
+#rm ~/.config/menus/gnome-applications.menu
 #打开主菜单就可以进行添加与修改了
 ```
 
@@ -339,7 +326,7 @@ io.elementary.terminal -> ctrl+alt+T
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
 sudo dpkg -i deepin.com.wechat_2.6.2.31deepin0_i386.deb
-#配置，修改显示为160
+#配置，修改显示为160dpi
 WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 ```
 
@@ -348,12 +335,52 @@ WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.rtx2015/deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
 sudo dpkg -i deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
 #如果安装报错，先执行一下sudo apt-get install -f，再重新安装即可。
-#配置
+#配置，修改显示为120dpi
 WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine winecfg
 #修改idle时间，只能直接修改文件内容，不然会启动不了
 #vim "/home/dave/文档/RTXC File List/c_Program Files_Tencent_RTXC/Accounts/dave.zhao/User.cfg"
 reply_page_bAutoChangeState=0
 reply_page_nTimeCount=30
+```
+
+英文操作系统不能输入中文解决, 参考[https://blog.csdn.net/deccmtd/article/details/5529736](https://blog.csdn.net/deccmtd/article/details/5529736)
+
+把下面的代码保存为winefont.reg 
+REGEDIT4 
+[HKEY_LOCAL_MACHINE/Software/Microsoft/Windows NT/CurrentVersion/FontSubstitutes] 
+"Arial"="simsun" 
+"Arial CE,238"="simsun" 
+"Arial CYR,204"="simsun" 
+"Arial Greek,161"="simsun" 
+"Arial TUR,162"="simsun" 
+"Courier New"="simsun" 
+"Courier New CE,238"="simsun" 
+"Courier New CYR,204"="simsun" 
+"Courier New Greek,161"="simsun" 
+"Courier New TUR,162"="simsun" 
+"FixedSys"="simsun" 
+"Helv"="simsun" 
+"Helvetica"="simsun" 
+"MS Sans Serif"="simsun" 
+"MS Shell Dlg"="simsun" 
+"MS Shell Dlg 2"="simsun" 
+"System"="simsun" 
+"Tahoma"="simsun" 
+"Times"="simsun" 
+"Times New Roman CE,238"="simsun" 
+"Times New Roman CYR,204"="simsun" 
+"Times New Roman Greek,161"="simsun" 
+"Times New Roman TUR,162"="simsun" 
+"Tms Rmn"="simsun"
+
+```bash
+WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine regedit winefont.reg
+```
+
+从Windows目录下的Fonts里的simsun.ttc复制到/home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts里面, 重启即可。注意选择Font为simsun。
+
+```bash
+wget https://github.com/sonatype/maven-guide-zh/raw/master/content-zh/src/main/resources/fonts/simsun.ttc -O /home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts/
 ```
 
 如果启动不了，直接删除Accounts目录即可。如果组织架构出不来，可以把好的机器中的Accounts目录下除User.cfg外所有的文件copy覆盖掉。
@@ -362,7 +389,7 @@ reply_page_nTimeCount=30
 ```bash
 wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.im/deepin.com.qq.im_8.9.19983deepin23_i386.deb
 sudo dpkg -i deepin.com.qq.im_8.9.19983deepin23_i386.deb
-#配置
+#配置，修改显示为120dpi
 WINEPREFIX=~/.deepinwine/Deepin-QQ deepin-wine winecfg
 ```
 
@@ -374,33 +401,7 @@ sudo apt-get install slingscold
 ```
 
 ## Mailspring
-从https://getmailspring.com/download下载对应的版本安装即可。
-
-## vscode
-安装以下插件：
-```bash
-Java Extension Pack
-Spring Boot Extension Pack
-Spring Boot Tools
-Spring Initializr Java Support
-Java Code Generators
-Eclipse Keymap
-AutoFileName
-koroFileHeader
-XML Tools
-Debugger for Chrome
-Local History
-Vetur
-Vue VSCode Snippets
-Color Picker
-Docker
-npm
-
-#android/ios plugin
-Android iOS Emulator
-React Native Tools
-#see debug:https://github.com/Microsoft/vscode-react-native/blob/master/doc/debugging.md#debugging-on-ios-device
-```
+从[https://getmailspring.com/download](https://getmailspring.com/download)下载对应的版本安装即可。
 
 ## WPS字体
 ```bash
@@ -422,27 +423,69 @@ sudo chmod +x /etc/vpn/vpnc-script
 sudo openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x
 ```
 
+也可以通过自动输入密码：
+
+安装spawn：
+
+```bash
+#安装spawn
+sudo apt install expect
+```
+
+以下为对应的脚本：
+
+```bash
+#!/usr/bin/expect
+
+set timeout -1
+#set PWD vagrant
+#spawn passwd
+spawn openconnect -u 对应的用户 --script=/etc/vpn/vpnc-script --no-dtls ip
+expect "确定"
+send "确定\r"
+expect "Password:"
+send "对应的密码\r"
+interact
+#expect eof
+```
+
 ## java
 
 sudo vim /etc/profile.d/java.sh
+
 ```bash
+export ANDROID_HOME=/Developer/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
+
 export JAVA_HOME=/Developer/java/jdk1.8.0_152
+#export JAVA_HOME=$(/usr/libexec/java_home)
 export M2_HOME=/Developer/apache-maven-3.3.9
+export GRADLE_USER_HOME=/Developer/.gradle
 export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 ```
+
 使配置生效：
 ```bash
 source /etc/profile
 ```
+
+将[settings.xml](/files/settings.xml)放到~/.m2/目录下。注意修改localRepository与password为自己的配置。
 
 ## 其它一些常用工具
 ```bash
 #https://www.jianshu.com/p/1e104090ffaa
 sudo apt-get install keepassx
 sudo apt-get install vlc
+sudo apt install synapse
+#synapse也可以用albert代替：https://github.com/albertlauncher/albert
 #yahei
 wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12/master/install.sh | sudo sh
-
+#将alt键打造成command键
+sudo vi /usr/share/X11/xkb/keycodes/evdev
+#找到LCTL和LALT, 将系统默认的LCTL=37, LALT=64的值互相交换即可。
 ```
 
 ## 添加打印机
@@ -450,23 +493,14 @@ wget -qO- https://raw.githubusercontent.com/yakumioto/YaHei-Consolas-Hybrid-1.12
 ### Linux
 
 ```bash
-cd /media/dave/DATA/os/LinuxPackages/FS-6525MFP series/64bit/Global/English
+#https://www.kyoceradocumentsolutions.co.za/index/service___support/download_center.false.driver.FS6525MFP._.EN.html#
+cd "LinuxPackages/FS-6525MFP series/64bit/Global/English"
 sudo ./install.sh
 sudo apt install system-config-printer
 system-config-printer
 #输入URI
 socket://192.168.101.2:9100
-#选择Kyocera FS-6525MFP驱动即可。
-```
-
-### MAC
-
-```bash
-#https://warwick.ac.uk/fac/soc/wbs/central/issu/help/kb/hardware/printers/kyoceramac-win/
-wget https://warwick.ac.uk/fac/soc/wbs/central/issu/help/kb/hardware/printers/kyoceramac-win/macphase4.0_2018.01.19-eu.zip
-#install Kyocera OS X 10.8+ Web build 2018.01.05.dmg
-#参考上面的网址配置即可。如果是windows smb的话，地址为：smb://192.168.100.105/Kyocera02
-#驱动选择Kyocera FS-6525MFP
+#选择Provide PPD file->Kyocera FS-6525MFP驱动即可。
 ```
 
 ## Beyond Compare
@@ -506,5 +540,52 @@ sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
 #vim /usr/share/applications/netease-cloud-music.desktop
 #修改Exec为：
 Exec=sh -c "unset SESSION_MANAGER && netease-cloud-music %U"
+```
+
+## virtualbox
+
+下载virtualbox与Extension_Pack，直接安装即可。不过安装后虚拟机不能找到usb，是因为没有权限，通过以下命令解决：
+
+```bash
+#https://blog.csdn.net/huohongpeng/article/details/60965563
+cat /etc/group | grep vbox
+sudo usermod -a -G vboxusers dave
+```
+
+重启系统，再次打开虚拟机，USB设备都已经被识别了。
+
+## 系统备份与还原
+
+### 备份
+
+```bash
+#https://blog.csdn.net/sinat_27554409/article/details/78227496
+#备份
+sudo tar -cvpzf /media/dave/DATA/elementary.backup.tgz --ignore-failed-read --exclude=/proc --exclude=/lost+found --exclude=/mnt --exclude=/sys --exclude=/media --exclude=/tmp --exclude=/Developer / > /dev/null
+```
+
+### 还原
+
+如果原来的Ubuntu系统已经崩溃，无法进入。则可以使用Ubuntu安装U盘（live USB）进入试用Ubuntu界面。
+
+切换到root用户，找到之前Ubuntu系统的根目录所在磁盘分区（一般电脑上的磁盘分区（假设分区名称为sdaX）均可以在当前Ubuntu系统的根目录下的media目录下（即/media）找到。目录通常为当前根目录下 cd /media/磁盘名称/分区名称）。进入该分区，输入以下指令来删除该根目录下的所有文件：
+
+```bash
+sudo rm -rf /media/磁盘名称/分区名称*
+```
+
+将备份文件”elementary.backup.tgz”拷入该分区：
+```bash
+sudo cp -i elementary.backup.tgz /media/磁盘名/分区名sdaX
+```
+
+进入分区并将压缩文件解压缩，参数x是告诉tar程序解压缩备份文件：
+```bash
+sudo tar xvpfz elementary.backup.tgz
+```
+
+重新创建那些在备份时被排除在外的目录：
+```bash
+sudo mkdir proc lost+found mnt sys media tmp Developer
 ```
 

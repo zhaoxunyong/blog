@@ -95,16 +95,8 @@ sudo mv /etc/xdg/autostart/nm-applet.desktop ~/
 
 ~~/usr/bin/stalonetray~~
 
-## electron-ssr
+## 配置环境变量
 
-不需要翻墙的不需要安装。另外翻墙需要有相应的账户才行。
-
-从[https://github.com/erguotou520/electron-ssr](https://github.com/erguotou520/electron-ssr)
-中下载最新的版本安装。
-
-如果是chrome浏览器，参考其他教程：安装个SwitchyOmega插件就行。具体可参考[SwitchyOmega.zip](/files/SwitchyOmega.zip)
-
-配置环境变量：
 vim ~/.bashrc
 ```conf
 alias ll='ls -l'
@@ -129,10 +121,11 @@ function proxy_on() {
 ```
 
 ## 安装git
+
 ```bash
 sudo apt-get install git
 git config --global user.name "dave.zhao"
-git config --global user.email dave.zhao@zerofinance.cn
+git config --global user.email dave.zhao@zerofinance.com
 git config --global core.autocrlf false
 git config --global core.safecrlf warn
 git config --global core.filemode false
@@ -246,6 +239,7 @@ git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git ~/.local/s
 ```
 
 ## 字体
+
 ```bash
 #wget "https://dl-sh-ctc-2.pchome.net/25/rm/YosemiteSanFranciscoFont-master.zip"
 #mv YosemiteSanFranciscoFont-master SanFranciscoFont
@@ -300,15 +294,33 @@ sudo ./Install.sh
 在系统设置-->启动应用程序中添加/usr/bin/stalonetray即可。
 也可以在dconf中添加：io.elementary.desktop.cerbere中添加stalonetray。如果被kill会自动启动。
 
-## deepin-wine-for-ubuntu
-deepin优化了很多wine的包，可以直接拿来使用：
-```bash
-#https://github.com/wszqkzqk/deepin-wine-ubuntu
-#克隆 (git clone https://github.com/wszqkzqk/deepin-wine-ubuntu.git) 或下载到本地。
-git clone https://github.com/wszqkzqk/deepin-wine-ubuntu.git
-#在中国推荐用下面的地址，速度更快： (git clone https://gitee.com/wszqkzqk/deepin-wine-for-ubuntu.git)
-cd deepin-wine-ubuntu
-sudo ./install.sh
+## deepin-wine
+
+```
+#https://github.com/zq1997/deepin-wine
+wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
+
+sudo apt-fast install deepin.com.qq.im.light
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-QQLight deepin-wine winecfg
+
+sudo apt-fast install deepin.com.wechat
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
+
+sudo apt-fast install deepin.com.thunderspeed
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-ThunderSpeed deepin-wine winecfg
+
+sudo apt-fast install deepin.com.weixin.work
+#配置，修改显示为160dpi
+WINEPREFIX=~/.deepinwine/Deepin-WXWork deepin-wine winecfg
+
+sudo apt-fast install deepin-screenshot
+sudo apt-fast install deepin-terminal
+xdg-open . -> Win+E
+deepin-screenshot -> ctrl+alt+Q
+deepin-terminal -> ctrl+alt+T
 ```
 
 ## 截图
@@ -320,84 +332,6 @@ xdg-open . -> Win+E
 deepin-screenshot -> ctrl+alt+Q
 #deepin-terminal -> ctrl+alt+T
 io.elementary.terminal -> ctrl+alt+T
-```
-
-## weixin
-```bash
-wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.wechat/deepin.com.wechat_2.6.2.31deepin0_i386.deb
-sudo dpkg -i deepin.com.wechat_2.6.2.31deepin0_i386.deb
-#配置，修改显示为160dpi
-WINEPREFIX=~/.deepinwine/Deepin-WeChat deepin-wine winecfg
-```
-
-## RTX
-```bash
-wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.rtx2015/deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
-sudo dpkg -i deepin.com.qq.rtx2015_8.3.649.1deepin0_i386.deb
-#如果安装报错，先执行一下sudo apt-get install -f，再重新安装即可。
-#配置，修改显示为120dpi
-WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine winecfg
-#修改idle时间，只能直接修改文件内容，不然会启动不了
-#vim "/home/dave/文档/RTXC File List/c_Program Files_Tencent_RTXC/Accounts/dave.zhao/User.cfg"
-reply_page_bAutoChangeState=0
-reply_page_nTimeCount=30
-```
-
-英文操作系统不能输入中文解决, 参考[https://blog.csdn.net/deccmtd/article/details/5529736](https://blog.csdn.net/deccmtd/article/details/5529736)
-
-把下面的代码保存为winefont.reg 
-REGEDIT4 
-[HKEY_LOCAL_MACHINE/Software/Microsoft/Windows NT/CurrentVersion/FontSubstitutes] 
-"Arial"="simsun" 
-"Arial CE,238"="simsun" 
-"Arial CYR,204"="simsun" 
-"Arial Greek,161"="simsun" 
-"Arial TUR,162"="simsun" 
-"Courier New"="simsun" 
-"Courier New CE,238"="simsun" 
-"Courier New CYR,204"="simsun" 
-"Courier New Greek,161"="simsun" 
-"Courier New TUR,162"="simsun" 
-"FixedSys"="simsun" 
-"Helv"="simsun" 
-"Helvetica"="simsun" 
-"MS Sans Serif"="simsun" 
-"MS Shell Dlg"="simsun" 
-"MS Shell Dlg 2"="simsun" 
-"System"="simsun" 
-"Tahoma"="simsun" 
-"Times"="simsun" 
-"Times New Roman CE,238"="simsun" 
-"Times New Roman CYR,204"="simsun" 
-"Times New Roman Greek,161"="simsun" 
-"Times New Roman TUR,162"="simsun" 
-"Tms Rmn"="simsun"
-
-```bash
-WINEPREFIX=~/.deepinwine/Deepin-RTX2015 deepin-wine regedit winefont.reg
-```
-
-从Windows目录下的Fonts里的simsun.ttc复制到/home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts里面, 重启即可。注意选择Font为simsun。
-
-```bash
-wget https://github.com/sonatype/maven-guide-zh/raw/master/content-zh/src/main/resources/fonts/simsun.ttc -O /home/dave/.deepinwine/Deepin-RTX2015/drive_c/windows/Fonts/
-```
-
-如果启动不了，直接删除Accounts目录即可。如果组织架构出不来，可以把好的机器中的Accounts目录下除User.cfg外所有的文件copy覆盖掉。
-
-## QQ
-```bash
-wget http://mirrors.aliyun.com/deepin/pool/non-free/d/deepin.com.qq.im/deepin.com.qq.im_8.9.19983deepin23_i386.deb
-sudo dpkg -i deepin.com.qq.im_8.9.19983deepin23_i386.deb
-#配置，修改显示为120dpi
-WINEPREFIX=~/.deepinwine/Deepin-QQ deepin-wine winecfg
-```
-
-## 安装slingscold启动器
-```bash
-sudo add-apt-repository ppa:noobslab/macbuntu
-sudo apt-get update
-sudo apt-get install slingscold
 ```
 
 ## Mailspring
@@ -531,15 +465,6 @@ sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
 #echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
 #chmod +x xmind
 #If you want to crack, please see: http://blog.slpro.cn/posts/eb75c5c4/
-```
-
-## 网易云音乐
-
-```bash
-#https://www.zhihu.com/question/277330447
-#vim /usr/share/applications/netease-cloud-music.desktop
-#修改Exec为：
-Exec=sh -c "unset SESSION_MANAGER && netease-cloud-music %U"
 ```
 
 ## virtualbox
