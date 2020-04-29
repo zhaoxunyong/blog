@@ -741,6 +741,8 @@ exit
 # exit
 # . /etc/profile
 # echo $SPARK_HOME
+vim $KYLIN_HOME/conf/kylin.properties
+scp -r apache-kylin-3.0.1 hadoop@kylin2:/works/soft/
 
 $KYLIN_HOME/bin/check-env.sh
 $KYLIN_HOME/bin/kylin.sh start
@@ -751,7 +753,7 @@ hbase-site.xml的hbase.zookeeper.quorum，该项只需配置Host不需要配置�
 tail -n100 -f $KYLIN_HOME/logs/kylin.log
 hdfs dfs -ls /kylin/
 
-http://nna:7070/kylin
+http://kylin1:7070/kylin
 http://nna:50070/dfshealth.html#tab-overview
 http://nna:8188/cluster
 http://nna:16010/master-status
