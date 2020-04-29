@@ -575,13 +575,17 @@ hive:
 #Working on nna/nns
 sudo yum -y install gcc*
 sudo yum -y install openssl-devel pcre-devel
-scp -r dave@192.168.102.136:/Developer/Kylin/hive/haproxy-1.9.8.tar.gz /works/soft/
+scp -r dave@192.168.102.136:/Developer/Kylin/hive/haproxy-1.9.8.tar.gz /tmp
+cd /tmp
+tar zxvf haproxy-1.9.8.tar.gz
+cd haproxy-1.9.8
 make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_CRYPT_H=1 USE_LIBCRYPT=1
 sudo make install
 haproxy -vv
 
 #Working on nna
-#vim /works/haproxy/config.cfg
+mkdir -p works/soft/haproxy-1.9.8/
+#vim /works/soft/haproxy-1.9.8/config.cfg
 scp -r haproxy hadoop@nns:/works/
 
 
@@ -643,13 +647,117 @@ scp -r /works/soft/apache-hive-2.3.7 hadoop@dn3:/works/soft/
 
 #Working on dn1/dn2/dn3
 hive --service hiveserver2 & 
-
+#https://my.oschina.net/zss1993/blog/1607208
+http://dn1:10002
 #Working on nna/nns
 haproxy -f /works/haproxy/config.cfg
 http://nna:1090/
 admin/123456
 
+hive>
+＃在创建数据库时添加判断，防止因创建的数据库己存在而抛出异常
+CREATE DATABASE IF NOT EXISTS game; 
+#hdfs dfs -ls /works/hive/warehouse/game.db/
+#CASCADE表示强制删除所有的数据，不加的话，必须先删除所有的表才能删除数据库
+DROP DATABASE IF EXISTS game CASCADE;
+USE game;
+＃创建表时添加判断，防止因创建的表己存在而抛出异常
+CREATE TABLE IF NOT EXISTS IP_LOGIN_TEXT( 
+  `stm`  string  comment    '时间戳', 
+  `uid`  string   comment    '平台id', 
+  `ip`   string  comment    '登录IP',
+  `plat` string  comment    '平台号'
+) ROW FORMAT SERDE "org.apache.hive.hcatalog.data.JsonSerDe" STORED AS TEXTFILE; 
+ desc IP_LOGIN_TEXT;
+＃清空表数据
+TRUNCATE TABLE IP_LOGIN_TEXT; 
+DROP TABLE IF EXISTS IP_LOGIN_TEXT; 
 
+#分区存储
+＃按天分区 ORCFILE 格式进行存储
+CREATE TABLE IF NOT EXISTS IP_LOGIN( 
+  `stm`  string  comment    '时间戳', 
+  `uid`  string   comment    '平台id', 
+  `ip`   string  comment    '登录IP',
+  `plat` string  comment    '平台号'
+) PARTITIONED BY (tm int comment '分区日期(格式yyyyMMdd:20171101)')
+CLUSTERED BY (`uid`) SORTED BY (`uid`) INTO 2 BUCKETS STORED AS ORC;
+
+#https://www.cnblogs.com/frankdeng/p/9403942.html
+create table student(
+  id int, 
+  name string, 
+  sex string, 
+  age int, 
+  department string
+) row format delimited fields terminated by ",";
+load data local inpath "/home/hadoop/student.txt" into table student;
+select * from student;
+desc student;
+
+CREATE TABLE alerts ( id int, msg string ) 
+partitioned by (continent string, country string) 
+clustered by (id) into 5 buckets 
+stored as orc tblproperties ("transactional"= "true"); 
+
+#-------------------------
+yarn:
+yarn application
+
+
+Kylin:
+#http://kylin.apache.org/cn/docs/install/index.html
+4 core CPU，16 GB 内存和 100 GB 磁盘
+su - hadoop
+确保有以下客户端环境：Hive，HBase，HDFS
+#Working on kylin1
+scp dave@192.168.102.136:/Developer/Kylin/soft/sources/apache-kylin-3.0.1-bin-hbase1x.tar.gz /works/soft/
+mv apache-kylin-3.0.1-bin-hbase1x apache-kylin-3.0.1
+sudo chown -R hadoop:hadoop /works/soft/apache-kylin-3.0.1
+su -
+cat > /etc/profile.d/kylin.sh << EOF
+export KYLIN_HOME=/works/soft/apache-kylin-3.0.1
+export PATH=\$PATH:\$KYLIN_HOME/bin
+EOF
+exit
+. /etc/profile
+
+# scp -r hadoop@dn1:/works/soft/apache-hive-2.3.7 /works/soft/
+# su -
+# cat > /etc/profile.d/hive.sh << EOF
+# export HIVE_HOME=/works/soft/apache-hive-2.3.7
+# export PATH=\$PATH:\$HIVE_HOME/bin
+# EOF
+# exit
+# . /etc/profile
+# echo $HIVE_HOME
+
+# scp -r hadoop@dn1:/works/soft/spark-2.4.5 /works/soft/
+# su -
+# cat > /etc/profile.d/spark.sh << EOF
+# export SPARK_HOME=/works/soft/spark-2.4.5
+# export PATH=\$PATH:\$SPARK_HOME/bin
+# EOF
+# exit
+# . /etc/profile
+# echo $SPARK_HOME
+
+$KYLIN_HOME/bin/check-env.sh
+$KYLIN_HOME/bin/kylin.sh start
+
+kylin UnknownHostException: dn1:2181: invalid IPv6 address
+端口号2181在zk connectString里写了两遍 
+hbase-site.xml的hbase.zookeeper.quorum，该项只需配置Host不需要配置端口号Port。
+tail -n100 -f $KYLIN_HOME/logs/kylin.log
+hdfs dfs -ls /kylin/
+
+http://nna:7070/kylin
+http://nna:50070/dfshealth.html#tab-overview
+http://nna:8188/cluster
+http://nna:16010/master-status
+
+http://dn1:8080
+http://nna:1090/
 
 
 -----------------------------------------
@@ -665,23 +773,25 @@ sudo route del default gw 10.0.2.2
 #hadoop-daemons.sh start journalnode
 start-dfs.sh
 start-yarn.sh
+yarn-daemon.sh start proxyserver
+mr-jobhistory-daemon.sh start historyserver
 #https://www.cnblogs.com/honeybee/p/8276984.html
 # hadoop-daemon.sh start namenode
 #Working on nns
 yarn-daemon.sh start resourcemanager
 #https://www.hemingliang.site/169.html
 #hadoop namenode -recover
-yarn-daemon.sh start proxyserver
-mr-jobhistory-daemon.sh start historyserver
 
 # Hadoop 访问地址
 http://nna:50070/
 #YARN (资源管理调度)访问地址
 http://nna:8188/
 
+#hdfs dfs -cat /works/hello.txt
+
 #habse 
 #Working on nna
-hadoop dfsadmin -safemode leave
+#hadoop dfsadmin -safemode leave
 start-hbase.sh
 #Working on nns
 hbase-daemon.sh start master
@@ -693,6 +803,15 @@ http://nna:16010/
 $SPARK_HOME/sbin/start-all.sh
 
 #Web: http://dn1:8080
+
+#hive
+#Working on dn1/dn2/dn3
+hive --service hiveserver2 & 
+
+#Working on nna/nns
+haproxy -f /works/soft/haproxy-1.9.8/config.cfg
+http://nna:1090/
+admin/123456
 
 
 

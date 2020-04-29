@@ -84,4 +84,22 @@ sudo vagrant snapshot take dn1 dn1_hive_snapshot
 sudo vagrant snapshot take dn2 dn2_hive_snapshot
 sudo vagrant snapshot take dn3 dn3_hive_snapshot
 
+修改boxes的目录
+sudo vagrant halt
+sudo su -
+https://www.jianshu.com/p/12cf1ecb224b
+https://www.cnblogs.com/csliwei/p/5860005.html
+cp -a ~/.vagrant.d/ /data/vagrant/
+#加到root与当前使用用户中
+vim ~/.bashrc
+export VAGRANT_HOME='/data/vagrant'
+export VAGRANT_DISABLE_VBOXSYMLINKCREATE=1
+
+#VBoxManage setproperty machinefolder  /data/vagrant/
+cp -a "/root/VirtualBox VMs" "/data/vagrant/VirtualBox VMs"
+sudo ln -s "/data/vagrant/VirtualBox VMs" "/root/VirtualBox VMs"
+mv "/root/VirtualBox VMs" "/root/VirtualBox VMs.bak"
+重新登录
+
+
 
