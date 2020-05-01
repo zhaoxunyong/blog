@@ -775,14 +775,18 @@ sudo route del default gw 10.0.2.2
 #hadoop-daemons.sh start journalnode
 start-dfs.sh
 start-yarn.sh
+:8090
 yarn-daemon.sh start proxyserver
-mr-jobhistory-daemon.sh start historyserver
 #https://www.cnblogs.com/honeybee/p/8276984.html
 # hadoop-daemon.sh start namenode
 #Working on nns
 yarn-daemon.sh start resourcemanager
 #https://www.hemingliang.site/169.html
 #hadoop namenode -recover
+
+#Working on all nodes, including all of the kylin nodes
+:10020 :19888
+mr-jobhistory-daemon.sh start historyserver
 
 # Hadoop 访问地址
 http://nna:50070/
@@ -816,4 +820,29 @@ http://nna:1090/
 admin/123456
 
 
+Hadoop:
+nna: NameNode Active  2G/2c   DFSZKFailoverController HMaster
+nns: NameNode Standby 2G/2c   DFSZKFailoverController HMaster
+dn1: DateNode         1G/1c   QuorumPeerMain          HRegionServer
+dn2: DataNode         1G/1c   QuorumPeerMain          HRegionServer
+dn3: DataNode         1G/1c   QuorumPeerMain          HRegionServer
+
+HBase:
+nna: HMaster          2G/2c   
+nns: HMaster          2G/2c
+dn1: HMaster          1G/1c
+dn2: HMaster          1G/1c
+dn3: HMaster          1G/1c
+
+Spark:
+dn1: Master           1G/1c
+dn2: Worker           1G/1c
+dn3: Worker           1G/1c
+
+Hive:
+nna: HAProxy/MySQL    2G/2c 
+nns: HAProxy          2G/2c
+dn1: Hive             1G/1c
+dn2: Hive             1G/1c
+dn3: Hive             1G/1c
 
