@@ -192,6 +192,14 @@ GROUP BY dws_fin_loan_account_d.snap_date_key
 
 ## Cluster
 
+Hadoop: 2.7+, 3.1+ (since v2.5)            hadoop-2.7.7
+Hive: 0.13 - 1.2.1+                        apache-hive-2.3.7
+HBase: 1.1+, 2.0 (since v2.5)              hbase-1.2.7
+Spark (可选) 2.3.0+                         spark-2.4.5
+Kafka (可选) 1.0.0+ (since v2.5)            
+JDK: 1.8+ (since v2.5)                     jdk-8u241
+OS:                                        CentOS Linux release 7.7.1908   
+
 useradd hadoop
 passwd hadoop
 chmod +w /etc/sudoers
@@ -224,9 +232,14 @@ scp ~/.ssh/authorized_keys hadoop@ds1:~/.ssh
 scp ~/.ssh/authorized_keys hadoop@ds2:~/.ssh
 scp ~/.ssh/authorized_keys hadoop@ds3:~/.ssh
 
+
 #所有
 su - hadoop
-sudo chown hadoop -R /works
+ssh hadoop@nna "sudo chown hadoop -R /works"
+ssh hadoop@nns "sudo chown hadoop -R /works"
+ssh hadoop@dn1 "sudo chown hadoop -R /works"
+ssh hadoop@dn2 "sudo chown hadoop -R /works"
+ssh hadoop@dn3 "sudo chown hadoop -R /works"
 
 #zookeeper, just only on dn1/dn2/dn3
 mkdir -p /works/zkdata
@@ -256,12 +269,9 @@ server.2=dn2:2888:3888
 server.3=dn3:2888:3888
 EOF
 
-#dn1
-echo 1 > /works/zkdata/myid
-#dn2
-echo 2 > /works/zkdata/myid
-#dn3
-echo 3 > /works/zkdata/myid
+ssh hadoop@dn1 "echo 1 > /works/zkdata/myid"
+ssh hadoop@dn2 "echo 2 > /works/zkdata/myid"
+ssh hadoop@dn3 "echo 3 > /works/zkdata/myid"
 
 #sudo vim /etc/profile
 su -
@@ -326,6 +336,15 @@ vim yarn-site.xml
   </property>
 
 #Working on all of nodes
+rm -fr /works/hadoop/tmp
+rm -fr /works/hadoop/tmp/journal
+rm -fr /works/hadoop/tmp/journal
+rm -fr /works/hadoop/dfs/name
+rm -fr /works/hadoop/dfs/data
+rm -fr /works/hadoop/yarn/local
+rm -fr /works/hadoop/log/yarn
+rm -fr /works/soft/hadoop-2.7.7/logs
+
 mkdir -p /works/hadoop/tmp
 mkdir -p /works/hadoop/tmp/journal
 mkdir -p /works/hadoop/tmp/journal
@@ -333,7 +352,7 @@ mkdir -p /works/hadoop/dfs/name
 mkdir -p /works/hadoop/dfs/data
 mkdir -p /works/hadoop/yarn/local
 mkdir -p /works/hadoop/log/yarn
-mkdir -p  /works/soft/hadoop-2.7.7/logs
+mkdir -p /works/soft/hadoop-2.7.7/logs
 
 cd /works/soft/hadoop-2.7.7/sbin
 #在任意一台 Name Node 节点上启动 JournalNode 进程
@@ -352,55 +371,72 @@ start-dfs.sh
 start-yarn.sh
 
 
-在当前节点的终端上输入 jps 命 令查看相关的服务进程,其 中包含 
-DFSZKFailoverController 、 NameNode 和 ResomceManager 服务进程。
-
-#同步 nna 节点元数据信息到 nns 节点
-hdfs namenode -bootstrapStandby
-
 #Working on nns
 切换到 nns 节 点上并输入 j ps 命令查看相关的启动进程。如果发现只有 DFSZK
 ailoverontroller 服务进程,可以手动启动 nns 节点上的 NameNode 和 ResourceManager 服务
 进程, 具 体操作命令如下:
 #启动 NameNode 进程
 cd /works/soft/hadoop-2.7.7/sbin
-hadoop-daemon.sh start namenode -bootstrapStandby
+hadoop-daemon.sh start namenode
 #启动 ResourceManager 进程
-yarn-daemon.sh start resourcemanager -bootstrapStandby
+yarn-daemon.sh start resourcemanager
 
 #Working on nna
 yarn-daemon.sh start proxyserver
 mr-jobhistory-daemon.sh start historyserver
+
+在当前节点的终端上输入 jps 命 令查看相关的服务进程,其 中包含 
+DFSZKFailoverController 、 NameNode 和 ResomceManager 服务进程。
+
+#同步 nna 节点元数据信息到 nns 节点
+#hdfs namenode -bootstrapStandby
 
 # Hadoop 访问地址
 http://nna:50070/
 #YARN (资源管理调度)访问地址
 http://nna:8188/
 
-https://www.jianshu.com/p/c44495a10043
-找到hadoop安装目录下 hadoop-2.4.1/data/dfs/data里面的current文件夹删除
+https://www.jianshu.com/p/c44495a1004
+找到hadoop安装目录下 /works/hadoop/dfs/name/current里面的current文件夹删除
 然后从新执行一下 hadoop namenode -format
 再使用start-dfs.sh和start-yarn.sh 重启一下hadoop
 用jps命令看一下就可以看见datanode已经启动了
-rm -fr /works/hadoop/dfs/data/current
+#dn1/dn2/dn3
+ssh hadoop@nna "rm -fr /works/hadoop/dfs/data/current"
+ssh hadoop@nns "rm -fr /works/hadoop/dfs/data/current"
+ssh hadoop@dn1 "rm -fr /works/hadoop/dfs/data/current"
+ssh hadoop@dn2 "rm -fr /works/hadoop/dfs/data/current"
+ssh hadoop@dn3 "rm -fr /works/hadoop/dfs/data/current"
 stop-all.sh
-hadoop-daemons.sh start journalnode
+start-all.sh
+#hadoop-daemons.sh start journalnode
 #格式化 NameNode 节点
 hdfs namenode -format
 #向 Zoo keeper 注册
-hdfs zkfc -formatZK
+# zkfc -formatZK
 start-dfs.sh
 start-yarn.sh
 yarn-daemon.sh start proxyserver
 mr-jobhistory-daemon.sh start historyserver
 
+Initialization failed for Block pool BP-759442594-192.168.80.191-1588834760484 (Datanode Uuid b0f6ca98-4b67-46b8-8121-baf29d34afed) service to nna/192.168.80.190:9000 Blockpool ID mismatch: previously connected to Blockpool ID BP-759442594-192.168.80.191-1588834760484 but now connected to Blockpool ID BP-695244506-192.168.80.190-1588835193647
+https://blog.csdn.net/sunggff/article/details/72885187
+修改namenode的/works/hadoop/dfs/name/current/VERSION 
+的blockpoolID=BP-695244506-192.168.80.190-1588835193647
 
-hadoop namenode -format
+Incompatible namespaceID for journal Storage Directory /home/rimi/bigData/hadoop-2.2.0/tmp/journal/cluster1: NameNode has nsId 2006559846 but storage has nsId 1781480752
+https://blog.csdn.net/shifenglov/article/details/38583971
+修改dn1/dn2/dn3的以下内容与namenode保持一致
+vim /works/hadoop/dfs/data/current/VERSION
+vim /works/hadoop/tmp/journal/cluster1/current/VERSION
+
+
 echo "xxx" > hello.txt
 #上传本地文件到分布式文件系统中的 tmp 目录
 hdfs dfs -mkdir /works/
 hdfs dfs -ls /works/
 hdfs dfs -put hello.txt /works/abc.txt
+hdfs dfs -cat /works/abc.txt
 #下载分布式文件系统中 tmp 目录下的 hello.txt 文件本地当前目录
 hdfs dfs -get /works/abc.txt ./
 #删除分布式文件系统中 tmp 目录下的 hello.txt 文f~:
@@ -672,7 +708,7 @@ sudo make install
 haproxy -vv
 
 #Working on nna
-mkdir -p works/soft/haproxy-1.9.8/
+mkdir -p /works/soft/haproxy-1.9.8/
 #vim /works/soft/haproxy-1.9.8/config.cfg
 scp -r haproxy hadoop@nns:/works/
 
@@ -691,7 +727,14 @@ hdfs dfs -chmod 777 /works/hive/warehouse
 hdfs dfs -chmod 777 /works/tmp/hive
 
 #local on dn1/dn2/dn3
-mkdir -p /works/hive/
+<!-- ssh hadoop@dn1 "rm -fr /works/hive/"
+ssh hadoop@dn2 "rm -fr /works/hive/"
+ssh hadoop@dn3 "rm -fr /works/hive/"
+
+ssh hadoop@dn1 "mkdir -p /works/hive/"
+ssh hadoop@dn2 "mkdir -p /works/hive/"
+ssh hadoop@dn3 "mkdir -p /works/hive/" -->
+
 
 #Working on dn1/dn2/dn3
 su -
@@ -841,6 +884,12 @@ hbase-site.xml的hbase.zookeeper.quorum，该项只需配置Host不需要配置�
 tail -n100 -f $KYLIN_HOME/logs/kylin.log
 hdfs dfs -ls /kylin/
 
+Failed to find metadata store by url: kylin_metadata@hbase
+https://www.cnblogs.com/harrymore/p/10882090.html
+zkCli.sh
+rmr /kylin/kylin_metadata
+rmr /hbase/table/kylin_metadata
+
 http://kylin1:7070/kylin
 http://nna:50070/dfshealth.html#tab-overview
 http://nna:8188/cluster
@@ -858,6 +907,7 @@ sudo route del default gw 10.0.2.2
 #Working on dn1/dn2/dn3
 #su - hadoop
 #zkServer.sh start
+
 
 #Working on nna
 #hadoop-daemons.sh start journalnode
@@ -878,10 +928,11 @@ mr-jobhistory-daemon.sh start historyserver
 
 # Hadoop 访问地址
 http://nna:50070/
+http://nns:50070/
 #YARN (资源管理调度)访问地址
 http://nna:8188/
 
-hdfs dfs -cat /works/hello.txt
+hdfs dfs -cat /works/abc.txt
 
 #habse 
 #Working on nna
@@ -889,9 +940,9 @@ hdfs dfs -cat /works/hello.txt
 start-hbase.sh
 #Working on nns
 hbase-daemon.sh start master
-
 #Web
 http://nna:16010/
+http://nns:16010/
 
 #Starting dn1
 $SPARK_HOME/sbin/start-all.sh
@@ -906,6 +957,45 @@ hive --service hiveserver2 &
 haproxy -f /works/soft/haproxy-1.9.8/config.cfg
 http://nna:1090/
 admin/123456
+
+/works/hadoop/dfs/name
+/works/hadoop/dfs/data
+
+#Working on dn1/dn2/dn3
+
+#Working on all of nodes
+rm -fr /works/hadoop/tmp
+rm -fr /works/hadoop/tmp/journal
+rm -fr /works/hadoop/tmp/journal
+rm -fr /works/hadoop/dfs/name
+rm -fr /works/hadoop/dfs/data
+rm -fr /works/hadoop/yarn/local
+rm -fr /works/hadoop/log/yarn
+rm -fr /works/soft/hadoop-2.7.7/logs
+
+mkdir -p /works/hadoop/tmp
+mkdir -p /works/hadoop/tmp/journal
+mkdir -p /works/hadoop/tmp/journal
+mkdir -p /works/hadoop/dfs/name
+mkdir -p /works/hadoop/dfs/data
+mkdir -p /works/hadoop/yarn/local
+mkdir -p /works/hadoop/log/yarn
+mkdir -p /works/soft/hadoop-2.7.7/logs
+
+Hive:
+hdfs dfs -mkdir -p /works/hive/warehouse
+hdfs dfs -mkdir -p /works/tmp/hive/
+hdfs dfs -chmod 777 /works/hive/warehouse
+hdfs dfs -chmod 777 /works/tmp/hive
+
+#local on dn1/dn2/dn3
+ssh hadoop@dn1 "rm -fr /works/hive/"
+ssh hadoop@dn2 "rm -fr /works/hive/"
+ssh hadoop@dn3 "rm -fr /works/hive/"
+
+ssh hadoop@dn1 "mkdir -p /works/hive/"
+ssh hadoop@dn2 "mkdir -p /works/hive/"
+ssh hadoop@dn3 "mkdir -p /works/hive/"
 
 
 Hadoop:
@@ -933,4 +1023,68 @@ nns: HAProxy          2G/2c
 dn1: Hive             1G/1c
 dn2: Hive             1G/1c
 dn3: Hive             1G/1c
+
+
+zkServer.sh start
+dn1/dn2/dn3
+QuorumPeerMain  Port: 2181
+netstat -anp | grep 6176
+
+start-dfs.sh
+nna/nns
+9030 DFSZKFailoverController  Port: 8019
+8712 NameNode  Port: 9000/50070
+dn1/dn2/dn3
+6465 JournalNode  Port: 8480/8485
+6355 DataNode  Port: 50010/50075/8800/50020
+
+start-yarn.sh
+nna
+9243 ResourceManager  Port: 8188/8033/8130/8131/8131
+nns
+yarn-daemon.sh start resourcemanager
+9243 ResourceManager  Port: 8188/8033/8130/8131/8131
+dn1/dn2/dn3
+6260 NodeManager Port: 13562/23078/8040/8042
+
+yarn-daemon.sh start proxyserver
+dna
+9578 WebAppProxyServer Port: 8090
+
+start-hbase.sh
+nna
+9895 HMaster  Port: 16000/16010
+nns
+hbase-daemon.sh start master
+9895 HMaster  Port: 16000/16010
+dn1/dn2/dn3
+6974 HRegionServer Port: 16030/16020
+
+$SPARK_HOME/sbin/start-all.sh
+dn1
+7266 Master  Port: 7077/8080
+dn2/dn3
+6927 Worker  Port: 8081
+
+Hive
+dn1/dn2/dn3
+7587 RunJar Port: 10000/10002
+
+Haproxy
+nna/nns
+Port: 1090/10001
+
+mr-jobhistory-daemon.sh start historyserver
+nna/nns/dn1/dn2/dn3
+10381 JobHistoryServer Port: 10020/10020/10033
+
+kylin.sh start
+kylin1
+5781 RunJar  Port: 7070/9009
+http://kylin1:7070/kylin
+
+yarn application -list 
+yarn application -kill application_1588257935302_0002
+#Deleting all
+yarn application -list|grep "UNDEFINED"|awk '{print $1}'|sed 's;^;yarn application -kill ;'|sh +x
 

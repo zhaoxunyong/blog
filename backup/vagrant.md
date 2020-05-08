@@ -78,11 +78,12 @@ sudo vagrant snapshot take dn1 dn1_hbase_snapshot
 sudo vagrant snapshot take dn2 dn2_hbase_snapshot
 sudo vagrant snapshot take dn3 dn3_hbase_snapshot
 
-sudo vagrant snapshot take nna nna_hive_snapshot
-sudo vagrant snapshot take nns nns_hive_snapshot
-sudo vagrant snapshot take dn1 dn1_hive_snapshot
-sudo vagrant snapshot take dn2 dn2_hive_snapshot
-sudo vagrant snapshot take dn3 dn3_hive_snapshot
+sudo vagrant snapshot take nna nna_kylin_snapshot
+sudo vagrant snapshot take nns nns_kylin_snapshot
+sudo vagrant snapshot take dn1 dn1_kylin_snapshot
+sudo vagrant snapshot take dn2 dn2_kylin_snapshot
+sudo vagrant snapshot take dn3 dn3_kylin_snapshot
+sudo vagrant snapshot take dn3 kylin1_kylin_snapshot
 
 修改boxes的目录
 sudo vagrant halt
@@ -100,6 +101,36 @@ cp -a "/root/VirtualBox VMs" "/data/vagrant/VirtualBox VMs"
 sudo ln -s "/data/vagrant/VirtualBox VMs" "/root/VirtualBox VMs"
 mv "/root/VirtualBox VMs" "/root/VirtualBox VMs.bak"
 重新登录
+
+
+Authentication failure. Retrying 
+sudo ssh-keygen -t rsa -C "vagrant"
+sudo cat  /root/.ssh/id_rsa.pub >>  /root/.ssh/authorized_keys
+sudo chmod 600  /root/.ssh/authorized_keys
+#Making sure ssh vagrant@nna without password: sudo ssh vagrant@nns
+sudo scp  /root/.ssh/authorized_keys vagrant@nna:/home/vagrant/.ssh/
+sudo scp  /root/.ssh/authorized_keys vagrant@nns:/home/vagrant/.ssh/
+sudo scp  /root/.ssh/authorized_keys vagrant@dn1:/home/vagrant/.ssh/
+sudo scp  /root/.ssh/authorized_keys vagrant@dn2:/home/vagrant/.ssh/
+sudo scp  /root/.ssh/authorized_keys vagrant@dn3:/home/vagrant/.ssh/
+sudo cp -a /root/.ssh/id_rsa /root/.vagrant.d/insecure_private_key
+
+或者在Vagrantfile中添加：
+kylin1.ssh.private_key_path = "/root/.ssh/id_rsa"
+kylin1.ssh.forward_agent = true
+
+-----------------------------------------------
+sudo vagrant ssh-config
+  Host kylin1
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /root/.vagrant.d/insecure_private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
 
 
 
