@@ -174,7 +174,7 @@ sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT) as PRINCIPAL_BALA
 sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_PROCESS_AMOUNT) as PRINCIPAL_BALANCE_PROCESS_AMOUNT,
 sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT) as PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT
 FROM dwh.dws_fin_loan_account_d  
-WHERE dws_fin_loan_account_d.snap_date_key >= '2020-01-01' 
+WHERE dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
 AND dws_fin_loan_account_d.snap_date_key < '2020-04-30' 
 GROUP BY dws_fin_loan_account_d.snap_date_key
 
@@ -1088,3 +1088,12 @@ yarn application -kill application_1588257935302_0002
 #Deleting all
 yarn application -list|grep "UNDEFINED"|awk '{print $1}'|sed 's;^;yarn application -kill ;'|sh +x
 
+
+--------------------------------------------
+CDH
+
+sudo mkdir -p /opt/cloudera/parcel-repo
+cp -a CDH-5.16.2-1.cdh5.16.2.p0.8-el7.parcel* manifest.json /opt/cloudera/parcel-repo/
+sudo mv /etc/cloudera-scm-server/db.properties /etc/cloudera-scm-server/db.properties.bak
+chmod u+x cloudera-manager-installer.bin
+sudo ./cloudera-manager-installer.bin

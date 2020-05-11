@@ -78,12 +78,19 @@ sudo vagrant snapshot take dn1 dn1_hbase_snapshot
 sudo vagrant snapshot take dn2 dn2_hbase_snapshot
 sudo vagrant snapshot take dn3 dn3_hbase_snapshot
 
-sudo vagrant snapshot take nna nna_kylin_snapshot
-sudo vagrant snapshot take nns nns_kylin_snapshot
-sudo vagrant snapshot take dn1 dn1_kylin_snapshot
-sudo vagrant snapshot take dn2 dn2_kylin_snapshot
-sudo vagrant snapshot take dn3 dn3_kylin_snapshot
-sudo vagrant snapshot take dn3 kylin1_kylin_snapshot
+sudo vagrant snapshot save nna nna_kylin_snapshot
+sudo vagrant snapshot save nns nns_kylin_snapshot
+sudo vagrant snapshot save dn1 dn1_kylin_snapshot
+sudo vagrant snapshot save dn2 dn2_kylin_snapshot
+sudo vagrant snapshot save dn3 dn3_kylin_snapshot
+sudo vagrant snapshot save kylin1 kylin1_kylin_snapshot
+
+sudo vagrant snapshot restore nna nna_kylin_snapshot
+sudo vagrant snapshot restore nns nns_kylin_snapshot
+sudo vagrant snapshot restore dn1 dn1_kylin_snapshot
+sudo vagrant snapshot restore dn2 dn2_kylin_snapshot
+sudo vagrant snapshot restore dn3 dn3_kylin_snapshot
+sudo vagrant snapshot restore kylin1 kylin1_kylin_snapshot
 
 修改boxes的目录
 sudo vagrant halt
