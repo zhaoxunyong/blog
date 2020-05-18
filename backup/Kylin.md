@@ -198,7 +198,7 @@ HBase: 1.1+, 2.0 (since v2.5)              hbase-1.2.7
 Spark (可选) 2.3.0+                         spark-2.4.5
 Kafka (可选) 1.0.0+ (since v2.5)            
 JDK: 1.8+ (since v2.5)                     jdk-8u241
-OS:                                        CentOS Linux release 7.7.1908   
+OS:                                        CentOS Linux release 7.7.1908
 
 useradd hadoop
 passwd hadoop
@@ -213,6 +213,9 @@ chmod -w /etc/sudoers
 cat > /etc/hosts << EOF
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.80.187 kylin1
+192.168.80.188 kylin2
+192.168.80.189 kylin3
 192.168.80.190 nna
 192.168.80.191 nns
 192.168.80.192 dn1
@@ -221,18 +224,22 @@ cat > /etc/hosts << EOF
 EOF
 
 
+#Working on all nodes
 su - hadoop
 ssh-keygen -t rsa
+#直接写入到nna的~/.ssh/authorized_keys中：
+ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@nna
 #只在nna
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
-将其他机器中的~/.ssh/id_rsa.pub内容追加到~/.ssh/authorized_keys中
-scp ~/.ssh/authorized_keys hadoop@nns:~/.ssh
-scp ~/.ssh/authorized_keys hadoop@ds1:~/.ssh
-scp ~/.ssh/authorized_keys hadoop@ds2:~/.ssh
-scp ~/.ssh/authorized_keys hadoop@ds3:~/.ssh
+将其他机器中的~/.ssh/id_rsa.pub内容追加到~/.ssh/authorized_keys中,并复制到所有机器
+scp ~/.ssh/authorized_keys hadoop@nns:~/.ssh/
+scp ~/.ssh/authorized_keys hadoop@dn1:~/.ssh/
+scp ~/.ssh/authorized_keys hadoop@dn2:~/.ssh/
+scp ~/.ssh/authorized_keys hadoop@dn3:~/.ssh/
+scp ~/.ssh/authorized_keys hadoop@kylin1:~/.ssh/
 
-
+---------------------------------------------------
 #所有
 su - hadoop
 ssh hadoop@nna "sudo chown hadoop -R /works"
@@ -1091,9 +1098,66 @@ yarn application -list|grep "UNDEFINED"|awk '{print $1}'|sed 's;^;yarn applicati
 
 --------------------------------------------
 CDH
+https://docs.cloudera.com/documentation/enterprise/5/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
+https://docs.cloudera.com/documentation/enterprise/release-notes/topics/hardware_requirements_guide.html
+https://docs.cloudera.com/documentation/enterprise/release-notes/topics/cdh_vd_cdh_package_tarball.html
+https://docs.cloudera.com/documentation/enterprise/release-notes/topics/cdh_vd_cdh_package_tarball_516.html
 
+#Working on all
+sudo vim /etc/resolv.conf
+nameserver 114.114.114.114 
+nameserver 8.8.8.8
+
+sudo su -
+echo "vm.swappiness = 10" >> /etc/sysctl.conf
+sysctl -p
+
+echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
+echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
+ 
+
+sudo yum localinstall *.rpm
+#Working on nns
 sudo mkdir -p /opt/cloudera/parcel-repo
+#mv CDH-5.16.2-1.cdh5.16.2.p0.8-el7.parcel.sha.1 CDH-5.16.2-1.cdh5.16.2.p0.8-el7.parcel.sha
 cp -a CDH-5.16.2-1.cdh5.16.2.p0.8-el7.parcel* manifest.json /opt/cloudera/parcel-repo/
 sudo mv /etc/cloudera-scm-server/db.properties /etc/cloudera-scm-server/db.properties.bak
 chmod u+x cloudera-manager-installer.bin
 sudo ./cloudera-manager-installer.bin
+
+scp -r dave@192.168.102.172:/Developer/Kylin/Drivers/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH-5.16.2-1.cdh5.16.2.p0.8/lib/sqoop/lib/
+
+hbase-site.xml
+
+Standalone HBase
+https://hbase.apache.org/book.html#quickstart
+sudo mkdir -p /data/hbase
+sudo mkdir -p /Kylin
+sudo chown -R hadoop:hadoop /data/hbase
+sudo chown -R hdfs:hdfs /kylin
+mkdir -p /var/lib/hive/
+chown -R hdfs:hdfs /var/lib/hive/
+start-hbase.sh 
+
+https://blog.csdn.net/u014235646/article/details/100928291#53_jdbc_265
+Hive:
+sudo scp -r dave@192.168.102.195:/Developer/Kylin/Drivers/*.jar /opt/cloudera/parcels/CDH/lib/hive/lib/
+jdbc driver
+将mysql驱动放置在组件所部署机器上的/usr/share/java/目录下，没有目录则创建目录。并将驱动更名为mysql-connector-java.jar
+-- hive数据库 
+create database hive DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+-- 集群监控数据库
+create database amon DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+-- hue数据库
+create database hue DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+-- oozie数据库
+create database oozie DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
+Hive Gateway需要安装在kylin中
+
+hbase shell
+create 'game_x_tmp', '_x'
+put 'game_x_tmp', 'rowkey1', '_x', 'v1'
+scan 'game_x_tmp'
+disable 'game_x_tmp'
+drop 'game_x_tmp'

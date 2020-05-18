@@ -64,11 +64,16 @@ net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_tw_recycle = 1
 net.ipv4.ip_local_port_range = 1024 65535
 net.ipv4.ip_forward = 1
+vm.swappiness = 10
 EOF
 sysctl -p
 fi
 
 su - root -c "ulimit -a"
+
+echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
+echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
+chmod +x /etc/rc.local
 
 #echo '192.168.10.6 k8s-master
 #192.168.10.7   k8s-node1
@@ -91,7 +96,7 @@ yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-
 ntsysv net-tools lrzsz bridge-utils \
 htop telnet lsof vim dos2unix unix2dos zip unzip lsof
 yum install psmisc -y
-sudo systemctl enable ssh
+sudo systemctl enable sshd
 
 # mkdir -p /works/soft
 # cd /works/soft
