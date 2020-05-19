@@ -55,6 +55,7 @@ DefaultLimitNPROC=100000
 EOF
 fi
 
+#echo "vm.swappiness = 10" >> /etc/sysctl.conf
 cat /etc/sysctl.conf|grep "net.ipv4.ip_local_port_range" > /dev/null
 if [[ $? != 0 ]]; then
 cat >> /etc/sysctl.conf  << EOF
