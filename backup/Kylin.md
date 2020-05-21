@@ -231,7 +231,8 @@ ssh-keygen -t rsa
 ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@nna
 #只在nna
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
+sudo chmod 700 ~/.ssh
+sudo chmod 600 ~/.ssh/authorized_keys
 将其他机器中的~/.ssh/id_rsa.pub内容追加到~/.ssh/authorized_keys中,并复制到所有机器
 scp ~/.ssh/authorized_keys hadoop@nns:~/.ssh/
 scp ~/.ssh/authorized_keys hadoop@dn1:~/.ssh/
@@ -1135,8 +1136,8 @@ sudo mkdir -p /data/hbase
 sudo mkdir -p /Kylin
 sudo chown -R hadoop:hadoop /data/hbase
 sudo chown -R hdfs:hdfs /kylin
-mkdir -p /var/lib/hive/
-chown -R hdfs:hdfs /var/lib/hive/
+<!-- mkdir -p /var/lib/hive/
+chown -R hdfs:hdfs /var/lib/hive/ -->
 start-hbase.sh 
 
 https://blog.csdn.net/u014235646/article/details/100928291#53_jdbc_265

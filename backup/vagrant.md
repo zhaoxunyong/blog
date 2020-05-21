@@ -53,6 +53,7 @@ sudo vagrant snapshot take nns nns_0427_snapshot
 sudo vagrant snapshot take dn1 dn1_0427_snapshot
 sudo vagrant snapshot take dn2 dn2_0427_snapshot
 sudo vagrant snapshot take dn3 dn3_0427_snapshot
+tqPAI1H24TYjR5H57bHF7xxRBoSZldSp
 sudo vagrant snapshot list nna
 sudo vagrant snapshot go nna nna_0427_snapshot
 
@@ -84,6 +85,13 @@ sudo vagrant snapshot save dn1 dn1_kylin_snapshot
 sudo vagrant snapshot save dn2 dn2_kylin_snapshot
 sudo vagrant snapshot save dn3 dn3_kylin_snapshot
 sudo vagrant snapshot save kylin1 kylin1_kylin_snapshot
+
+
+sudo vagrant snapshot save nna nna_cdh6_snapshot
+sudo vagrant snapshot save nns nns_cdh6_snapshot
+sudo vagrant snapshot save dn1 dn1_cdh6_snapshot
+sudo vagrant snapshot save dn2 dn2_cdh6_snapshot
+sudo vagrant snapshot save dn3 dn3_cdh6_snapshot
 
 sudo vagrant snapshot restore nna nna_kylin_snapshot
 sudo vagrant snapshot restore nns nns_kylin_snapshot

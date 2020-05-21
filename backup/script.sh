@@ -92,6 +92,11 @@ wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-
 yum clean all
 yum makecache
 
+sudo yum -y install ntp
+sudo timedatectl set-timezone Asia/Shanghai
+sudo systemctl enable ntpd
+sudo systemctl start ntpd
+
 #yum -y install createrepo rpm-sign rng-tools yum-utils 
 yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-securitylevel-tui system-config-network-tui \
 ntsysv net-tools lrzsz bridge-utils \
