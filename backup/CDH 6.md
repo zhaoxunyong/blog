@@ -323,3 +323,5 @@ yarn.nodemanager.resource.memory-mb=6G
 yarn.scheduler.maximum-allocation-mb=6G
 
 kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
+在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
+kylin.env.hadoop-conf-dir=/etc/hadoop/conf
