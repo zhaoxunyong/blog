@@ -307,3 +307,19 @@ kylin.source.jdbc.pass=Gk97TU6coSsvtipC9SB2
 kylin.source.jdbc.sqoop-home=/opt/cloudera/parcels/CDH/lib/sqoop
 kylin.source.jdbc.filed-delimiter=|
 注意：修改以上jdbc配置，job需要删除并重新创建才能生效
+
+The required MAP capability is more than the supported max container capability in the cluster
+https://blog.csdn.net/weixin_33766168/article/details/93405662
+mapreduce.map.memory.mb=2G
+apreduce.reduce.memory.mb=3G
+yarn.scheduler.minimum-allocation-mb=2G
+
+arn.scheduler.maximum-allocation-mb=6G
+
+yarn.scheduler.minimum-allocation-vcores=4
+yarn.scheduler.maximum-allocation-vcores=12
+
+yarn.nodemanager.resource.memory-mb=6G
+yarn.scheduler.maximum-allocation-mb=6G
+
+kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
