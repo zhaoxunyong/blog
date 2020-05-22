@@ -2,6 +2,11 @@ CDH 6
 准备环境：
 https://www.staroon.dev/2017/11/05/SetEnv/
 
+资源配置：
+https://docs.cloudera.com/documentation/enterprise/6/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
+https://docs.cloudera.com/documentation/enterprise/release-notes/topics/hardware_requirements_guide.html
+https://docs.cloudera.com/cdpdc/7.0/release-guide/topics/cdpdc-hardware-requirements.html
+
 #Working all
 sudo su -
 echo "vm.swappiness = 10" >> /etc/sysctl.conf
@@ -88,9 +93,7 @@ Gateway: all nodes
 
 
 https://www.staroon.dev/2018/12/01/CDH6Install/
-
-https://docs.cloudera.com/documentation/enterprise/6/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
-
+#下载安装包：
 https://archive.cloudera.com/cdh6/6.1.1/parcels/
 https://archive.cloudera.com/cm6/6.1.1/redhat7/yum/RPMS/x86_64/
 
@@ -374,8 +377,11 @@ arn.scheduler.maximum-allocation-mb=6G
 yarn.scheduler.minimum-allocation-vcores=4
 yarn.scheduler.maximum-allocation-vcores=12
 
-yarn.nodemanager.resource.memory-mb=6G
-yarn.scheduler.maximum-allocation-mb=6G
+#https://www.cnblogs.com/missie/p/4370135.html
+#表示该节点上YARN可使用的物理内存总量，默认是8192（MB），注意，如果你的节点内存资源不够8GB，则需要调减小这个值，而YARN不会智能的探测节点的物理内存总量。
+yarn.nodemanager.resource.memory-mb=5G
+#单个任务可申请的最多物理内存量，默认是8192（MB）。
+yarn.scheduler.maximum-allocation-mb=4G
 
 kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
 在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
@@ -391,3 +397,31 @@ kylin.engine.spark-conf.spark.driver.memory=1G
 kylin.engine.spark-conf.spark.executor.memory=2G
 #kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
 kylin.engine.spark-conf.spark.executor.cores=6
+
+oozie:
+https://www.cnblogs.com/yinzhengjie/p/10934172.html
+https://blog.csdn.net/adshiye/article/details/84311890
+
+Failed to install Oozie ShareLib:
+cpu core not greate than..
+此时已经创建了oozie，新开一个窗口修改core后，再在此页面点击resume.
+
+hue:
+https://blog.csdn.net/gao123456789amy/article/details/79242713
+hue的时区zone修改为：
+Asia/Shanghai
+http://nns:8889
+
+cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+
+sqoop import-all-tables \
+             --connect jdbc:mysql://192.168.80.196:3306/dwh \
+             --username root \
+             --password Gk97TU6coSsvtipC9SB2 \
+             --hive-import \
+             --hive-database dwh \
+             --exclude-tables dim_client,dim_collection_status,dim_date,dim_loan_account,dim_loan_account_process_status,dim_loan_account_status,dim_loan_account_type,dim_loan_bill,dim_loan_product,dim_loan_type,dim_repay_amount_type,dim_source_system,dim_trading_summary,dim_virtual_center,dws_fin_exempt,dws_fin_loan_account_d,temp \
+             --num-mappers 1 \
+             --verbose
+
+sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 --username root --password Gk97TU6coSsvtipC9SB2
