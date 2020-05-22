@@ -52,6 +52,40 @@ sudo systemctl start ntpd.service
 sudo ntpdate -u nna
 sudo ntpstat
 
+Important: NFS Gateway/Hive Gateway/Spark Gateway：all nodes
+
+nna:  8G/4C
+nns:  16G/4C
+dn1:  8G/12C
+dn2:  8G/12C
+dn3:  8G/12C
+kylin: 16G/8C
+
+HDFS: 
+NFS Gateway: all nodes
+DataNode: dn1/dn2/dn3
+NameNode: nna
+SecondaryNameNode/Balancer: nns
+
+YARN:
+ResourceManager: nna
+JobHisotry Server: nna
+NodeManager: the same as hdfs datanodes
+
+Zookeeper:
+Server: nna
+
+Hive:
+Gateway: all nodes
+Metastore Server/HiveServer2: nns
+
+Spark:
+Gateway: all nodes
+History Server: nna
+
+Sqoop1:
+Gateway: all nodes
+
 
 https://www.staroon.dev/2018/12/01/CDH6Install/
 
@@ -142,16 +176,15 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'Aa123#@!';
 
 #https://docs.cloudera.com/documentation/enterprise/6/6.3/topics/cm_ig_mysql.html#cmig_topic_5_5
 服务名	                             数据库名	  用户名
-Cloudera Manager Server	            scm	        scm
-Activity Monitor	                amon	    amon
+Cloudera Manager Server	            scm	      scm
+Activity Monitor	                  amon	    amon
 Reports Manager	                    rman	    rman
-Hive Metastore Server	            hive	hive
-
-Hue	                                hue	        hue
-Sentry Server	                    sentry	    sentry
-Cloudera Navigator Audit Server	    nav	        nav
+Hive Metastore Server	              metastore	metastore
+Hue	                                hue	      hue
+Sentry Server	                      sentry	  sentry
+Cloudera Navigator Audit Server	    nav	      nav
 Cloudera Navigator Metadata Server	navms	    navms
-Oozie	                            oozie	    oozie
+Oozie	                              oozie	    oozie
 
 CREATE DATABASE scm DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 CREATE DATABASE amon DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
@@ -242,27 +275,17 @@ cat /etc/profile.d/java.sh
 export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
 export PATH=$JAVA_HOME/bin:$PATH
 
+cat /etc/profile.d/kylin.sh 
+export KYLIN_HOME=/works/kylin-3.0.2
+export PATH=$KYLIN_HOME/bin:$PATH
+
 cat /etc/profile.d/spark.sh 
 export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark/
 export PATH=$SPARK_HOME/bin:$PATH
 
-<!-- useradd hdfs
-passwd hdfs
-chmod +w /etc/sudoers
-
-vim /etc/sudoers
-#在 sudoers 文件中添加以下内容
-q
-
-#最后保存内容后退出,并取消 sudoers 文件的写权限
-chmod -w /etc/sudoers -->
-
+#Using hadoop account:
 sudo mkdir -p /data/hbase
 sudo chown -R hadoop:hadoop /data/hbase
-<!-- sudo mkdir -p /kylin
-sudo chown -R hdfs:hdfs /kylin -->
-<!-- mkdir -p /var/lib/hive/
-chown -R hdfs:hdfs /var/lib/hive/ -->
 
 start-hbase.sh 
 hbase shell
@@ -308,8 +331,40 @@ kylin.source.jdbc.sqoop-home=/opt/cloudera/parcels/CDH/lib/sqoop
 kylin.source.jdbc.filed-delimiter=|
 注意：修改以上jdbc配置，job需要删除并重新创建才能生效
 
+kylin.engine.spark-conf.spark.master=yarn
+kylin.engine.spark-conf.spark.submit.deployMode=cluster
+kylin.engine.spark-conf.spark.dynamicAllocation.enabled=true
+kylin.engine.spark-conf.spark.dynamicAllocation.minExecutors=1
+kylin.engine.spark-conf.spark.dynamicAllocation.maxExecutors=1000
+kylin.engine.spark-conf.spark.dynamicAllocation.executorIdleTimeout=300
+kylin.engine.spark-conf.spark.yarn.queue=default
+kylin.engine.spark-conf.spark.driver.memory=2G
+kylin.engine.spark-conf.spark.executor.memory=4G
+kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
+kylin.engine.spark-conf.spark.executor.cores=6
+kylin.engine.spark-conf.spark.network.timeout=600
+kylin.engine.spark-conf.spark.shuffle.service.enabled=true
+#kylin.engine.spark-conf.spark.executor.instances=1
+kylin.engine.spark-conf.spark.eventLog.enabled=true
+kylin.engine.spark-conf.spark.hadoop.dfs.replication=2
+kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress=true
+kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoo
+p.io.compress.DefaultCodec
+kylin.engine.spark-conf.spark.io.compression.codec=org.apache.spark.io.SnappyCompressionCodec
+kylin.engine.spark-conf.spark.eventLog.dir=hdfs\://nna:8020/kylin/spark-history
+kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://nna:8020/kylin/spark-history
+kylin.env.hadoop-conf-dir=/etc/hadoop/conf
+----------------
+
+修改hdfs任何用户可以写入：
+https://blog.csdn.net/Ahuuua/article/details/90669011
+1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
+2、添加这个，保存更改，重启hdfs
+dfs.permissions.enabled 的值设置为false
+
 The required MAP capability is more than the supported max container capability in the cluster
 https://blog.csdn.net/weixin_33766168/article/details/93405662
+https://www.cnblogs.com/yako/p/5498168.html
 mapreduce.map.memory.mb=2G
 apreduce.reduce.memory.mb=3G
 yarn.scheduler.minimum-allocation-mb=2G
@@ -326,4 +381,13 @@ kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.s
 在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
 kylin.env.hadoop-conf-dir=/etc/hadoop/conf
 
-NFS Gateway/Hive Gateway/Spark Gateway：all nodes
+
+
+ExecutorLostFailure (executor 1 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 5.0 GB of 5 GB physical memory used. Consider boosting spark.yarn.executor.memoryOverhead or disabling yarn.nodemanager.vmem-check-enabled because of YARN-4714.
+
+Exception in thread "main" java.lang.IllegalArgumentException: Required executor memory (4096), overhead (4096 MB), and PySpark memory (0 MB) is above the max threshold (6144 MB) of this cluster! Please check the values of 'yarn.scheduler.maximum-allocation-mb' and/or 'yarn.nodemanager.resource.memory-mb'.
+
+kylin.engine.spark-conf.spark.driver.memory=1G
+kylin.engine.spark-conf.spark.executor.memory=2G
+#kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
+kylin.engine.spark-conf.spark.executor.cores=6
