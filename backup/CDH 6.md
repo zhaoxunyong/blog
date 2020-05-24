@@ -57,17 +57,16 @@ sudo su - hadoop
 ssh-keygen -t rsa
 #直接写入到nna的~/.ssh/authorized_keys中：
 ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@nna
+#cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 sudo chmod 700 ~/.ssh
 sudo chmod 600 ~/.ssh/authorized_keys
 并复制到所有机器
 scp ~/.ssh/authorized_keys hadoop@nns:~/.ssh/
 ...
 
-sudo grep 'sshd' /var/log/secure | grep 'Authentication refused' | tail -5
-Authentication refused: bad ownership or modes for directory
-sudo chmod g-w ~/
-sudo chmod 700 ~/.ssh
-sudo chmod 600 ~/.ssh/authorized_keys
+#sudo grep 'sshd' /var/log/secure | grep 'Authentication refused' | tail -5
+#Authentication refused: bad ownership or modes for directory
+
 
 NTP:
 #https://www.staroon.dev/2017/11/05/SetEnv/#%E9%85%8D%E7%BD%AEntp%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5
