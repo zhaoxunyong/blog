@@ -225,14 +225,14 @@ EOF
 
 
 #Working on all nodes
-su - hadoop
+sudo su - hadoop
 ssh-keygen -t rsa
 #直接写入到nna的~/.ssh/authorized_keys中：
 ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@nna
-#只在nna
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 sudo chmod 700 ~/.ssh
 sudo chmod 600 ~/.ssh/authorized_keys
+#只在nna
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 将其他机器中的~/.ssh/id_rsa.pub内容追加到~/.ssh/authorized_keys中,并复制到所有机器
 scp ~/.ssh/authorized_keys hadoop@nns:~/.ssh/
 scp ~/.ssh/authorized_keys hadoop@dn1:~/.ssh/

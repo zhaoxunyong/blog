@@ -1,6 +1,38 @@
 CDH 6
 准备环境：
 https://www.staroon.dev/2017/11/05/SetEnv/
+https://blog.csdn.net/LCYong_/article/details/82385668
+
+mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
+mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
+
+sudo vim /etc/yum.repos.d/epel.repo:
+[epel]
+name=Extra Packages for Enterprise Linux 7 - $basearch
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/$basearch
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
+failovermethod=priority
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+
+[epel-debuginfo]
+name=Extra Packages for Enterprise Linux 7 - $basearch - Debug
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/$basearch/debug
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-7&arch=$basearch
+failovermethod=priority
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+gpgcheck=1
+
+[epel-source]
+name=Extra Packages for Enterprise Linux 7 - $basearch - Source
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/SRPMS
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-source-7&arch=$basearch
+failovermethod=priority
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+gpgcheck=1
 
 资源配置：
 https://docs.cloudera.com/documentation/enterprise/6/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
@@ -227,16 +259,13 @@ sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql nav nav Aa123#@!
 sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql navms navms Aa123#@!
 sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql oozie oozie Aa123#@!
 
-sudo sed -i "s;server_host=localhost;server_host=nns;g" /etc/cloudera-scm-agent/config.ini
-<!-- sudo vim /etc/cloudera-scm-agent/config.ini
-server_host=nns -->
-
 sudo systemctl enable cloudera-scm-server
 sudo systemctl start cloudera-scm-server
 #第一次启动会很慢
 sudo tail -n100 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
 
 #Working on all nodes
+sudo sed -i "s;server_host=localhost;server_host=nns;g" /etc/cloudera-scm-agent/config.ini
 sudo systemctl enable cloudera-scm-agent
 sudo systemctl start cloudera-scm-agent
 sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
