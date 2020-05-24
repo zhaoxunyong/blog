@@ -3,10 +3,10 @@ CDH 6
 https://www.staroon.dev/2017/11/05/SetEnv/
 https://blog.csdn.net/LCYong_/article/details/82385668
 
-mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
-mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
+sudo mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
+sudo mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
 
-sudo vim /etc/yum.repos.d/epel.repo:
+sudo vim /etc/yum.repos.d/epel.repo
 [epel]
 name=Extra Packages for Enterprise Linux 7 - $basearch
 baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/$basearch
@@ -34,6 +34,8 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 gpgcheck=1
 
+sudo yum install -y htop
+
 资源配置：
 https://docs.cloudera.com/documentation/enterprise/6/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
 https://docs.cloudera.com/documentation/enterprise/release-notes/topics/hardware_requirements_guide.html
@@ -50,6 +52,23 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled
 echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
 echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
 
+#Working on all nodes
+sudo su - hadoop
+ssh-keygen -t rsa
+#直接写入到nna的~/.ssh/authorized_keys中：
+ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@nna
+sudo chmod 700 ~/.ssh
+sudo chmod 600 ~/.ssh/authorized_keys
+并复制到所有机器
+scp ~/.ssh/authorized_keys hadoop@nns:~/.ssh/
+...
+
+sudo grep 'sshd' /var/log/secure | grep 'Authentication refused' | tail -5
+Authentication refused: bad ownership or modes for directory
+sudo chmod g-w ~/
+sudo chmod 700 ~/.ssh
+sudo chmod 600 ~/.ssh/authorized_keys
+
 NTP:
 #https://www.staroon.dev/2017/11/05/SetEnv/#%E9%85%8D%E7%BD%AEntp%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5
 https://blog.csdn.net/u010514380/article/details/88083139
@@ -58,7 +77,7 @@ sudo systemctl disable chronyd.service
 sudo systemctl stop chronyd.service
 sudo yum -y install ntp
 sudo timedatectl set-timezone Asia/Shanghai
-vim /etc/ntp.conf
+sudo vim /etc/ntp.conf
 restrict 0.0.0.0 mask 0.0.0.0 nomodify notrap
 server 127.127.1.0
 fudge  127.127.1.0 stratum 10
