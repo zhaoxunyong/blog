@@ -66,19 +66,6 @@ sudo route add default gw 192.168.80.254
 #每次重启都要删除
 sudo route del default gw 10.0.2.2
 
-
-sudo vagrant snapshot take nna nna_hadoopbase_snapshot
-sudo vagrant snapshot take nns nns_hadoopbase_snapshot
-sudo vagrant snapshot take dn1 dn1_hadoopbase_snapshot
-sudo vagrant snapshot take dn2 dn2_hadoopbase_snapshot
-sudo vagrant snapshot take dn3 dn3_hadoopbase_snapshot
-
-sudo vagrant snapshot take nna nna_hbase_snapshot
-sudo vagrant snapshot take nns nns_hbase_snapshot
-sudo vagrant snapshot take dn1 dn1_hbase_snapshot
-sudo vagrant snapshot take dn2 dn2_hbase_snapshot
-sudo vagrant snapshot take dn3 dn3_hbase_snapshot
-
 sudo vagrant snapshot save nna nna_kylin_snapshot
 sudo vagrant snapshot save nns nns_kylin_snapshot
 sudo vagrant snapshot save dn1 dn1_kylin_snapshot
