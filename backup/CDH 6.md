@@ -415,11 +415,15 @@ dfs.permissions.enabled 的值设置为false
 The required MAP capability is more than the supported max container capability in the cluster
 https://blog.csdn.net/weixin_33766168/article/details/93405662
 https://www.cnblogs.com/yako/p/5498168.html
-mapreduce.map.memory.mb=2G
-apreduce.reduce.memory.mb=3G
-yarn.scheduler.minimum-allocation-mb=2G
+https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
+说明：单个Map/Reduce task 申请的内存大小，其值应该在RM中的最大和最小container值之间。如果没有配置则通过如下简单公式获得：
+max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
+一般reduce内存大小应该是map的2倍。注：这两个值可以在应用启动时通过参数改变，可以动态调整；
 
-arn.scheduler.maximum-allocation-mb=6G
+mapreduce.map.memory.mb=2G
+mapreduce.reduce.memory.mb=4G
+yarn.scheduler.minimum-allocation-mb=1G
+yarn.scheduler.maximum-allocation-mb=6G
 
 yarn.scheduler.minimum-allocation-vcores=4
 yarn.scheduler.maximum-allocation-vcores=12
