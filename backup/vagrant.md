@@ -66,26 +66,20 @@ sudo route add default gw 192.168.80.254
 #每次重启都要删除
 sudo route del default gw 10.0.2.2
 
-sudo vagrant snapshot save nna nna_kylin_snapshot
-sudo vagrant snapshot save nns nns_kylin_snapshot
-sudo vagrant snapshot save dn1 dn1_kylin_snapshot
-sudo vagrant snapshot save dn2 dn2_kylin_snapshot
-sudo vagrant snapshot save dn3 dn3_kylin_snapshot
-sudo vagrant snapshot save kylin1 kylin1_kylin_snapshot
-
-
+80.196:
 sudo vagrant snapshot save nna nna_cdh6_snapshot
 sudo vagrant snapshot save nns nns_cdh6_snapshot
 sudo vagrant snapshot save dn1 dn1_cdh6_snapshot
 sudo vagrant snapshot save dn2 dn2_cdh6_snapshot
+
+80.201:
 sudo vagrant snapshot save dn3 dn3_cdh6_snapshot
+sudo vagrant snapshot save dn4 dn4_cdh6_snapshot
+sudo vagrant snapshot save kylin1 kylin1_cdh6_snapshot
+sudo vagrant snapshot save kylin2 kylin2_cdh6_snapshot
 
 sudo vagrant snapshot restore nna nna_kylin_snapshot
-sudo vagrant snapshot restore nns nns_kylin_snapshot
-sudo vagrant snapshot restore dn1 dn1_kylin_snapshot
-sudo vagrant snapshot restore dn2 dn2_kylin_snapshot
-sudo vagrant snapshot restore dn3 dn3_kylin_snapshot
-sudo vagrant snapshot restore kylin1 kylin1_kylin_snapshot
+...
 
 修改boxes的目录
 sudo vagrant halt
