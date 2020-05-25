@@ -104,12 +104,12 @@ vim ./hadoop-2.7.0/etc/hadoop/mapred-site.xml
     </property>
     <property>
         <name>mapreduce.map.java.opts</name>
-        <!--须小于mapreduce.map.memory.mb的值-->
+        <!--须小于mapreduce.map.memory.mb的值,一般设置为0.75倍的memory.mb，因为需要为java code等预留些空间-->
         <value>-Xmx2560m</value>
     </property>
     <property>
         <name>mapreduce.reduce.java.opts</name>
-        <!--须小于mapreduce.reduce.memory.mb的值-->
+        <!--须小于mapreduce.reduce.memory.mb的值,一般设置为0.75倍的memory.mb，因为需要为java code等预留些空间-->
         <value>-Xmx4608m</value>
     </property>
 

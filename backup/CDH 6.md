@@ -258,6 +258,7 @@ GRANT ALL ON sentry.* TO 'sentry'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON nav.* TO 'nav'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON navms.* TO 'navms'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON oozie.* TO 'oozie'@'%' IDENTIFIED BY 'Aa123#@!';
+#grant all privileges on *.* to root@'%' identified by 'Aa123#@!' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 exit
 
@@ -290,6 +291,30 @@ sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 http://nns:7180
 
+## Kylin
+
+cat /etc/profile.d/java.sh 
+export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
+export PATH=$JAVA_HOME/bin:$PATH
+
+cat /etc/profile.d/kylin.sh 
+export KYLIN_HOME=/works/kylin-3.0.2
+export PATH=$KYLIN_HOME/bin:$PATH
+
+cat /etc/profile.d/hbase.sh 
+export HBASE_HOME=/works/hbase-2.0.0
+export PATH=$HBASE_HOME/bin:$PATH
+
+cat /etc/profile.d/spark.sh 
+export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark/
+export PATH=$SPARK_HOME/bin:$PATH
+
+#Using hadoop account:
+sudo mkdir /works
+sudo chown -R hadoop:hadoop /works
+sudo mkdir -p /data/hbase
+sudo chown -R hadoop:hadoop /data/hbase
+
 
 ## Standalone HBase
 https://hbase.apache.org/book.html#quickstart
@@ -321,22 +346,6 @@ hbase-site.xml
   </property>
 </configuration>
 
-cat /etc/profile.d/java.sh 
-export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
-export PATH=$JAVA_HOME/bin:$PATH
-
-cat /etc/profile.d/kylin.sh 
-export KYLIN_HOME=/works/kylin-3.0.2
-export PATH=$KYLIN_HOME/bin:$PATH
-
-cat /etc/profile.d/spark.sh 
-export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark/
-export PATH=$SPARK_HOME/bin:$PATH
-
-#Using hadoop account:
-sudo mkdir -p /data/hbase
-sudo chown -R hadoop:hadoop /data/hbase
-
 start-hbase.sh 
 hbase shell
 create 'game_x_tmp', '_x'
@@ -344,6 +353,13 @@ put 'game_x_tmp', 'rowkey1', '_x', 'v1'
 scan 'game_x_tmp'
 disable 'game_x_tmp'
 drop 'game_x_tmp'
+
+修改hdfs任何用户可以写入：
+https://blog.csdn.net/Ahuuua/article/details/90669011
+1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
+2、添加这个，保存更改，重启hdfs
+HDFS Service Advanced Configuration Snippet (Safety Valve) for hdfs-site.xml中添加：
+dfs.permissions.enabled 的值设置为false
 
 echo "xxx" > hello.txt
 #上传本地文件到分布式文件系统中的 tmp 目录
@@ -362,8 +378,9 @@ lines.count()
 
 Kylin:
 mkdir -p /works/kylin-3.0.2/ext/
-cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar $KYLIN_HOME/ext/
-cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar $KYLIN_HOME/ext/
+sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+sudo chown -R hadoop:hadoop /works
 
 SQOOP:
 #Testing
@@ -406,11 +423,6 @@ kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://nna:8020/kylin/spa
 kylin.env.hadoop-conf-dir=/etc/hadoop/conf
 ----------------
 
-修改hdfs任何用户可以写入：
-https://blog.csdn.net/Ahuuua/article/details/90669011
-1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
-2、添加这个，保存更改，重启hdfs
-dfs.permissions.enabled 的值设置为false
 
 The required MAP capability is more than the supported max container capability in the cluster
 https://blog.csdn.net/weixin_33766168/article/details/93405662
@@ -420,19 +432,29 @@ https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc
 max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
 一般reduce内存大小应该是map的2倍。注：这两个值可以在应用启动时通过参数改变，可以动态调整；
 
+#https://blog.csdn.net/u014665013/article/details/80923044
+#https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
+#单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
 mapreduce.map.memory.mb=2G
 mapreduce.reduce.memory.mb=4G
+
+#就是你的这台服务器节点上准备分给yarn的内存
+yarn.nodemanager.resource.memory-mb=6G
+
+#单个任务可申请的最多物理内存量，默认是8192（MB）
 yarn.scheduler.minimum-allocation-mb=1G
 yarn.scheduler.maximum-allocation-mb=6G
 
-yarn.scheduler.minimum-allocation-vcores=4
+yarn.scheduler.minimum-allocation-vcores=1
 yarn.scheduler.maximum-allocation-vcores=12
+
+#cpu分配不平衡：
+https://blog.csdn.net/nazeniwaresakini/article/details/105137788
+yarn.scheduler.fair.maxassign=4
 
 #https://www.cnblogs.com/missie/p/4370135.html
 #表示该节点上YARN可使用的物理内存总量，默认是8192（MB），注意，如果你的节点内存资源不够8GB，则需要调减小这个值，而YARN不会智能的探测节点的物理内存总量。
-yarn.nodemanager.resource.memory-mb=5G
-#单个任务可申请的最多物理内存量，默认是8192（MB）。
-yarn.scheduler.maximum-allocation-mb=4G
+
 
 kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
 在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
@@ -448,6 +470,8 @@ kylin.engine.spark-conf.spark.driver.memory=1G
 kylin.engine.spark-conf.spark.executor.memory=2G
 #kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
 kylin.engine.spark-conf.spark.executor.cores=6
+
+http://kylin1:7070/kylin
 
 oozie:
 https://www.cnblogs.com/yinzhengjie/p/10934172.html
@@ -476,3 +500,7 @@ sqoop import-all-tables \
              --verbose
 
 sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 --username root --password Gk97TU6coSsvtipC9SB2
+
+/opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.196:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "Gk97TU6coSsvtipC9SB2" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dim_date\`.\`date_key\` as \`DIM_DATE_DATE_KEY\` ,\`dws_fin_loan_account_d\`.\`principal_balance_repay_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_repay_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_process_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_process_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_repay_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_REPAY_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_process_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_PROCESS_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_repay_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_REPAY_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_process_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_PROCESS_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2013-01-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-05-01')  AND \$CONDITIONS" --target-dir hdfs://nna:8020/kylin/kylin_metadata/kylin-351f6185-ce7d-b718-9fe9-143b77aafbcc/kylin_intermediate_dwh_cube_e38a3639_f8ae_7fcb_4129_b496a2b1ade8 --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2013-01-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-05-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
+
+/opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.196:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "Gk97TU6coSsvtipC9SB2" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dim_date\`.\`date_key\` as \`DIM_DATE_DATE_KEY\` ,\`dws_fin_loan_account_d\`.\`principal_balance_repay_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_repay_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_process_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_process_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_repay_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_REPAY_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_process_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_PROCESS_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_repay_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_REPAY_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_process_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_PROCESS_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-04-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-05-01')  AND \$CONDITIONS" --target-dir hdfs://nna:8020/kylin/kylin_metadata/kylin-ba600d98-71c5-9493-4efc-4bb5dca95d2b/kylin_intermediate_dwh_cube_939e12b0_7da7_cfb0_d64b_1de9e6ca82a1 --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-04-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-05-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
