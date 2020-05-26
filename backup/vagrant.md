@@ -48,14 +48,7 @@ sudo vagrant ssh dns2
 sudo vagrant ssh dns3
 
 sudo vagrant plugin install vagrant-vbox-snapshot
-sudo vagrant snapshot take nna nna_0427_snapshot
-sudo vagrant snapshot take nns nns_0427_snapshot
-sudo vagrant snapshot take dn1 dn1_0427_snapshot
-sudo vagrant snapshot take dn2 dn2_0427_snapshot
-sudo vagrant snapshot take dn3 dn3_0427_snapshot
-tqPAI1H24TYjR5H57bHF7xxRBoSZldSp
 sudo vagrant snapshot list nna
-sudo vagrant snapshot go nna nna_0427_snapshot
 
 #udo vagrant package --output centos-ready.box
 sudo vagrant package nna --output centos-ready.box
@@ -66,17 +59,16 @@ sudo route add default gw 192.168.80.254
 #每次重启都要删除
 sudo route del default gw 10.0.2.2
 
-80.196:
-sudo vagrant snapshot save nna nna_cdh6_snapshot
-sudo vagrant snapshot save nns nns_cdh6_snapshot
-sudo vagrant snapshot save dn1 dn1_cdh6_snapshot
-sudo vagrant snapshot save dn2 dn2_cdh6_snapshot
-
 80.201:
-sudo vagrant snapshot save dn3 dn3_cdh6_snapshot
-sudo vagrant snapshot save dn4 dn4_cdh6_snapshot
-sudo vagrant snapshot save kylin1 kylin1_cdh6_snapshot
-sudo vagrant snapshot save kylin2 kylin2_cdh6_snapshot
+sudo vagrant snapshot save nna nna_base_snapshot
+sudo vagrant snapshot save nns nns_base_snapshot
+sudo vagrant snapshot save dn1 dn1_base_snapshot
+sudo vagrant snapshot save dn2 dn2_base_snapshot
+
+80.196:
+sudo vagrant snapshot save kylin1 kylin1_base_snapshot
+sudo vagrant snapshot save dn3 dn3_base_snapshot
+sudo vagrant snapshot save dn4 dn4_base_snapshot
 
 sudo vagrant snapshot restore nna nna_kylin_snapshot
 ...

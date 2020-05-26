@@ -49,6 +49,13 @@ sysctl -p
 echo never > /sys/kernel/mm/transparent_hugepage/defrag
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
+dd if=/dev/zero of=/swapfile bs=1024 count=8388608
+chmod 0600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+swapon -s
+
 echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
 echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
 
@@ -162,8 +169,6 @@ cd /Developer/Kylin/
 python3 -m http.server 8900
 sudo su -
 
-yum remove epel-release -y
-
 cat > /etc/yum.repos.d/cloudera-repo.repo << EOF
 [cloudera-repo]
 name=cloudera-repo
@@ -195,11 +200,12 @@ sudo yum install cloudera-manager-daemons cloudera-manager-agent cloudera-manage
 cd /vagrant/CDH/6/rpm/
 sudo rpm -ivh oracle-j2sdk1.8-1.8.0+update181-1.x86_64.rpm
 
-#cloudera-scm-server
+#cloudera-scm-agent
 #Working on all nodes
 sudo rpm -ivh cloudera-manager-daemons-6.1.1-853290.el7.x86_64.rpm
 sudo yum localinstall cloudera-manager-agent-6.1.1-853290.el7.x86_64.rpm -y
 
+#cloudera-scm-server
 #Working on nns
 sudo rpm -ivh cloudera-manager-server-6.1.1-853290.el7.x86_64.rpm
 -------------------------------------
@@ -219,6 +225,7 @@ cd /vagrant/CDH/mysql
 sudo yum localinstall *.rpm -y
 
 #启动MySQL
+sudo systemctl enable mysqld
 sudo systemctl start mysqld
 #查看初始密码
 sudo grep 'temporary password' /var/log/mysqld.log
@@ -258,7 +265,7 @@ GRANT ALL ON sentry.* TO 'sentry'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON nav.* TO 'nav'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON navms.* TO 'navms'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON oozie.* TO 'oozie'@'%' IDENTIFIED BY 'Aa123#@!';
-#grant all privileges on *.* to root@'%' identified by 'Aa123#@!' WITH GRANT OPTION;
+grant all privileges on *.* to root@'%' identified by 'Aa123#@!' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 exit
 
@@ -291,62 +298,46 @@ sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 http://nns:7180
 
+<!-- sudo mkdir /data/
+/data/hbase
+/data/dfs/dn
+/data/dfs/snn
+/data/yarn/nm -->
+
 ## Kylin
-
-cat /etc/profile.d/java.sh 
+sudo su -
+cat > /etc/profile.d/kylin.sh << EOF
 export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
-export PATH=$JAVA_HOME/bin:$PATH
-
-cat /etc/profile.d/kylin.sh 
-export KYLIN_HOME=/works/kylin-3.0.2
-export PATH=$KYLIN_HOME/bin:$PATH
-
-cat /etc/profile.d/hbase.sh 
-export HBASE_HOME=/works/hbase-2.0.0
-export PATH=$HBASE_HOME/bin:$PATH
-
-cat /etc/profile.d/spark.sh 
 export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark/
-export PATH=$SPARK_HOME/bin:$PATH
+export HBASE_HOME=/opt/cloudera/parcels/CDH/lib/hbase/
+export KYLIN_HOME=/works/kylin-3.0.2
+export PATH=\$JAVA_HOME/bin:\$SPARK_HOME/bin:\$HBASE_HOME/bin:\$KYLIN_HOME/bin:$PATH
+EOF
 
-#Using hadoop account:
+. /etc/profile
+
+exit
+
 sudo mkdir /works
 sudo chown -R hadoop:hadoop /works
-sudo mkdir -p /data/hbase
-sudo chown -R hadoop:hadoop /data/hbase
+
+sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
+sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+
+cp -a /vagrant/soft/hadoop-2.7.7/share/hadoop/common/lib/commons-configuration-1.6.jar/works/kylin-3.0.2/tomcat/lib/
+
+kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
+在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
+kylin.env.hadoop-conf-dir=/etc/hadoop/conf
+
+java.lang.NoClassDefFoundError: org/apache/commons/configuration/ConfigurationException:
+https://www.hotbak.net/key/NoClassDefFoundError%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95KylinKylin%E7%9A%84%E4%B8%93%E6%A0%8FCSDN%E5%8D%9A%E5%AE%A2.html
+sudo find / -name "*commons-configuration*"
+cp -a /works/hbase-2.0.0.bak/lib/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/
 
 
-## Standalone HBase
-https://hbase.apache.org/book.html#quickstart
-Using hbase 2.0.0 and login with hdfs:
-hbase-site.xml
-<configuration>
-  <property>
-    <name>hbase.rootdir</name>
-    <value>file:///data/hbase</value>
-  </property>
-  <property>
-    <name>hbase.zookeeper.property.dataDir</name>
-    <value>/data/hbase/zookeeper</value>
-  </property>
-  <property>
-    <name>hbase.unsafe.stream.capability.enforce</name>
-    <value>false</value>
-    <description>
-      Controls whether HBase will check for stream capabilities (hflush/hsync).
 
-      Disable this if you intend to run on LocalFileSystem, denoted by a rootdir
-      with the 'file://' scheme, but be mindful of the NOTE below.
-
-      WARNING: Setting this to false blinds you to potential data loss and
-      inconsistent system state in the event of process and/or node failures. If
-      HBase is complaining of an inability to use hsync or hflush it's most
-      likely not a false positive.
-    </description>
-  </property>
-</configuration>
-
-start-hbase.sh 
+<!-- start-hbase.sh  -->
 hbase shell
 create 'game_x_tmp', '_x'
 put 'game_x_tmp', 'rowkey1', '_x', 'v1'
@@ -381,6 +372,22 @@ mkdir -p /works/kylin-3.0.2/ext/
 sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar $KYLIN_HOME/ext/
 sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
 sudo chown -R hadoop:hadoop /works
+
+http://kylin1:7070/kylin
+
+oozie:
+https://www.cnblogs.com/yinzhengjie/p/10934172.html
+https://blog.csdn.net/adshiye/article/details/84311890
+
+Failed to install Oozie ShareLib:
+cpu core not greate than..
+此时已经创建了oozie，新开一个窗口修改core后，再在此页面点击resume.
+
+hue:
+https://blog.csdn.net/gao123456789amy/article/details/79242713
+hue的时区zone修改为：
+Asia/Shanghai
+http://nns:8889
 
 SQOOP:
 #Testing
@@ -434,33 +441,32 @@ max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
 
 #https://blog.csdn.net/u014665013/article/details/80923044
 #https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
+#https://blog.csdn.net/mamls/article/details/68941800
+#https://www.cnblogs.com/missie/p/4370135.html
 #单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
-mapreduce.map.memory.mb=2G
-mapreduce.reduce.memory.mb=4G
+<!-- mapreduce.map.memory.mb=2G
+mapreduce.reduce.memory.mb=4G -->
 
 #就是你的这台服务器节点上准备分给yarn的内存
-yarn.nodemanager.resource.memory-mb=6G
+yarn.nodemanager.resource.memory-mb=12G
 
 #单个任务可申请的最多物理内存量，默认是8192（MB）
 yarn.scheduler.minimum-allocation-mb=1G
-yarn.scheduler.maximum-allocation-mb=6G
+#单个任务可申请的最多物理内存量，默认是8192（MB）
+yarn.scheduler.maximum-allocation-mb=12G
 
+#https://www.jianshu.com/p/d49135b0559f
+#表示该节点服务器上yarn可以使用的虚拟的CPU个数
+yarn.nodemanager.resource.cpu-vcores=12
+#表示单个任务最小可以申请的虚拟核心数，默认为1
 yarn.scheduler.minimum-allocation-vcores=1
+#表示单个任务最大可以申请的虚拟核数，默认为4；如果申请资源时，超过这个配置，会抛出 InvalidResourceRequestException
 yarn.scheduler.maximum-allocation-vcores=12
+
 
 #cpu分配不平衡：
 https://blog.csdn.net/nazeniwaresakini/article/details/105137788
 yarn.scheduler.fair.maxassign=4
-
-#https://www.cnblogs.com/missie/p/4370135.html
-#表示该节点上YARN可使用的物理内存总量，默认是8192（MB），注意，如果你的节点内存资源不够8GB，则需要调减小这个值，而YARN不会智能的探测节点的物理内存总量。
-
-
-kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
-在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
-kylin.env.hadoop-conf-dir=/etc/hadoop/conf
-
-
 
 ExecutorLostFailure (executor 1 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 5.0 GB of 5 GB physical memory used. Consider boosting spark.yarn.executor.memoryOverhead or disabling yarn.nodemanager.vmem-check-enabled because of YARN-4714.
 
@@ -471,23 +477,41 @@ kylin.engine.spark-conf.spark.executor.memory=2G
 #kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
 kylin.engine.spark-conf.spark.executor.cores=6
 
-http://kylin1:7070/kylin
+---------------------
+## Standalone HBase
+#Using hadoop account:
+sudo mkdir /works
+sudo chown -R hadoop:hadoop /works
+sudo mkdir -p /data/hbase
+sudo chown -R hadoop:hadoop /data/hbase
+https://hbase.apache.org/book.html#quickstart
+Using hbase 2.0.0 and login with hdfs:
+hbase-site.xml
+<configuration>
+  <property>
+    <name>hbase.rootdir</name>
+    <value>file:///data/hbase</value>
+  </property>
+  <property>
+    <name>hbase.zookeeper.property.dataDir</name>
+    <value>/data/hbase/zookeeper</value>
+  </property>
+  <property>
+    <name>hbase.unsafe.stream.capability.enforce</name>
+    <value>false</value>
+    <description>
+      Controls whether HBase will check for stream capabilities (hflush/hsync).
 
-oozie:
-https://www.cnblogs.com/yinzhengjie/p/10934172.html
-https://blog.csdn.net/adshiye/article/details/84311890
+      Disable this if you intend to run on LocalFileSystem, denoted by a rootdir
+      with the 'file://' scheme, but be mindful of the NOTE below.
 
-Failed to install Oozie ShareLib:
-cpu core not greate than..
-此时已经创建了oozie，新开一个窗口修改core后，再在此页面点击resume.
-
-hue:
-https://blog.csdn.net/gao123456789amy/article/details/79242713
-hue的时区zone修改为：
-Asia/Shanghai
-http://nns:8889
-
-cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+      WARNING: Setting this to false blinds you to potential data loss and
+      inconsistent system state in the event of process and/or node failures. If
+      HBase is complaining of an inability to use hsync or hflush it's most
+      likely not a false positive.
+    </description>
+  </property>
+</configuration>
 
 sqoop import-all-tables \
              --connect jdbc:mysql://192.168.80.196:3306/dwh \

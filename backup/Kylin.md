@@ -15,7 +15,7 @@ https://blog.csdn.net/qq_43147136/article/details/89189759
 MySQL: 
 mysql -uroot -h192.168.80.196 -pGk97TU6coSsvtipC9SB2
 
-/home/admin/sqoop-1.4.7/bin/sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 --username root --password Gk97TU6coSsvtipC9SB2
+/works/soft/sqoop-1.4.7/bin/sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 --username root --password Gk97TU6coSsvtipC9SB2
 
 https://www.cnblogs.com/chushiyaoyue/p/5707683.html
 
@@ -33,7 +33,7 @@ docker run -d \
 -p 8032:8032 \
 -p 8042:8042 \
 -p 16010:16010 \
-apachekylin/apache-kylin-standalone:3.0.1
+apachekylin/apache-kylin-standalone:3.0.2
 docker cp /etc/localtime kylin:/etc/localtime
 docker restart kylin
 docker exec -it kylin /bin/bash
@@ -54,7 +54,7 @@ tar zxvf Drivers/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz -C /home/admin/
 mv sqoop-1.4.7.bin__hadoop-2.6.0 sqoop-1.4.7
 
 vim /etc/profile
-export SQOOP_HOME=/home/admin/sqoop-1.4.7
+export SQOOP_HOME=/works/soft/sqoop-1.4.7
 export PATH=$SQOOP_HOME/bin:$PATH
 . /etc/profile
 
@@ -73,7 +73,7 @@ kylin.source.jdbc.driver=com.mysql.jdbc.Driver
 kylin.source.jdbc.dialect=mysql
 kylin.source.jdbc.user=root
 kylin.source.jdbc.pass=Gk97TU6coSsvtipC9SB2
-kylin.source.jdbc.sqoop-home=/home/admin/sqoop-1.4.7
+kylin.source.jdbc.sqoop-home=/works/soft/sqoop-1.4.7
 kylin.source.jdbc.filed-delimiter=|
 注意：修改以上jdbc配置，job需要删除并重新创建才能生效
 
@@ -378,6 +378,10 @@ start-dfs.sh
 #启动 YARN 服务进程
 start-yarn.sh
 
+#Working on nns:
+#同步 nna 节点元数据信息到 nns 节点
+#hdfs namenode -bootstrapStandby
+
 
 #Working on nns
 切换到 nns 节 点上并输入 j ps 命令查看相关的启动进程。如果发现只有 DFSZK
@@ -396,13 +400,13 @@ mr-jobhistory-daemon.sh start historyserver
 在当前节点的终端上输入 jps 命 令查看相关的服务进程,其 中包含 
 DFSZKFailoverController 、 NameNode 和 ResomceManager 服务进程。
 
-#同步 nna 节点元数据信息到 nns 节点
-#hdfs namenode -bootstrapStandby
 
 # Hadoop 访问地址
 http://nna:50070/
+http://nns:50070/
 #YARN (资源管理调度)访问地址
 http://nna:8188/
+http://nns:8188/
 
 https://www.jianshu.com/p/c44495a1004
 找到hadoop安装目录下 /works/hadoop/dfs/name/current里面的current文件夹删除
@@ -569,6 +573,7 @@ sqoop export -D sqoop.export.records.per.statement=100 \
 --batch --update-key uid --update-mode allowinsert
 
 -------------------------------------------
+#Working on all nodes:
 hbase:
 cd /works/soft
 scp -r dave@192.168.102.136:/Developer/Kylin/hbase-1.2.7-bin.tar.gz .
@@ -678,6 +683,8 @@ vim slaves
 
 scp -r /works/soft/spark-2.4.5 hadoop@dn2:/works/soft/
 scp -r /works/soft/spark-2.4.5 hadoop@dn3:/works/soft/
+
+#Working on dn1
 #Starting
 $SPARK_HOME/sbin/start-all.sh
 
@@ -695,12 +702,12 @@ lines.count()
 
 No live nodes contain current block Block locations: Dead nodes
 
-#Working on dn1/dn2/dn3
+<!-- #Working on dn1/dn2/dn3
 putting zookeeper.service to "/usr/lib/systemd/system"
 sudo scp dave@192.168.102.136:/Developer/Kylin/zookeeper.service /usr/lib/systemd/system/
 sudo chmod +x /usr/lib/systemd/system/zookeeper.service 
 sudo systemctl enable zookeeper
-sudo systemctl start zookeeper
+sudo systemctl start zookeeper -->
 
 ----------------------------------------------
 hive:
@@ -734,8 +741,8 @@ hdfs dfs -mkdir -p /works/tmp/hive/
 hdfs dfs -chmod 777 /works/hive/warehouse
 hdfs dfs -chmod 777 /works/tmp/hive
 
-#local on dn1/dn2/dn3
-<!-- ssh hadoop@dn1 "rm -fr /works/hive/"
+<!-- #local on dn1/dn2/dn3
+ssh hadoop@dn1 "rm -fr /works/hive/"
 ssh hadoop@dn2 "rm -fr /works/hive/"
 ssh hadoop@dn3 "rm -fr /works/hive/"
 
@@ -767,14 +774,14 @@ property.hive.log.dir = /works/soft/apache-hive-2.3.7/logs
 property.hive.log.file = hive.log
 
 MySQL创建hive用户
-sqoop import --connect jdbc:mysql://192.168.80.196:3306/dwh \
---username root --password Gk97TU6coSsvtipC9SB2 \
+<!-- sqoop import --connect jdbc:mysql://192.168.80.196:3306/dwh \
+--username root --password Gk97TU6coSsvtipC9SB2 \ -->
 
-mysql -uroot -h192.168.80.196 -pGk97TU6coSsvtipC9SB2
+>mysql -uroot -h192.168.80.196 -pGk97TU6coSsvtipC9SB2
 grant all privileges on *.* to hive@'%' identified by 'Aa654321';
 
-mysqladmin  -uroot -p -S /data/mydata/mysql.sock shutdown
-/works/app/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf --user=mysql --basedir=/works/app/mysql --datadir=/data/mydata &
+<!-- mysqladmin  -uroot -p -S /data/mydata/mysql.sock shutdown
+/works/app/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf --user=mysql --basedir=/works/app/mysql --datadir=/data/mydata & -->
 
 cd $HIVE_HOME/bin
 ./schematool -initSchema -dbType mysql
