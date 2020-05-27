@@ -77,7 +77,7 @@ kylin.source.jdbc.sqoop-home=/works/soft/sqoop-1.4.7
 kylin.source.jdbc.filed-delimiter=|
 注意：修改以上jdbc配置，job需要删除并重新创建才能生效
 
-vim ./hadoop-2.7.0/etc/hadoop/mapred-site.xml
+vim hadoop-2.7.0/etc/hadoop/mapred-site.xml
     <property>
         <name>mapreduce.jobhistory.address</name>
         <value>0.0.0.0:10020</value>
@@ -121,7 +121,7 @@ lsof -i:10020
 tail -n100 -f /home/admin/apache-kylin-3.0.1-bin-hbase1x/logs/kylin.log
 
 解决Extract Fact Table Distinct Columns卡死的问题：
-vim ./hadoop-2.7.0/etc/hadoop/yarn-site.xml
+vim hadoop-2.7.0/etc/hadoop/yarn-site.xml
     <!--<property>
         <name>yarn.nodemanager.resource.memory-mb</name>
         <value>6144</value>
@@ -912,6 +912,13 @@ http://nna:16010/master-status
 
 http://dn1:8080
 http://nna:1090/
+
+
+https://dongkelun.com/2018/05/06/sparkSubmitException/
+DatastoreDriverNotFoundException:
+解决方案 
+kylin1:
+cp -a /works/soft/apache-kylin-3.0.2/ext/mysql-connector-java-5.1.48-bin.jar $SPARK_HOME/jars/
 
 
 -----------------------------------------
