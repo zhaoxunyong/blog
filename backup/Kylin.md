@@ -1177,6 +1177,7 @@ scan 'game_x_tmp'
 disable 'game_x_tmp'
 drop 'game_x_tmp'
 
+kylin.engine.spark.rdd-partition-cut-mb=500
 
 
 Dimensions：
@@ -1196,3 +1197,4 @@ Measures：
 8	DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_INCOME_PROCESS_DEADLINE_AMOUNT
 
 13.03 mins
+
