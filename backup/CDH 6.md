@@ -324,7 +324,7 @@ sudo chown -R hadoop:hadoop /works
 sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
 sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
 
-cp -a /vagrant/soft/hadoop-2.7.7/share/hadoop/common/lib/commons-configuration-1.6.jar/works/kylin-3.0.2/tomcat/lib/
+cp -a /vagrant/soft/hadoop-2.7.7/share/hadoop/common/lib/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/
 
 kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
 在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
@@ -333,8 +333,6 @@ kylin.env.hadoop-conf-dir=/etc/hadoop/conf
 java.lang.NoClassDefFoundError: org/apache/commons/configuration/ConfigurationException:
 https://www.hotbak.net/key/NoClassDefFoundError%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95KylinKylin%E7%9A%84%E4%B8%93%E6%A0%8FCSDN%E5%8D%9A%E5%AE%A2.html
 sudo find / -name "*commons-configuration*"
-cp -a /works/hbase-2.0.0.bak/lib/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/
-
 
 
 <!-- start-hbase.sh  -->
