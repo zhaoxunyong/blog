@@ -1197,4 +1197,6 @@ Measures：
 8	DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_INCOME_PROCESS_DEADLINE_AMOUNT
 
 13.03 mins
-
+                 mapreducer/spark
+smaple_dwh_cube: 4.37 mins-5.00 KB/4.18 mins-5.00 KB
+dwh_cube:        71.45 mins-12.21 GB/
