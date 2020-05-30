@@ -1199,4 +1199,4 @@ Measures：
 13.03 mins
                  mapreducer/spark
 smaple_dwh_cube: 4.37 mins-5.00 KB/4.18 mins-5.00 KB
-dwh_cube:        71.45 mins-12.21 GB/
+dwh_cube:        71.45(65.58)mins-12.21 GB/
