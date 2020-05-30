@@ -1200,3 +1200,6 @@ Measures：
                  mapreducer/spark
 smaple_dwh_cube: 4.37 mins-5.00 KB/4.18 mins-5.00 KB
 dwh_cube:        71.45(65.58)mins-12.21 GB/
+
+
+Caused by: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 1.0 failed 4 times, most recent failure: Lost task 0.3 in stage 1.0 (TID 28, dn1, executor 4): ExecutorLostFailure (executor 4 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits.  5.0 GB of 5 GB physical memory used. Consider boosting spark.yarn.executor.memoryOverhead or disabling yarn.nodemanager.vmem-check-enabled because of YARN-4714.

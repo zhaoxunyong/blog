@@ -121,4 +121,26 @@ sudo vagrant ssh-config
   LogLevel FATAL
 
 
+https://askubuntu.com/questions/317338/how-can-i-increase-disk-size-on-a-vagrant-vm
+https://medium.com/@kanrangsan/how-to-automatically-resize-virtual-box-disk-with-vagrant-9f0f48aa46b3
+I found this simplest way to resolve this problem:
 
+Install this plugin: vagrant plugin install vagrant-disksize
+
+Edit the Vagrantfile:
+
+Vagrant.configure('2') do |config|
+  ...
+  config.vm.box = 'ubuntu/xenial64'
+  config.disksize.size = '50GB'
+  ...
+end
+vagrant halt && vagrant up
+
+Note: this will not work with vagrant reload
+
+Enter container:
+sudo parted /dev/sda resizepart 2 100%
+sudo pvresize /dev/sda2
+sudo lvextend -l +100%FREE /dev/centos/root
+sudo xfs_growfs /dev/centos/root
