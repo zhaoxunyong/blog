@@ -441,9 +441,6 @@ max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
 #https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
 #https://blog.csdn.net/mamls/article/details/68941800
 #https://www.cnblogs.com/missie/p/4370135.html
-#单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
-mapreduce.map.memory.mb=4G
-mapreduce.reduce.memory.mb=8G
 
 #就是你的这台服务器节点上准备分给yarn的内存
 yarn.nodemanager.resource.memory-mb=16G
@@ -452,6 +449,10 @@ yarn.nodemanager.resource.memory-mb=16G
 yarn.scheduler.minimum-allocation-mb=1G
 #单个任务可申请的最多物理内存量，默认是8192（MB）
 yarn.scheduler.maximum-allocation-mb=16G
+
+#单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
+mapreduce.map.memory.mb=4G
+mapreduce.reduce.memory.mb=8G
 
 #https://www.jianshu.com/p/d49135b0559f
 #表示该节点服务器上yarn可以使用的虚拟的CPU个数
