@@ -645,7 +645,95 @@ sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 --username root 
 /opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.196:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "Gk97TU6coSsvtipC9SB2" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dim_date\`.\`date_key\` as \`DIM_DATE_DATE_KEY\` ,\`dws_fin_loan_account_d\`.\`principal_balance_repay_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_repay_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_process_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_balance_process_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_repay_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_REPAY_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_process_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_PROCESS_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_repay_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_REPAY_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_income_process_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_INCOME_PROCESS_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-04-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-05-01')  AND \$CONDITIONS" --target-dir hdfs://nna:8020/kylin/kylin_metadata/kylin-ba600d98-71c5-9493-4efc-4bb5dca95d2b/kylin_intermediate_dwh_cube_939e12b0_7da7_cfb0_d64b_1de9e6ca82a1 --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-04-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-05-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
 
 
-export HADOOP_CONF_DIR=/etc/hadoop/conf && /opt/cloudera/parcels/CDH/lib/spark//bin/spark-submit --class org.apache.kylin.common.util.SparkEntry --name "Build Cube with Spark:dwh_cube_spark[20140101000000_20200501000000]" --conf spark.executor.cores=8  --conf spark.hadoop.yarn.timeline-service.enabled=false  --conf spark.hadoop.mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.DefaultCodec  --conf spark.master=yarn  --conf spark.hadoop.mapreduce.output.fileoutputformat.compress=true  --conf spark.executor.instances=1  --conf spark.executor.memory=8G  --conf spark.yarn.queue=default  --conf spark.submit.deployMode=cluster  --conf spark.dynamicAllocation.minExecutors=1  --conf spark.network.timeout=600  --conf spark.hadoop.dfs.replication=2  --conf spark.yarn.executor.memoryOverhead=1024  --conf spark.dynamicAllocation.executorIdleTimeout=300  --conf spark.history.fs.logDirectory=hdfs://nna/kylin/spark-history  --conf spark.driver.memory=4G  --conf spark.io.compression.codec=org.apache.spark.io.SnappyCompressionCodec  --conf spark.eventLog.enabled=true  --conf spark.shuffle.service.enabled=true  --conf spark.eventLog.dir=hdfs://nna/kylin/spark-history  --conf spark.dynamicAllocation.maxExecutors=1000  --conf spark.dynamicAllocation.enabled=true --jars /works/kylin-3.0.2/lib/kylin-job-3.0.2.jar /works/kylin-3.0.2/lib/kylin-job-3.0.2.jar -className org.apache.kylin.engine.spark.SparkCubingByLayer -hiveTable default.kylin_intermediate_dwh_cube_spark_86979e54_535a_730c_9320_0c2c75a0290c -output hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/dwh_cube_spark/cuboid/ -input hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/kylin_intermediate_dwh_cube_spark_86979e54_535a_730c_9320_0c2c75a0290c -segmentId 86979e54-535a-730c-9320-0c2c75a0290c -metaUrl kylin_metadata@hdfs,path=hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/dwh_cube_spark/metadata -cubename dwh_cube_spark
+export HADOOP_CONF_DIR=/etc/hadoop/conf && /opt/cloudera/parcels/CDH/lib/spark//bin/spark-submit --class org.apache.kylin.common.util.SparkEntry --name "Build Cube with Spark:dwh_cube_spark[20140101000000_20200501000000]" --conf spark.executor.cores=16  --conf spark.hadoop.yarn.timeline-service.enabled=false  --conf spark.hadoop.mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.DefaultCodec  --conf spark.master=yarn  --conf spark.hadoop.mapreduce.output.fileoutputformat.compress=true  --conf spark.executor.instances=1  --conf spark.executor.memory=4G  --conf spark.yarn.queue=default  --conf spark.submit.deployMode=cluster  --conf spark.dynamicAllocation.minExecutors=1  --conf spark.network.timeout=600  --conf spark.hadoop.dfs.replication=2 --conf spark.dynamicAllocation.executorIdleTimeout=300  --conf spark.history.fs.logDirectory=hdfs://nna/kylin/spark-history  --conf spark.driver.memory=2G  --conf spark.io.compression.codec=org.apache.spark.io.SnappyCompressionCodec  --conf spark.eventLog.enabled=true  --conf spark.shuffle.service.enabled=true  --conf spark.eventLog.dir=hdfs://nna/kylin/spark-history  --conf spark.dynamicAllocation.maxExecutors=1000  --conf spark.dynamicAllocation.enabled=true --jars /works/kylin-3.0.2/lib/kylin-job-3.0.2.jar /works/kylin-3.0.2/lib/kylin-job-3.0.2.jar -className org.apache.kylin.engine.spark.SparkCubingByLayer -hiveTable default.kylin_intermediate_dwh_cube_spark_86979e54_535a_730c_9320_0c2c75a0290c -output hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/dwh_cube_spark/cuboid/ -input hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/kylin_intermediate_dwh_cube_spark_86979e54_535a_730c_9320_0c2c75a0290c -segmentId 86979e54-535a-730c-9320-0c2c75a0290c -metaUrl kylin_metadata@hdfs,path=hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/dwh_cube_spark/metadata -cubename dwh_cube_spark
 
 
 export HADOOP_CONF_DIR=/etc/hadoop/conf && /opt/cloudera/parcels/CDH/lib/spark//bin/spark-submit --class org.apache.kylin.common.util.SparkEntry --name "Build Cube with Spark:dwh_cube_spark[20140101000000_20200501000000]" --conf spark.executor.instances=40  --conf spark.yarn.queue=default  --conf spark.history.fs.logDirectory=hdfs://nna/kylin/spark-history  --conf spark.master=yarn  --conf spark.hadoop.yarn.timeline-service.enabled=false  --conf spark.executor.memory=4G  --conf spark.eventLog.enabled=true  --conf spark.eventLog.dir=hdfs://nna/kylin/spark-history  --conf spark.yarn.executor.memoryOverhead=1024  --conf spark.driver.memory=2G  --conf spark.shuffle.service.enabled=true --jars /works/kylin-3.0.2/lib/kylin-job-3.0.2.jar /works/kylin-3.0.2/lib/kylin-job-3.0.2.jar -className org.apache.kylin.engine.spark.SparkCubingByLayer -hiveTable default.kylin_intermediate_dwh_cube_spark_86979e54_535a_730c_9320_0c2c75a0290c -output hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/dwh_cube_spark/cuboid/ -input hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/kylin_intermediate_dwh_cube_spark_86979e54_535a_730c_9320_0c2c75a0290c -segmentId 86979e54-535a-730c-9320-0c2c75a0290c -metaUrl kylin_metadata@hdfs,path=hdfs://nna:8020/kylin/kylin_metadata/kylin-da3ae210-822e-bc38-d246-ed3558a8dc71/dwh_cube_spark/metadata -cubename dwh_cube_spark
+
+
+SELECT
+tb.snap_date_key,
+COUNT(tb.contract_number) AS 'totalAccount',
+SUM(tb.principal_repay_balance_amount) AS 'total_principalBalance',
+SUM(tb.1_15_overdue_count) AS '1_15_overdue_count',
+SUM(tb.1_15_overdue_principalBalance) AS '1_15_overdue_principalBalance',
+SUM(tb.16_30_overdue_count) AS '16_30_overdue_count',
+SUM(tb.16_30_overdue_principalBalance) AS '16_30_overdue_principalBalance',
+SUM(tb.31_60_overdue_count) AS '31_60_overdue_count',
+SUM(tb.31_60_overdue_principalBalance) AS '31_60_overdue_principalBalance',
+SUM(tb.61_90_overdue_count) AS '61_90_overdue_count',
+SUM(tb.61_90_overdue_principalBalance) AS '61_90_overdue_principalBalance',
+SUM(tb.91_120_overdue_count) AS '91_120_overdue_count',
+SUM(tb.91_120_overdue_principalBalance) AS '91_120_overdue_principalBalance',
+SUM(tb.121_150_overdue_count) AS '121_150_overdue_count',
+SUM(tb.121_150_overdue_principalBalance) AS '121_150_overdue_principalBalance',
+SUM(tb.151_180_overdue_count) AS '151_180_overdue_count',
+SUM(tb.151_180_overdue_principalBalance) AS '151_180_overdue_principalBalance',
+SUM(tb.180_overdue_count) AS '180_overdue_count',
+SUM(tb.180_overdue_principalBalance) AS '180_overdue_principalBalance'
+FROM (
+SELECT
+tfa.snap_date_key,
+tfa.sid,
+tlc.contract_number,
+tlp.loan_product_name,
+tfa.principal_repay_balance_amount,
+tfa.overdue_repay_day_days,
+tfa.overdue_repay_amount,
+CASE WHEN tfa.overdue_repay_day_days < 1 THEN 1 
+    ELSE 0 END AS c_count,
+CASE WHEN tfa.overdue_repay_day_days < 1 THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS c_principalBalance,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 1 AND 15 ) THEN 1 
+    ELSE 0 END AS 1_15_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 1 AND 15 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 1_15_overdue_principalBalance,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 16 AND 30 ) THEN 1 
+    ELSE 0 END AS 16_30_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 16 AND 30 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 16_30_overdue_principalBalance,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 31 AND 60 ) THEN 1 
+    ELSE 0 END AS 31_60_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 31 AND 60 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 31_60_overdue_principalBalance,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 61 AND 90 ) THEN 1 
+    ELSE 0 END AS 61_90_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 61 AND 90 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 61_90_overdue_principalBalance,
+		CASE WHEN (tfa.overdue_repay_day_days BETWEEN 91 AND 120 ) THEN 1 
+    ELSE 0 END AS 91_120_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 91 AND 120 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 91_120_overdue_principalBalance,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 121 AND 150 ) THEN 1 
+    ELSE 0 END AS 121_150_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 121 AND 150 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 121_150_overdue_principalBalance,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 151 AND 180 ) THEN 1 
+    ELSE 0 END AS 151_180_overdue_count,
+CASE WHEN (tfa.overdue_repay_day_days BETWEEN 151 AND 180 ) THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 151_180_overdue_principalBalance,
+CASE WHEN tfa.overdue_repay_day_days > 180 THEN 1 
+    ELSE 0 END AS 180_overdue_count,
+CASE WHEN tfa.overdue_repay_day_days > 180 THEN tfa.overdue_repay_amount 
+    ELSE 0 END AS 180_overdue_principalBalance
+FROM 
+dws_fin_loan_account_d tfa
+LEFT JOIN
+dim_source_system tls ON tfa.source_system_id = tls.source_system_id
+LEFT JOIN
+dim_contract tlc ON tfa.contract_id = tlc.contract_id
+LEFT JOIN
+dim_loan_product tlp ON tfa.loan_product_id = tlp.loan_product_id
+LEFT JOIN
+ods_daystart_hk_cos.la_loan_account tla ON tfa.sid = tla.id
+WHERE
+tls.source_system = 'HK_COS'
+AND
+tfa.snap_date_key BETWEEN DATE_FORMAT('2020-05-19','%Y-%m-01') AND '2020-05-19'
+AND
+tfa.writeoff = '未核销'
+AND
+(tla.accountStatus = 'AC' 
+OR (tla.accountStatus <>'AC' AND DATE(tla.settleDate) > '2020-05-19'))
+) tb
+GROUP BY tb.snap_date_key
