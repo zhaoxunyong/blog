@@ -132,7 +132,7 @@ Edit the Vagrantfile:
 Vagrant.configure('2') do |config|
   ...
   config.vm.box = 'ubuntu/xenial64'
-  config.disksize.size = '50GB'
+  config.disksize.size = '150GB'
   ...
 end
 vagrant halt && vagrant up
@@ -140,7 +140,29 @@ vagrant halt && vagrant up
 Note: this will not work with vagrant reload
 
 Enter container:
+sudo parted /dev/sda print free
 sudo parted /dev/sda resizepart 2 100%
 sudo pvresize /dev/sda2
-sudo lvextend -l +100%FREE /dev/centos/root
-sudo xfs_growfs /dev/centos/root
+sudo lvextend -l +100%FREE /dev/mapper/centos-root
+sudo xfs_growfs /dev/mapper/centos-root
+
+
+Filesystem               Size  Used Avail Use% Mounted on
+devtmpfs                 7.8G     0  7.8G   0% /dev
+tmpfs                    7.8G     0  7.8G   0% /dev/shm
+tmpfs                    7.8G   17M  7.8G   1% /run
+tmpfs                    7.8G     0  7.8G   0% /sys/fs/cgroup
+/dev/mapper/centos-root   50G   15G   36G  29% /
+/dev/sda1               1014M   83M  932M   9% /boot
+/dev/mapper/centos-home   47G   44G  3.9G  92% /home
+cm_processes             7.8G  1.2M  7.8G   1% /run/cloudera-scm-agent/process
+vagrant                  883G  345G  539G  40% /vagrant
+tmpfs                    1.6G     0  1.6G   0% /run/user/1001
+
+
+192.168.100.100    root    wlt.local   32G/8Core
+192.168.100.31     root    wlt.local   62.5G/16Core
+192.168.108.100     root    wlt.local   32G/8Core
+192.168.80.94      root     V70TGPHUHWRBbjPncLvXlggeUlNhEncC
+192.168.80.201      root    tqPAI1H24TYjR5H57bHF7xxRBoSZldSp
+192.168.80.196      root    AsvpWKtDNoCFiLfVJMNsAni5RhAJcIz3

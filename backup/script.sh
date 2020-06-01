@@ -76,6 +76,7 @@ echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
 echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
 chmod +x /etc/rc.local
 chmod +x /etc/rc.d/rc.local
+systemctl enable rc-local.service
 
 #echo '192.168.10.6 k8s-master
 #192.168.10.7   k8s-node1

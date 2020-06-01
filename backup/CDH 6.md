@@ -6,33 +6,34 @@ https://blog.csdn.net/LCYong_/article/details/82385668
 sudo mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
 sudo mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
 
-sudo vim /etc/yum.repos.d/epel.repo
+cat > /etc/yum.repos.d/epel.repo  << EOF
 [epel]
-name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/$basearch
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
+name=Extra Packages for Enterprise Linux 7 - \$basearch
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/\$basearch
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=\$basearch
 failovermethod=priority
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
 [epel-debuginfo]
-name=Extra Packages for Enterprise Linux 7 - $basearch - Debug
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/$basearch/debug
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-7&arch=$basearch
+name=Extra Packages for Enterprise Linux 7 - \$basearch - Debug
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/\$basearch/debug
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-7&arch=\$basearch
 failovermethod=priority
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 gpgcheck=1
 
 [epel-source]
-name=Extra Packages for Enterprise Linux 7 - $basearch - Source
+name=Extra Packages for Enterprise Linux 7 - \$basearch - Source
 baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/SRPMS
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-source-7&arch=$basearch
+#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-source-7&arch=\$basearch
 failovermethod=priority
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 gpgcheck=1
+EOF
 
 sudo yum install -y htop
 
@@ -61,6 +62,7 @@ echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.loca
 
 chmod +x /etc/rc.local
 chmod +x /etc/rc.d/rc.local
+sudo systemctl enable rc-local.service
 
 #Working on all nodes
 sudo su - hadoop
@@ -323,6 +325,8 @@ exit
 
 sudo mkdir /works
 sudo chown -R hadoop:hadoop /works
+sudo mkdir -p /data/hbase
+sudo chown -R hadoop:hadoop /data
 
 sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
 sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
@@ -367,6 +371,10 @@ hdfs dfs -rm -r /works/hello.txt
 >spark-shell
 var lines=sc.textFile("/works/hello.txt")
 lines.count()
+
+Cannot run program "/etc/hadoop/conf.cloudera.yarn/topology.py"
+#Working on dn4:
+scp -r /etc/hadoop/conf.cloudera.yarn root@kylin1:/etc/hadoop/
 
 Kylin:
 mkdir -p /works/kylin-3.0.2/ext/
