@@ -59,6 +59,9 @@ swapon -s
 echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
 echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
 
+chmod +x /etc/rc.local
+chmod +x /etc/rc.d/rc.local
+
 #Working on all nodes
 sudo su - hadoop
 ssh-keygen -t rsa
