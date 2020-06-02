@@ -146,6 +146,8 @@ sudo pvresize /dev/sda2
 sudo lvextend -l +100%FREE /dev/mapper/centos-root
 sudo xfs_growfs /dev/mapper/centos-root
 
+https://www.cnblogs.com/liusingbon/p/12896370.html
+
 
 Filesystem               Size  Used Avail Use% Mounted on
 devtmpfs                 7.8G     0  7.8G   0% /dev
