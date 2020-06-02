@@ -121,11 +121,12 @@ sudo ntpstat
 
 Important: NFS Gateway/Hive Gateway/Spark Gateway：all nodes
 
-nna:  8G/4C
-nns:  16G/4C
-dn1:  8G/12C
-dn2:  8G/12C
-dn3:  8G/12C
+nna:  12G/4C
+nns:  16G/8C
+dn1:  16G/16C
+dn2:  16G/16C
+dn3:  16G/16C
+dn4:  16G/16C
 kylin: 16G/8C
 
 HDFS: 
