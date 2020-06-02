@@ -436,7 +436,17 @@ p.io.compress.DefaultCodec
 kylin.engine.spark-conf.spark.io.compression.codec=org.apache.spark.io.SnappyCompressionCodec
 kylin.engine.spark-conf.spark.eventLog.dir=hdfs\://nna:8020/kylin/spark-history
 kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://nna:8020/kylin/spark-history
+
 kylin.env.hadoop-conf-dir=/etc/hadoop/conf
+#kylin.job.mr.config.override.mapreduce.map.java.opts=-Xmx4g
+#kylin.job.mr.config.override.mapreduce.map.memory.mb=4500
+#kylin.job.mr.config.override.mapreduce.reduce.java.opts=-Xmx8g
+#kylin.job.mr.config.override.mapreduce.reduce.memory.mb=8500
+
+kylin.job.mapreduce.mapper.input.rows=500000
+kylin.job.mapreduce.default.reduce.input.mb=200
+kylin.hbase.region.cut=2
+kylin.hbase.hfile.size.gb=1
 ----------------
 
 
@@ -465,6 +475,12 @@ yarn.scheduler.maximum-allocation-mb=16G
 mapreduce.map.memory.mb=4G
 mapreduce.reduce.memory.mb=8G
 
+Java Heap Size of NameNode in Bytes： 1G
+Cloudera Management Service:
+Maximum Non-Java Memory of Service Monitor: 12G
+Maximum Non-Java Memory of Host Monitor: 12G
+Java Heap Size of Service Monitor in Bytes: 1G
+
 #https://www.jianshu.com/p/d49135b0559f
 #表示该节点服务器上yarn可以使用的虚拟的CPU个数
 yarn.nodemanager.resource.cpu-vcores=16
@@ -475,6 +491,16 @@ yarn.scheduler.maximum-allocation-vcores=16
 #cpu分配不平衡
 yarn.scheduler.fair.maxassign=4
 
+清理空间：
+http://kylin.apache.org/cn/docs/howto/howto_cleanup_storage.html
+${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete false
+${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete true
+如果您想要删除所有资源；可添加 “–force true” 选项：
+${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --force true --delete true
+https://www.csdn.net/gather_26/MtTaEgzsMjI1MC1ibG9n.html
+metastore.sh clean --delete true
+hdfs dfs -rm -r -skipTrash /hbase/archive/data/default/KYLIN_DPIQ6EHGZK
+hdfs dfs -expunge
 
 #cpu分配不平衡：
 https://blog.csdn.net/nazeniwaresakini/article/details/105137788
@@ -483,11 +509,6 @@ yarn.scheduler.fair.maxassign=4
 ExecutorLostFailure (executor 1 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 5.0 GB of 5 GB physical memory used. Consider boosting spark.yarn.executor.memoryOverhead or disabling yarn.nodemanager.vmem-check-enabled because of YARN-4714.
 
 Exception in thread "main" java.lang.IllegalArgumentException: Required executor memory (4096), overhead (4096 MB), and PySpark memory (0 MB) is above the max threshold (6144 MB) of this cluster! Please check the values of 'yarn.scheduler.maximum-allocation-mb' and/or 'yarn.nodemanager.resource.memory-mb'.
-
-kylin.engine.spark-conf.spark.driver.memory=1G
-kylin.engine.spark-conf.spark.executor.memory=2G
-#kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
-kylin.engine.spark-conf.spark.executor.cores=6
 
 <!-- kylin spark Container killed on request. Exit code is 143
 https://blog.csdn.net/yijichangkong/article/details/51332432 -->
@@ -582,29 +603,6 @@ kylin_job_conf_inmem.xml
         <value>200</value>
         <description></description>
     </property>
-
-kylin.properties:
-kylin.source.default=8
-kylin.source.jdbc.connection-url=jdbc:mysql://192.168.80.196:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=500&useCursorFetch=true
-kylin.source.jdbc.driver=com.mysql.jdbc.Driver
-kylin.source.jdbc.dialect=mysql
-kylin.source.jdbc.user=root
-kylin.source.jdbc.pass=Gk97TU6coSsvtipC9SB2
-kylin.source.jdbc.sqoop-home=/opt/cloudera/parcels/CDH/lib/sqoop
-kylin.source.jdbc.filed-delimiter=|
-
-kylin.env.hadoop-conf-dir=/etc/hadoop/conf
-#kylin.job.mr.config.override.mapreduce.map.java.opts=-Xmx4g
-#kylin.job.mr.config.override.mapreduce.map.memory.mb=4500
-#kylin.job.mr.config.override.mapreduce.reduce.java.opts=-Xmx8g
-#kylin.job.mr.config.override.mapreduce.reduce.memory.mb=8500
-
-kylin.job.mapreduce.mapper.input.rows=500000
-kylin.job.mapreduce.default.reduce.input.mb=200
-kylin.hbase.region.cut=2
-kylin.hbase.hfile.size.gb=1
-
-
 
 ---------------------
 ## Standalone HBase
