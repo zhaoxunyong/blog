@@ -3,66 +3,12 @@ CDH 6
 https://www.staroon.dev/2017/11/05/SetEnv/
 https://blog.csdn.net/LCYong_/article/details/82385668
 
-sudo mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
-sudo mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
-
-cat > /etc/yum.repos.d/epel.repo  << EOF
-[epel]
-name=Extra Packages for Enterprise Linux 7 - \$basearch
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/\$basearch
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=\$basearch
-failovermethod=priority
-enabled=1
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-
-[epel-debuginfo]
-name=Extra Packages for Enterprise Linux 7 - \$basearch - Debug
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/\$basearch/debug
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-7&arch=\$basearch
-failovermethod=priority
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-gpgcheck=1
-
-[epel-source]
-name=Extra Packages for Enterprise Linux 7 - \$basearch - Source
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/SRPMS
-#mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-source-7&arch=\$basearch
-failovermethod=priority
-enabled=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-gpgcheck=1
-EOF
-
-sudo yum install -y htop
-
 资源配置：
 https://docs.cloudera.com/documentation/enterprise/6/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
 https://docs.cloudera.com/documentation/enterprise/release-notes/topics/hardware_requirements_guide.html
 https://docs.cloudera.com/cdpdc/7.0/release-guide/topics/cdpdc-hardware-requirements.html
 
 #Working all
-sudo su -
-echo "vm.swappiness = 10" >> /etc/sysctl.conf
-sysctl -p
-
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-
-dd if=/dev/zero of=/swapfile bs=1024 count=8388608
-chmod 0600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo '/swapfile none swap sw 0 0' >> /etc/fstab
-swapon -s
-
-echo "echo never > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
-echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled"  >> /etc/rc.local
-
-chmod +x /etc/rc.local
-chmod +x /etc/rc.d/rc.local
-sudo systemctl enable rc-local.service
 
 #Working on all nodes
 sudo su - hadoop

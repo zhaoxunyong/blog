@@ -32,7 +32,7 @@ centos:centos7 \
 
 cd vagrant
 sudo vagrant box remove centos7
-sudo vagrant box add centos7 centos-ready.box
+sudo vagrant box add centos7 centos7-0.0.99.box
 sudo vagrant box list
 #sudo vagrant init centos7
 sudo vagrant up
@@ -85,6 +85,7 @@ export VAGRANT_HOME='/data/vagrant'
 export VAGRANT_DISABLE_VBOXSYMLINKCREATE=1
 
 #VBoxManage setproperty machinefolder  /data/vagrant/
+sudo mkdir -p "/data/vagrant/VirtualBox VMs"
 cp -a "/root/VirtualBox VMs" "/data/vagrant/VirtualBox VMs"
 sudo ln -s "/data/vagrant/VirtualBox VMs" "/root/VirtualBox VMs"
 mv "/root/VirtualBox VMs" "/root/VirtualBox VMs.bak"
@@ -146,7 +147,26 @@ sudo pvresize /dev/sda2
 sudo lvextend -l +100%FREE /dev/mapper/centos-root
 sudo xfs_growfs /dev/mapper/centos-root
 
+合并home到root：
 https://www.cnblogs.com/liusingbon/p/12896370.html
+#!/bin/bash
+
+cd /
+sudo tar -cvf /mnt/home.tar /home
+sudo fuser -km /home
+sudo umount /home
+sudo lvremove /dev/centos/home
+sudo vgdisplay
+#sudo vim /etc/fstab : Disable /dev/mapper/centos-home mount
+sudo sed -i "s;/dev/mapper/centos-home;#/dev/mapper/centos-home;" /etc/fstab
+sudo lvdisplay
+sudo parted /dev/sda print free
+sudo parted /dev/sda resizepart 2 100%
+sudo pvresize /dev/sda2
+sudo lvextend -l +100%FREE /dev/mapper/centos-root
+sudo xfs_growfs /dev/mapper/centos-root
+sudo tar -xvf /mnt/home.tar -C /
+#reboot system to take affect
 
 
 Filesystem               Size  Used Avail Use% Mounted on
@@ -162,9 +182,12 @@ vagrant                  883G  345G  539G  40% /vagrant
 tmpfs                    1.6G     0  1.6G   0% /run/user/1001
 
 
-192.168.100.100    root    wlt.local   32G/8Core
-192.168.100.31     root    wlt.local   62.5G/16Core
-192.168.108.100     root    wlt.local   32G/8Core
-192.168.80.94      root     V70TGPHUHWRBbjPncLvXlggeUlNhEncC
-192.168.80.201      root    tqPAI1H24TYjR5H57bHF7xxRBoSZldSp
-192.168.80.196      root    AsvpWKtDNoCFiLfVJMNsAni5RhAJcIz3
+192.168.100.100    root    wlt.local   32G/8Core     Master Host 1/Utility Host 1
+192.168.108.100    root    wlt.local   32G/8Core     Master Host 2/Gateway Hosts 1
+192.168.80.94      root                32G/8Core     Master Host 2/Gateway Hosts 1
+
+
+192.168.100.31     root    wlt.local   64G/16Core
+
+192.168.80.201      root    tqPAI1H24TYjR5H57bHF7xxRBoSZldSp   64G/48Core
+192.168.80.196      root    AsvpWKtDNoCFiLfVJMNsAni5RhAJcIz3   64G/48Core

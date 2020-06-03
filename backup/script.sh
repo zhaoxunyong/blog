@@ -91,6 +91,9 @@ wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-
 
 yum -y install epel-release
 
+sudo mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
+sudo mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
+
 cat > /etc/yum.repos.d/epel.repo  << EOF
 [epel]
 name=Extra Packages for Enterprise Linux 7 - \$basearch
@@ -123,21 +126,21 @@ EOF
 yum clean all
 yum makecache
 
-sudo yum install -y htop
+yum install -y htop
 
-sudo systemctl disable chronyd.service
-sudo systemctl stop chronyd.service
-sudo yum -y install ntp
-sudo timedatectl set-timezone Asia/Shanghai
-sudo systemctl enable ntpd
-sudo systemctl start ntpd
+systemctl disable chronyd.service
+systemctl stop chronyd.service
+yum -y install ntp
+timedatectl set-timezone Asia/Shanghai
+systemctl enable ntpd
+systemctl start ntpd
 
 #yum -y install createrepo rpm-sign rng-tools yum-utils 
 yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-securitylevel-tui system-config-network-tui \
 ntsysv net-tools lrzsz bridge-utils \
 htop telnet lsof vim dos2unix unix2dos zip unzip lsof
 yum install psmisc -y
-sudo systemctl enable sshd
+systemctl enable sshd
 
 # mkdir -p /works/soft
 # cd /works/soft
@@ -149,3 +152,13 @@ sudo systemctl enable sshd
 # EOF
 
 # . /etc/profile
+
+#Swap
+# dd if=/dev/zero of=/swapfile bs=1024 count=8388608
+# chmod 0600 /swapfile
+# mkswap /swapfile
+# swapon /swapfile
+# echo '/swapfile none swap sw 0 0' >> /etc/fstab
+# swapon -s
+
+
