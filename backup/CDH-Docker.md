@@ -10,13 +10,6 @@ centos:centos7 \
 /bin/bash -c "tail -n100 -f /var/log/yum.log"
 
 docker run -d \
--m 16G --cpus=8 \
---name nns \
--p 7180:7180 -p 8889:8889 -p 50070:50070 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
-
-docker run -d \
 -m 16G --cpus=16 \
 --name dn1 \
 centos:centos7 \
@@ -27,6 +20,35 @@ docker run -d \
 --name dn2 \
 centos:centos7 \
 /bin/bash -c "tail -n100 -f /var/log/yum.log"
+
+docker run -d \
+-m 16G --cpus=16 \
+--name dn3 \
+centos:centos7 \
+/bin/bash -c "tail -n100 -f /var/log/yum.log"
+
+-------------
+
+
+docker run -d \
+-m 16G --cpus=8 \
+--name nns \
+-p 7180:7180 -p 8889:8889 -p 50070:50070 \
+centos:centos7 \
+/bin/bash -c "tail -n100 -f /var/log/yum.log"
+
+docker run -d \
+-m 16G --cpus=16 \
+--name dn4 \
+centos:centos7 \
+/bin/bash -c "tail -n100 -f /var/log/yum.log"
+
+docker run -d \
+-m 16G --cpus=16 \
+--name dn5 \
+centos:centos7 \
+/bin/bash -c "tail -n100 -f /var/log/yum.log"
+
 
 cm-server:7180
 kylin:7070
