@@ -85,8 +85,27 @@ systemctl daemon-reload
 systemctl enable docker
 systemctl restart docker
 
+docker build -t dave/cdh:base ./
 
 test:
 docker run -it --rm --name centos centos bash
-docker run -it --rm --privileged --name myCentos centos /usr/sbin/init
+
+https://blog.csdn.net/baidu_38558076/article/details/103890319
+docker run -tid --name centos --privileged=true centos /sbin/init
+docker exec -it centos bash
+$ yum install -y lsof openssl openssh-server
+$ systemctl start sshd
 进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
+
+
+docker run -tid --name centos --privileged=true dave/hadoop:base /sbin/init
+
+docker run -d \
+-m 16G --cpus=12 \
+--name dn4 \
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+--privileged=true \
+centos:centos7 /sbin/init
+
+yum install sudo openssh-clients -y

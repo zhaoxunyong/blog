@@ -8,86 +8,96 @@ sudo mkdir -p /data/cdh
 10.244.62.2
 docker run -d \
 -m 8G --cpus=4 \
---name master1 \
+-h master1 --name master1 \
 -p 50070:50070 -p 8088:8088 -p 19888:19888 \
 -v /home/dev/vagrant:/vagrant \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.62.3
 docker run -d \
 -m 16G --cpus=12 \
---name dn1 \
+-h dn1 --name dn1 \
 -v /home/dev/vagrant:/vagrant \
 -v /data/cdh:/data/cdh \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.62.4
 docker run -d \
 -m 16G --cpus=12 \
---name dn2 \
+-h dn2 --name dn2 \
 -v /home/dev/vagrant:/vagrant \
 -v /data/cdh:/data/cdh \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.62.5
 docker run -d \
 -m 16G --cpus=12 \
---name dn3 \
+-h dn3 --name dn3 \
 -v /home/dev/vagrant:/vagrant \
 -v /data/cdh:/data/cdh \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 80.196:64G/48Core
 -------------
 10.244.54.2
 docker run -d \
 -m 8G --cpus=4 \
---name master2 \
+-h master2 --name master2 \
 -v /home/dev/vagrant:/vagrant \
 -p 7180:7180 -p 8889:8889 -p 50070:50070 \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.54.3
 docker run -d \
 -m 16G --cpus=12 \
---name dn4 \
+-h dn4 --name dn4 \
 -v /home/dev/vagrant:/vagrant \
 -v /data/cdh:/data/cdh \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.54.4
 docker run -d \
 -m 16G --cpus=12 \
---name dn5 \
+-h dn5 --name dn5 \
 -v /home/dev/vagrant:/vagrant \
 -v /data/cdh:/data/cdh \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.54.5
 docker run -d \
 -m 16G --cpus=12 \
---name dn6 \
+-h dn6 --name dn6 \
 -v /home/dev/vagrant:/vagrant \
 -v /data/cdh:/data/cdh \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 89.94:32G/8Core
 -------------
 10.244.46.2
 docker run -d \
 -m 8G --cpus=4 \
---name master3 \
+-h master3 --name master3 \
 -v /home/dev/vagrant:/vagrant \
 -p 7180:7180 -p 8889:8889 -p 50070:50070 \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 10.244.46.3
 docker run -d \
 -m 24G --cpus=4 \
---name kylin \
+-h kylin --name kylin \
 -v /home/dev/vagrant:/vagrant \
 -p 7070:7070 \
-dave/hadoop:base
+--privileged=true \
+dave/cdh:base /sbin/init
 
 
 cm-server:7180
