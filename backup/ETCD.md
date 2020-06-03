@@ -87,5 +87,6 @@ systemctl restart docker
 
 
 test:
-docker run -it --rm --name centos centos:centos7 bash
+docker run -it --rm --name centos centos bash
+docker run -it --rm --privileged --name myCentos centos /usr/sbin/init
 进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。

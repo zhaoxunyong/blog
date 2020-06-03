@@ -9,6 +9,8 @@ filepath=/vagrant
 bip=$1
 hostname=$2
 
+yum install -y wget
+
 if [[ "$hostname" != "" ]]; then
   hostnamectl --static set-hostname $hostname
   sysctl kernel.hostname=$hostname
@@ -138,9 +140,10 @@ systemctl start ntpd
 #yum -y install createrepo rpm-sign rng-tools yum-utils 
 yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-securitylevel-tui system-config-network-tui \
 ntsysv net-tools lrzsz bridge-utils \
-htop telnet lsof vim dos2unix unix2dos zip unzip lsof
+htop telnet lsof vim dos2unix unix2dos zip unzip lsof openssl openssh-server
 yum install psmisc -y
 systemctl enable sshd
+systemctl start sshd
 
 # mkdir -p /works/soft
 # cd /works/soft

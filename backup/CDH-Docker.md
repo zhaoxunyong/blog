@@ -1,53 +1,93 @@
 https://blog.csdn.net/xu470438000/article/details/50512442
 https://www.cnblogs.com/Jing-Wang/p/10672609.html
 
+sudo mkdir -p /data/cdh
+
+80.201:64G/48Core
+------------------------
+10.244.62.2
 docker run -d \
--m 12G --cpus=4 \
---name nna \
+-m 8G --cpus=4 \
+--name master1 \
 -p 50070:50070 -p 8088:8088 -p 19888:19888 \
 -v /home/dev/vagrant:/vagrant \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+dave/hadoop:base
 
+10.244.62.3
 docker run -d \
--m 16G --cpus=16 \
+-m 16G --cpus=12 \
 --name dn1 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+dave/hadoop:base
 
+10.244.62.4
 docker run -d \
--m 16G --cpus=16 \
+-m 16G --cpus=12 \
 --name dn2 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+dave/hadoop:base
 
+10.244.62.5
 docker run -d \
--m 16G --cpus=16 \
+-m 16G --cpus=12 \
 --name dn3 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+dave/hadoop:base
 
+80.196:64G/48Core
 -------------
-
-
+10.244.54.2
 docker run -d \
--m 16G --cpus=8 \
---name nns \
+-m 8G --cpus=4 \
+--name master2 \
+-v /home/dev/vagrant:/vagrant \
 -p 7180:7180 -p 8889:8889 -p 50070:50070 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+dave/hadoop:base
 
+10.244.54.3
 docker run -d \
--m 16G --cpus=16 \
+-m 16G --cpus=12 \
 --name dn4 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+dave/hadoop:base
 
+10.244.54.4
 docker run -d \
--m 16G --cpus=16 \
+-m 16G --cpus=12 \
 --name dn5 \
-centos:centos7 \
-/bin/bash -c "tail -n100 -f /var/log/yum.log"
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+dave/hadoop:base
+
+10.244.54.5
+docker run -d \
+-m 16G --cpus=12 \
+--name dn6 \
+-v /home/dev/vagrant:/vagrant \
+-v /data/cdh:/data/cdh \
+dave/hadoop:base
+
+89.94:32G/8Core
+-------------
+10.244.46.2
+docker run -d \
+-m 8G --cpus=4 \
+--name master3 \
+-v /home/dev/vagrant:/vagrant \
+-p 7180:7180 -p 8889:8889 -p 50070:50070 \
+dave/hadoop:base
+
+10.244.46.3
+docker run -d \
+-m 24G --cpus=4 \
+--name kylin \
+-v /home/dev/vagrant:/vagrant \
+-p 7070:7070 \
+dave/hadoop:base
 
 
 cm-server:7180
