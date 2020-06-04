@@ -1,7 +1,7 @@
 https://blog.csdn.net/xu470438000/article/details/50512442
 https://www.cnblogs.com/Jing-Wang/p/10672609.html
 
-sudo mkdir -p /data/cdh
+sudo mkdir -p /cdh
 
 80.201:64G/48Core
 ------------------------
@@ -19,7 +19,7 @@ docker run -d \
 -m 16G --cpus=12 \
 -h dn1 --name dn1 \
 -v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
+-v /cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -28,7 +28,7 @@ docker run -d \
 -m 16G --cpus=12 \
 -h dn2 --name dn2 \
 -v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
+-v /cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -37,7 +37,7 @@ docker run -d \
 -m 16G --cpus=12 \
 -h dn3 --name dn3 \
 -v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
+-v /cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -57,7 +57,7 @@ docker run -d \
 -m 16G --cpus=12 \
 -h dn4 --name dn4 \
 -v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
+-v /cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -66,7 +66,7 @@ docker run -d \
 -m 16G --cpus=12 \
 -h dn5 --name dn5 \
 -v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
+-v /cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -75,7 +75,7 @@ docker run -d \
 -m 16G --cpus=12 \
 -h dn6 --name dn6 \
 -v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
+-v /cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -83,7 +83,7 @@ dave/cdh:base /sbin/init
 -------------
 10.244.46.2
 docker run -d \
--m 8G --cpus=4 \
+-m 16G --cpus=4 \
 -h master3 --name master3 \
 -v /home/dev/vagrant:/vagrant \
 -p 7180:7180 -p 8889:8889 -p 50070:50070 \
@@ -92,7 +92,7 @@ dave/cdh:base /sbin/init
 
 10.244.46.3
 docker run -d \
--m 24G --cpus=4 \
+-m 16G --cpus=4 \
 -h kylin --name kylin \
 -v /home/dev/vagrant:/vagrant \
 -p 7070:7070 \
@@ -120,4 +120,39 @@ dn4:  16G/16C
 kylin: 16G/8C
 
 
-docker build -t dave/hadoop:base ./
+docker build -t dave/cdh:base ./
+
+test:
+docker run -it --rm --name centos centos bash
+进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
+https://blog.csdn.net/baidu_38558076/article/details/103890319
+
+cat Dockerfile 
+# Version: 1.0.0
+FROM centos:centos7 
+MAINTAINER dave.zhao@zerofinance.com
+
+VOLUME [ "/data", "/works" ]
+RUN mkdir -p /works/shell
+COPY script.sh /works/shell/ 
+
+WORKDIR /works/shell/
+RUN bash script.sh
+
+#ENTRYPOINT [ "redis-server", "--protected-mode", "no", "--logfile", "/var/log/redis/redis-server.log" ]
+#ENTRYPOINT [ "tail" ]
+#CMD ["-f", "no", "/var/log/yum.log"]
+
+#EXPOSE 6379
+
+
+https://archive.cloudera.com/cm6/6.1.1/
+
+yum install -y openssh-server openssh-clients initscripts rpcbind
+systemctl enable rpcbind ; systemctl start rpcbind
+
+流量再从flannel出去，其他host上看到的source ip就是flannel的网关ip
+https://www.cnblogs.com/wjoyxt/p/9970837.html
+https://github.com/coreos/flannel/issues/117
+/usr/lib/systemd/system/docker.service
+ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS --ip-masq=false

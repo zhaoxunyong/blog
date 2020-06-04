@@ -149,9 +149,11 @@ systemctl start ntpd
 #yum -y install createrepo rpm-sign rng-tools yum-utils 
 yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-securitylevel-tui system-config-network-tui \
 ntsysv net-tools lrzsz bridge-utils \
-htop telnet lsof vim dos2unix unix2dos zip unzip lsof openssl openssh-server openssh-clients
+htop telnet lsof vim dos2unix unix2dos zip unzip \
+lsof openssl openssh-server openssh-clients initscripts
 yum install psmisc -y
 systemctl enable sshd
+systemctl enable rpcbind
 
 # mkdir -p /works/soft
 # cd /works/soft

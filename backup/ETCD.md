@@ -77,7 +77,7 @@ systemctl enable flanneld
 systemctl start flanneld
 systemctl status flanneld
 
-sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
+sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS --ip-masq=false;g' \
 /usr/lib/systemd/system/docker.service
 
 #重启docker服务
@@ -85,27 +85,3 @@ systemctl daemon-reload
 systemctl enable docker
 systemctl restart docker
 
-docker build -t dave/cdh:base ./
-
-test:
-docker run -it --rm --name centos centos bash
-
-https://blog.csdn.net/baidu_38558076/article/details/103890319
-docker run -tid --name centos --privileged=true centos /sbin/init
-docker exec -it centos bash
-$ yum install -y lsof openssl openssh-server
-$ systemctl start sshd
-进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
-
-
-docker run -tid --name centos --privileged=true dave/hadoop:base /sbin/init
-
-docker run -d \
--m 16G --cpus=12 \
---name dn4 \
--v /home/dev/vagrant:/vagrant \
--v /data/cdh:/data/cdh \
---privileged=true \
-centos:centos7 /sbin/init
-
-yum install sudo openssh-clients -y

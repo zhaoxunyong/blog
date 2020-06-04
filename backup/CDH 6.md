@@ -243,7 +243,7 @@ sudo systemctl start cloudera-scm-server
 sudo tail -n100 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
 
 #Working on all nodes
-sudo sed -i "s;server_host=localhost;server_host=nns;g" /etc/cloudera-scm-agent/config.ini
+sudo sed -i "s;server_host=.*;server_host=nns;g" /etc/cloudera-scm-agent/config.ini
 sudo systemctl enable cloudera-scm-agent
 sudo systemctl start cloudera-scm-agent
 sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
