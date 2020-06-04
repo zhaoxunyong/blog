@@ -65,11 +65,10 @@ $ sed -i 's;^FLANNEL_ETCD_ENDPOINTS=.*;FLANNEL_ETCD_ENDPOINTS="http://192.168.80
 $ sed -i 's;^FLANNEL_ETCD_PREFIX=.*;FLANNEL_ETCD_PREFIX="/coreos.com/network";g' \
 /etc/sysconfig/flanneld
 
-201/94:
-$ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld-start --iface=em1 -etcd-endpoints=${FLANNEL_ETCD_ENDPOINTS} -etcd-prefix=${FLANNEL_ETCD_PREFIX} $FLANNEL_OPTIONS;g' \
-/usr/lib/systemd/system/flanneld.service
-196:
-$ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld-start --iface=team0 -etcd-endpoints=${FLANNEL_ETCD_ENDPOINTS} -etcd-prefix=${FLANNEL_ETCD_PREFIX} $FLANNEL_OPTIONS;g' \
+$ sed -i 's;^#FLANNEL_OPTIONS=.*;FLANNEL_OPTIONS="-ip-masq=true";g' \
+/etc/sysconfig/flanneld
+
+$ sed -i 's;^ExecStart=.*;ExecStart=/usr/bin/flanneld-start -etcd-endpoints=${FLANNEL_ETCD_ENDPOINTS} -etcd-prefix=${FLANNEL_ETCD_PREFIX} $FLANNEL_OPTIONS;g' \
 /usr/lib/systemd/system/flanneld.service
 
 systemctl daemon-reload
