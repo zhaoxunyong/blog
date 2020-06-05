@@ -48,7 +48,7 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master2 --name master2 \
 -v /home/dev/vagrant:/vagrant \
--p 7180:7180 -p 8889:8889 -p 50070:50070 \
+-p 7180:7180 -p 8088:8088 -p 19888:19888 -p 8889:8889 -p 50070:50070 \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -86,7 +86,7 @@ docker run -d \
 -m 16G --cpus=4 \
 -h master3 --name master3 \
 -v /home/dev/vagrant:/vagrant \
--p 7180:7180 -p 8889:8889 -p 50070:50070 \
+-p 7180:7180 -p 8088:8088 -p 19888:19888 -p 8889:8889 -p 50070:50070 \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -109,16 +109,6 @@ jobhistory all nodes:19888
 #hiveServer:10002
 
 -p 8020:8020 -p 8022:8022 -p 7180:7180 -p 21050:21050 -p 50070:50070 -p 50075:50075 -p 50010:50010 -p 50020:50020 -p 8890:8890 -p 60010:60010 -p 10002:10002 -p 25010:25010 -p 25020:25020 -p 18088:18088 -p 8088:8088 -p 19888:19888 -p 7187:7187 -p 11000:11000
-
-
-nna:  12G/4C
-nns:  16G/8C
-dn1:  16G/16C
-dn2:  16G/16C
-dn3:  16G/16C
-dn4:  16G/16C
-kylin: 16G/8C
-
 
 docker build -t dave/cdh:base ./
 

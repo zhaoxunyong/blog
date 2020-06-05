@@ -297,6 +297,11 @@ scan 'game_x_tmp'
 disable 'game_x_tmp'
 drop 'game_x_tmp'
 
+hive>
+＃在创建数据库时添加判断，防止因创建的数据库己存在而抛出异常
+CREATE DATABASE IF NOT EXISTS game; 
+DROP DATABASE game;
+
 修改hdfs任何用户可以写入：
 https://blog.csdn.net/Ahuuua/article/details/90669011
 1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
