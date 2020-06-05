@@ -1,7 +1,6 @@
 https://blog.csdn.net/xu470438000/article/details/50512442
 https://www.cnblogs.com/Jing-Wang/p/10672609.html
 
-sudo mkdir -p /cdh
 
 80.201:64G/48Core
 ------------------------
@@ -15,29 +14,32 @@ docker run -d \
 dave/cdh:base /sbin/init
 
 10.244.62.3
+sudo mkdir -p /data/cdh/dn1
 docker run -d \
 -m 16G --cpus=12 \
 -h dn1 --name dn1 \
 -v /home/dev/vagrant:/vagrant \
--v /cdh:/cdh \
+-v /data/cdh/dn1:/data/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
 10.244.62.4
+sudo mkdir -p /data/cdh/dn2
 docker run -d \
 -m 16G --cpus=12 \
 -h dn2 --name dn2 \
 -v /home/dev/vagrant:/vagrant \
--v /cdh:/cdh \
+-v /data/cdh/dn2:/data/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
 10.244.62.5
+sudo mkdir -p /data/cdh/dn3
 docker run -d \
 -m 16G --cpus=12 \
 -h dn3 --name dn3 \
 -v /home/dev/vagrant:/vagrant \
--v /cdh:/cdh \
+-v /data/cdh/dn3:/data/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -53,29 +55,32 @@ docker run -d \
 dave/cdh:base /sbin/init
 
 10.244.54.3
+sudo mkdir -p /data/cdh/dn4
 docker run -d \
 -m 16G --cpus=12 \
 -h dn4 --name dn4 \
 -v /home/dev/vagrant:/vagrant \
--v /cdh:/cdh \
+-v /data/cdh/dn4:/data/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
 10.244.54.4
+sudo mkdir -p /data/cdh/dn5
 docker run -d \
 -m 16G --cpus=12 \
 -h dn5 --name dn5 \
 -v /home/dev/vagrant:/vagrant \
--v /cdh:/cdh \
+-v /data/cdh/dn5:/data/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
 10.244.54.5
+sudo mkdir -p /data/cdh/dn6
 docker run -d \
 -m 16G --cpus=12 \
 -h dn6 --name dn6 \
 -v /home/dev/vagrant:/vagrant \
--v /cdh:/cdh \
+-v /data/cdh/dn6:/data/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -91,10 +96,12 @@ docker run -d \
 dave/cdh:base /sbin/init
 
 10.244.46.3
+sudo mkdir -p /data/cdh/kylin
 docker run -d \
 -m 16G --cpus=4 \
 -h kylin --name kylin \
 -v /home/dev/vagrant:/vagrant \
+-v /data/cdh/kylin:/data/kylin \
 -p 7070:7070 \
 --privileged=true \
 dave/cdh:base /sbin/init
