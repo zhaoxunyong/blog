@@ -186,10 +186,10 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/1001
 192.168.108.100    root    wlt.local   32G/8Core
 192.168.100.31     root    wlt.local   64G/16Core -->
 
-192.168.80.94      root                32G/8Core     Master Host 2/Gateway Hosts 1
-192.168.80.201      root    tqPAI1H24TYjR5H57bHF7xxRBoSZldSp   64G/48Core
-192.168.80.196      root    AsvpWKtDNoCFiLfVJMNsAni5RhAJcIz3   64G/48Core
+192.168.80.201     root    64G/48Core
+192.168.80.196     root    64G/48Core
 
-32562K2  192.168.80.97    root    TITCYqgMcO3+nVABYEh9AET7z4yeoTia   32G/8Core   
-5K03YL2   192.168.80.98   root    zKscgayWcqzy0dfik4kXt7iNoRPrJNi7   64G/16Core    
-5JS3Q52  192.168.80.99    root    wwgGdo1K1HVRVcsBiXGjY9TGyAz8kKYo   32G/8Core  
+192.168.80.94      root    32G/8Core
+192.168.80.97      root    32G/8Core    
+192.168.80.99      root    32G/8Core  
+192.168.80.98      root    64G/16Core   
