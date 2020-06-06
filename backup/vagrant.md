@@ -192,4 +192,4 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/1001
 192.168.80.94      root    32G/8Core
 192.168.80.97      root    32G/8Core    
 192.168.80.99      root    32G/8Core  
-192.168.80.98      root    64G/16Core   
+192.168.80.98      root    w64G/16Core   
