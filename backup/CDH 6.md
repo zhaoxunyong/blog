@@ -5,6 +5,8 @@ https://blog.csdn.net/LCYong_/article/details/82385668
 
 资源配置：
 https://docs.cloudera.com/documentation/enterprise/6/latest/topics/cm_ig_host_allocations.html#concept_f43_j4y_dw__section_icy_mgj_ndb
+https://docs.cloudera.com/documentation/enterprise/6/release-notes/topics/rg_hardware_requirements.html
+5.x
 https://docs.cloudera.com/documentation/enterprise/release-notes/topics/hardware_requirements_guide.html
 https://docs.cloudera.com/cdpdc/7.0/release-guide/topics/cdpdc-hardware-requirements.html
 
