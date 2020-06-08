@@ -80,18 +80,8 @@ chmod +x /etc/rc.local
 chmod +x /etc/rc.d/rc.local
 systemctl enable rc-local.service
 
-echo '10.244.62.2 master1
-10.244.62.3   dn1
-10.244.62.4   dn2
-10.244.62.5   dn3
-
-10.244.54.2   master2
-10.244.54.3   dn4
-10.244.54.4   dn5
-10.244.54.5   dn6
-
-10.244.46.2   master3
-10.244.46.3   kylin' >> /etc/hosts
+# echo '10.244.32.2 master1
+# 10.244.46.3   kylin' >> /etc/hosts
 
 ##sed -i 's;en_GB;zh_CN;' /etc/sysconfig/i18n
 
@@ -150,7 +140,7 @@ systemctl start ntpd
 yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-securitylevel-tui system-config-network-tui \
 ntsysv net-tools lrzsz bridge-utils \
 htop telnet lsof vim dos2unix unix2dos zip unzip \
-lsof openssl openssh-server openssh-clients initscripts
+lsof openssl openssh-server openssh-clients initscripts rpcbind
 yum install psmisc -y
 systemctl enable sshd
 systemctl enable rpcbind

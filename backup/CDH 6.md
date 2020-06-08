@@ -151,7 +151,7 @@ sudo yum install cloudera-manager-daemons cloudera-manager-agent cloudera-manage
 ------------------------------------
 手动安装：(可选安装方式，建议)
 #Working on all nodes
-cd /vagrant/CDH/6/rpm/
+cd /cdh/CDH/6/rpm/
 sudo rpm -ivh oracle-j2sdk1.8-1.8.0+update181-1.x86_64.rpm
 
 #cloudera-scm-agent
@@ -164,8 +164,8 @@ sudo yum localinstall cloudera-manager-agent-6.1.1-853290.el7.x86_64.rpm -y
 sudo rpm -ivh cloudera-manager-server-6.1.1-853290.el7.x86_64.rpm
 -------------------------------------
 
-#Working on nns
-sudo cp -a /vagrant/CDH/6/parcel-repo/* /opt/cloudera/parcel-repo/
+#Working on cloudera-scm-server
+sudo cp -a /cdh/CDH/6/parcel-repo/* /opt/cloudera/parcel-repo/
 sudo chown -R cloudera-scm:cloudera-scm /opt/cloudera/parcel-repo/
 <!-- sudo mv CDH-6.1.1-1.cdh6.1.1.p0.875250-el7.parcel.sha256 CDH-6.1.1-1.cdh6.1.1.p0.875250-el7.parcel.sha
 sha1sum CDH-6.1.1-1.cdh6.1.1.p0.875250-el7.parcel
@@ -175,7 +175,7 @@ Mysql:
 https://blog.csdn.net/u010514380/article/details/88083139
 
 #Working on nns:
-cd /vagrant/CDH/mysql
+cd /cdh/CDH/mysql
 sudo yum localinstall *.rpm -y
 
 #启动MySQL
@@ -225,8 +225,8 @@ exit
 
 #Working on all
 sudo mkdir -p /usr/share/java/
-sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
-sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
 
 #Working on nns
 sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql scm scm Aa123#@!
@@ -277,8 +277,8 @@ sudo chown -R hadoop:hadoop /works
 sudo mkdir -p /data/hbase
 sudo chown -R hadoop:hadoop /data
 
-sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
-sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
 
 cp -a /vagrant/soft/hadoop-2.7.7/share/hadoop/common/lib/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/
 
@@ -332,8 +332,8 @@ scp -r /etc/hadoop/conf.cloudera.yarn root@kylin1:/etc/hadoop/
 
 Kylin:
 mkdir -p /works/kylin-3.0.2/ext/
-sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar $KYLIN_HOME/ext/
-sudo cp -a /vagrant/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar $KYLIN_HOME/ext/
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
 sudo chown -R hadoop:hadoop /works
 
 http://kylin1:7070/kylin

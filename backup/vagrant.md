@@ -185,11 +185,172 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/1001
 <!-- 192.168.100.100    root    wlt.local   32G/8Core
 192.168.108.100    root    wlt.local   32G/8Core
 192.168.100.31     root    wlt.local   64G/16Core -->
+192.168.80.196     root    64G/48Core  10G/8C 
 
-192.168.80.201     root    64G/48Core
-192.168.80.196     root    64G/48Core
+192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(utility1/mysql)
+192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway1)
+192.168.80.99      root    32G/8Core   8G/4C(master3)  24G/4C(kylin)
 
-192.168.80.94      root    32G/8Core
-192.168.80.97      root    32G/8Core    
-192.168.80.99      root    32G/8Core  
-192.168.80.98      root    64G/16Core   
+192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6
+192.168.80.98      root    64G/16Core  
+
+
+80.94
+---------------------------
+master1:
+docker run -d \
+-m 8G --cpus=4 \
+-h master1 --name master1 \
+-p 8088:8088 -p 19888:19888 -p 50070:50070 \
+-v /home/dev/cdh:/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+utility1:
+docker run -d \
+-m 24G --cpus=4 \
+-h utility --name utility \
+-p 7180:7180 -p 8889:8889 \
+-v /home/dev/cdh:/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+80.97
+---------------------------
+master2:
+docker run -d \
+-m 8G --cpus=4 \
+-h master2 --name master2 \
+-v /home/dev/cdh:/cdh \
+-p 8088:8088 -p 19888:19888 -p 50070:50070 \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+gateway1:
+docker run -d \
+-m 8G --cpus=4 \
+-h gateway1 --name gateway1 \
+-v /home/dev/cdh:/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+80.99
+---------------------------
+master3:
+docker run -d \
+-m 8G --cpus=4 \
+-h master3 --name master3 \
+-v /home/dev/cdh:/cdh \
+-p 8088:8088 -p 19888:19888 -p 50070:50070 \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+kylin:
+docker run -d \
+-m 24G --cpus=4 \
+-h kylin --name kylin \
+-p 7070:7070 \
+-v /home/dev/cdh:/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+80.201
+---------------------------
+dn1:
+sudo mkdir -p /data/cdh/dn1
+docker run -d \
+-m 10G --cpus=8 \
+-h dn1 --name dn1 \
+-v /home/dev/cdh:/cdh \
+-v /data/cdh/dn1:/data/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn2:
+sudo mkdir -p /data/cdh/dn2
+docker run -d \
+-m 10G --cpus=8 \
+-h dn2 --name dn2 \
+-v /home/dev/cdh:/cdh \
+-v /data/cdh/dn2:/data/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn3:
+sudo mkdir -p /data/cdh/dn3
+docker run -d \
+-m 10G --cpus=8 \
+-h dn3 --name dn3 \
+-v /home/dev/cdh:/cdh \
+-v /data/cdh/dn3:/data/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn4:
+sudo mkdir -p /data/cdh/dn4
+docker run -d \
+-m 10G --cpus=8 \
+-h dn4 --name dn4 \
+-v /home/dev/cdh:/cdh \
+-v /data/cdh/dn4:/data/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn5:
+sudo mkdir -p /data/cdh/dn5
+docker run -d \
+-m 10G --cpus=8 \
+-h dn5 --name dn5 \
+-v /home/dev/cdh:/cdh \
+-v /data/cdh/dn5:/data/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn6:
+sudo mkdir -p /data/cdh/dn6
+docker run -d \
+-m 10G --cpus=8 \
+-h dn6 --name dn6 \
+-v /home/dev/cdh:/cdh \
+-v /data/cdh/dn6:/data/cdh \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+
+echo '10.244.32.2 master1
+10.244.32.3   utility
+10.244.93.2   master2
+10.244.93.3   gateway1
+10.244.5.2   master3
+10.244.5.3   kylin
+10.244.61.2   dn1
+10.244.61.3   dn2
+10.244.61.4   dn3
+10.244.61.5   dn4
+10.244.61.6   dn5
+10.244.61.7   dn6' >> /etc/hosts
+
+master1:
+cat /run/flannel/docker
+DOCKER_OPT_BIP="--bip=10.244.32.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.32.1/24 --ip-masq=false --mtu=1472"
+
+master2:
+DOCKER_OPT_BIP="--bip=10.244.93.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.93.1/24 --ip-masq=false --mtu=1472"
+
+master3:
+DOCKER_OPT_BIP="--bip=10.244.5.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.5.1/24 --ip-masq=false --mtu=1472"
+
+dn1:
+DOCKER_OPT_BIP="--bip=10.244.61.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.61.1/24 --ip-masq=false --mtu=1472"

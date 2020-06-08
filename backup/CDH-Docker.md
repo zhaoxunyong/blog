@@ -120,7 +120,7 @@ jobhistory all nodes:19888
 docker build -t dave/cdh:base ./
 
 test:
-docker run -it --rm --name centos centos bash
+docker run -it --rm --name centos dave/cdh:base bash
 进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
 https://blog.csdn.net/baidu_38558076/article/details/103890319
 
