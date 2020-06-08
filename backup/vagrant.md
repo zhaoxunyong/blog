@@ -317,18 +317,6 @@ docker run -d \
 dave/cdh:base /sbin/init
 
 
-echo '10.244.32.2 master1
-10.244.32.3   utility
-10.244.93.2   master2
-10.244.93.3   gateway1
-10.244.5.2   master3
-10.244.5.3   kylin
-10.244.61.2   dn1
-10.244.61.3   dn2
-10.244.61.4   dn3
-10.244.61.5   dn4
-10.244.61.6   dn5
-10.244.61.7   dn6' >> /etc/hosts
 
 master1:
 cat /run/flannel/docker
@@ -354,3 +342,32 @@ DOCKER_OPT_BIP="--bip=10.244.61.1/24"
 DOCKER_OPT_IPMASQ="--ip-masq=false"
 DOCKER_OPT_MTU="--mtu=1472"
 DOCKER_NETWORK_OPTIONS=" --bip=10.244.61.1/24 --ip-masq=false --mtu=1472"
+
+<!-- echo "10.244.61.2 dn1
+10.244.61.3 dn2
+10.244.61.4 dn3
+10.244.61.5 dn4
+10.244.61.6 dn5
+10.244.61.7 dn6
+
+10.244.93.3 gateway1
+10.244.5.3 kylin
+10.244.32.2 master1
+10.244.93.2 master2
+10.244.5.2 master3
+10.244.32.3 utility" >> /etc/hosts
+ -->
+
+
+echo '10.244.32.2 master1
+10.244.32.3   utility
+10.244.93.2   master2
+10.244.93.3   gateway1
+10.244.5.2   master3
+10.244.5.3   kylin
+10.244.61.2   dn1
+10.244.61.3   dn2
+10.244.61.4   dn3
+10.244.61.5   dn4
+10.244.61.6   dn5
+10.244.61.7   dn6' >> /etc/hosts

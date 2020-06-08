@@ -79,6 +79,8 @@ systemctl enable flanneld
 systemctl restart flanneld
 systemctl status flanneld
 
+#Disabling ExecStartPost in /usr/lib/systemd/system/flanneld.service while rebooting, change a new ip
+
 sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
 /usr/lib/systemd/system/docker.service
 
