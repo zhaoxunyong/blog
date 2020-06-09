@@ -191,8 +191,9 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/1001
 192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway1)
 192.168.80.99      root    32G/8Core   8G/4C(master3)  24G/4C(kylin)
 
-192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6
-192.168.80.98      root    64G/16Core  
+<!-- #192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6 -->
+192.168.80.201     root    64G/48Core  20G/14C node1/node2/node3
+192.168.80.98      root    64G/16Core  20G/14C node4
 
 
 80.94
@@ -419,3 +420,14 @@ echo '10.244.32.2 master1
 http://192.168.80.94:7180/cmf/
 http://192.168.80.99:7070/kylin/
 
+
+
+python -c "import base64; print base64.standard_b64encode('ADMIN:KYLIN')"        
+QURNSU46S1lMSU4=
+
+curl -c ~/cookie.txt -X POST -H "Authorization: Basic QURNSU46S1lMSU4=" -H 'Content-Type: application/json' http://192.168.80.99:7070/kylin/api/user/authentication
+{"userDetails":{"username":"ADMIN","password":"$2a$10$o3ktIWsGYxXNuUWQiYlZXOW5hWcqyNAFQsSSCSEWoC/BRVMAUjL32","authorities":[{"authority":"ROLE_ADMIN"},{"authority":"ROLE_ANALYST"},{"authority":"ROLE_MODELER"},{"authority":"ALL_USERS"}],"disabled":false,"defaultPassword":false,"locked":false,"lockedTime":0,"wrongTime":0,"uuid":"2218e5ca-5b7e-066d-ef30-487e83852233","last_modified":1591674148561,"version":"3.0.0.20500"}}
+
+curl -b ~/cookie.txt -X POST -H "Authorization: Basic QURNSU46S1lMSU4=" -H 'Content-Type: application/json' http://192.168.80.99:7070/kylin/api/user/authentication/api/cubes?cubeName=cube_name&limit=15&offset=0
+
+curl -X PUT --user ADMIN:KYLIN -H "Content-Type: application/json;charset=utf-8" -d '{ "startTime": 820454400000, "endTime": 821318400000, "buildType": "BUILD"}' http://192.168.80.99:7070/kylin/api/cubes/kylin_sales/build
