@@ -58,7 +58,6 @@ etcdctl member list
 
 yum install -y flannel
 
-
 etcdctl --endpoints "http://192.168.80.94:2379,http://192.168.80.97:2379,http://192.168.80.99:2379" set /coreos.com/network/config '{"NetWork":"10.244.0.0/16"}'
 
 #Working on all nodes:
@@ -81,7 +80,13 @@ systemctl status flanneld
 
 #Disabling ExecStartPost in /usr/lib/systemd/system/flanneld.service while rebooting, change a new ip
 
-sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
+
+#防止重启后可以IP会变更，使用/data/flannel/docker文件
+mkdir -p /data/flannel/
+cp -a /run/flannel/docker /data/flannel/docker
+
+
+sed -i -e '/ExecStart=/iEnvironmentFile=/data/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
 /usr/lib/systemd/system/docker.service
 
 #重启docker服务

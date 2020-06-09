@@ -187,7 +187,7 @@ tmpfs                    1.6G     0  1.6G   0% /run/user/1001
 192.168.100.31     root    wlt.local   64G/16Core -->
 192.168.80.196     root    64G/48Core  10G/8C 
 
-192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(utility1/mysql)
+192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(utility/mysql)
 192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway1)
 192.168.80.99      root    32G/8Core   8G/4C(master3)  24G/4C(kylin)
 
@@ -325,11 +325,23 @@ DOCKER_OPT_IPMASQ="--ip-masq=false"
 DOCKER_OPT_MTU="--mtu=1472"
 DOCKER_NETWORK_OPTIONS=" --bip=10.244.32.1/24 --ip-masq=false --mtu=1472"
 
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.32.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+
 master2:
 DOCKER_OPT_BIP="--bip=10.244.93.1/24"
 DOCKER_OPT_IPMASQ="--ip-masq=false"
 DOCKER_OPT_MTU="--mtu=1472"
 DOCKER_NETWORK_OPTIONS=" --bip=10.244.93.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.93.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
 
 master3:
 DOCKER_OPT_BIP="--bip=10.244.5.1/24"
@@ -337,11 +349,23 @@ DOCKER_OPT_IPMASQ="--ip-masq=false"
 DOCKER_OPT_MTU="--mtu=1472"
 DOCKER_NETWORK_OPTIONS=" --bip=10.244.5.1/24 --ip-masq=false --mtu=1472"
 
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.5.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+
 dn1:
 DOCKER_OPT_BIP="--bip=10.244.61.1/24"
 DOCKER_OPT_IPMASQ="--ip-masq=false"
 DOCKER_OPT_MTU="--mtu=1472"
 DOCKER_NETWORK_OPTIONS=" --bip=10.244.61.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.61.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
 
 <!-- echo "10.244.61.2 dn1
 10.244.61.3 dn2
@@ -358,6 +382,26 @@ DOCKER_NETWORK_OPTIONS=" --bip=10.244.61.1/24 --ip-masq=false --mtu=1472"
 10.244.32.3 utility" >> /etc/hosts
  -->
 
+ 80.94：
+ docker start  master1
+ docker start  utility
+
+ 80.97：
+ docker start master2
+ docker start gateway1
+
+ 80.99：
+ docker start master3
+ docker start kylin
+
+ 80.201：
+ docker start dn1
+ docker start dn2
+ docker start dn3
+ docker start dn4
+ docker start dn5
+ docker start dn6
+
 
 echo '10.244.32.2 master1
 10.244.32.3   utility
@@ -371,3 +415,7 @@ echo '10.244.32.2 master1
 10.244.61.5   dn4
 10.244.61.6   dn5
 10.244.61.7   dn6' >> /etc/hosts
+
+http://192.168.80.94:7180/cmf/
+http://192.168.80.99:7070/kylin/
+

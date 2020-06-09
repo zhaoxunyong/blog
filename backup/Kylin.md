@@ -1,8 +1,8 @@
 ## Docker
-http://192.168.80.196:7070/kylin
-http://192.168.80.196:50070/dfshealth.html#tab-overview
-http://192.168.80.196:8088/cluster
-http://192.168.80.196:16010/master-status
+http://192.168.80.98:7070/kylin
+http://192.168.80.98:50070/dfshealth.html#tab-overview
+http://192.168.80.98:8088/cluster
+http://192.168.80.98:16010/master-status
 
 默认的系统管理员 ADMIN 的密码为 KYLIN
 
@@ -13,9 +13,9 @@ https://www.jianshu.com/p/4f4417ef790a
 https://blog.csdn.net/qq_43147136/article/details/89189759
 
 MySQL: 
-mysql -uroot -h192.168.80.196 -pGk97TU6coSsvtipC9SB2
+mysql -uroot -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM
 
-/works/soft/sqoop-1.4.7/bin/sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 --username root --password Gk97TU6coSsvtipC9SB2
+/works/soft/sqoop-1.4.7/bin/sqoop list-databases --connect jdbc:mysql://192.168.80.98:3306 --username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM
 
 https://www.cnblogs.com/chushiyaoyue/p/5707683.html
 
@@ -68,11 +68,11 @@ cp -a Drivers/mysql-connector-java-5.1.48-bin.jar $SQOOP_HOME/lib
 
 vim $KYLIN_HOME/conf/kylin.properties:
 kylin.source.default=8
-kylin.source.jdbc.connection-url=jdbc:mysql://192.168.80.196:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true
+kylin.source.jdbc.connection-url=jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true
 kylin.source.jdbc.driver=com.mysql.jdbc.Driver
 kylin.source.jdbc.dialect=mysql
 kylin.source.jdbc.user=root
-kylin.source.jdbc.pass=Gk97TU6coSsvtipC9SB2
+kylin.source.jdbc.pass=6Aq2FuMVvWzsEFeJ4p84ctiwM
 kylin.source.jdbc.sqoop-home=/works/soft/sqoop-1.4.7
 kylin.source.jdbc.filed-delimiter=|
 注意：修改以上jdbc配置，job需要删除并重新创建才能生效
@@ -154,7 +154,7 @@ vim hadoop-2.7.0/etc/hadoop/yarn-site.xml
 docker restart kylin
 
 
-dwh.dws_fin_loan_account_d,dwh.dim_account_age,dwh.dim_client,dwh.dim_collection_status,dwh.dim_contract,dwh.dim_date,dwh.dim_loan_account,dwh.dim_loan_account_process_status,dwh.dim_loan_account_status,dwh.dim_loan_account_type,dwh.dim_loan_bill,dwh.dim_loan_product,dwh.dim_loan_type,dwh.dim_repay_amount_type,dwh.dim_source_system,dwh.dim_trading_summary,dwh.dim_virtual_center,dwh.dws_fin_exempt
+dwh.dws_fin_loan_account_d,dwh.dim_date
 
 performance:
 4-5 core less than 30G RAM
@@ -163,26 +163,45 @@ performance:
 
 https://www.jianshu.com/p/57178dce12de
 
-SELECT dws_fin_loan_account_d.fin_loan_account_d_id as DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID ,dws_fin_loan_account_d.snap_date_key ,dws_fin_loan_account_d.loan_bill_id as DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID ,dws_fin_loan_account_d.loan_client_id as DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID ,dws_fin_loan_account_d.loan_account_id as DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID ,dim_date.date_key as DIM_DATE_DATE_KEY ,dws_fin_loan_account_d.principal_balance_repay_amount as DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_AMOUNT ,dws_fin_loan_account_d.principal_balance_repay_irr_amount as DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT ,dws_fin_loan_account_d.principal_balance_process_amount as DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_AMOUNT ,dws_fin_loan_account_d.principal_balance_process_irr_amount as DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT  FROM dwh.dws_fin_loan_account_d dws_fin_loan_account_d INNER JOIN dwh.dim_date dim_date ON dws_fin_loan_account_d.snap_date_key = dim_date.date_key WHERE 1=1 AND (dws_fin_loan_account_d.snap_date_key >= '2020-01-01' AND dws_fin_loan_account_d.snap_date_key < '2020-04-30')
 
 
 SELECT min(snap_date_key), max(snap_date_key) FROM dwh.dws_fin_loan_account_d  WHERE dws_fin_loan_account_d.snap_date_key >= '2020-01-01' AND dws_fin_loan_account_d.snap_date_key < '2020-04-30'
 
 SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_REPAY_AMOUNT) as PRINCIPAL_BALANCE_REPAY_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT) as PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_PROCESS_AMOUNT) as PRINCIPAL_BALANCE_PROCESS_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT) as PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_AMOUNT) as PRINCIPAL_REPAY_BALANCE_AMOUNT, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT) as PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_AMOUNT) as RECEIVE_REPAY_INCOME_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_AMOUNT) as RECEIVE_PROCESS_INCOME_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT) as RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT) as RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_PRINCIPAL_AMOUNT) as RECEIVE_REPAY_PRINCIPAL_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_PRINCIPAL_AMOUNT) as RECEIVE_PROCESS_PRINCIPAL_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INTEREST_AMOUNT) as RECEIVE_REPAY_INTEREST_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INTEREST_AMOUNT) as RECEIVE_PROCESS_INTEREST_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT) as RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT) as RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT
 FROM dwh.dws_fin_loan_account_d  
 WHERE dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
 AND dws_fin_loan_account_d.snap_date_key < '2020-04-30' 
 GROUP BY dws_fin_loan_account_d.snap_date_key
 
 SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_REPAY_AMOUNT) as PRINCIPAL_BALANCE_REPAY_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT) as PRINCIPAL_BALANCE_REPAY_IRR_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_PROCESS_AMOUNT) as PRINCIPAL_BALANCE_PROCESS_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT) as PRINCIPAL_BALANCE_PROCESS_IRR_AMOUNT
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_AMOUNT) as PRINCIPAL_REPAY_BALANCE_AMOUNT, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT) as PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_AMOUNT) as RECEIVE_REPAY_INCOME_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_AMOUNT) as RECEIVE_PROCESS_INCOME_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT) as RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT) as RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_PRINCIPAL_AMOUNT) as RECEIVE_REPAY_PRINCIPAL_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_PRINCIPAL_AMOUNT) as RECEIVE_PROCESS_PRINCIPAL_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INTEREST_AMOUNT) as RECEIVE_REPAY_INTEREST_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INTEREST_AMOUNT) as RECEIVE_PROCESS_INTEREST_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT) as RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT,
+sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT) as RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT
 FROM dwh.dws_fin_loan_account_d dws_fin_loan_account_d 
 INNER JOIN dwh.dim_date dim_date ON dws_fin_loan_account_d.snap_date_key = dim_date.date_key 
 WHERE 1=1 
@@ -553,11 +572,11 @@ export HADOOP_COMMON_HOME=/data/soft/new/hadoop
 export HADOOP_MAPRED_HOME=/data/soft/new/hadoop
 
 #Testing
-sqoop list-databases --connect jdbc:mysql://192.168.80.196:3306 \
---username root --password Gk97TU6coSsvtipC9SB2
+sqoop list-databases --connect jdbc:mysql://192.168.80.98:3306 \
+--username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM
 
-sqoop import --connect jdbc:mysql://192.168.80.196:3306/dwh \
---username root --password Gk97TU6coSsvtipC9SB2 \
+sqoop import --connect jdbc:mysql://192.168.80.98:3306/dwh \
+--username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM \
 --table dim_client \
 --fields-terminated-by ',' \
 --null-string '**' \
@@ -565,8 +584,8 @@ sqoop import --connect jdbc:mysql://192.168.80.196:3306/dwh \
 --append --target-dir '/works/sqoop/dwh.db'
 
 sqoop export -D sqoop.export.records.per.statement=100 \
- --connect jdbc:mysql://192.168.80.196:3306/dwh \
- --username root --password Gk97TU6coSsvtipC9SB2 \
+ --connect jdbc:mysql://192.168.80.98:3306/dwh \
+ --username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM \
 --table dim_client_copy \
 --fields-terminated-by ',' \
 --export-dir "/works/sqoop/dwh.db/part-m-00000" \
@@ -774,10 +793,10 @@ property.hive.log.dir = /works/soft/apache-hive-2.3.7/logs
 property.hive.log.file = hive.log
 
 MySQL创建hive用户
-<!-- sqoop import --connect jdbc:mysql://192.168.80.196:3306/dwh \
---username root --password Gk97TU6coSsvtipC9SB2 \ -->
+<!-- sqoop import --connect jdbc:mysql://192.168.80.98:3306/dwh \
+--username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM \ -->
 
->mysql -uroot -h192.168.80.196 -pGk97TU6coSsvtipC9SB2
+>mysql -uroot -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM
 grant all privileges on *.* to hive@'%' identified by 'Aa654321';
 
 <!-- mysqladmin  -uroot -p -S /data/mydata/mysql.sock shutdown
