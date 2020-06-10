@@ -232,8 +232,13 @@ docker run -d \
 -m 8G --cpus=4 \
 -h gateway1 --name gateway1 \
 -v /home/dev/cdh:/cdh \
+-p 8888:8888 -p 8889:8889 \
 --privileged=true \
 dave/cdh:base /sbin/init
+
+https://blog.csdn.net/lsziri/article/details/69396990
+iptables -t nat -A PREROUTING  -p tcp -m tcp --dport 8889 -j DNAT --to-destination  10.244.93.3:8889
+iptables-save
 
 80.99
 ---------------------------
