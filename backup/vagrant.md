@@ -425,6 +425,9 @@ echo '10.244.32.2 master1
 http://192.168.80.94:7180/cmf/
 http://192.168.80.99:7070/kylin/
 
+kylin.hbase.region.count.min 2
+kylin.hbase.region.count.max 100
+kylin.hbase.region.cut 3
 
 
 python -c "import base64; print base64.standard_b64encode('ADMIN:KYLIN')"        
