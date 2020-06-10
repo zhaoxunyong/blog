@@ -219,7 +219,7 @@ GRANT ALL ON sentry.* TO 'sentry'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON nav.* TO 'nav'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON navms.* TO 'navms'@'%' IDENTIFIED BY 'Aa123#@!';
 GRANT ALL ON oozie.* TO 'oozie'@'%' IDENTIFIED BY 'Aa123#@!';
-grant all privileges on *.* to root@'%' identified by 'Aa123#@!' WITH GRANT OPTION;
+#grant all privileges on *.* to root@'%' identified by 'Aa123#@!' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 exit
 
@@ -229,15 +229,16 @@ sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-co
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
 
 #Working on nns
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql scm scm Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql amon amon Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql rman rman Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql hue hue Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql metastore metastore Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql sentry sentry Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql nav nav Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql navms navms Aa123#@!
-sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql oozie oozie Aa123#@!
+#scm_prepare_database.sh mysql  -uroot -p --scm-host localhost scm scm scm_password
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM scm scm Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM amon amon Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM rman rman Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM hue hue Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM metastore metastore Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM sentry sentry Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM nav nav Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM navms navms Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM oozie oozie Aa123#@!
 
 sudo systemctl enable cloudera-scm-server
 sudo systemctl start cloudera-scm-server
@@ -261,16 +262,22 @@ http://nns:7180
 ## Kylin
 sudo su -
 
-groupadd hadoop
-useradd -m -g hadoop hadoop
-passwd hadoop
+groupadd kylin
+useradd -m -g kylin kylin
+passwd kylin
 chmod +w /etc/sudoers
 
 vim /etc/sudoers
 #在 sudoers 文件中添加以下内容
-echo "hadoop ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
+echo "kylin ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
 #最后保存内容后退出,并取消 sudoers 文件的写权限
 chmod -w /etc/sudoers
+
+sudo su - kylin
+sudo mkdir /works
+sudo chown -R kylin:kylin /works
+<!-- sudo mkdir -p /data/hbase
+sudo chown -R kylin:kylin /data -->
 
 cat > /etc/profile.d/kylin.sh << EOF
 export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
@@ -284,10 +291,9 @@ EOF
 
 exit
 
-sudo mkdir /works
-sudo chown -R hadoop:hadoop /works
-sudo mkdir -p /data/hbase
-sudo chown -R hadoop:hadoop /data
+cd /works
+tar zxf apache-kylin-3.0.2-bin-cdh60.tar.gz
+mv apache-kylin-3.0.2-bin-cdh60 kylin-3.0.2
 
 mkdir /works/kylin-3.0.2/ext/
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
@@ -343,11 +349,8 @@ Cannot run program "/etc/hadoop/conf.cloudera.yarn/topology.py"
 #Working on dn4:
 scp -r /etc/hadoop/conf.cloudera.yarn root@kylin1:/etc/hadoop/
 
-Kylin:
-mkdir -p /works/kylin-3.0.2/ext/
-sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar $KYLIN_HOME/ext/
-sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
-sudo chown -R hadoop:hadoop /works
+check-env.sh 
+kylin.sh start
 
 http://kylin1:7070/kylin
 
@@ -356,7 +359,7 @@ https://www.cnblogs.com/yinzhengjie/p/10934172.html
 https://blog.csdn.net/adshiye/article/details/84311890
 
 Failed to install Oozie ShareLib:
-cpu core not greate than..
+cpu core not greate than...
 此时已经创建了oozie，新开一个窗口修改core后，再在此页面点击resume.
 
 hue:
@@ -433,7 +436,7 @@ max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
 #https://www.cnblogs.com/missie/p/4370135.html
 
 #就是你的这台服务器节点上准备分给yarn的内存
-yarn.nodemanager.resource.memory-mb=16G（default: the maxnuim of the pysyicl machine）
+yarn.nodemanager.resource.memory-mb=16G（default: the maxnuim of the pysyical machine）
 
 #单个任务可申请的最多物理内存量，默认是8192（MB）
 yarn.scheduler.minimum-allocation-mb=1G
@@ -443,12 +446,6 @@ yarn.scheduler.maximum-allocation-mb=16G
 #单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
 mapreduce.map.memory.mb=4G（default: 0）
 mapreduce.reduce.memory.mb=8G（default: 0）
-
-Java Heap Size of NameNode in Bytes： 1G
-Cloudera Management Service:
-Maximum Non-Java Memory of Service Monitor: 12G
-Maximum Non-Java Memory of Host Monitor: 12G
-Java Heap Size of Service Monitor in Bytes: 1G
 
 #https://www.jianshu.com/p/d49135b0559f
 #表示该节点服务器上yarn可以使用的虚拟的CPU个数

@@ -78,15 +78,14 @@ systemctl enable flanneld
 systemctl restart flanneld
 systemctl status flanneld
 
-#Disabling ExecStartPost in /usr/lib/systemd/system/flanneld.service while rebooting, change a new ip
+<!-- #Disabling ExecStartPost in /usr/lib/systemd/system/flanneld.service while rebooting, change a new ip -->
 
-
-#防止重启后可以IP会变更，使用/data/flannel/docker文件
+<!-- #防止重启后可以IP会变更，使用/data/flannel/docker文件
 mkdir -p /data/flannel/
-cp -a /run/flannel/docker /data/flannel/docker
+cp -a /run/flannel/docker /data/flannel/docker -->
 
 
-sed -i -e '/ExecStart=/iEnvironmentFile=/data/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
+sed -i -e '/ExecStart=/iEnvironmentFile=/run/flannel/docker' -e 's;^ExecStart=/usr/bin/dockerd;ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS;g' \
 /usr/lib/systemd/system/docker.service
 
 #重启docker服务
@@ -94,3 +93,68 @@ systemctl daemon-reload
 systemctl enable docker
 systemctl restart docker
 
+
+master1:
+cat /run/flannel/docker
+DOCKER_OPT_BIP="--bip=10.244.32.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.32.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.32.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+
+master2:
+cat /run/flannel/docker
+DOCKER_OPT_BIP="--bip=10.244.93.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.93.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.93.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+
+master3:
+cat /run/flannel/docker
+DOCKER_OPT_BIP="--bip=10.244.5.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.5.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.5.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+
+dn1:
+cat /run/flannel/docker
+DOCKER_OPT_BIP="--bip=10.244.61.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.61.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.61.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+
+dn4:
+cat /run/flannel/docker
+DOCKER_OPT_BIP="--bip=10.244.47.1/24"
+DOCKER_OPT_IPMASQ="--ip-masq=false"
+DOCKER_OPT_MTU="--mtu=1472"
+DOCKER_NETWORK_OPTIONS=" --bip=10.244.47.1/24 --ip-masq=false --mtu=1472"
+
+cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.47.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
