@@ -1,0 +1,253 @@
+master() 4G/4C
+utility() 16G/4C
+kylin() 16G/4C
+dn1-3()  8G/12C
+
+cm-server:7180
+kylin:7070
+hue:8889
+namenode:50070
+yarnmanager:8088(proxy yarnmanager)
+jobhistory all nodes:19888
+
+
+master:
+docker run -d \
+-m 4G --cpus=4 \
+-h master --name master \
+-p 8088:8088 -p 19888:19888 -p 50070:50070 \
+-v /data/cdh6:/data/cdh6 \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+utility:
+docker run -d \
+-m 16G --cpus=4 \
+-h utility --name utility \
+-p 7180:7180 -p 8889:8889 \
+-v /data/cdh6:/data/cdh6 \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+kylin:
+docker run -d \
+-m 16G --cpus=4 \
+-h kylin --name kylin \
+-p 7070:7070 \
+-v /data/cdh6:/data/cdh6 \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn1:
+sudo mkdir -p /data/hadoop/dn1
+docker run -d \
+-m 8G --cpus=12 \
+-h dn1 --name dn1 \
+-v /data/cdh6:/data/cdh6 \
+-v /data/hadoop/dn1:/data/hadoop \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn2:
+sudo mkdir -p /data/hadoop/dn2
+docker run -d \
+-m 8G --cpus=12 \
+-h dn2 --name dn2 \
+-v /data/cdh6:/data/cdh6 \
+-v /data/hadoop/dn2:/data/hadoop \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+dn3:
+sudo mkdir -p /kylin/cdh/dn3
+docker run -d \
+-m 8G --cpus=12 \
+-h dn3 --name dn3 \
+-v /data/cdh6:/data/cdh6 \
+-v /data/hadoop/dn3:/data/hadoop \
+--privileged=true \
+dave/cdh:base /sbin/init
+
+echo "10.244.54.2 master
+10.244.54.3 utility
+10.244.54.4 kylin
+10.244.54.5 dn1
+10.244.54.6 dn2
+10.244.54.7 dn3" >> /etc/hosts
+
+
+手动安装：(可选安装方式，建议)
+#Working on all nodes
+cd /data/cdh6/rpm/
+sudo rpm -ivh oracle-j2sdk1.8-1.8.0+update181-1.x86_64.rpm
+
+#cloudera-scm-agent
+#Working on all nodes
+sudo rpm -ivh cloudera-manager-daemons-6.1.1-853290.el7.x86_64.rpm
+sudo yum localinstall cloudera-manager-agent-6.1.1-853290.el7.x86_64.rpm -y
+
+#cloudera-scm-server
+#Working on utility
+sudo rpm -ivh cloudera-manager-server-6.1.1-853290.el7.x86_64.rpm
+sudo cp -a /data/cdh6/parcel-repo/* /opt/cloudera/parcel-repo/
+sudo chown -R cloudera-scm:cloudera-scm /opt/cloudera/parcel-repo/
+cd /data/cdh6/mysql
+sudo yum localinstall *.rpm -y
+
+#启动MySQL
+sudo systemctl enable mysqld
+sudo systemctl start mysqld
+#查看初始密码
+sudo grep 'temporary password' /var/log/mysqld.log
+#通过初始密码登陆
+mysql -uroot -p
+#修改root用户的密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Aa123#@!';
+
+#https://docs.cloudera.com/documentation/enterprise/6/6.3/topics/cm_ig_mysql.html#cmig_topic_5_5
+服务名	                             数据库名	  用户名
+Cloudera Manager Server	            scm	        scm
+Activity Monitor	                amon	    amon
+Reports Manager	                    rman	    rman
+Hive Metastore Server	            metastore	metastore
+Hue	                                hue	      hue
+Sentry Server	                    sentry	  sentry
+Cloudera Navigator Audit Server	    nav	      nav
+Cloudera Navigator Metadata Server	navms	    navms
+Oozie	                            oozie	    oozie
+
+CREATE DATABASE scm DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE amon DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE rman DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE hue DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE metastore DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE sentry DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE nav DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE navms DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+CREATE DATABASE oozie DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+
+GRANT ALL ON scm.* TO 'scm'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON amon.* TO 'amon'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON rman.* TO 'rman'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON hue.* TO 'hue'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON metastore.* TO 'metastore'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON sentry.* TO 'sentry'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON nav.* TO 'nav'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON navms.* TO 'navms'@'%' IDENTIFIED BY 'Aa123#@!';
+GRANT ALL ON oozie.* TO 'oozie'@'%' IDENTIFIED BY 'Aa123#@!';
+#grant all privileges on *.* to root@'%' identified by 'Aa123#@!' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+exit
+
+#Working on all
+sudo mkdir -p /usr/share/java/
+sudo cp -a /data/cdh6/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
+sudo cp -a /data/cdh6/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
+
+#Working on utility
+#scm_prepare_database.sh mysql  -uroot -p --scm-host localhost scm scm scm_password
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql scm scm Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql amon amon Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql rman rman Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql hue hue Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql metastore metastore Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql sentry sentry Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql nav nav Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql navms navms Aa123#@!
+sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql oozie oozie Aa123#@!
+
+#cloudera-scm-server
+sudo systemctl enable cloudera-scm-server
+sudo systemctl start cloudera-scm-server
+#第一次启动会很慢
+sudo tail -n100 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+
+#Working on all nodes
+sudo sed -i "s;server_host=.*;server_host=utility;g" /etc/cloudera-scm-agent/config.ini
+sudo systemctl enable cloudera-scm-agent
+sudo systemctl start cloudera-scm-agent
+sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
+
+http://192.168.80.196:7180
+
+hue:
+https://blog.csdn.net/gao123456789amy/article/details/79242713
+hue的时区zone修改为：
+Asia/Shanghai
+http://192.168.80.196:8889
+
+## Kylin
+sudo su -
+groupadd kylin
+useradd -m -g kylin kylin
+passwd kylin
+chmod +w /etc/sudoers
+
+vim /etc/sudoers
+#在 sudoers 文件中添加以下内容
+echo "kylin ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
+#最后保存内容后退出,并取消 sudoers 文件的写权限
+chmod -w /etc/sudoers
+
+mkdir /works
+
+cd /works
+tar zxf apache-kylin-3.0.2-bin-cdh60.tar.gz
+mv apache-kylin-3.0.2-bin-cdh60 kylin-3.0.2
+
+chown -R kylin:kylin /works
+
+cat > /etc/profile.d/kylin.sh << EOF
+export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
+export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark/
+export HBASE_HOME=/opt/cloudera/parcels/CDH/lib/hbase/
+export KYLIN_HOME=/works/kylin-3.0.2
+export PATH=\$JAVA_HOME/bin:\$SPARK_HOME/bin:\$HBASE_HOME/bin:\$KYLIN_HOME/bin:$PATH
+EOF
+
+. /etc/profile
+
+#Addding sqoop via cloudera manager
+
+sudo su - kylin
+mkdir /works/kylin-3.0.2/ext/
+sudo cp -a /data/cdh6/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
+sudo cp -a /data/cdh6/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
+sudo cp -a /data/cdh6/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/
+
+check-env.sh
+
+修改hdfs任何用户可以写入：
+https://blog.csdn.net/Ahuuua/article/details/90669011
+1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
+2、添加这个，保存更改，重启hdfs
+HDFS Service Advanced Configuration Snippet (Safety Valve) for hdfs-site.xml中添加：
+dfs.permissions.enabled 的值设置为false
+
+Testing:
+hbase shell
+create 'game_x_tmp', '_x'
+disable 'game_x_tmp'
+drop 'game_x_tmp'
+
+hive>
+＃在创建数据库时添加判断，防止因创建的数据库己存在而抛出异常
+CREATE DATABASE IF NOT EXISTS game; 
+DROP DATABASE game;
+
+
+echo "xxx" > hello.txt
+#上传本地文件到分布式文件系统中的 tmp 目录
+hdfs dfs -mkdir /works/
+hdfs dfs -ls /works/
+hdfs dfs -put hello.txt /works/hello.txt
+hdfs dfs -cat /works/hello.txt
+
+>spark-shell
+var lines=sc.textFile("/works/hello.txt")
+lines.count()
+
+#Starting kylin
+kylin.sh start
+http://192.168.80.196:7070/kylin
+

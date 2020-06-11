@@ -67,7 +67,7 @@ net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_tw_recycle = 1
 net.ipv4.ip_local_port_range = 1024 65535
 net.ipv4.ip_forward = 1
-vm.swappiness = 10
+vm.swappiness = 1
 EOF
 sysctl -p
 fi

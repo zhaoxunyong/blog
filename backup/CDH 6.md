@@ -461,11 +461,16 @@ yarn.scheduler.fair.maxassign=4
 http://kylin.apache.org/cn/docs/howto/howto_cleanup_storage.html
 ${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete false
 ${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete true
+
 如果您想要删除所有资源；可添加 “–force true” 选项：
 ${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --force true --delete true
 https://www.csdn.net/gather_26/MtTaEgzsMjI1MC1ibG9n.html
+metastore.sh clean
 metastore.sh clean --delete true
-hdfs dfs -rm -r -skipTrash /hbase/archive/data/default/KYLIN_DPIQ6EHGZK
+kylin.sh storage cleanup
+kylin.sh storage cleanup --delete true
+hdfs dfs -du -h /hbase/archive/data/default
+hdfs dfs -rm -r -skipTrash /hbase/archive/data/default/*
 hdfs dfs -expunge
 
 #cpu分配不平衡：
