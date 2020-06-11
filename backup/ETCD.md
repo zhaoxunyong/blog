@@ -78,6 +78,12 @@ systemctl enable flanneld
 systemctl restart flanneld
 systemctl status flanneld
 
+<!-- 流量再从flannel出去，其他host上看到的source ip就是flannel的网关ip
+https://www.cnblogs.com/wjoyxt/p/9970837.html
+https://github.com/coreos/flannel/issues/117
+/usr/lib/systemd/system/docker.service
+ExecStart=/usr/bin/dockerd $DOCKER_NETWORK_OPTIONS --ip-masq=false -->
+
 <!-- #Disabling ExecStartPost in /usr/lib/systemd/system/flanneld.service while rebooting, change a new ip -->
 
 <!-- #防止重启后可以IP会变更，使用/data/flannel/docker文件

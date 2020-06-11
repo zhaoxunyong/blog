@@ -384,7 +384,36 @@ kylin.source.jdbc.user=root
 kylin.source.jdbc.pass=6Aq2FuMVvWzsEFeJ4p84ctiwM
 kylin.source.jdbc.sqoop-home=/opt/cloudera/parcels/CDH/lib/sqoop
 kylin.source.jdbc.filed-delimiter=|
-注意：修改以上jdbc配置，job需要删除并重新创建才能生效
+
+kylin.env.hadoop-conf-dir=/etc/hadoop/conf
+kylin.job.mr.config.override.mapreduce.map.java.opts=-Xmx4g
+kylin.job.mr.config.override.mapreduce.map.memory.mb=4500
+kylin.job.mr.config.override.mapreduce.reduce.java.opts=-Xmx8g
+kylin.job.mr.config.override.mapreduce.reduce.memory.mb=8500
+
+kylin.job.mapreduce.mapper.input.rows=500000
+kylin.job.mapreduce.default.reduce.input.mb=200
+#kylin.hbase.region.cut=2
+#kylin.hbase.hfile.size.gb=1
+kylin.storage.hbase.region-cut-gb=2
+kylin.storage.hbase.hfile-size-gb=1
+
+kylin.cube.cubeplanner.enabled=true
+kylin.server.query-metrics2-enabled=true
+kylin.metrics.reporter-query-enabled=true
+kylin.metrics.reporter-job-enabled=true
+kylin.metrics.monitor-enabled=true
+
+kylin.web.dashboard-enabled=true
+
+kylin.job.notification-enabled=true
+kylin.job.notification-mail-enable-starttls=true
+kylin.job.notification-mail-host=smtp.exmail.qq.com
+kylin.job.notification-mail-port=465
+kylin.job.notification-mail-username=notify@zerofinance.com
+kylin.job.notification-mail-password=NotAeasy8396*
+kylin.job.notification-mail-sender=notify@zerofinance.com
+kylin.job.notification-admin-emails=dave.zhao@zerofinance.com
 
 kylin.engine.spark-conf.spark.master=yarn
 kylin.engine.spark-conf.spark.submit.deployMode=cluster
@@ -396,7 +425,7 @@ kylin.engine.spark-conf.spark.yarn.queue=default
 kylin.engine.spark-conf.spark.driver.memory=2G
 kylin.engine.spark-conf.spark.executor.memory=4G
 kylin.engine.spark-conf.spark.yarn.executor.memoryOverhead=1024
-kylin.engine.spark-conf.spark.executor.cores=6
+kylin.engine.spark-conf.spark.executor.cores=1
 kylin.engine.spark-conf.spark.network.timeout=600
 kylin.engine.spark-conf.spark.shuffle.service.enabled=true
 #kylin.engine.spark-conf.spark.executor.instances=1
@@ -406,19 +435,8 @@ kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress=
 kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoo
 p.io.compress.DefaultCodec
 kylin.engine.spark-conf.spark.io.compression.codec=org.apache.spark.io.SnappyCompressionCodec
-kylin.engine.spark-conf.spark.eventLog.dir=hdfs\://nna:8020/kylin/spark-history
-kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://nna:8020/kylin/spark-history
-
-kylin.env.hadoop-conf-dir=/etc/hadoop/conf
-#kylin.job.mr.config.override.mapreduce.map.java.opts=-Xmx4g
-#kylin.job.mr.config.override.mapreduce.map.memory.mb=4500
-#kylin.job.mr.config.override.mapreduce.reduce.java.opts=-Xmx8g
-#kylin.job.mr.config.override.mapreduce.reduce.memory.mb=8500
-
-kylin.job.mapreduce.mapper.input.rows=500000
-kylin.job.mapreduce.default.reduce.input.mb=200
-kylin.hbase.region.cut=2
-kylin.hbase.hfile.size.gb=1
+kylin.engine.spark-conf.spark.eventLog.dir=hdfs\://master1:8020/kylin/spark-history
+kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://master1:8020/kylin/spark-history
 ----------------
 
 
@@ -484,6 +502,21 @@ Exception in thread "main" java.lang.IllegalArgumentException: Required executor
 Cube优化：
 kylin.sh org.apache.kylin.engine.mr.common.CubeStatsReader dwh_cube
 
+https://www.jianshu.com/p/fb1d690dc19a
+kylin的默认设置中
+
+kylin.storage.hbase.region-cut-gb=5
+kylin.storage.hbase.min-region-count=1
+kylin.storage.hbase.max-region-count=500
+优化
+kylin.storage.hbase.region-cut-gb=1
+kylin.storage.hbase.min-region-count=2
+kylin.storage.hbase.max-region-count=100
+
+备份还还原元数据：
+metastore.sh backup
+metastore.sh restore /works/kylin-3.0.2/meta_backups/meta_2020_06_11_16_27_05
+在web UI上单击"Reload Metadata"对元数据缓存进行刷新
 
 <!-- kylin spark Container killed on request. Exit code is 143
 https://blog.csdn.net/yijichangkong/article/details/51332432 -->
@@ -583,9 +616,9 @@ kylin_job_conf_inmem.xml
 ## Standalone HBase
 #Using hadoop account:
 sudo mkdir /works
-sudo chown -R hadoop:hadoop /works
+sudo chown -R kylin:kylin /works
 sudo mkdir -p /data/hbase
-sudo chown -R hadoop:hadoop /data/hbase
+sudo chown -R kylin:kylin /data/hbase
 https://hbase.apache.org/book.html#quickstart
 Using hbase 2.0.0 and login with hdfs:
 hbase-site.xml
@@ -614,6 +647,16 @@ hbase-site.xml
     </description>
   </property>
 </configuration>
+
+#Starting hbase
+start-hbase.sh 
+<!-- Testing  -->
+hbase shell
+create 'game_x_tmp', '_x'
+put 'game_x_tmp', 'rowkey1', '_x', 'v1'
+scan 'game_x_tmp'
+disable 'game_x_tmp'
+drop 'game_x_tmp'
 
 sqoop import-all-tables \
              --connect jdbc:mysql://192.168.80.98:3306/dwh \
