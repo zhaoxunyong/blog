@@ -672,6 +672,41 @@ sqoop import-all-tables \
 
 sqoop list-databases --connect jdbc:mysql://192.168.80.98:3306 --username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM
 
+dwh.dws_fin_loan_account_d,dwh.dim_date
+
+SELECT min(snap_date_key), max(snap_date_key) FROM dwh.dws_fin_loan_account_d  WHERE dws_fin_loan_account_d.snap_date_key >= '2020-01-01' AND dws_fin_loan_account_d.snap_date_key < '2020-04-30'
+
+SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_amount) as principal_repay_balance_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_irr_amount) as principal_repay_balance_irr_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_amount) as principal_process_balance_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_irr_amount) as principal_process_balance_irr_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_amount) as receive_repay_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_amount) as receive_process_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_deadline_amount) as receive_repay_income_deadline_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_deadline_amount) as receive_process_income_deadline_amount
+FROM dwh.dws_fin_loan_account_d  
+WHERE dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
+AND dws_fin_loan_account_d.snap_date_key < '2020-04-30' 
+GROUP BY dws_fin_loan_account_d.snap_date_key
+
+SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_amount) as principal_repay_balance_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_irr_amount) as principal_repay_balance_irr_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_amount) as principal_process_balance_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_irr_amount) as principal_process_balance_irr_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_amount) as receive_repay_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_amount) as receive_process_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_deadline_amount) as receive_repay_income_deadline_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_deadline_amount) as receive_process_income_deadline_amount
+FROM dwh.dws_fin_loan_account_d dws_fin_loan_account_d 
+INNER JOIN dwh.dim_date dim_date ON dws_fin_loan_account_d.snap_date_key = dim_date.date_key 
+WHERE 1=1 
+AND (dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
+AND dws_fin_loan_account_d.snap_date_key < '2020-04-30')
+GROUP BY dws_fin_loan_account_d.snap_date_key
+
+
 SELECT
 tb.snap_date_key,
 COUNT(tb.contract_number) AS 'totalAccount',
