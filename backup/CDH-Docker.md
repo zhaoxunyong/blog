@@ -126,38 +126,19 @@ docker run -d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
-<!-- echo "10.244.61.2 dn1
-10.244.61.3 dn2
-10.244.61.4 dn3
-10.244.61.5 dn4
-10.244.61.6 dn5
-10.244.61.7 dn6
-
-10.244.93.3 gateway1
-10.244.5.3 kylin
-10.244.32.2 master1
-10.244.93.2 master2
-10.244.5.2 master3
-10.244.32.3 utility" >> /etc/hosts
- -->
-
  80.94：
  docker start  master1
  docker start  utility
-
  80.97：
  docker start master2
  docker start gateway1
-
  80.99：
  docker start master3
  docker start kylin
-
  80.201：
  docker start dn1
  docker start dn2
  docker start dn3
-
  80.98：
  docker start dn4
 

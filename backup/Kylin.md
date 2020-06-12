@@ -168,40 +168,28 @@ https://www.jianshu.com/p/57178dce12de
 SELECT min(snap_date_key), max(snap_date_key) FROM dwh.dws_fin_loan_account_d  WHERE dws_fin_loan_account_d.snap_date_key >= '2020-01-01' AND dws_fin_loan_account_d.snap_date_key < '2020-04-30'
 
 SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_AMOUNT) as PRINCIPAL_REPAY_BALANCE_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT) as PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_AMOUNT) as RECEIVE_REPAY_INCOME_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_AMOUNT) as RECEIVE_PROCESS_INCOME_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT) as RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT) as RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_PRINCIPAL_AMOUNT) as RECEIVE_REPAY_PRINCIPAL_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_PRINCIPAL_AMOUNT) as RECEIVE_PROCESS_PRINCIPAL_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INTEREST_AMOUNT) as RECEIVE_REPAY_INTEREST_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INTEREST_AMOUNT) as RECEIVE_PROCESS_INTEREST_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT) as RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT) as RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_amount) as principal_repay_balance_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_irr_amount) as principal_repay_balance_irr_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_amount) as principal_process_balance_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_irr_amount) as principal_process_balance_irr_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_amount) as receive_repay_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_amount) as receive_process_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_deadline_amount) as receive_repay_income_deadline_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_deadline_amount) as receive_process_income_deadline_amount
 FROM dwh.dws_fin_loan_account_d  
 WHERE dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
 AND dws_fin_loan_account_d.snap_date_key < '2020-04-30' 
 GROUP BY dws_fin_loan_account_d.snap_date_key
 
 SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_AMOUNT) as PRINCIPAL_REPAY_BALANCE_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT) as PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT, 
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT) as PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_AMOUNT) as RECEIVE_REPAY_INCOME_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_AMOUNT) as RECEIVE_PROCESS_INCOME_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT) as RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT) as RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_PRINCIPAL_AMOUNT) as RECEIVE_REPAY_PRINCIPAL_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_PRINCIPAL_AMOUNT) as RECEIVE_PROCESS_PRINCIPAL_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_INTEREST_AMOUNT) as RECEIVE_REPAY_INTEREST_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_INTEREST_AMOUNT) as RECEIVE_PROCESS_INTEREST_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT) as RECEIVE_REPAY_MANAGEMENT_FEE_AMOUNT,
-sum(DWS_FIN_LOAN_ACCOUNT_D.RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT) as RECEIVE_PROCESS_MANAGEMENT_FEE_AMOUNT
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_amount) as principal_repay_balance_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_repay_balance_irr_amount) as principal_repay_balance_irr_amount, 
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_amount) as principal_process_balance_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.principal_process_balance_irr_amount) as principal_process_balance_irr_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_amount) as receive_repay_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_amount) as receive_process_income_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_deadline_amount) as receive_repay_income_deadline_amount,
+sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_deadline_amount) as receive_process_income_deadline_amount
 FROM dwh.dws_fin_loan_account_d dws_fin_loan_account_d 
 INNER JOIN dwh.dim_date dim_date ON dws_fin_loan_account_d.snap_date_key = dim_date.date_key 
 WHERE 1=1 
@@ -1221,4 +1209,26 @@ smaple_dwh_cube: 4.37 mins-5.00 KB/4.18 mins-5.00 KB
 dwh_cube:        71.45(65.58)mins-12.21 GB/
 
 
-Caused by: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 1.0 failed 4 times, most recent failure: Lost task 0.3 in stage 1.0 (TID 28, dn1, executor 4): ExecutorLostFailure (executor 4 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits.  5.0 GB of 5 GB physical memory used. Consider boosting spark.yarn.executor.memoryOverhead or disabling yarn.nodemanager.vmem-check-enabled because of YARN-4714.
+Kylin Dashboard:
+http://kylin.apache.org/cn/docs/tutorial/setup_systemcube.html
+kylin.sh org.apache.kylin.tool.metrics.systemcube.SCCreator -inputConfig /works/kylin-3.0.2/SCSinkTools.json -output /data/kylin/
+hive -f /data/kylin/create_hive_tables_for_system_cubes.sql
+metastore.sh restore /data/kylin/
+
+system-cube.sh setup
+system-cube.sh build
+system-cube.sh cron
+
+修改kylin密码：
+https://w3sun.com/210.html
+http://kylin.apache.org/cn/docs/gettingstarted/faq.html
+cd $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/lib
+java -classpath kylin-server-base-3.0.2.jar:spring-beans-4.3.10.RELEASE.jar:spring-core-4.3.10.RELEASE.jar:spring-security-core-4.2.3.RELEASE.jar:commons-codec-1.7.jar:commons-logging-1.1.1.jar:kylin-cache-3.0.2.jar org.apache.kylin.rest.security.PasswordPlaceholderConfigurer BCrypt "Aa123456"
+
+vi $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/classes/kylinSecurity.xml中ADMIN的密码并重启
+
+sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" --table dws_fin_loan_account_d --fields-terminated-by '|'  --null-string '\\N'  --null-non-string '\\N'  --m 1 --append --target-dir '/works/sqoop/dwh.db'
+
+
+
+/opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-05-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-06-01')  AND \$CONDITIONS" --target-dir hdfs://master1:8020/kylin/kylin_metadata/kylin-17a6c8ed-e221-dbbe-1f3b-f7c66ab5419d/kylin_intermediate_dwh_cube_9864cfd8_5a44_6137_85c9_62b3f9c0750b --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-06-30' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-07-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
