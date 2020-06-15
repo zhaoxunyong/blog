@@ -732,36 +732,50 @@ vi $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/classes/kylinSecurity.xml中ADMIN的
 #drop database if exists dwh cascade; 
 #CREATE DATABASE IF NOT EXISTS game; 
 
+删除旧有database并创建新的：
 hive -e "DROP DATABASE dwh cascade;
 CREATE DATABASE dwh;
 " --hiveconf hive.merge.mapredfiles=false --hiveconf hive.auto.convert.join=true --hiveconf dfs.replication=2 --hiveconf hive.exec.compress.output=true --hiveconf hive.auto.convert.join.noconditionaltask=true --hiveconf mapreduce.job.split.metainfo.maxsize=-1 --hiveconf hive.merge.mapfiles=false --hiveconf hive.auto.convert.join.noconditionaltask.size=100000000 --hiveconf hive.stats.autogather=true
 
+#https://stackoverflow.com/questions/54760995/sqoop-import-data-to-hive-and-hdfs
+导入所有的表（排除个别表）
 sqoop import-all-tables \
 --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
 --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \
 --exclude-tables dws_fin_loan_account_d \
---warehouse-dir hdfs://master1:8020/works/warehouse/dwh.db \
+--warehouse-dir /data/warehouse/dwh.db/ \
 --fields-terminated-by '|'  \
 --null-string '\\N'  --null-non-string '\\N'  \
 --hive-import \
 --hive-database dwh \
---num-mappers 16
+--num-mappers 4
 
 19:10:28-19:21:05
 
-#hdfs://master1:8020/user/hive/warehouse/dwh.db/dim_lender/part-m-00015 from file hdfs://master1:8020/user/hive/warehouse/dwh.db/dim_lender
-#--target-dir hdfs://master1:8020/user/hive/warehouse/dwh.db/dws_fin_loan_account_d
-
+导入固定的表：
 sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
 --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \
 --table dws_fin_loan_account_d \
---hive-import \
 --hive-database dwh \
---target-dir hdfs://master1:8020/works/warehouse/dwh.db/dws_fin_loan_account_d \
+--hive-import \
+--target-dir /data/warehouse/dwh.db/dws_fin_loan_account_d \
 --split-by \`snap_date_key\` \
 --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`" \
 --null-string '\\N' --null-non-string '\\N' \
---fields-terminated-by '|' --num-mappers 16
+--fields-terminated-by '|' --num-mappers 4
+
+通过query导入指定的数据：
+sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
+--username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \
+--query "SELECT * FROM dwh.dws_fin_loan_account_d WHERE 1=1 AND (dws_fin_loan_account_d.snap_date_key >= '2020-04-01' AND dws_fin_loan_account_d.snap_date_key < '2020-06-01')  AND \$CONDITIONS" \
+--hive-table dws_fin_loan_account_d \
+--hive-database dwh \
+--hive-import \
+--target-dir /data/warehouse/dwh.db/dws_fin_loan_account_d \
+--split-by snap_date_key \
+--boundary-query "SELECT min(snap_date_key), max(snap_date_key) FROM dwh.dws_fin_loan_account_d  WHERE dws_fin_loan_account_d.snap_date_key >= '2020-04-01' AND dws_fin_loan_account_d.snap_date_key < '2020-06-01'" \
+--null-string '\\N' --null-non-string '\\N' \
+--fields-terminated-by '|' --num-mappers 4
 
 19:35:23-19:39:15
 
@@ -774,5 +788,5 @@ sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResourc
 --num-mappers 4
 
 
-/opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-05-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-06-01')  AND \$CONDITIONS" --target-dir hdfs://master1:8020/kylin/kylin_metadata/kylin-17a6c8ed-e221-dbbe-1f3b-f7c66ab5419d/kylin_intermediate_dwh_cube_9864cfd8_5a44_6137_85c9_62b3f9c0750b --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-06-30' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-07-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
+/opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-05-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-06-01')  AND \$CONDITIONS" --target-dir hdfs://master1:8020/kylin/kylin_metadata/kylin-17a6c8ed-e221-dbbe-1f3b-f7c66ab5419d/kylin_intermediate_dwh_cube_9864cfd8_5a44_6137_85c9_62b3f9c0750b --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-05-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-06-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
 
