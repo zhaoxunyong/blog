@@ -12,6 +12,7 @@ https://docs.cloudera.com/cdpdc/7.0/release-guide/topics/cdpdc-hardware-requirem
 
 #Working all
 
+#Not necessary
 #Working on all nodes
 sudo su - hadoop
 ssh-keygen -t rsa
