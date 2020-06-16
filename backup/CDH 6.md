@@ -455,24 +455,24 @@ max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
 #https://www.cnblogs.com/missie/p/4370135.html
 
 #就是你的这台服务器节点上准备分给yarn的内存
-yarn.nodemanager.resource.memory-mb=16G（default: the maxnuim of the pysyical machine）
+yarn.nodemanager.resource.memory-mb=20G（default: the maxnuim of the pysyical machine）
 
 #单个任务可申请的最多物理内存量，默认是8192（MB）
 yarn.scheduler.minimum-allocation-mb=1G
 #单个任务可申请的最多物理内存量，默认是8192（MB）
-yarn.scheduler.maximum-allocation-mb=16G
+yarn.scheduler.maximum-allocation-mb=20G
 
 #单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
-mapreduce.map.memory.mb=4G（default: 0）
-mapreduce.reduce.memory.mb=8G（default: 0）
+#mapreduce.map.memory.mb=4G（default: 0）
+#mapreduce.reduce.memory.mb=8G（default: 0）
 
 #https://www.jianshu.com/p/d49135b0559f
 #表示该节点服务器上yarn可以使用的虚拟的CPU个数
-yarn.nodemanager.resource.cpu-vcores=16
+yarn.nodemanager.resource.cpu-vcores=14
 #表示单个任务最小可以申请的虚拟核心数，默认为1
 yarn.scheduler.minimum-allocation-vcores=1
 #表示单个任务最大可以申请的虚拟核数，默认为4；如果申请资源时，超过这个配置，会抛出 InvalidResourceRequestException
-yarn.scheduler.maximum-allocation-vcores=16
+yarn.scheduler.maximum-allocation-vcores=14
 #cpu分配不平衡
 yarn.scheduler.fair.maxassign=4
 
@@ -484,6 +484,7 @@ ${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete true
 如果您想要删除所有资源；可添加 “–force true” 选项：
 ${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --force true --delete true
 https://www.csdn.net/gather_26/MtTaEgzsMjI1MC1ibG9n.html
+https://www.cnblogs.com/sellsa/p/10212620.html
 metastore.sh clean
 metastore.sh clean --delete true
 kylin.sh storage cleanup
@@ -753,6 +754,15 @@ sqoop import-all-tables \
 19:10:28-19:21:05
 
 导入固定的表：
+sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
+--username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \
+--table dim_date \
+--hive-database dwh \
+--hive-import \
+--target-dir /data/warehouse/dwh.db/dim_date \
+--null-string '\\N' --null-non-string '\\N' \
+--fields-terminated-by '|' --num-mappers 4
+
 sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
 --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \
 --table dws_fin_loan_account_d \

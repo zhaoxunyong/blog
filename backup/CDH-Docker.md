@@ -23,6 +23,7 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master1 --name master1 \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -32,6 +33,7 @@ docker run -d \
 -m 24G --cpus=4 \
 -h utility --name utility \
 -p 7180:7180 -p 8889:8889 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -44,6 +46,7 @@ docker run -d \
 -h master2 --name master2 \
 -v /home/dev/cdh:/cdh \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -53,6 +56,7 @@ docker run -d \
 -h gateway1 --name gateway1 \
 -v /home/dev/cdh:/cdh \
 -p 8888:8888 -p 8889:8889 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -68,6 +72,7 @@ docker run -d \
 -h master3 --name master3 \
 -v /home/dev/cdh:/cdh \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -76,6 +81,7 @@ docker run -d \
 -m 24G --cpus=4 \
 -h kylin --name kylin \
 -p 7070:7070 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -87,6 +93,7 @@ sudo mkdir -p /kylin/cdh/dn1
 docker run -d \
 -m 20G --cpus=14 \
 -h dn1 --name dn1 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn1:/kylin/cdh \
 --privileged=true \
@@ -99,6 +106,7 @@ sudo mkdir -p /kylin/cdh/dn2
 docker run -d \
 -m 20G --cpus=14 \
 -h dn2 --name dn2 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn2:/kylin/cdh \
 --privileged=true \
@@ -109,6 +117,7 @@ sudo mkdir -p /kylin/cdh/dn3
 docker run -d \
 -m 20G --cpus=14 \
 -h dn3 --name dn3 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn3:/kylin/cdh \
 --privileged=true \
@@ -119,29 +128,13 @@ dave/cdh:base /sbin/init
 dn4:
 sudo mkdir -p /kylin/cdh/dn4
 docker run -d \
--m 20G --cpus=14 \
+-m 60G --cpus=14 \
 -h dn4 --name dn4 \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn4:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
-
- 80.94：
- docker start  master1
- docker start  utility
- 80.97：
- docker start master2
- docker start gateway1
- 80.99：
- docker start master3
- docker start kylin
- 80.201：
- docker start dn1
- docker start dn2
- docker start dn3
- 80.98：
- docker start dn4
-
 
 echo '10.244.32.2 master1
 10.244.32.3   utility
