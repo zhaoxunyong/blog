@@ -109,60 +109,6 @@ https://www.staroon.dev/2018/12/01/CDH6Install/
 https://archive.cloudera.com/cdh6/6.1.1/parcels/
 https://archive.cloudera.com/cm6/6.1.1/redhat7/yum/RPMS/x86_64/
 
-#repo方式安装：
-wget https://archive.cloudera.com/cm6/6.1.1/allkeys.asc -P /Developer/Kylin/cloudera-repos/cm6/6.1.1/
-wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/gplextras6/6.1.1/redhat7/ -P /Developer/Kylin/cloudera-repos
-wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/cdh6/6.1.1/redhat7/ -P /Developer/Kylin/cloudera-repos
-wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/cm6/6.1.1/redhat7/ -P /Developer/Kylin/cloudera-repos
-
-wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/cdh6/6.1.1/parcels/ -P /Developer/Kylin/cloudera-repos
-
-mv /Developer/Kylin/cloudera-repos /Developer/Kylin/
-cd /Developer/Kylin/
-#python -m SimpleHTTPServer 8900
-#http-server -p8900
-python3 -m http.server 8900
-sudo su -
-
-cat > /etc/yum.repos.d/cloudera-repo.repo << EOF
-[cloudera-repo]
-name=cloudera-repo
-baseurl=http://192.168.80.98:8900/cloudera-repos/cm6/6.1.1/redhat7/yum/
-enabled=1
-gpgcheck=0 
-EOF
-
-cat > /etc/yum.repos.d/cloudera-repo-cdh.repo << EOF
-[cloudera-repo-cdh]
-name=cloudera-repo-cdh
-baseurl=http://192.168.80.98:8900/cloudera-repos/cdh6/6.1.1/redhat7/yum/
-enabled=1
-gpgcheck=0
-EOF
-
-yum clean all
-yum makecache
-#Working on all nodes
-sudo yum install oracle-j2sdk1.8 -y
-sudo yum install cloudera-manager-daemons cloudera-manager-agent -y
-
-#Working on nns
-#sudo yum install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server -y
-sudo yum install oracle-j2sdk1.8 -y
-sudo yum install cloudera-manager-daemons cloudera-manager-server -y
-执行初始化mysql后
-sudo mkdir -p /usr/share/java/
-sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
-sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
-sudo systemctl enable cloudera-scm-server
-sudo systemctl start cloudera-scm-server
-#第一次启动会很慢
-sudo tail -n100 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
-
-
-
-------------------------------------
-手动安装：(可选安装方式，建议)
 #Working on all nodes
 cd /cdh/CDH/6/rpm/
 sudo rpm -ivh oracle-j2sdk1.8-1.8.0+update181-1.x86_64.rpm

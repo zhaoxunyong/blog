@@ -1258,3 +1258,41 @@ AND
 OR (tla.accountStatus <>'AC' AND DATE(tla.settleDate) > '2020-05-19'))
 ) tb
 GROUP BY tb.snap_date_key
+
+
+-----------------------
+#repo方式安装：
+wget https://archive.cloudera.com/cm6/6.1.1/allkeys.asc -P /Developer/Kylin/cloudera-repos/cm6/6.1.1/
+wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/gplextras6/6.1.1/redhat7/ -P /Developer/Kylin/cloudera-repos
+wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/cdh6/6.1.1/redhat7/ -P /Developer/Kylin/cloudera-repos
+wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/cm6/6.1.1/redhat7/ -P /Developer/Kylin/cloudera-repos
+
+wget --recursive --no-parent --no-host-directories https://archive.cloudera.com/cdh6/6.1.1/parcels/ -P /Developer/Kylin/cloudera-repos
+
+mv /Developer/Kylin/cloudera-repos /Developer/Kylin/
+cd /Developer/Kylin/
+#python -m SimpleHTTPServer 8900
+#http-server -p8900
+python3 -m http.server 8900
+sudo su -
+
+cat > /etc/yum.repos.d/cloudera-repo.repo << EOF
+[cloudera-repo]
+name=cloudera-repo
+baseurl=http://192.168.80.98:8900/cloudera-repos/cm6/6.1.1/redhat7/yum/
+enabled=1
+gpgcheck=0 
+EOF
+
+cat > /etc/yum.repos.d/cloudera-repo-cdh.repo << EOF
+[cloudera-repo-cdh]
+name=cloudera-repo-cdh
+baseurl=http://192.168.80.98:8900/cloudera-repos/cdh6/6.1.1/redhat7/yum/
+enabled=1
+gpgcheck=0
+EOF
+
+yum clean all
+yum makecache
+
+------------------------------------

@@ -25,7 +25,6 @@ docker run -d \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -36,7 +35,6 @@ docker run -d \
 -p 7180:7180 -p 8889:8889 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -47,7 +45,6 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master2 --name master2 \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 --privileged=true \
@@ -58,7 +55,6 @@ docker run -d \
 -m 8G --cpus=4 \
 -h gateway --name gateway \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -p 8888:8888 -p 8889:8889 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 --privileged=true \
@@ -75,7 +71,6 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master3 --name master3 \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 --privileged=true \
@@ -88,7 +83,6 @@ docker run -d \
 -p 7070:7070 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -101,7 +95,6 @@ docker run -d \
 -h dn1 --name dn1 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn1:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -115,7 +108,6 @@ docker run -d \
 -h dn2 --name dn2 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn2:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -127,7 +119,6 @@ docker run -d \
 -h dn3 --name dn3 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn3:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -141,7 +132,6 @@ docker run -d \
 -h dn4 --name dn4 \
 $(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
--v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn4:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
