@@ -147,7 +147,19 @@ sudo yum install oracle-j2sdk1.8 -y
 sudo yum install cloudera-manager-daemons cloudera-manager-agent -y
 
 #Working on nns
-sudo yum install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server -y
+#sudo yum install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server -y
+sudo yum install oracle-j2sdk1.8 -y
+sudo yum install cloudera-manager-daemons cloudera-manager-server -y
+执行初始化mysql后
+sudo mkdir -p /usr/share/java/
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
+sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
+sudo systemctl enable cloudera-scm-server
+sudo systemctl start cloudera-scm-server
+#第一次启动会很慢
+sudo tail -n100 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+
+
 
 ------------------------------------
 手动安装：(可选安装方式，建议)
@@ -189,6 +201,8 @@ mysql -uroot -p
 #修改root用户的密码
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'Aa123#@!';
 
+#mysql -uroot -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM
+
 #https://docs.cloudera.com/documentation/enterprise/6/6.3/topics/cm_ig_mysql.html#cmig_topic_5_5
 服务名	                             数据库名	  用户名
 Cloudera Manager Server	            scm	      scm
@@ -201,6 +215,15 @@ Cloudera Navigator Audit Server	    nav	      nav
 Cloudera Navigator Metadata Server	navms	    navms
 Oozie	                              oozie	    oozie
 
+drop database if exists scm;
+drop database if exists amon;
+drop database if exists rman;
+drop database if exists hue;
+drop database if exists metastore;
+drop database if exists sentry;
+drop database if exists nav;
+drop database if exists navms;
+drop database if exists oozie;
 CREATE DATABASE scm DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 CREATE DATABASE amon DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 CREATE DATABASE rman DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
@@ -229,7 +252,7 @@ sudo mkdir -p /usr/share/java/
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
 
-#Working on nns
+#Working on cmserver
 #scm_prepare_database.sh mysql  -uroot -p --scm-host localhost scm scm scm_password
 sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM scm scm Aa123#@!
 sudo /opt/cloudera/cm/schema/scm_prepare_database.sh mysql -h192.168.80.98 -p6Aq2FuMVvWzsEFeJ4p84ctiwM amon amon Aa123#@!
@@ -247,7 +270,7 @@ sudo systemctl start cloudera-scm-server
 sudo tail -n100 -f /var/log/cloudera-scm-server/cloudera-scm-server.log
 
 #Working on all nodes
-sudo sed -i "s;server_host=.*;server_host=nns;g" /etc/cloudera-scm-agent/config.ini
+sudo sed -i "s;server_host=.*;server_host=cmserver;g" /etc/cloudera-scm-agent/config.ini
 sudo systemctl enable cloudera-scm-agent
 sudo systemctl start cloudera-scm-agent
 sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
@@ -715,13 +738,16 @@ dwh_cube:        71.45(65.58)mins-12.21 GB/
 
 Kylin Dashboard:
 http://kylin.apache.org/cn/docs/tutorial/setup_systemcube.html
+
+system-cube.sh setup
+sudo mkdir -p /data/kylin/
+sudo chown -R kylin:kylin /data/kylin/
 kylin.sh org.apache.kylin.tool.metrics.systemcube.SCCreator -inputConfig /works/kylin-3.0.2/SCSinkTools.json -output /data/kylin/
 hive -f /data/kylin/create_hive_tables_for_system_cubes.sql
 metastore.sh restore /data/kylin/
-
-system-cube.sh setup
-system-cube.sh build
+<!-- system-cube.sh build -->
 system-cube.sh cron
+Reload metadata via Kylin WEB
 
 修改kylin密码：
 https://w3sun.com/210.html

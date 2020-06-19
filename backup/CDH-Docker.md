@@ -7,13 +7,13 @@ https://www.cnblogs.com/Jing-Wang/p/10672609.html
 192.168.100.31     root    wlt.local   64G/16Core -->
 192.168.80.196     root    64G/48Core  10G/8C 
 
-192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(utility/mysql)
-192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway1)
-192.168.80.99      root    32G/8Core   8G/4C(master3)  24G/4C(kylin)
+192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(cmserver/mysql)
+192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway)
+192.168.80.99      root    32G/8Core   8G/4C(master3) 24G/4C(kylin)
 
 <!-- #192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6 -->
-192.168.80.201     root    64G/48Core  20G/14C node1/node2/node3
-192.168.80.98      root    64G/16Core  20G/14C node4
+192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6
+<!-- 192.168.80.98      root    64G/16Core  30G/8C node7/node8 -->
 
 
 80.94
@@ -23,18 +23,20 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master1 --name master1 \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
-utility:
+cmserver:
 docker run -d \
 -m 24G --cpus=4 \
--h utility --name utility \
+-h cmserver --name cmserver \
 -p 7180:7180 -p 8889:8889 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -45,18 +47,20 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master2 --name master2 \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 --privileged=true \
 dave/cdh:base /sbin/init
 
-gateway1:
+gateway:
 docker run -d \
 -m 8G --cpus=4 \
--h gateway1 --name gateway1 \
+-h gateway --name gateway \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -p 8888:8888 -p 8889:8889 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -71,8 +75,9 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master3 --name master3 \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -81,8 +86,9 @@ docker run -d \
 -m 24G --cpus=4 \
 -h kylin --name kylin \
 -p 7070:7070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 --privileged=true \
 dave/cdh:base /sbin/init
 
@@ -93,8 +99,9 @@ sudo mkdir -p /kylin/cdh/dn1
 docker run -d \
 -m 20G --cpus=14 \
 -h dn1 --name dn1 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn1:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -106,8 +113,9 @@ sudo mkdir -p /kylin/cdh/dn2
 docker run -d \
 -m 20G --cpus=14 \
 -h dn2 --name dn2 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn2:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -117,8 +125,9 @@ sudo mkdir -p /kylin/cdh/dn3
 docker run -d \
 -m 20G --cpus=14 \
 -h dn3 --name dn3 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn3:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
@@ -128,19 +137,20 @@ dave/cdh:base /sbin/init
 dn4:
 sudo mkdir -p /kylin/cdh/dn4
 docker run -d \
--m 60G --cpus=14 \
+-m 20G --cpus=14 \
 -h dn4 --name dn4 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{if(NR>2){print "--add-host "$2":"$1}}') \
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 -v /home/dev/cdh:/cdh \
+-v /etc/yum.repos.d:/etc/yum.repos.d \
 -v /kylin/cdh/dn4:/kylin/cdh \
 --privileged=true \
 dave/cdh:base /sbin/init
 
-echo '10.244.32.2 master1
-10.244.32.3   utility
+<!-- echo '10.244.32.2 master1
+10.244.32.3   cmserver
 
 10.244.93.2   master2
-10.244.93.3   gateway1
+10.244.93.3   gateway
 
 10.244.5.2   master3
 10.244.5.3   kylin
@@ -149,7 +159,7 @@ echo '10.244.32.2 master1
 10.244.61.3   dn2
 10.244.61.4   dn3
 
-10.244.47.2   dn4' >> /etc/hosts
+10.244.47.2   dn4' >> /etc/hosts -->
 
 http://192.168.80.94:7180/cmf/
 http://192.168.80.99:7070/kylin/
