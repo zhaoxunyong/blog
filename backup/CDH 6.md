@@ -705,6 +705,8 @@ vi $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/classes/kylinSecurity.xml中ADMIN的
 #drop database if exists dwh cascade; 
 #CREATE DATABASE IF NOT EXISTS game; 
 
+dwh.dim_account_age, dwh.dim_client, dwh.dim_collection_status, dwh.dim_contract, dwh.dim_date, dwh.dim_lender, dwh.dim_loan_account, dwh.dim_loan_account_process_status, dwh.dim_loan_account_status, dwh.dim_loan_account_type, dwh.dim_loan_bill, dwh.dim_loan_product, dwh.dim_loan_type, dwh.dim_repay_amount_type, dwh.dim_source_system, dwh.dim_trading_summary, dwh.dim_virtual_center, dwh.dws_fin_exempt, dwh.dws_fin_loan, dwh.dws_fin_loan_account_d, dwh.dws_fin_writeoff, dwh.temp
+
 删除旧有database并创建新的：
 hive -e "DROP DATABASE dwh cascade;
 CREATE DATABASE dwh;
