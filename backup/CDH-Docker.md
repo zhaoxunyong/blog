@@ -5,16 +5,19 @@ https://www.cnblogs.com/Jing-Wang/p/10672609.html
 <!-- 192.168.100.100    root    wlt.local   32G/8Core
 192.168.108.100    root    wlt.local   32G/8Core
 192.168.100.31     root    wlt.local   64G/16Core -->
-192.168.80.196     root    64G/48Core  10G/8C 
+192.168.80.196     root    64G/48Core  10G/8C
 
 192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(cmserver/mysql)
 192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway)
 192.168.80.99      root    32G/8Core   8G/4C(master3) 24G/4C(kylin)
 
-<!-- #192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6 -->
-192.168.80.201     root    64G/48Core  10G/8C node1/node2/node3/node4/node5/node6
-<!-- 192.168.80.98      root    64G/16Core  30G/8C node7/node8 -->
+192.168.80.201     root    64G/48Core  20G/16C node1/node2/node3
+192.168.80.98      root    64G/16Core  20G/16C node4
 
+<!-- 192.168.80.201     root    64G/48Core  16G/12C node1/node2/node3/node4
+192.168.80.98      root    64G/16Core  16G/12C node5 -->
+
+$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
 
 80.94
 ---------------------------
@@ -23,20 +26,20 @@ docker run -d \
 -m 8G --cpus=4 \
 -h master1 --name master1 \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 cmserver:
 docker run -d \
 -m 24G --cpus=4 \
 -h cmserver --name cmserver \
 -p 7180:7180 -p 8889:8889 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 80.97
 ---------------------------
@@ -46,9 +49,9 @@ docker run -d \
 -h master2 --name master2 \
 -v /home/dev/cdh:/cdh \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 gateway:
 docker run -d \
@@ -56,9 +59,9 @@ docker run -d \
 -h gateway --name gateway \
 -v /home/dev/cdh:/cdh \
 -p 8888:8888 -p 8889:8889 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 https://blog.csdn.net/lsziri/article/details/69396990
 iptables -t nat -A PREROUTING  -p tcp -m tcp --dport 8889 -j DNAT --to-destination  10.244.93.3:8889
@@ -72,69 +75,69 @@ docker run -d \
 -h master3 --name master3 \
 -v /home/dev/cdh:/cdh \
 -p 8088:8088 -p 19888:19888 -p 50070:50070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 kylin:
 docker run -d \
 -m 24G --cpus=4 \
 -h kylin --name kylin \
 -p 7070:7070 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 80.201
 ---------------------------
 dn1:
 sudo mkdir -p /kylin/cdh/dn1
 docker run -d \
--m 20G --cpus=14 \
+-m 20G --cpus=16 \
 -h dn1 --name dn1 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn1:/kylin/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 docker update --memory 20480m dn2
 
 dn2:
 sudo mkdir -p /kylin/cdh/dn2
 docker run -d \
--m 20G --cpus=14 \
+-m 20G --cpus=16 \
 -h dn2 --name dn2 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn2:/kylin/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 dn3:
 sudo mkdir -p /kylin/cdh/dn3
 docker run -d \
--m 20G --cpus=14 \
+-m 20G --cpus=16 \
 -h dn3 --name dn3 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn3:/kylin/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 80.98
 ---------------------------
 dn4:
 sudo mkdir -p /kylin/cdh/dn4
 docker run -d \
--m 20G --cpus=14 \
+-m 20G --cpus=16 \
 -h dn4 --name dn4 \
-$(cat /etc/hosts|sed -e '/^$/d' -e '/^::1.*/d' -e '/127.0.0.1.*/d' -e '/^#.*/d'|awk -F ' ' '{print "--add-host "$2":"$1}') \
+-v /etc/hosts:/etc/hosts \
 -v /home/dev/cdh:/cdh \
 -v /kylin/cdh/dn4:/kylin/cdh \
 --privileged=true \
-dave/cdh:base /sbin/init
+192.168.100.87:5000/cdh:base /sbin/init
 
 <!-- echo '10.244.32.2 master1
 10.244.32.3   cmserver
@@ -163,7 +166,7 @@ jobhistory all nodes:19888
 #hiveServer:10002
 
 test:
-docker run -it --rm --name centos dave/cdh:base bash
+docker run -it --rm --name centos 192.168.100.87:5000/cdh:base bash
 进入bash后，ip addr查看各自ip，互相ping一下对方的ip，如果可以ping通，表示安装正常，否则请检查相关的安装步骤。
 https://blog.csdn.net/baidu_38558076/article/details/103890319
 
@@ -185,7 +188,7 @@ RUN bash script.sh
 
 #EXPOSE 6379
 -----------------
-docker build -t dave/cdh:base ./
+docker build -t 192.168.100.87:5000/cdh:base ./
 
 Finereporter: 192.168.100.224
 

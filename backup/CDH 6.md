@@ -223,6 +223,64 @@ sudo tail -n100 -n100 -f /var/log/cloudera-scm-agent/cloudera-scm-agent.log
 
 http://nns:7180
 
+hue:
+https://blog.csdn.net/gao123456789amy/article/details/79242713
+hue的时区zone修改为：
+Asia/Shanghai
+http://nns:8889
+
+修改hdfs任何用户可以写入：
+https://blog.csdn.net/Ahuuua/article/details/90669011
+1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
+2、添加这个，保存更改，重启hdfs
+HDFS Service Advanced Configuration Snippet (Safety Valve) for hdfs-site.xml中添加：
+dfs.permissions.enabled 的值设置为false
+
+
+The required MAP capability is more than the supported max container capability in the cluster
+https://blog.csdn.net/weixin_33766168/article/details/93405662
+https://www.cnblogs.com/yako/p/5498168.html
+https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
+说明：单个Map/Reduce task 申请的内存大小，其值应该在RM中的最大和最小container值之间。如果没有配置则通过如下简单公式获得：
+max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
+一般reduce内存大小应该是map的2倍。注：这两个值可以在应用启动时通过参数改变，可以动态调整；
+
+#https://blog.csdn.net/u014665013/article/details/80923044
+#https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
+#https://blog.csdn.net/mamls/article/details/68941800
+#https://www.cnblogs.com/missie/p/4370135.html
+
+#就是你的这台服务器节点上准备分给yarn的内存
+yarn.nodemanager.resource.memory-mb=20G（default: the maxnuim of the pysyical machine）
+
+#单个任务可申请的最多物理内存量，默认是8192（MB）
+yarn.scheduler.minimum-allocation-mb=1G
+#单个任务可申请的最多物理内存量，默认是8192（MB）
+yarn.scheduler.maximum-allocation-mb=20G
+
+#单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
+#mapreduce.map.memory.mb=4G（default: 0）
+#mapreduce.reduce.memory.mb=8G（default: 0）
+
+#https://www.jianshu.com/p/d49135b0559f
+#表示该节点服务器上yarn可以使用的虚拟的CPU个数
+yarn.nodemanager.resource.cpu-vcores=16
+#表示单个任务最小可以申请的虚拟核心数，默认为1
+yarn.scheduler.minimum-allocation-vcores=1
+#表示单个任务最大可以申请的虚拟核数，默认为4；如果申请资源时，超过这个配置，会抛出 InvalidResourceRequestException
+yarn.scheduler.maximum-allocation-vcores=16
+#cpu分配不平衡
+yarn.scheduler.fair.maxassign=4
+
+#Working on kylin
+sudo su - kylin
+ssh-keygen -t rsa
+#直接写入到80.201的~/.ssh/authorized_keys中：
+#ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@nna
+#cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+sudo chmod 700 ~/.ssh
+sudo chmod 600 ~/.ssh/authorized_keys
+
 <!-- sudo mkdir /data/
 /data/hbase
 /data/dfs/dn
@@ -249,6 +307,7 @@ sudo chown -R kylin:kylin /works
 <!-- sudo mkdir -p /data/hbase
 sudo chown -R kylin:kylin /data -->
 
+sudo su -
 cat > /etc/profile.d/kylin.sh << EOF
 export JAVA_HOME=/usr/java/jdk1.8.0_181-cloudera
 export SPARK_HOME=/opt/cloudera/parcels/CDH/lib/spark/
@@ -281,6 +340,7 @@ sudo find / -name "*commons-configuration*"
 
 
 <!-- start-hbase.sh  -->
+## Testing...
 hbase shell
 create 'game_x_tmp', '_x'
 put 'game_x_tmp', 'rowkey1', '_x', 'v1'
@@ -293,13 +353,7 @@ hive>
 CREATE DATABASE IF NOT EXISTS game; 
 DROP DATABASE game;
 
-修改hdfs任何用户可以写入：
-https://blog.csdn.net/Ahuuua/article/details/90669011
-1、找到hdfs-site.xml 的 HDFS 服务高级配置代码段（安全阀）
-2、添加这个，保存更改，重启hdfs
-HDFS Service Advanced Configuration Snippet (Safety Valve) for hdfs-site.xml中添加：
-dfs.permissions.enabled 的值设置为false
-
+Hdfs>
 echo "xxx" > hello.txt
 #上传本地文件到分布式文件系统中的 tmp 目录
 hdfs dfs -mkdir /works/
@@ -328,15 +382,6 @@ oozie:
 https://www.cnblogs.com/yinzhengjie/p/10934172.html
 https://blog.csdn.net/adshiye/article/details/84311890
 
-Failed to install Oozie ShareLib:
-cpu core not greate than...
-此时已经创建了oozie，新开一个窗口修改core后，再在此页面点击resume.
-
-hue:
-https://blog.csdn.net/gao123456789amy/article/details/79242713
-hue的时区zone修改为：
-Asia/Shanghai
-http://nns:8889
 
 SQOOP:
 #Testing
@@ -365,8 +410,10 @@ kylin.job.mapreduce.mapper.input.rows=500000
 kylin.job.mapreduce.default.reduce.input.mb=200
 #kylin.hbase.region.cut=2
 #kylin.hbase.hfile.size.gb=1
-kylin.storage.hbase.region-cut-gb=2
+kylin.storage.hbase.region-cut-gb=1
 kylin.storage.hbase.hfile-size-gb=1
+#kylin.storage.hbase.min-region-count=2
+#kylin.storage.hbase.max-region-count=100
 
 kylin.cube.cubeplanner.enabled=true
 kylin.server.query-metrics2-enabled=true
@@ -402,48 +449,11 @@ kylin.engine.spark-conf.spark.shuffle.service.enabled=true
 kylin.engine.spark-conf.spark.eventLog.enabled=true
 kylin.engine.spark-conf.spark.hadoop.dfs.replication=2
 kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress=true
-kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoo
-p.io.compress.DefaultCodec
+kylin.engine.spark-conf.spark.hadoop.mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.DefaultCodec
 kylin.engine.spark-conf.spark.io.compression.codec=org.apache.spark.io.SnappyCompressionCodec
 kylin.engine.spark-conf.spark.eventLog.dir=hdfs\://master1:8020/kylin/spark-history
 kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://master1:8020/kylin/spark-history
 ----------------
-
-
-The required MAP capability is more than the supported max container capability in the cluster
-https://blog.csdn.net/weixin_33766168/article/details/93405662
-https://www.cnblogs.com/yako/p/5498168.html
-https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
-说明：单个Map/Reduce task 申请的内存大小，其值应该在RM中的最大和最小container值之间。如果没有配置则通过如下简单公式获得：
-max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
-一般reduce内存大小应该是map的2倍。注：这两个值可以在应用启动时通过参数改变，可以动态调整；
-
-#https://blog.csdn.net/u014665013/article/details/80923044
-#https://blog.csdn.net/z3935212/article/details/78637157?utm_medium=distribute.pc_relevant.none-task-blog-baidujs-9
-#https://blog.csdn.net/mamls/article/details/68941800
-#https://www.cnblogs.com/missie/p/4370135.html
-
-#就是你的这台服务器节点上准备分给yarn的内存
-yarn.nodemanager.resource.memory-mb=20G（default: the maxnuim of the pysyical machine）
-
-#单个任务可申请的最多物理内存量，默认是8192（MB）
-yarn.scheduler.minimum-allocation-mb=1G
-#单个任务可申请的最多物理内存量，默认是8192（MB）
-yarn.scheduler.maximum-allocation-mb=20G
-
-#单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
-#mapreduce.map.memory.mb=4G（default: 0）
-#mapreduce.reduce.memory.mb=8G（default: 0）
-
-#https://www.jianshu.com/p/d49135b0559f
-#表示该节点服务器上yarn可以使用的虚拟的CPU个数
-yarn.nodemanager.resource.cpu-vcores=14
-#表示单个任务最小可以申请的虚拟核心数，默认为1
-yarn.scheduler.minimum-allocation-vcores=1
-#表示单个任务最大可以申请的虚拟核数，默认为4；如果申请资源时，超过这个配置，会抛出 InvalidResourceRequestException
-yarn.scheduler.maximum-allocation-vcores=14
-#cpu分配不平衡
-yarn.scheduler.fair.maxassign=4
 
 清理空间：
 http://kylin.apache.org/cn/docs/howto/howto_cleanup_storage.html
