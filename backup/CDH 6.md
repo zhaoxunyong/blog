@@ -738,14 +738,14 @@ sqoop import-all-tables \
 19:10:28-19:21:05
 
 导入固定的表：
-sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
+<!-- sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
 --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \
 --table dim_date \
 --hive-database dwh \
 --hive-import \
 --target-dir /data/warehouse/dwh.db/dim_date \
 --null-string '\\N' --null-non-string '\\N' \
---fields-terminated-by '|' --num-mappers 4
+--fields-terminated-by '|' --num-mappers 4 -->
 
 sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver \
 --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" \

@@ -2,13 +2,10 @@ https://blog.csdn.net/xu470438000/article/details/50512442
 https://www.cnblogs.com/Jing-Wang/p/10672609.html
 
 
-<!-- 192.168.100.100    root    wlt.local   32G/8Core
-192.168.108.100    root    wlt.local   32G/8Core
-192.168.100.31     root    wlt.local   64G/16Core -->
 192.168.80.196     root    64G/48Core  10G/8C
 
 192.168.80.94      root    32G/8Core   8G/4C(master1) 24G/4C(cmserver/mysql)
-192.168.80.97      root    32G/8Core   8G/4C(master2)  8G/4C(gateway)
+192.168.80.97      root    32G/8Core   8G/4C(master2) 24G/4C(gateway)
 192.168.80.99      root    32G/8Core   8G/4C(master3) 24G/4C(kylin)
 
 192.168.80.201     root    64G/48Core  20G/16C node1/node2/node3
@@ -139,19 +136,15 @@ docker run -d \
 --privileged=true \
 192.168.100.87:5000/cdh:base /sbin/init
 
-<!-- echo '10.244.32.2 master1
-10.244.32.3   cmserver
-
-10.244.93.2   master2
-10.244.93.3   gateway
-
-10.244.5.2   master3
-10.244.5.3   kylin
-
-10.244.61.2   dn1
-10.244.61.3   dn2
-10.244.61.4   dn3
-
+<!-- echo '10.244.23.2   master1
+10.244.23.3   cmserver
+10.244.60.2   master2
+10.244.60.3   gateway
+10.244.88.2   master3
+10.244.88.3   kylin
+10.244.96.2   dn1 
+10.244.96.3   dn2 
+10.244.96.4   dn3 
 10.244.47.2   dn4' >> /etc/hosts -->
 
 http://192.168.80.94:7180/cmf/
