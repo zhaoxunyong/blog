@@ -197,6 +197,7 @@ exit
 sudo mkdir -p /usr/share/java/
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /usr/share/java/mysql-connector-java.jar
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/cm/lib/mysql-connector-java.jar
+ln -fs /opt/cloudera/parcels/CDH/lib/oozie/lib/logredactor-2.0.6.jar /opt/cloudera/parcels/CDH/lib/oozie/lib/
 
 #Working on cmserver
 #scm_prepare_database.sh mysql  -uroot -p --scm-host localhost scm scm scm_password
@@ -251,12 +252,12 @@ max(MIN_CONTAINER_SIZE, (Total Available RAM) / containers))
 #https://www.cnblogs.com/missie/p/4370135.html
 
 #就是你的这台服务器节点上准备分给yarn的内存
-yarn.nodemanager.resource.memory-mb=20G（default: the maxnuim of the pysyical machine）
+yarn.nodemanager.resource.memory-mb=32G（default: the maxnuim of the pysyical machine）
 
 #单个任务可申请的最多物理内存量，默认是8192（MB）
 yarn.scheduler.minimum-allocation-mb=1G
 #单个任务可申请的最多物理内存量，默认是8192（MB）
-yarn.scheduler.maximum-allocation-mb=20G
+yarn.scheduler.maximum-allocation-mb=32G
 
 #单个map任务申请内存资源,一般reduce内存大小应该是map的2倍
 #mapreduce.map.memory.mb=4G（default: 0）
@@ -264,11 +265,11 @@ yarn.scheduler.maximum-allocation-mb=20G
 
 #https://www.jianshu.com/p/d49135b0559f
 #表示该节点服务器上yarn可以使用的虚拟的CPU个数
-yarn.nodemanager.resource.cpu-vcores=16
+yarn.nodemanager.resource.cpu-vcores=8
 #表示单个任务最小可以申请的虚拟核心数，默认为1
 yarn.scheduler.minimum-allocation-vcores=1
 #表示单个任务最大可以申请的虚拟核数，默认为4；如果申请资源时，超过这个配置，会抛出 InvalidResourceRequestException
-yarn.scheduler.maximum-allocation-vcores=16
+yarn.scheduler.maximum-allocation-vcores=8
 #cpu分配不平衡
 yarn.scheduler.fair.maxassign=4
 
@@ -295,7 +296,7 @@ useradd -m -g kylin kylin
 passwd kylin
 chmod +w /etc/sudoers
 
-vim /etc/sudoers
+#vim /etc/sudoers
 #在 sudoers 文件中添加以下内容
 echo "kylin ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
 #最后保存内容后退出,并取消 sudoers 文件的写权限
@@ -328,7 +329,7 @@ mkdir /works/kylin-3.0.2/ext/
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /works/kylin-3.0.2/ext/
 sudo cp -a /cdh/CDH/mysql-connector-java-5.1.48-bin.jar /opt/cloudera/parcels/CDH/lib/sqoop/lib/
 
-cp -a /cdh/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/
+cp -a /cdh/commons-configuration-1.6.jar /works/kylin-3.0.2/tomcat/lib/commons-configuration-1.6.jar
 
 kylin_hadoop_conf_dir is empty, check if there's error in the output of 'kylin.sh start'
 在 kylin.properties 中设置属性 “kylin.env.hadoop-conf-dir” 好让 Kylin 知道这个目录:
@@ -408,10 +409,10 @@ kylin.job.mr.config.override.mapreduce.reduce.memory.mb=8500
 
 kylin.job.mapreduce.mapper.input.rows=500000
 kylin.job.mapreduce.default.reduce.input.mb=200
-#kylin.hbase.region.cut=2
-#kylin.hbase.hfile.size.gb=1
-kylin.storage.hbase.region-cut-gb=1
-kylin.storage.hbase.hfile-size-gb=1
+kylin.hbase.region.cut=2
+kylin.hbase.hfile.size.gb=1
+#kylin.storage.hbase.region-cut-gb=1
+#kylin.storage.hbase.hfile-size-gb=1
 #kylin.storage.hbase.min-region-count=2
 #kylin.storage.hbase.max-region-count=100
 
@@ -667,8 +668,8 @@ sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_amount) as receive_process_inc
 sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_deadline_amount) as receive_repay_income_deadline_amount,
 sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_deadline_amount) as receive_process_income_deadline_amount
 FROM dwh.dws_fin_loan_account_d  
-WHERE dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
-AND dws_fin_loan_account_d.snap_date_key < '2020-04-30' 
+WHERE dws_fin_loan_account_d.snap_date_key >= '2014-01-01' 
+AND dws_fin_loan_account_d.snap_date_key < '2020-07-30' 
 GROUP BY dws_fin_loan_account_d.snap_date_key
 
 SELECT dws_fin_loan_account_d.snap_date_key as SNAP_DATE_KEY, 
@@ -681,11 +682,15 @@ sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_amount) as receive_process_inc
 sum(DWS_FIN_LOAN_ACCOUNT_D.receive_repay_income_deadline_amount) as receive_repay_income_deadline_amount,
 sum(DWS_FIN_LOAN_ACCOUNT_D.receive_process_income_deadline_amount) as receive_process_income_deadline_amount
 FROM dwh.dws_fin_loan_account_d dws_fin_loan_account_d 
-INNER JOIN dwh.dim_date dim_date ON dws_fin_loan_account_d.snap_date_key = dim_date.date_key 
+LEFT JOIN dwh.dim_date dim_date ON dws_fin_loan_account_d.snap_date_key = dim_date.date_key 
+LEFT JOIN dwh.dim_virtual_center ON dws_fin_loan_account_d.virtual_center_id = dim_virtual_center.virtual_center_id 
+LEFT JOIN dwh.dim_loan_product ON dws_fin_loan_account_d.loan_product_id = dim_loan_product.loan_product_id 
 WHERE 1=1 
-AND (dws_fin_loan_account_d.snap_date_key >= '2013-01-01' 
-AND dws_fin_loan_account_d.snap_date_key < '2020-04-30')
-GROUP BY dws_fin_loan_account_d.snap_date_key
+AND (dim_date.date_key >= '2017-01-01' 
+AND dim_date.date_key < '2020-07-30')
+AND dim_virtual_center.virtual_center_id  = 1
+AND dim_loan_product.loan_product_id  = 2
+GROUP BY dws_fin_loan_account_d.snap_date_key,dws_fin_loan_account_d.virtual_center_id,dws_fin_loan_account_d.loan_product_id
 
                  mapreducer/spark
 smaple_dwh_cube: 4.37 mins-5.00 KB/4.18 mins-5.00 KB
@@ -770,17 +775,4 @@ sqoop import --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResourc
 --boundary-query "SELECT min(snap_date_key), max(snap_date_key) FROM dwh.dws_fin_loan_account_d  WHERE dws_fin_loan_account_d.snap_date_key >= '2020-04-01' AND dws_fin_loan_account_d.snap_date_key < '2020-06-01'" \
 --null-string '\\N' --null-non-string '\\N' \
 --fields-terminated-by '|' --num-mappers 4
-
-19:35:23-19:39:15
-
-14:21-14:35
-
---target-dir hdfs://master1:8020/kylin/kylin_metadata/kylin-17a6c8ed-e221-dbbe-1f3b-f7c66ab5419d/kylin_intermediate_dwh_cube_9864cfd8_5a44_6137_85c9_62b3f9c0750b \
---split-by \`snap_date_key\` \
---null-non-string '\\N' \
---fields-terminated-by '|' \
---num-mappers 4
-
-
-/opt/cloudera/parcels/CDH/lib/sqoop/bin/sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true  -Dmapreduce.job.queuename=default --connect "jdbc:mysql://192.168.80.98:3306/dwh?dontTrackOpenResources=true&defaultFetchSize=1000&useCursorFetch=true" --driver com.mysql.jdbc.Driver --username root --password "6Aq2FuMVvWzsEFeJ4p84ctiwM" --query "SELECT \`dws_fin_loan_account_d\`.\`fin_loan_account_d_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_FIN_LOAN_ACCOUNT_D_ID\` ,\`dws_fin_loan_account_d\`.\`sid\` as \`DWS_FIN_LOAN_ACCOUNT_D_SID\` ,\`dws_fin_loan_account_d\`.\`source_system_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_SOURCE_SYSTEM_ID\` ,\`dws_fin_loan_account_d\`.\`snap_date_key\` ,\`dws_fin_loan_account_d\`.\`loan_bill_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_BILL_ID\` ,\`dws_fin_loan_account_d\`.\`loan_client_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_CLIENT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_account_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_ACCOUNT_ID\` ,\`dws_fin_loan_account_d\`.\`contract_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_CONTRACT_ID\` ,\`dws_fin_loan_account_d\`.\`loan_product_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_LOAN_PRODUCT_ID\` ,\`dws_fin_loan_account_d\`.\`virtual_center_id\` as \`DWS_FIN_LOAN_ACCOUNT_D_VIRTUAL_CENTER_ID\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_repay_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_REPAY_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`principal_process_balance_irr_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_PRINCIPAL_PROCESS_BALANCE_IRR_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_repay_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_REPAY_INCOME_DEADLINE_AMOUNT\` ,\`dws_fin_loan_account_d\`.\`receive_process_income_deadline_amount\` as \`DWS_FIN_LOAN_ACCOUNT_D_RECEIVE_PROCESS_INCOME_DEADLINE_AMOUNT\`  FROM \`dwh\`.\`dws_fin_loan_account_d\` \`dws_fin_loan_account_d\` INNER JOIN \`dwh\`.\`dim_date\` \`dim_date\` ON \`dws_fin_loan_account_d\`.\`snap_date_key\` = \`dim_date\`.\`date_key\` WHERE 1=1 AND (\`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-05-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-06-01')  AND \$CONDITIONS" --target-dir hdfs://master1:8020/kylin/kylin_metadata/kylin-17a6c8ed-e221-dbbe-1f3b-f7c66ab5419d/kylin_intermediate_dwh_cube_9864cfd8_5a44_6137_85c9_62b3f9c0750b --split-by \`snap_date_key\` --boundary-query "SELECT min(\`snap_date_key\`), max(\`snap_date_key\`) FROM \`dwh\`.\`dws_fin_loan_account_d\`  WHERE \`dws_fin_loan_account_d\`.\`snap_date_key\` >= '2020-05-01' AND \`dws_fin_loan_account_d\`.\`snap_date_key\` < '2020-06-01'" --null-string '\\N' --null-non-string '\\N' --fields-terminated-by '|' --num-mappers 4
 
