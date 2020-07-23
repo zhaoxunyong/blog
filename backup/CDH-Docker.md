@@ -195,7 +195,7 @@ QURNSU46S1lMSU4=
 date -u -d "2020-05-01 00:00:00" +%s'000'
 date -u -d "2020-06-01 00:00:00" +%s'000'
 
-date -u -d "`date -d "1 days ago" +%Y-%m-%d` 00:00:00" +%s'000'
+date -u -d "`date -d "${last_days_ago} days ago" +%Y-%m-%d` 00:00:00" +%s'000'
 date -u -d "`date +%Y-%m-%d` 00:00:00" +%s'000'
 
 curl -X PUT --user ADMIN:KYLIN -H "Content-Type: application/json;charset=utf-8" -d '{ "startTime": 1588291200000, "endTime": 1590969600000, "buildType": "BUILD"}' http://192.168.80.99:7070/kylin/api/cubes/dwh_cube/build
