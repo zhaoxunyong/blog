@@ -382,6 +382,11 @@ http://kylin1:7070/kylin
 oozie:
 https://www.cnblogs.com/yinzhengjie/p/10934172.html
 https://blog.csdn.net/adshiye/article/details/84311890
+输出大小默认是2048，在oozie-site.xml修改配置，重启
+<property>
+    <name>oozie.action.max.output.data</name>
+    <value>204800</value>
+</property>
 
 
 SQOOP:
@@ -458,20 +463,25 @@ kylin.engine.spark-conf.spark.history.fs.logDirectory=hdfs\://master1:8020/kylin
 
 清理空间：
 http://kylin.apache.org/cn/docs/howto/howto_cleanup_storage.html
-${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete false
+#${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete false
 ${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --delete true
 
 如果您想要删除所有资源；可添加 “–force true” 选项：
-${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --force true --delete true
+#${KYLIN_HOME}/bin/kylin.sh org.apache.kylin.tool.StorageCleanupJob --force true --delete true
 https://www.csdn.net/gather_26/MtTaEgzsMjI1MC1ibG9n.html
 https://www.cnblogs.com/sellsa/p/10212620.html
-metastore.sh clean
+#metastore.sh clean
 metastore.sh clean --delete true
-kylin.sh storage cleanup
-kylin.sh storage cleanup --delete true
+#kylin.sh storage cleanup
+#kylin.sh storage cleanup --delete true
 hdfs dfs -du -h /hbase/archive/data/default
-hdfs dfs -rm -r -skipTrash /hbase/archive/data/default/*
+#hdfs dfs -rm -r -skipTrash /hbase/archive/data/default/*
 hdfs dfs -expunge
+
+备份还还原元数据：
+metastore.sh backup
+metastore.sh restore /works/kylin-3.0.2/meta_backups/meta_2020_07_28_15_20_48
+在web UI上单击"Reload Metadata"对元数据缓存进行刷新
 
 #cpu分配不平衡：
 https://blog.csdn.net/nazeniwaresakini/article/details/105137788
@@ -496,11 +506,6 @@ kylin.storage.hbase.min-region-count=2
 kylin.storage.hbase.max-region-count=100
 Spark:
 kylin.engine.spark.rdd-partition-cut-mb=500
-
-备份还还原元数据：
-metastore.sh backup
-metastore.sh restore /works/kylin-3.0.2/meta_backups/meta_2020_06_11_16_27_05
-在web UI上单击"Reload Metadata"对元数据缓存进行刷新
 
 <!-- kylin spark Container killed on request. Exit code is 143
 https://blog.csdn.net/yijichangkong/article/details/51332432 -->
@@ -699,16 +704,38 @@ dwh_cube:        71.45(65.58)mins-12.21 GB/
 
 Kylin Dashboard:
 http://kylin.apache.org/cn/docs/tutorial/setup_systemcube.html
-
+https://www.jianshu.com/p/d89314a75cfd
+# 创建hive表及cube元数据
 system-cube.sh setup
-sudo mkdir -p /data/kylin/
+# 以admin账户 登陆kylin页面，刷新metadata；
+# 执行system cube build命令
+system-cube.sh build
+# 添加crontab定时任务 ，kylin任何一个节点都可以；
+system-cube.sh cron
+# kylin-2.6.x后的system cube构建方便多了，不再像官网上的那么繁琐了，一键部署
+
+#!/bin/bash
+
+cube_name=$1
+last_days_ago=$2
+start_date=`date -d "${last_days_ago} days ago" +%Y-%m-%d`
+end_date=`date +%Y-%m-%d`
+start_time=`date -u -d "${start_date} 00:00:00" +%s'000'`
+end_time=`date -u -d "${end_date} 00:00:00" +%s'000'`
+echo "start_time=$start_time"
+echo "end_time=$end_time"
+curl -X PUT --user ADMIN:KYLIN -H "Content-Type: application/json;charset=utf-8" -d "{ \"startTime\": ${start_time}, \"endTime\": ${end_time}, \"buildType\": \"BUILD\"}" http://192.168.80.201:7070/kylin/api/cubes/${cube_name}/build
+
+crontab -e
+0 6 * * * sh /works/kylin-3.0.2/triggerJobs.sh dwh_cube 1
+
+hdfs dfs -put /works/kylin-3.0.2/triggerJobs.sh  /kylin/
+
+<!-- sudo mkdir -p /data/kylin/
 sudo chown -R kylin:kylin /data/kylin/
 kylin.sh org.apache.kylin.tool.metrics.systemcube.SCCreator -inputConfig /works/kylin-3.0.2/SCSinkTools.json -output /data/kylin/
 hive -f /data/kylin/create_hive_tables_for_system_cubes.sql
-metastore.sh restore /data/kylin/
-<!-- system-cube.sh build -->
-system-cube.sh cron
-Reload metadata via Kylin WEB
+metastore.sh restore /data/kylin/ -->
 
 修改kylin密码：
 https://w3sun.com/210.html
