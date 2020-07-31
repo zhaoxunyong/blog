@@ -229,6 +229,9 @@ https://blog.csdn.net/gao123456789amy/article/details/79242713
 hue的时区zone修改为：
 Asia/Shanghai
 http://nns:8889
+hue中不能查看hbase数据的解决办法：
+https://cloud.tencent.com/developer/article/1442402
+
 
 修改hdfs任何用户可以写入：
 https://blog.csdn.net/Ahuuua/article/details/90669011
