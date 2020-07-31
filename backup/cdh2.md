@@ -111,3 +111,12 @@ docker run -d \
 -v /kylin/cdh/dn5:/kylin/cdh \
 --privileged=true \
 192.168.100.87:5000/cdh:base /sbin/init
+
+
+cat /etc/rc.local:
+80.201 iptables:
+# For reporter
+iptables -I DOCKER ! -s 192.168.108.0/24 -i em1 -p tcp -m tcp --dport 7070 -j DROP
+# For Dave
+iptables -I DOCKER -s 192.168.102.196/32 -i em1 -p tcp -m tcp --dport 7070 -j ACCEPT
+iptables -I DOCKER -s 192.168.80.0/24 -i em1 -p tcp -m tcp --dport 7070 -j ACCEPT
