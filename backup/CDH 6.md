@@ -487,6 +487,29 @@ metastore.sh restore /works/kylin-3.0.2/meta_backups/meta_2020_07_28_15_20_48
 https://blog.csdn.net/nazeniwaresakini/article/details/105137788
 yarn.scheduler.fair.maxassign=4
 
+crontab -l
+0 1 * * * sh /works/kylin-3.0.2/bin/metastore.sh backup
+0 6 * * * sh /works/kylin-3.0.2/triggerJobs.sh dwh_cube 1
+
+cat triggerJobs.sh:
+#!/bin/bash
+
+cube_name=$1
+last_days_ago=$2
+start_date=`date -d "${last_days_ago} days ago" +%Y-%m-%d`
+end_date=`date +%Y-%m-%d`
+start_time=`date -u -d "${start_date} 00:00:00" +%s'000'`
+end_time=`date -u -d "${end_date} 00:00:00" +%s'000'`
+echo "start_time=$start_time"
+echo "end_time=$end_time"
+curl -X PUT --user ADMIN:Aazerofinance.123 -H "Content-Type: application/json;charset=utf-8" -d "{ \"startTime\": ${start_time}, \"endTime\": ${end_time}, \"buildType\": \"BUILD\"}" http://192.168.80.201:7070/kylin/api/cubes/${cube_name}/build
+if [[ $? == 0 ]]; then
+  echo "Building cube successful!"
+else
+  echo "Building cube failed!"
+fi
+
+
 ExecutorLostFailure (executor 1 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 5.0 GB of 5 GB physical memory used. Consider boosting spark.yarn.executor.memoryOverhead or disabling yarn.nodemanager.vmem-check-enabled because of YARN-4714.
 
 Exception in thread "main" java.lang.IllegalArgumentException: Required executor memory (4096), overhead (4096 MB), and PySpark memory (0 MB) is above the max threshold (6144 MB) of this cluster! Please check the values of 'yarn.scheduler.maximum-allocation-mb' and/or 'yarn.nodemanager.resource.memory-mb'.
@@ -658,6 +681,7 @@ drop 'game_x_tmp'
              --verbose -->
 
 sqoop list-databases --connect jdbc:mysql://192.168.80.98:3306 --username root --password 6Aq2FuMVvWzsEFeJ4p84ctiwM
+sqoop list-databases --connect jdbc:mysql://192.168.80.216:3306 --username kylin --password 8QMfM5234cZtiPGYrnuAzSkPM
 
 dwh.dws_fin_loan_account_d,dwh.dim_date
 
@@ -741,13 +765,24 @@ metastore.sh restore /data/kylin/ -->
 https://w3sun.com/210.html
 http://kylin.apache.org/cn/docs/gettingstarted/faq.html
 cd $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/lib
-java -classpath kylin-server-base-3.0.2.jar:spring-beans-4.3.10.RELEASE.jar:spring-core-4.3.10.RELEASE.jar:spring-security-core-4.2.3.RELEASE.jar:commons-codec-1.7.jar:commons-logging-1.1.1.jar:kylin-cache-3.0.2.jar org.apache.kylin.rest.security.PasswordPlaceholderConfigurer BCrypt "Aa123456"
+java -classpath kylin-server-base-3.0.2.jar:spring-beans-4.3.10.RELEASE.jar:spring-core-4.3.10.RELEASE.jar:spring-security-core-4.2.3.RELEASE.jar:commons-codec-1.7.jar:commons-logging-1.1.1.jar:kylin-cache-3.0.2.jar org.apache.kylin.rest.security.PasswordPlaceholderConfigurer BCrypt "Aazerofinance.123"
+BCrypt encrypted password is: 
+$2a$10$St5zYmeHr3Y0BIBV6klMu.eh6uhpGJvtIZKw3jAj.a1oTojBo5cfi
+$2a$10$o3ktIWsGYxXNuUWQiYlZXOW5hWcqyNAFQsSSCSEWoC/BRVMAUjL32
+#https://issues.apache.org/jira/browse/KYLIN-3562
+$KYLIN_HOME/bin/metastore.sh remove /user/ADMIN,并重启kylin服务
 
-vi $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/classes/kylinSecurity.xml中ADMIN的密码并重启
+kylin.sh org.apache.kylin.rest.security.PasswordPlaceholderConfigurer  BCrypt Aazerofinance.123
+BCrypt encrypted password is: 
+$2a$10$wnY/YswHYBBDJ4IPIHH43uV/0qAmxjC61Qru07nzkVDXleWd4u/NK
+
+vim $KYLIN_HOME/tomcat/webapps/kylin/WEB-INF/classes/kylinSecurity.xml中ADMIN的密码并重启
 #drop database if exists dwh cascade; 
 #CREATE DATABASE IF NOT EXISTS game; 
 
 dwh.dim_account_age, dwh.dim_client, dwh.dim_collection_status, dwh.dim_contract, dwh.dim_date, dwh.dim_lender, dwh.dim_loan_account, dwh.dim_loan_account_process_status, dwh.dim_loan_account_status, dwh.dim_loan_account_type, dwh.dim_loan_bill, dwh.dim_loan_product, dwh.dim_loan_type, dwh.dim_repay_amount_type, dwh.dim_source_system, dwh.dim_trading_summary, dwh.dim_virtual_center, dwh.dws_fin_exempt, dwh.dws_fin_loan, dwh.dws_fin_loan_account_d, dwh.dws_fin_writeoff, dwh.temp
+
+jdbc:kylin://192.168.80.201:7070/dwh
 
 删除旧有database并创建新的：
 hive -e "DROP DATABASE dwh cascade;
