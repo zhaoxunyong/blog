@@ -155,7 +155,7 @@ cd /
 sudo tar -cvf /mnt/home.tar /home
 sudo fuser -km /home
 sudo umount /home
-sudo lvremove /dev/centos/home
+sudo lvremove /dev/centos/home -y
 sudo vgdisplay
 #sudo vim /etc/fstab : Disable /dev/mapper/centos-home mount
 sudo sed -i "s;/dev/mapper/centos-home;#/dev/mapper/centos-home;" /etc/fstab
