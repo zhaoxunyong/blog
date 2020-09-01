@@ -1,14 +1,14 @@
----
+一一一
 title: A Guide to English Grammar
-date: 2019-08-28 09:01:32
+date: 2019一08一28 09:01:32
 categories: ["English"]
 tags: ["English"]
 toc: true
----
+一一一
 
 A guide to english grammar.
 
-<!-- more -->
+<!一一 more 一一>
 
 ## 句子的形成
 
@@ -96,7 +96,7 @@ To see him is my purpose of coming here.
 =It's interesting to learn English.(佳)
 ```
 
-2. 不定式作主语通常表示-种意愿、目的或未完成的事
+2. 不定式作主语通常表示一种意愿、目的或未完成的事
 
 ```
 出国念书是我最大的愿望。
@@ -127,11 +127,11 @@ l ) that从句
 ##### that从句
 
 ```
-任何-个主语起首的句子：
+任何一个主语起首的句子：
 
 他不读书令我生气
 he doesn't study makes me angry.
--> That he doesn't study makes me angry.
+一> That he doesn't study makes me angry.
 他不相信我说的话
 That he doesn't believe my words.
 有很多工作要做
@@ -146,27 +146,27 @@ That there is lot of work to do.
 a）问句有be动词时：
 他是否快乐
 Is he happy? 
--> whether he is happy
+一> whether he is happy
 
 b）问句有一般助动词（Can、will、may、should、ought to、must、have）时，主语与助动词还原，前面冠以whether：
 
 他是否能做这件事
 Can he do it? 
--> whether he can do it.
+一> whether he can do it.
 
 他是否已做好此事
 Has he done it?
--> Whether he has done it.
+一> Whether he has done it.
 
 c）问句有do、does、did等助动词时主语与助动词还原，再将do、does、did去掉，后面的动词依人称和时态变化:
 
 他是否来了
 Did he come? 
--> whether he came.
+一> whether he came.
 
 他是否喜欢它
 Does he like it? 
--> whether he likes it.
+一> whether he likes it.
 ```
 
 ##### 疑问词所引导的从句
@@ -180,7 +180,7 @@ Does he like it?
 
 他正在做什么
 What is he doing? 
--> what he is doing.
+一> what he is doing.
 ```
 
 2. 问句有一般助动词时：
@@ -190,7 +190,7 @@ What is he doing?
 
 他在哪里能找到它
 Where can he find it? 
--> where he can find it.
+一> where he can find it.
 ```
 
 3. 问句有do、does、did等助动词时：
@@ -200,29 +200,29 @@ Where can he find it?
 
 他写什么
 What did he write? 
--> what he wrote.
+一> what he wrote.
 
 他何时来
 When did he come? 
--> when he came.
+一> when he came.
 
 他怎么做这件事
 How does he do it? 
--> how he does it.
+一> how he does it.
 
 who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变:
 
 谁来这儿
 Who came here? 
--> who came here.
+一> who came here.
 
 昨晚发生什么事
 What happended last night? 
--> what happended last night.
+一> what happended last night.
 
 哪个被买走
 Which was bought? 
--> which was bought.
+一> which was bought.
 ```
 
 名词性从句的功能:
@@ -301,8 +301,8 @@ I am sure of that the team will win the game.(x)
 I am sure of the team's winning the game.
 
 (c) 从句若有以下助动词时，做下列变化：
-may -> be likely to
-can -> be able to
+may 一> be likely to
+can 一> be able to
 我很高兴他可能会来。
 I am happy about that he may come.(x)
 I am happy about his being likely to come.
@@ -473,7 +473,7 @@ She is in danger.
 
 be动词之后的现在分词有两种词性：
 
-一作形容词，一作动词进行时的现在分词。换言之，同学遇到v-ing；可译成"⋯的"时，就是作形容词的现在分词，否则就是表“进行状态”的现在分词，要译成“正在⋯”，而不视为形容词。
+一作形容词，一作动词进行时的现在分词。换言之，同学遇到v一ing；可译成"⋯的"时，就是作形容词的现在分词，否则就是表“进行状态”的现在分词，要译成“正在⋯”，而不视为形容词。
 
 ```
 这女孩很迷人
@@ -702,7 +702,7 @@ He stopped/quit smoking.
 你介意为我打开窗户吗？
 Would you mind opening the window for me?
 
-resist V-ing    抗拒...
+resist V一ing    抗拒...
 refuse to V     拒绝...
 我拒绝做此事
 I refused to do it.
@@ -711,13 +711,13 @@ I resist doing it.
 I couldn't resist having some more ice cream.
 
 expect to V    期望
-=anticipate V-ing
+=anticipate V一ing
 我期望和他一起环游世界
 I expect to travel around the world with him.
 I anticipate traveling around the world with him.
 
-stop V-ing    停止
-=quit V-ing
+stop V一ing    停止
+=quit V一ing
 他结婚后就不再写作了
 He stopped writing after he got married.
 他决定戒烟
@@ -969,7 +969,7 @@ I felt myself lifted.
 我们都把他视为天才
 We regard(look upon/think of/see/view) him as a genius.
 我误将那长发的男孩视作女孩
-I mistook the long-haired boy for a girl.
+I mistook the long一haired boy for a girl.
 ```
 
 2. 与to be连用者：
@@ -1158,10 +1158,10 @@ How hard he studied!
 ### 并列连词
 
 ```
-and -> both...and..            一方面...同时也...
-or  -> either...or...          要不就是...要不就是...
+and 一> both...and..            一方面...同时也...
+or  一> either...or...          要不就是...要不就是...
        neither...nor...        既非...亦非...
-but -> not...but...            并非...而是...
+but 一> not...but...            并非...而是...
        not only...but also...  不仅...而且...
 as well as...                  以及
 rather than...                 而非
@@ -1237,7 +1237,7 @@ once（一旦）等
 ```
 when:当                 一般现在时(或现在完成时)动词，主语+will+原形动词。
 if:如果 
-once/as soon as:-旦 
+once/as soon as:一旦 
 unless:除非
 
 我有钱时就会买辆车
@@ -1317,7 +1317,7 @@ Put the book where I can see it.
 =Put the book in the place where I can see it.
 ```
 
-once、as soon as: -旦
+once、as soon as: 一旦
 
 or: 否则
 ```
@@ -1374,7 +1374,7 @@ He has been studying quite hard since he went to college.
 
 a. 关系代词之前要有先行词
 b. 关系代词在引导的定语从句中要作主语、宾语或表语
-c. 否则关系代词之前-定要有介词, 介词可移到句尾
+c. 否则关系代词之前一定要有介词, 介词可移到句尾
 ```
 
 ```
@@ -1391,7 +1391,7 @@ He smokes three packs of cigarettes a day, which definitely does harm to his hea
 
 #### 非限制性定语从句
 
-该关系代词前-定要有逗号，按顺序翻译即可。
+该关系代词前一定要有逗号，按顺序翻译即可。
 
 ```
 I met John, who is my classmate.
@@ -1486,18 +1486,18 @@ The girl who danced here yesterday is my sister.
 =The girl dancing here yesterday is my sister.
 
 Who is that boy that is standing over there?
-that is->being->省略
+that is一>being一>省略
 =Who is that boy standing over there?
 
 I like the car which is parked in front of the post office.
-which is>being->省略
+which is>being一>省略
 =I like the car parked in front of the post office.
 ```
 
 非限制性定语从句不能化简为分词短语。但Who/which + be + n可以化简为同位语
 ```
 I met John, who is a good friend of mine.
-who is->being->省略
+who is一>being一>省略
 =I met John, a good friend of mine.
 
 He works hard, which is a fact that is known to all of us.
@@ -1514,7 +1514,7 @@ I believ(我相信)
 I think/consider(我相信)
 I feel(我觉得)
 I know(我知道)
-I find(我发瑞)
+I find(我发现)
 ```
 
 ```
@@ -1543,7 +1543,7 @@ He has no house in which he can live.
 =He has no house in which to live.
 =He has no house to live in.
 
-Lend me your pen whith which I can write my address.
+Lend me your pen with which I can write my address.
 =Lend me your pen with which to write my address.
 =Lend me your pen to write my address with.
 ```
@@ -1557,7 +1557,7 @@ whose
 
 a. 关系代词所有格之前要有先行词
 b. 关系代词所有格在引导的定语从句中要作主语、宾语或表语
-c. 否则关系代词所有格之前-定要有介词, 介词可移到句尾
+c. 否则关系代词所有格之前一定要有介词, 介词可移到句尾
 ```
 
 ```
@@ -1581,7 +1581,7 @@ This is a fancy car, whose color I like very much.
 where=in which/on which/at which: 修饰表地方的名词
 when=in which/on which/at which: 修饰表时间的名词
 why=for which: 修饰的reason
-how=in which: how和the way只能用其中之-
+how=in which: how和the way只能用其中之一
 ```
 
 ```
@@ -1610,7 +1610,7 @@ Do you see the desk on which there is a book.
 年月：in 日子：on 时间：at
 ```
 He came on Friday, on which it was raining hard.
-=He came on Friday, where it was raining hard.
+=He came on Friday, when it was raining hard.
 
 That's the year when he graduated.
 The sun rose at 5:30, when most people were still in their dreams.
@@ -1628,7 +1628,7 @@ I don't know the reason for which he cried.
 
 #### how
 
-how和the way只能用其中之-，表...的方式/方法
+how和the way只能用其中之一，表...的方式/方法
 
 ```
 That's the way in which he handled the problem.
@@ -1667,21 +1667,21 @@ where可作副词
 
 ```
 Put it where you found it.
-=Put it in the place where yound it.
-=Put it in the place in which yound it.
+=Put it in the place where found it.
+=Put it in the place in which found it.
 
 Where there is smoke, there is fire.
 ```
 
-the moment(when)... -...就...
+the moment(when)... 一...就...
 
 ```
-#他-听到这个悲伤的消息就哭了起来
+#他一听到这个悲伤的消息就哭了起来
 As soon as he heard the sad news, he burst into tears.
 #他来的时候，我正在睡觉
 The time(when) he came, I was sleeping.
 =When he came, I was sleeping.
-#他离开的那-天，正在下雨
+#他离开的那一天，正在下雨
 The day(when) he left, it was rainning.
 =When he left, it was rainning.
 ```
@@ -1701,9 +1701,9 @@ whomever(宾格)
 
 #代替人或物
 whichever(三者以上)
-=any one which(/who): 同-类的任何-个...
+=any one which(/who): 同一类的任何一个...
 whichever(二者)
--either which(/who): 同-类的任何-个...
+=either which(/who): 同一类的任何一个...
 
 #代替物
 what=the thing(s) which: 所...的东西
@@ -1740,7 +1740,7 @@ Give it to whomever you like.
 
 #### whichever
 
-是指同-类的任何东西
+是指同一类的任何东西
 
 ```
 There are many book here. You may take any one which you like.
@@ -1766,7 +1766,7 @@ I don't believe what he said.
 
 #### whatever
 
-与whichever类似，不同在于whatever指不同类的任何东西，whichever指同-类的任何东西
+与whichever类似，不同在于whatever指不同类的任何东西，whichever指同一类的任何东西
 
 ```
 Whatever he said is true.
@@ -1859,7 +1859,7 @@ that + the 前面的动词 + 关系代词(who/whom/which), 可作主语、宾语
 ```
 #主语
 I have more mony than is needed.
-that=that the money which，所以that中已经包含了主语，不用再添加主语
+than=that the money which，所以that中已经包含了主语，不用再添加主语
 More guests that were invited came.
 There are more books that are needed.
 
@@ -1897,17 +1897,17 @@ I have the same dictionary as you bought yesterday.
 #be动词后的表语
 I have the same dictionary as this one(is).
 
-#和...-样的...
+#和...一样的...
 as+adj.+n.+as...
 #主语
 #他是有史以来最勤奋的人
 He is as diligent a man as ever lived.
 as=as any man that
 #宾语
-#我有-本和你-样好的词典
+#我有一本和你一样好的词典
 I have as good a dictionary as you(do).
 #be动词后的表语
-#他是个和John-样好的人
+#他是个和John一样好的人
 He is as good a man as John.
 as=as the man that
 ```
@@ -1917,11 +1917,11 @@ Such a man like him is bad.(x)
 Such a man as he is bad.
 
 the same...as...:   和...相同的...(两个人或物)
-the same...that...: 就是同-个...(-个人或物) 
+the same...that...: 就是同一个...(一个人或物) 
 
-#我有-本书，与他正在看的那-本相同
+#我有一本书，与他正在看的那一本相同
 I have the same book as he is reading.
-#我借了-本书，就是他上周借的那-本
+#我借了一本书，就是他上周借的那一本
 I borrowed the same book that the borrowed last week.
 ```
 
@@ -1951,7 +1951,7 @@ as diligent a man as...
 #so...that...: 如此...以致
 He is so good a boy that I like him.
 
-#as...as...: 和...-样地...
+#as...as...: 和...一样地...
 He is as handsome a man as Peter.
 This music is as good as that.
 
@@ -2035,7 +2035,7 @@ It is difficult to learn English.
 
 want/desire/intend/expect+to+V，但anticipate+动名词。
 
-注意：think也有想要的意思，但只用以表示“想到某-件事”，通常用that引导名词性从句作宾语
+注意：think也有想要的意思，但只用以表示“想到某一件事”，通常用that引导名词性从句作宾语
 ```
 I think that he is great.
 I thought of Mary a while ago.
@@ -2088,7 +2088,7 @@ I have something to do.
 =I have something which I must do.
 ```
 
-此类句型中，被修饰的名词-定要作不定式短语中动词的宾语，否则就要作为介词的宾语：
+此类句型中，被修饰的名词一定要作不定式短语中动词的宾语，否则就要作为介词的宾语：
 
 ```
 He is a nice man to work with.
@@ -2138,16 +2138,16 @@ He tends to lie.
 You'll soon get to know him.
 ```
 
-修饰形容词：-定置于该形容词之后：
+修饰形容词：一定置于该形容词之后：
 ```
 He is able to handle the problem.
 He os apt to lie.=He tends to lie.
 This book is good to read.
 ```
 
-修饰副词，-定置于该副词之后：
+修饰副词，一定置于该副词之后：
 ```
-He is toold old to swim.
+He is too old to swim.
 He is old enough to go swimming alone.
 ```
 
@@ -2170,10 +2170,10 @@ The problem is where to start.
 #### that从句化简为不定式
 P157：
 
-单-动词:
+单一动词:
 ```
 It seems that he works hard.
-=He semms(appears) to work hard.
+=He seems(appears) to work hard.
 
 #我刚巧在那里
 It happended that I was there.
@@ -2186,8 +2186,8 @@ It is said: 据说         + that he is good.
 It is reported: 据报道
 It is rumored: 谣传
 It is known: 据了解
-It is thought: -般认为
-It is believed: -般相信
+It is thought: 一般认为
+It is believed: 一般相信
 =He is said(reported/...) to be good.
 ```
 
@@ -2258,7 +2258,7 @@ His speech led me to understand the importance of learning English.
 He advised me not to smoke again.
 ```
 
-不定式短语作主语时，若短语中最后-个词为宾语，该宾语可移置句首作主语，其余部分则移到句尾：
+不定式短语作主语时，若短语中最后一个词为宾语，该宾语可移置句首作主语，其余部分则移到句尾：
 
 ```
 To please my father is hard.
@@ -2342,7 +2342,7 @@ When I heard the story, I couldn't help but laugh.
 
 ```
 #进行： be+现在分词
-He is dong the work.
+He is doing the work.
 
 #完成：have+过去分词
 He has done the work.
@@ -2420,7 +2420,7 @@ I found the cockroaches killed.
 I found him killed.
 ```
 
-动词若为不及物动词作宾语补语时，-律变成现在分词：
+动词若为不及物动词作宾语补语时，一律变成现在分词：
 ```
 I found him trembling.
 I kept John waiting.
@@ -2460,7 +2460,7 @@ He is dead(completely) wrong.
 It's awful(awfully/very) hot day.
 ```
 
-#### 分词结构-动词变化
+#### 分词结构一动词变化
 
 a. 若两个动词无连词相连时，动作同时发后，第二个动词变成现在分词, 若为be动词，变成being后省略：
 
@@ -2483,7 +2483,7 @@ He came here to see me.
 He stood up to smoke a cigarette.
 ```
 
-c. 若两个动词有逗号相隔，而无连接时，不必考虑动作的先后顺序，第二个动词-定变成现在分词：
+c. 若两个动词有逗号相隔，而无连接时，不必考虑动作的先后顺序，第二个动词一定变成现在分词：
 
 ```
 He left home at six in the moring, arrived here about four in the afternoon.(x)
@@ -2493,9 +2493,9 @@ He ran away quickly,looked as if something terrible had happened.
 He ran away quickly,looking as if something terrible had happened.
 ```
 
-#### 分词结构-单句化简法
+#### 分词结构一单句化简法
 
-两句在-起，若无连词相连时，往往第-个句子要化简，变成分词短语：
+两句在一起，若无连词相连时，往往第一个句子要化简，变成分词短语：
 
 a. 两句主语相同时，被简化的主语要删除，若主语主同时则要保留
 b. 之后的动词要变成现在分词
@@ -2518,7 +2518,7 @@ He didn't intend to see her, he left early.(x)
 Not intending to see her, he left early.
 
 He had done the work, he felt happy.(x)
-Having done the work, he elft happy.
+Having done the work, he left happy.
 
 I have not seen her for ages, I miss her.(x)
 Not having seen her for ages, I miss her.
@@ -2530,7 +2530,7 @@ We will go picnicking tomorrow, weather permitting.
 =We will go picnicking torrow if weather permits.
 ```
 
-#### 分词短语-定语从句化简法
+#### 分词短语一定语从句化简法
 
 P184
 
@@ -2553,7 +2553,7 @@ John, who is a good friend of mine, studies hard.
 =John, a good friend of mine, studies hard.
 ```
 
-#### 分词结构-状语从句化简法
+#### 分词结构一状语从句化简法
 
 once/when/while/if/unless/though等所引导的状语从句中，若主语与主句中的主语相同时，亦可化简为分词结构
 
@@ -2607,7 +2607,7 @@ He wrote an article regarding(concerning/about/on) environmental pollution.
 P189
 
 ```
-Generally speaking... -般而言
+Generally speaking... 一般而言
 Strictly speaking... 严格说来
 Frankly speaking... 老实说
 Judging from his appearance... 从他的外表看来
@@ -2756,23 +2756,23 @@ Would you mind opening the windows.
 #### 常用的动名词惯用语
 
 ```
-#There is no V-ing: 不可能
+#There is no V+ing: 不可能
 =It is impossible to V
 There is no reasoning with such a stubborn man.
 It is impossible to reason with such a stubborn man.
 
-#It is no use V-ing: ...是无用的
+#It is no use V+ing: ...是无用的
 =It is of no use to V
 It is no use trying to escape.
-It is of no use to tryto escape.
+It is of no use to try to escape.
 
-#cannot help(resist/stop) + V-ing: 忍不住...
+#cannot help(resist/stop) + V一ing: 忍不住...
 =cannot but V
 =cannot help but V
 He couldn't help crying when he saw her.
 He couldn't but cry when he saw her.
 
-#on V-ing: -...就...
+#on V一ing: 一...就...
 =As soon as/once/The moment/The instant
 On(Upon) hearing it, he cried.
 As soon as he heard it, he cried.
@@ -2804,7 +2804,7 @@ You shall obey the law.
 
 #### should
 
-主要功能就是表示-种义务，后面接原型动词：应当，=ought to
+主要功能就是表示一种义务，后面接原型动词：应当，=ought to
 ```
 We should be kind to others.
 ```
@@ -2872,7 +2872,7 @@ He came early lest he(should) be late.
 =He came early for fear that he might be late.(might不可省略)
 ```
 
-##### 万-
+##### 万一
 
 ```
 If you should be late again, you will spoil the plan.
@@ -2938,7 +2938,7 @@ I would rather go than stay here.
 
 ##### I would rather that
 
-我多么希望.... = I wish + that从句，属于虚拟语气，若与现在事实相反，that从句用-般过去式，若与过去事实相反，则用过去完成式：
+我多么希望.... = I wish + that从句，属于虚拟语气，若与现在事实相反，that从句用一般过去式，若与过去事实相反，则用过去完成式：
 
 与现在事实相反：
 ```
@@ -3008,8 +3008,8 @@ he can have stolen your money.(x)
 
 6.对过去事实的肯定推论，有两种句型：
 ```
-must have+过去分词    -定曾经...
-#他看过来紧张兮兮，-定是偷了你的钱
+must have+过去分词    一定曾经...
+#他看过来紧张兮兮，一定是偷了你的钱
 He looks nervous; he must have stolen your money.
 
 may have+过去分词    可能曾经...
@@ -3042,7 +3042,7 @@ I cannot but laugh.
 #我们在择友时同志小心也不为过
 We cannot be too careful in choosing friends.
 
-#我-点儿也不在乎(我不能低于比现在不在乎的程度了)
+#我一点儿也不在乎(我不能低于比现在不在乎的程度了)
 I couldn't care less.
 
 #我同意极了(我不能比现在更加地同意了)
@@ -3055,7 +3055,7 @@ I couldn't agree more.
 ```
 You may take whatever you like.
 May I go home?
-#might与would/could-样，在问句中有客气的语气
+#might与would/could一样，在问句中有客气的语气
 Might I make a suggestion?
 ```
 
@@ -3136,7 +3136,7 @@ You might as well die as make friends with Mary.
 You must finish the work before leaving.
 ```
 
-3.must表-种义务上强制的必须，have to，有勉强的意味，表“有必要”
+3.must表一种义务上强制的必须，have to，有勉强的意味，表“有必要”
 ```
 You must love your country.
 ```
@@ -3177,15 +3177,15 @@ He has got to tell you the truth.
 
 4.must对现在状况或过去状况的推论
 
-a.对现在状况的推论：must+原形动词    -定...
+a.对现在状况的推论：must+原形动词    一定...
 ```
-#这-定是真的
+#这一定是真的
 It must be true.
 但否定时，不能用It must not be true.(x)，还用：
 It can't be true.(它不可能是真的)
 ```
 
-b.对过去状况的推论：must+have+过去分词    -定曾经...
+b.对过去状况的推论：must+have+过去分词    一定曾经...
 ```
 It must have rained last night.
 ```
@@ -3224,7 +3224,7 @@ He dare not go.
 Dare he go?
 ```
 
-2.How dare+-般陈述句？    ...怎敢...?
+2.How dare+一般陈述句？    ...怎敢...?
 ```
 How dare you say such a thing to me?
 ```
@@ -3235,7 +3235,7 @@ How dare you say such a thing to me?
 I wonder whether he dare do it.
 ```
 
-4.在肯定中，dare为-般动词
+4.在肯定中，dare为一般动词
 ```
 #他敢去
 He dares to go.
@@ -3420,8 +3420,8 @@ He failed to pass the test.
 fail: 未通过考试、使某人不及格
 He failed the test.
 
-#老师让三分之-的学生不及格
-The teacher failed one-third of his students.
+#老师让三分之一的学生不及格
+The teacher failed one一third of his students.
             flunked
 
 #不要辜负我
@@ -3461,16 +3461,16 @@ regret + Ving    后悔曾...
 
 ### 种类
 
-#### -般时
+#### 一般时
 
 ```
-1. -般现在时
+1. 一般现在时
 He writes a letter every day.
 
-2. -般过去时
+2. 一般过去时
 He wrote a letter yesterday.
 
-3. -般将来时
+3. 一般将来时
 He will write a letter tomorrow.
 ```
 
@@ -3512,7 +3512,7 @@ When I called, he had been writing a letter for two hours.
 
 ### 使用过去时的时机
 
-主语+-般过去时动词
+主语+一般过去时动词
 
 ```
 1. 表过去的动作、习惯、状态：
@@ -3524,10 +3524,10 @@ He was born in 1970
  Did you ever see her before?
 =Have you ever seen her before?
 
-3. 句中若有after/until/before等连词引导的从句，由于时间先后很清楚，可用-般过去时代替过去完成时：
+3. 句中若有after/until/before等连词引导的从句，由于时间先后很清楚，可用一般过去时代替过去完成时：
  After I had finished the work, I went home.
 =After I finished the work, I went home.
-#我搬来这里之前曾在日本住过很长-段时间
+#我搬来这里之前曾在日本住过很长一段时间
  Before I moved here, I had lived in Japan for a long time.
 =Before I moved here, I lived in Japan for a long time. 
 ```
@@ -3564,10 +3564,10 @@ He had studied English for 10 years before he left for the States.
 He had already left when I came.
 ```
 
-过去完成时不能单独存在，要与另-个-般过去时从句或表过去的副词短语连用：
+过去完成时不能单独存在，要与另一个一般过去时从句或表过去的副词短语连用：
 
-先发生的动作--->用过去完成时表示
-后发生的动作--->用-般过去时表示
+先发生的动作一一一>用过去完成时表示
+后发生的动作一一一>用一般过去时表示
 
 ```
 I lost the book which my father had given me.
@@ -3599,7 +3599,7 @@ He will have lived here for 10 years by the end of this month.
 
 ### 使用现在完成进行时的时机
 
-主语+have/has been+现在分词(have/has been译成“-直都在...”), 用以表示-直继续到现在且仍将继续下去的运作：
+主语+have/has been+现在分词(have/has been译成“一直都在...”), 用以表示一直继续到现在且仍将继续下去的运作：
 
 ```
 She has been working with this company for 5 years.
@@ -3608,7 +3608,7 @@ They have been standing here since 7 this morning.
 
 ### 使用过去完成进行时的时机
 
-主语+had been+现在分词(had been译成“-直都在”)，与过去完成时-样，过去完成进行时不能单独存在，须与-般过去时连用。
+主语+had been+现在分词(had been译成“一直都在”)，与过去完成时一样，过去完成进行时不能单独存在，须与一般过去时连用。
 
 ```
 I had been sleeping when he came.
@@ -3617,14 +3617,14 @@ He told us that he had been studying German since 2001.
 
 ### 使用将来完成进行时的时机
 
-主语+will have been+现在分词(will have been译成“将-直在”)，表-直继续到将来某时，而仍将继续进行的动作：
+主语+will have been+现在分词(will have been译成“将一直在”)，表一直继续到将来某时，而仍将继续进行的动作：
 
 ```
 到今年年底，我教英语将已有10年了
 I will have been teaching English for ten years by the end of this year.
 ```
 
-### “for+-段时间”与完成时的关系
+### “for+一段时间”与完成时的关系
 
 ```
 for            the |past| five years    过去5年来
@@ -3635,21 +3635,21 @@ down through
 over
 =since five years ago    自从5年前起
 这些短语与现在完成时或现在完成进行时连用
-#过去两个星期来，我都-直在学英语
+#过去两个星期来，我都一直在学英语
 I have been studying English for the past two weeks.
 ```
 
 ### since与完成时的关系
 
-since与"for+-段时间"使用差不多，不过注意：
+since与"for+一段时间"使用差不多，不过注意：
 
-since之后须接明确的某段时间作宾语，不要接-段时间作宾语，若之后有-段时间，则须在-段时间之后接ago:
+since之后须接明确的某段时间作宾语，不要接一段时间作宾语，若之后有一段时间，则须在一段时间之后接ago:
 ```
 Peter has lived here since 2002.
 Peter has lived here since two years ago.
 ```
 
-现在完成时或现在完成进行时的动词与“for+-段时间”连用时，该动词所表示的动作必须可接续进行，否则就不可与“for+-段时间”连用：
+现在完成时或现在完成进行时的动词与“for+一段时间”连用时，该动词所表示的动作必须可接续进行，否则就不可与“for+一段时间”连用：
 ```
 I have lived here for five years.
 
@@ -3666,7 +3666,7 @@ He has married Jane for twenty years.(x)
 
 ### 语态
 
-语态有两种：主动与被动。形成被动语态-定是及物动词：
+语态有两种：主动与被动。形成被动语态一定是及物动词：
 
 ```
 原句的宾语作主语+be动词+过去分词
@@ -3677,27 +3677,27 @@ He is loved by everyone.
 ## 虚拟语气
 
 ```
-a. 纯条件的虚拟语气---用现在式
+a. 纯条件的虚拟语气一一一用现在式
 如果他在这儿，我会揍他
 If he is here, I will beat him.
 
-b. 与现在事实相反的虚拟语气---用过去时
+b. 与现在事实相反的虚拟语气一一一用过去时
 如果他现在在这儿，我会揍他
 If he were here, I would beat him.(But he is not here.)
 
-c. 与过去事实相反的虚拟语气---用过去完成时
+c. 与过去事实相反的虚拟语气一一一用过去完成时
 如果他当时在这儿，我会揍他
 If he had been here, I would have beaten him.(But he was not here.)
 
-d. 与将来状况相反的虚拟语气---if从句要用助动词should，译成“万-”，主句则用过去时或现在时助动词
-万-他在这儿，我会揍他
+d. 与将来状况相反的虚拟语气一一一if从句要用助动词should，译成“万一”，主句则用过去时或现在时助动词
+万一他在这儿，我会揍他
 If he should be here, I would(或will) beat him.
 ```
 
 ### 纯条件虚拟语气
 
 ```
-If+主语+-般时动词，主语+will(may/can/should/shall/must/ought to)+原形动词
+If+主语+一般时动词，主语+will(may/can/should/shall/must/ought to)+原形动词
 
 If he comes, you should tell him the truth.
 
@@ -3711,20 +3711,20 @@ I will not do anything before he arrives.
 ### 与现在事实相反的虚拟语气
 
 ```
-If+主语+-般过去时动词， 主语+would(could/might/should/ought to)+原形动词
+If+主语+一般过去时动词， 主语+would(could/might/should/ought to)+原形动词
 
 If he lived in my town, I could see him every day.
 
-be动词统-使用were
+be动词统一使用were
 If I were rich, I would help you.
 因为我不是很有钱，所以我不能帮你
 =As I am not rich, I can't help you.
 
-主句中的助动词-定为过去时助动词
-will->would
-may->might
-can->could
-shall->should或者ought to
+主句中的助动词一定为过去时助动词
+will一>would
+may一>might
+can一>could
+shall一>should或者ought to
 must只能表示现在或将来的状况，只用于纯条件的虚拟语气中。
 ```
 
@@ -3750,12 +3750,12 @@ If I had met her five years ago, she might be my wife today.
 ### 与将来状况相反的虚拟语气
 
 ```
-译成"万-..."
+译成"万一..."
 
 a. 低可能性：主句要用过去时助动词
 If+主语+should+原形动词，主语 would(could/could/might/should/ought to)+原形动词
 
-万-你生病，会议将延期---你不太可能生病，会议不太可能延期
+万一你生病，会议将延期一一一你不太可能生病，会议不太可能延期
 If you should fall ill, the meeting would be put off
 
 If it should rain, I would stay home.
@@ -3763,13 +3763,13 @@ If it should rain, I would stay home.
 b. 高可能性：主句要用现在时助动词
 If+主语+should+原形动词，主语+will(can/may/should/ought to)+原形动词
 
-万-你生病，会议将延期---你可能会生病，而会议也可能延期
+万一你生病，会议将延期一一一你可能会生病，而会议也可能延期
 If you should fall ill, the meeting will be put off.
 
 If it should rain, I will stay home.
 
 也可能与祈祷句形成的主句连用
-万-我迟到，务必要等我---我可能会迟到
+万一我迟到，务必要等我一一一我可能会迟到
 If I should be late, be sure to wait for me.
 ```
 
@@ -3800,7 +3800,7 @@ c. were
 
 3. 可取代if的其他连词：
 ```
-in case(that): 万-
+in case(that): 万一
 on condition that: 如果
 provided/providing(that): 如果
 so long as/as long as: 只要
@@ -3808,8 +3808,8 @@ so long as/as long as: 只要
 只要书有趣，哪本书都可以
 Any book will do as long as it is interesting.
 
-in case +that从句    万-...
-in case of+名词      万-...
+in case +that从句    万一...
+in case of+名词      万一...
  In case an accident happens, don't panic.
 =In case of an accident happens, don't panic.
 ```
@@ -3819,7 +3819,7 @@ in case of+名词      万-...
 =without 若非/要不是...
 
 a. 与现在事实相反：若非...就...
- If it were not+that从句(-般现在时)，主语+could(would/might/should/ought to)+原形动词
+ If it were not+that从句(一般现在时)，主语+could(would/might/should/ought to)+原形动词
 =But for+名词，
 
 要不是他努力工作，我才不会喜欢他
@@ -3829,7 +3829,7 @@ a. 与现在事实相反：若非...就...
 =But for his hard work, I.. 
 
 b. 与过去事实相反：若非当时...就...
- If had not been that从句(-般过去时)，主语+could(would/might/should/ought to)+have+过去分词
+ If had not been that从句(一般过去时)，主语+could(would/might/should/ought to)+have+过去分词
 =But for+名词，
 
  If it had not been that he lent me the money, I could not have bought that book.
@@ -3866,15 +3866,15 @@ b. 与过去事实相反：若非当时...就...
 ```
 =as though...    仿佛...(副词)
 
-a. 表极大的可能->动词使用-般时态
+a. 表极大的可能一>动词使用一般时态
 
 看过来好像要下雨了
 It looks as if it is going to rain.
 
-b. 表与现在事实相反->动词使用-般过去时
+b. 表与现在事实相反一>动词使用一般过去时
 Mr. Wang loves me as if I were his own child.
 
-c. 表与过去事实相反->动词使用过去完成时
+c. 表与过去事实相反一>动词使用过去完成时
 It looks as if nothing had happended.
 ```
 
@@ -3890,7 +3890,7 @@ It looks as if nothing had happended.
 要是下雨了，怎么办？
 What if should rain?
 
-What也可以用-般现在时：
+What也可以用一般现在时：
 
  What if he comes?
 =What shall we do if he comes?
@@ -3899,9 +3899,9 @@ What也可以用-般现在时：
 =What may happen if it rains?
 ```
 
-8. It's time+that从句的-般过去时
+8. It's time+that从句的一般过去时
 ```
-It's time(about time/hight time) + that从句的-般过去时    该时...的时候了
+It's time(about time/hight time) + that从句的一般过去时    该时...的时候了
 
 该是他上床睡觉的时间了
 It's time he went to bed.
@@ -3919,7 +3919,7 @@ It's time we did it.
 ```
 要是...就好了
 
-只用于与现在事实或者过去事实相反的虚拟语气中，只能用-般过去时或者过去完成时：
+只用于与现在事实或者过去事实相反的虚拟语气中，只能用一般过去时或者过去完成时：
 
 要是他在现在在这里就好了
  If Only he were here.
@@ -3932,7 +3932,7 @@ It's time we did it.
 
 10. wish的用法
 ```
-a. 接that从句，-定要用虚拟语气，若与现在事实相反，用-般过去时若与过去事实相反，用过去完成时：
+a. 接that从句，一定要用虚拟语气，若与现在事实相反，用一般过去时若与过去事实相反，用过去完成时：
 
 I wish (that) he is here(x)
 I wish he were here.
@@ -3948,7 +3948,7 @@ I wish I had studied harder when young.
 
 11. hope的用法
 ```
-接that从句，使用-般时态，表示极大的可能性：
+接that从句，使用一般时态，表示极大的可能性：
 
 a. 表示现在的状况
 I hope he is safe.
@@ -3986,7 +3986,7 @@ I hope they have finished the work.
 =I hope to travel abroad.
 
 与for连用，表“期望获得”
-#我希望能有机会尝试-下
+#我希望能有机会尝试一下
 I wish for a chance to try it.
 
 表祝福时，只能用wish，接两个名词或代词作宾语
@@ -4001,8 +4001,8 @@ I hope my partents can live long.
 
 13. 对过去事物的猜测的三种句型
 ```
-a. must have+过去分词    -定曾经...
-他博学多才，-定受过良好的教育
+a. must have+过去分词    一定曾经...
+他博学多才，一定受过良好的教育
 He is learned; he must have received a good education.
 
 b. may have+过去分词    可能曾经...
@@ -4055,7 +4055,7 @@ Evidently, this answer is right.
 
 ### 副词的位置
 
-#### -般规则
+#### 一般规则
 
 1. 有be动词时，置于be动词之后:
 ```
@@ -4069,7 +4069,7 @@ He can hardly walk.
 He has never been to the US before.
 ```
 
-3. 有-般动词时，置于该动词之前，但修饰的动词的副词表示某种状态时，则置于动词之后：
+3. 有一般动词时，置于该动词之前，但修饰的动词的副词表示某种状态时，则置于动词之后：
 ```
 The often go fishing.
 He really cares about you.
@@ -4152,7 +4152,7 @@ He is much too young.
 2. little/a little
 
 ```
-little作副词，视为否定：-点儿都不，等于no:
+little作副词，视为否定：一点儿都不，等于no:
 病人的情况并没比昨天好到哪儿去
 The patient's condition is little better than (it was) yesterday.
 
@@ -4178,22 +4178,22 @@ The patient's condition is getting a little better.
 
 ```
 a. sometime 有时候
-他有时候会来这儿走-下
+他有时候会来这儿走一下
 Sometimes he comes here for a visit.
 
 b. sometime 某时(不知何时)
-可用于-般过去时或-般将来时，使用时通常与另-明确的时间副词或副词短语连用：
+可用于一般过去时或一般将来时，使用时通常与另一明确的时间副词或副词短语连用：
 
--般过来时：
+一般过来时：
 我昨天早上某个时间见过他
 I saw hime sometime yesterday morning.
 
--般将来时：
+一般将来时：
 我明天某个时间会在这里
 I'll be here sometime tomororw.
 
-c. some time -段时间
-我会在这儿待-阵子
+c. some time 一段时间
+我会在这儿待一阵子
 I'll stay here (for) some time.
 不久前他还在这里
 He was here some time ago.
@@ -4209,9 +4209,9 @@ I have been to Thailand a few times.
 5. ago/before/since/after
 
 ```
-a. ago表“距现在若干时间以前”，时态用-般过去时
+a. ago表“距现在若干时间以前”，时态用一般过去时
 
-他几-前来过这儿
+他几一前来过这儿
 He came here a few days ago.
 
 How long ago did he come?
@@ -4219,7 +4219,7 @@ How long ago did he come?
 b. before表“距过去某时若干时间以前”，时态用过去完成时:
 When I met Jim last week, He told me he had just gotten back from a trip to Lake Placid two days before.
 注意：
-ago只能用在-般过去时的结构。ago不能单独使用，但before可以作为单独副词单独使用：
+ago只能用在一般过去时的结构。ago不能单独使用，但before可以作为单独副词单独使用：
 I met him ago(x)
 I me him two hours ago(ok)
 I met him before(ok)
@@ -4232,7 +4232,7 @@ I have studied English Since I moved here in 2001.
 He told me that he had written two books since he moved here in 2001.
 
 since作副词，译成之后，置于句尾或have/has/had之后，修饰现在完成、进行时或者过去完成、进行时：
-我于2001年搬到此处，之后就-直在学习英文
+我于2001年搬到此处，之后就一直在学习英文
  I moved here in 2001 and have studied English since.
 =I moved here in 2001 and have since studied English.
 
@@ -4256,7 +4256,7 @@ He is rather old.
 He studies quite hard.
 
 修饰“形容词+单数名词”时，应在a或an之前：
-他是-个相当不错的学生
+他是一个相当不错的学生
 He is quite a good student.
 They are quite good students.
 ```
@@ -4264,25 +4264,25 @@ They are quite good students.
 7. someday/one day/the other day/some other day
 
 ```
-a. someday  将来有-天(用于未来时)
+a. someday  将来有一天(用于未来时)
 Keep on working hard, and someday you will be successful.
 
 b. one day  某日
-表前几天时，等于the other day，也可指几年前的某-天，两者均用过去时
-有-天我在城里看到他
+表前几天时，等于the other day，也可指几年前的某一天，两者均用过去时
+有一天我在城里看到他
  I saw him downtown one day.
 =I saw him downtown the other day.
 
-表将来总有-天，等于someday，用于将来时
-总有-天你会后悔的
+表将来总有一天，等于someday，用于将来时
+总有一天你会后悔的
  One day you'll be sorry.
 =Someday you'll be sorry.
 
-c. the other day  前些时间，用于-般过去时
-前几天我到公园玩了-趟
+c. the other day  前些时间，用于一般过去时
+前几天我到公园玩了一趟
 I went to the park for a visit the other day.
 
-d. some other day  改天，用于-般将来时
+d. some other day  改天，用于一般将来时
 我现在很忙，改天再拜访你
 I'm busy now, I'll visit you some ther day.
 ```
@@ -4290,7 +4290,7 @@ I'm busy now, I'll visit you some ther day.
 8. somewhat/somehow/anyhow
 
 ```
-a. somewhat  有-点儿，副词，置于形容词或副词前，以修饰形容词或副词：
+a. somewhat  有一点儿，副词，置于形容词或副词前，以修饰形容词或副词：
  It's somewhat cold today.
 =It's a little cold today.
 =It's a bit cold today.
@@ -4304,7 +4304,7 @@ b. somehow  不知怎的，=for some unknown reason.
 他人不错，但不知怎的，我就是不喜欢他
 He is nice; but somehow I don't like him.
 
-2) 表设法，作-般副词，修饰句中的动词，置于句尾
+2) 表设法，作一般副词，修饰句中的动词，置于句尾
 我们必须设法找到这笔钱
 We must find the money somehow.
 
@@ -4324,7 +4324,7 @@ at any rate,
 
 ```
 a. 形容词，表足够/充分的，修饰名词
-他有足够的钱买-辆拉风的车
+他有足够的钱买一辆拉风的车
 He has enough money |to buy| a fance car.
                     |for   |
 b. 副词，表足以，修饰形容词或副词，置于形容词或副词之后
@@ -4369,15 +4369,15 @@ He is nice, and so is she.
 He will come, and so will she.
               and she will, too.
 
-3). -般动词，主语与do/does/did倒装
+3). 一般动词，主语与do/does/did倒装
 他来了，她也来了
 He came, and so did she.
          and she did, too.
-他有-本书，她也有
+他有一本书，她也有
 He has a book, and so does she.
                and she does, too.
 
-同-个人时，不倒装
+同一个人时，不倒装
 He is stupid. So he is(=Indeed he is.)
 You can't do it. So I can't.
 
@@ -4402,7 +4402,7 @@ He hasn't gone, and neither has she.
                 nor has she.
                 and she hasn't, either.
 
-3). -般动词，主语与do/does/did倒装
+3). 一般动词，主语与do/does/did倒装
 他绝不说谎，她绝不说谎
 He never tells a lie, and neither does he.
                       nor does he.
@@ -4412,7 +4412,7 @@ He has no book, and neither does she.
                 nor does she.
                 and she doesn't, either.
 
-also只能又在肯定式中，置于be动词之后，或者-般动词之前：
+also只能又在肯定式中，置于be动词之后，或者一般动词之前：
 他很亲切，她也是
 He is kind, and she is also kind.
 He has a pen, and she also has one.
@@ -4428,7 +4428,7 @@ He has a pen, and she also has one.
 天天: day by day
 夜夜: night after night
 渐渐地: little by little
--个-个地: one by one
+一个一个地: one by one
 陆续地: one after another
 面对面地: face to face
 
@@ -4477,7 +4477,7 @@ That case was finally settled.
 ```
 more than应置于倍数之前:
 
-a. 先造-个含有“倍数词+as ⋯ as ⋯ ”的句子
+a. 先造一个含有“倍数词+as ⋯ as ⋯ ”的句子
 他的钱是你的三倍:
 He has three times as much money as you do.
 
@@ -4485,16 +4485,16 @@ b．再于“倍数词十as ⋯ as ⋯ ”的结构前置人more than，即告�
 He has more than three times as much money as you do．
 （他的钱超过你的三倍。）
 
-c. more than亦可置于动词double（增加-倍）之前。
+c. more than亦可置于动词double（增加一倍）之前。
 Our income has more than doubled in one year.
-（-年之内我们的收人增加了-倍多。）
+（一年之内我们的收人增加了一倍多。）
 ```
 
 17. more than与over的关系
 
 ```
 over作介词表“超过”时，可用rnore than代替:
-他已待在此地-年多
+他已待在此地一年多
 He has stayed here over a year.
 He has stayed here more than a year.
 
@@ -4553,7 +4553,7 @@ B: I'm afraid not.
    I'm afraid so.
 ```
 
-21. all（三人以上-起）、both（两人-起）
+21. all（三人以上一起）、both（两人一起）
 
 ```
 约翰、保罗和彼得明天都要来这里庆祝杰克的生日
@@ -4593,7 +4593,7 @@ He lives near, not far.
 He was nearly drowned.
 
 near虽可作介词，但在下列短语中，near之后仍应置人to，形成固定短语
-come near to + V - ing差-点就⋯
+come near to + V 一 ing差一点就⋯
 他差点淹死了
  He came near to being drowned.
 =He came close to being drowned.
@@ -4624,7 +4624,7 @@ He was deeply hurt.
 
 ```
 a . greatly表示"大量地，大大地"
-他大大地吃了-惊
+他大大地吃了一惊
 He was greatly surprised.
 车祸次数大幅增加
 The number of traffic accidents has increased greatly.
@@ -4663,7 +4663,7 @@ So kind she that he deserves all my respect.
 3. 地方副词倒装句：
 
 ```
-那儿站着-个男孩
+那儿站着一个男孩
 A boy stood there.
 There stood a boy.
 ```
@@ -4694,7 +4694,7 @@ never: 从不
 hardly: 几乎不 = scarely
 rarely: 很少
 seldom: 很少
-little: -点儿也不
+little: 一点儿也不
 
 常用的否定副词短语：
 by no means: 绝对不
@@ -4732,7 +4732,7 @@ By no means are you the person we need.
 I was not aware of it until he came.
 No until he came was I awae of it.
 
-只有玛丽跟他在-起的时候，他才快乐
+只有玛丽跟他在一起的时候，他才快乐
 He is happy only when Mary is with him.
 
 b. 助动词
@@ -4746,14 +4746,14 @@ Hardly can he move.
 He has never done it before.
 Never has he done it before.
 
-c. -般动词
-与疑问句-样，变成do/does/did+原形动词
+c. 一般动词
+与疑问句一样，变成do/does/did+原形动词
 
 他很少唱歌
 He seldom sings.
 Seldom does he sing.
 
-他-点儿也没有想到玛丽的英语这么好
+他一点儿也没有想到玛丽的英语这么好
 He little knew that Mary's English could be so good.(x, 没有He little knew的说法)
 Little did he konw that Mary's English could be so good.
 ```
@@ -4773,22 +4773,22 @@ Only with his help will be able to weather the fifficulties.
 |Only at that time|
 ```
 
-3. not+a+单数可数名词    连-个...都没有
+3. not+a+单数可数名词    连一个...都没有
 
-我在那儿-个人也没有看到
+我在那儿一个人也没有看到
 I didn't see a soul(=a person) over there.
 Not a soul did I see over there.
 
 I was not able to discover a clue to the murder.
 No a clue to the murder was I able to discover.
-这件谋杀案我连-点蛛丝马迹也没法找到
+这件谋杀案我连一点蛛丝马迹也没法找到
 
 4. nowhere=in no place    在任何地方都不
 
 这种人我在任何地方都找不到
 Nowhere could I find such a man.
 
-5. -...就...的句型
+5. 一...就...的句型
 
 ```
 a. 同时态的状语从句
@@ -4797,17 +4797,17 @@ a. 同时态的状语从句
 =The instant she...
 =The moment she ...
 
-b. On/Upon+N/V-ing, S+V
-upon或on之后加名词或动名词，也表示"-...就..."的意思
+b. On/Upon+N/V一ing, S+V
+upon或on之后加名词或动名词，也表示"一...就..."的意思
 
 主语相同：
-我-做完工作就回家
+我一做完工作就回家
  As soon as I finished the job, I went home.
 =Upon/On finishing the job, I went home.
 
 不同主语：
 Upon/On用所有格
-他-到我就走了
+他一到我就走了
  As soon as he arrived, I left.
 =Upon/On his arriving, I left. 
 ```
@@ -4832,7 +4832,7 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 =So well has he done that deserves our respect.
 ```
 
-3. 有-般动词时：
+3. 有一般动词时：
 
 ```
 他太晚到，而没有赶上火车
@@ -4846,12 +4846,12 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 
 地方副词(there/here)或地方副词短语(in the room/at the station/by the window)置于句首时，亦可形成倒装：
 
-1. 第-型
+1. 第一型
 
 ```
 主语+不及物动词+地方副词
                地方副词短语
-->
+一>
 地方副词    +不及物动词+主语
 地方副词短语
 
@@ -4873,14 +4873,14 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 
 ```
 主语+be动词+过去分词+地方副词或地方副词短语
-->
+一>
 地方副词或地方副词短语+be动词+过去分词+主语
 
-门后锁着-个人
+门后锁着一个人
  A man was locked behind the door.
 =Behind the door was locked a man.
 
-那里坐落着-所学校
+那里坐落着一所学校
  A school is located there.
 =There is located a school.
 ```
@@ -4889,10 +4889,10 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 
 ```
 主语+be动词+现在分词+地方副词或地方副词短语
-->
+一>
 现在分词+地方副词或地方副词短语+be动词+主语
 
-那儿有-个女孩在唱歌，她是我女友
+那儿有一个女孩在唱歌，她是我女友
 #A girl is singing over there, she is my girlfriend.
 Singing over there is a girl, who is my girlfriend.
 
@@ -4929,7 +4929,7 @@ Here we are: 到了
 
 Here you are/Here you go: 拿去吧
 
-There you go again: 你又来这-套了
+There you go again: 你又来这一套了
 
 There you are/There it is: 在那里
 ```
@@ -4939,7 +4939,7 @@ There you are/There it is: 在那里
 1. 原级比较：as
 
 ```
-他和彼得-样用功
+他和彼得一样用功
 He work as hard as Peter.
 He is as diligent as Peter.
 
@@ -4947,7 +4947,7 @@ He is as diligent as Peter.
 He doesn't study so hard as Peter.
 ```
 
-2. -般比较：than
+2. 一般比较：than
 
 ```
 他比彼得用功
@@ -4957,12 +4957,12 @@ He is more diligent than Peter.
 He doesn't study harder than Peter.
 ```
 
-### -般比较结构
+### 一般比较结构
 
 1. 造句方式：
 
 ```
-a. 先造-个含有形容词或副词的句子：
+a. 先造一个含有形容词或副词的句子：
 
 他很小心
 He is prudent.
@@ -4983,7 +4983,7 @@ He works less enthusiastically than Peter.
 2. than引导的状语从句结构变化：
 
 ```
-若有be动词、助动词可保留，若有-般动词以do/does/did代替，当然这些也可以省略。
+若有be动词、助动词可保留，若有一般动词以do/does/did代替，当然这些也可以省略。
 
 a. be动词
 他没有你负责任
@@ -4993,7 +4993,7 @@ b. 助动词
 他唱歌比你悦耳
 He can sing more beautifully than you (can).
 
-c. -般动词
+c. 一般动词
 他工作比你仔细
 He worked more carefully than you (did).
 ```
@@ -5029,7 +5029,7 @@ He is healthier than he was.
 他比以前唱歌好(不同时态)
 He can sing better than he could.
 
-3). -般动词
+3). 一般动词
 
 他比以前努力
 He work hander than he did.
@@ -5037,7 +5037,7 @@ He work hander than he did.
 
 b. 此类中若有对等的介词短语,than之后的主语及动词或助动词都可以省略：
 1) 介词短语
-他和玛丽在-起比和简在-起快乐
+他和玛丽在一起比和简在一起快乐
  He is happier with Mary than He is with Jane.
 =He is happier with Mary than with Jane.
 
@@ -5152,7 +5152,7 @@ The boy is getting fatter and fatter.
 这问题比那个要难多了/甚至更难
 This question is (far/much/a lot) more fifficult than than one.
 
-他比他们之中任何-个都用功得多
+他比他们之中任何一个都用功得多
 He studies much harder than anyone of them.
 
 far/much/a lot可修饰副词too：
@@ -5184,7 +5184,7 @@ c. 动词
 I need you most.
 ```
 
-12. 最高级-定要是三者以上：
+12. 最高级一定要是三者以上：
 
 ```
 a. Of/among the three/four... 在这三个/四个...之中
@@ -5192,7 +5192,7 @@ a. Of/among the three/four... 在这三个/四个...之中
 这五本书中，我最喜欢那本
 Of five books, I like that one best.
 
-他是所有学生中最好的-个
+他是所有学生中最好的一个
 He is the best student of all.
 
 of the two则使用比较级
@@ -5203,17 +5203,17 @@ Of the two students, John is the better.
 Of the two books, I like that one better.
 
 b. 最高级形容词+n+关系代词that(不可使用who/whom/which)+定语从句完成时：
-在我所认识的人中，John是最有责任感的-位
+在我所认识的人中，John是最有责任感的一位
 John is the most responsible man (that) I've ever known.
 
-在我教过的学生中，他是最好的-位
+在我教过的学生中，他是最好的一位
 He is the best students that I've ever taught.
 ```
 
 13. the与最高级的关系：
 
 ```
-最高级副词修饰动词或副词时，不-定要加the，但最高级形容词修饰名词时，则须加the:
+最高级副词修饰动词或副词时，不一定要加the，但最高级形容词修饰名词时，则须加the:
 
 a. 副词
 这四个学生中，他待人最有礼
@@ -5225,7 +5225,7 @@ Of all the people I know, I respect him (the) most.
 I respect him most that I've ever known.
 
 c. 名词
-他是所有学生当中最好的-个
+他是所有学生当中最好的一个
 He is the best student of all.
 ```
 
@@ -5250,22 +5250,22 @@ She is by far/much the most beautiful girl in town.
 1. 造句方式：
 
 ```
-as...as...: 和...-样地...
+as...as...: 和...一样地...
 
-a. 先造-个含有形容词或副词的句子：
+a. 先造一个含有形容词或副词的句子：
 He is prudent.
 He runs fast.
 
-b. 再于句中的形容词或副词之前置as-词as为副词，译成“-样地” ：
-他-样地小心
+b. 再于句中的形容词或副词之前置as一词as为副词，译成“一样地” ：
+他一样地小心
 He is as prudent.
 He runs as fast.
 
 c. 再设定比较对象，并在该比较对象之前置副词连接词as即告完成；此as译成
 “和” ：
-他和约翰-样小心
+他和约翰一样小心
 He is as prudent as John.
-他跑得和约翰-样快
+他跑得和约翰一样快
 He runs as fast as John.
 ```
 
@@ -5273,15 +5273,15 @@ He runs as fast as John.
 
 ```
 a. be动词
-他和约翰-样小心
+他和约翰一样小心
 He is as prudent as John (is)
 
 b. 助动词
-他唱得和约翰-样好
+他唱得和约翰一样好
 He can sing as well as John (can)
 
-c. -般动词
-他跑得和约翰-样快
+c. 一般动词
+他跑得和约翰一样快
 He runs as fast as John.
 ```
 
@@ -5291,7 +5291,7 @@ He runs as fast as John.
 他比我的好友约翰谨慎
 He is as prudent is John, who is a good friend of mine.
 
-他和我妹妹玛丽-样用功
+他和我妹妹玛丽一样用功
 He studies as hand as does Mary, who is my sister. 
 
 他比我妹妹玛丽用功多了
@@ -5303,7 +5303,7 @@ He studies much hander than does Mary, who is my sister.
 ```
 肯定句：
 He studies as hard as Mary.
-他和栏杆-样瘦
+他和栏杆一样瘦
 He is as thin as a rail.
 
 否定句：
@@ -5316,7 +5316,7 @@ He isn't as(so) polite as John.
 1. "as...as..."可与单数可数名词连用：
 
 ```
-#将第-个as置于动词之后：
+#将第一个as置于动词之后：
 He is as handsome a boy as John.
 I have as fancy a car as that one.
 
@@ -5352,8 +5352,8 @@ He is such a good boy that I like him.
 They are such good boys that I like them.
 
 这类只能与单数可数名词连用的结构记忆法：
-从前有个书呆子(so...that...)，他有两个朋友，-个叫阿西(as...as...),
--个叫土土(too...to...)，三人相聚时，最爱念-个字：好(how...)
+从前有个书呆子(so...that...)，他有两个朋友，一个叫阿西(as...as...),
+一个叫土土(too...to...)，三人相聚时，最爱念一个字：好(how...)
 ```
 
 2. as...as one can 尽可能地...
@@ -5361,13 +5361,13 @@ They are such good boys that I like them.
 
 ```
 a. 造句方法：
-1) 先造-个含有形容词或副词的句子：
-他-定要用功
+1) 先造一个含有形容词或副词的句子：
+他一定要用功
 You must study hard.
 他保持沉默
 He remained quiet.
 
-2). 在hard或quiet之前置入第-个as(用副词，中文译为"-样地")：
+2). 在hard或quiet之前置入第一个as(用副词，中文译为"一样地")：
 You must study as hard.
 He remained as quite.
 
@@ -5379,24 +5379,24 @@ He remained as quiet as he could.
                      as possible.
 ```
 
-3. as...as any  与任何人-样...
+3. as...as any  与任何人一样...
 
 ```
-他和任何其他人-样快乐
+他和任何其他人一样快乐
 He is as happy a man as any. 
 ```
 
-4. as...as ever  与往常-样...
+4. as...as ever  与往常一样...
 
 ```
-虽然我和他分开已久，但他还是和以前-样年轻
+虽然我和他分开已久，但他还是和以前一样年轻
 Though it has been a long time since I parted for him, he is as young as ever.
 ```
 
-5. as...as ever lived  古今最...之-
+5. as...as ever lived  古今最...之一
   =one of the+最高级...that ever lived
 ```
-他是古今最伟大的英雄之-
+他是古今最伟大的英雄之一
  He is as great a heo as ever lived.
 =He is one of the greatest heroes that ever lived.
 ```
@@ -5404,7 +5404,7 @@ Though it has been a long time since I parted for him, he is as young as ever.
 6. 两个形容词的相互比较：
 
 ```
-more...that结构中两个形容词比较，-律用原级：
+more...that结构中两个形容词比较，一律用原级：
  He is more good than bad.
 =He is not so bad as good.
 =He is good rather than bad.
@@ -5413,7 +5413,7 @@ more...that结构中两个形容词比较，-律用原级：
 7. 倍数词造句法：
 
 ```
-a. 本结构-共有四种：
+a. 本结构一共有四种：
 倍数词+as⋯as⋯                           是⋯的几倍
 morethan+倍数词+as⋯as⋯                 是⋯的几倍还不止
 倍数词+the（或所有格）+名词是⋯ ⋯的几倍
@@ -5466,15 +5466,15 @@ He has twice my money.
 3. He has more than twice my money.
 
 f. 下列词类均视为倍数词：
-one-third      三分之-
-two-thirds     三分之二
-three-fourths  四分之三
+one一third      三分之一
+two一thirds     三分之二
+three一fourths  四分之三
 
-我的年龄只有你的-半
+我的年龄只有你的一半
 I am half as old as you.
 
-我的用功程度仅及他的三分之-
-I study only one-third as hard as he.
+我的用功程度仅及他的三分之一
+I study only one一third as hard as he.
 
 她的体重有我的两倍
 She is twice my weight.
@@ -5484,7 +5484,7 @@ g. 特殊结构：
 他的年纪是我的两倍
 He is twice as old as I.
 
-2. one and a half times as⋯as...   是⋯的-倍半
+2. one and a half times as⋯as...   是⋯的一倍半
 He 15 eight years old, and I am one and a half times as old as he·
 
 3. as many as+数词+复数名词    多达⋯
@@ -5516,13 +5516,13 @@ he came home as late as two in the morning.
 ```
 使用本句型的先决条件为：句中要有副词或形容词：
 a. 造句法：
-你愈用功，你就愈能成为-个好学生
+你愈用功，你就愈能成为一个好学生
 1. 加入The..., the...:
    The____..., the____...
 2. 将中文句子中的“愈”去掉，变成：
-   你用功，你就能成为-个好学生：
+   你用功，你就能成为一个好学生：
    You study hard, you'll become a good student.(x)
-3. 将第二步中的英文句子置于第-步中的空格后：
+3. 将第二步中的英文句子置于第一步中的空格后：
    The____you study hard, the____you'll become a good student.
 4. 将第三步中的形容词或副词移位到空格中，并变成比较级。若形容词之后有名词，该名词也要移位，
    而原有的a或an则删除：
@@ -5575,7 +5575,7 @@ That he wants to study is good.
 
 ### it作形式宾语
 
-1. 但动词虽加宾语，意思却不完整，而需要补充说明，谓不完全及物动词，其补充语-定是名词或形容词（包括分词变成的形容词）：
+1. 但动词虽加宾语，意思却不完整，而需要补充说明，谓不完全及物动词，其补充语一定是名词或形容词（包括分词变成的形容词）：
 
 ```
 我认为他人很好
@@ -5629,8 +5629,8 @@ some
 half
 part
 the rest
-one-third
-two-thirds
+one一third
+two一thirds
 none
 
 大部分的钱都被窃了(money前不得加the)
@@ -5641,7 +5641,7 @@ Some of the students are here.
 All of the students are here.
 他所有的演播都在这儿
 All of his students are here.
-有三分之-的学生通过了测验
+有三分之一的学生通过了测验
 One third of the students have passed the test.
 70％的水被污染了
 Seventy percent of the water is contaminated.
@@ -5676,7 +5676,7 @@ All students love music.
 ```
 她自杀了
 She killed herself.
-她的书和我的-样有趣
+她的书和我的一样有趣
 her books are as interesting as mine.
 ```
 
@@ -5693,7 +5693,7 @@ He did it himself.
 ![Grammar_it3.png](/images/Grammar_it3.png)
 
 ```
-他是我的-位朋友
+他是我的一位朋友
 He is a friend of mine.
 你的这位朋友是个好人
 This friend of yours is good.
@@ -5702,7 +5702,7 @@ This friend of yours is good.
 他是我最好的朋友
 He is the best of mine.(x)
 He is my best friend.
-他是我最好的朋友其中-个
+他是我最好的朋友其中一个
 He is one of my best friends.
 ```
 
@@ -5731,24 +5731,24 @@ b. one after the other    两者相继地
 
 他相继地举起左右手
 He raised his hands one after the other.
-所有学生-个接-个地进来
+所有学生一个接一个地进来
 All the students came in one after another.
 ```
 
 11. either/neither/both/all/any/none作代词的用法
 
 ```
-either（两者中任-）    any（三者或以上任-）
+either（两者中任一）    any（三者或以上任一）
 neither（两者皆不）     none（三者或以上皆不）
 both（两者皆）          all（三者或以上皆）
 
 你上咖啡也好，茶也好，我都不在乎随便哪样都行
 I don't care whether you serve coffee or tea; either will do.
-这四把椅子没有-把是我喜欢的
+这四把椅子没有一把是我喜欢的
 I don't like any of the four chairs.
 这两本书都不好
 Neither of the two books is good.
-三个学生中没有-个是用功的
+三个学生中没有一个是用功的
 None of the three students is(或are) diligent.
 那两个学生都懒惰
 Both of the two students are lazy.
@@ -5756,35 +5756,35 @@ Both of the two students are lazy.
 All of the five apples are rotten.
 ```
 
-12. one...the other...    -个...另-个...(限定的两者)
+12. one...the other...    一个...另一个...(限定的两者)
 
 ```
-他有两个儿子。-个是老师, 另-个则是军人。
+他有两个儿子。一个是老师, 另一个则是军人。
 He have two sons. One is a teacher, and the other is a soldier.
 ```
 
-13. one...another...the other...    -个...-个...另-个...(限定的三者)
+13. one...another...the other...    一个...一个...另一个...(限定的三者)
 
 ```
-他有三个儿子。-个是老师，-个是军人，另-个则是律师
+他有三个儿子。一个是老师，一个是军人，另一个则是律师
 He have three sons. One is a teacher, another is a soldier, and the other is a lawyer.
 ```
 
-14. one...another...    -个...另-个...(非限定的两者)
+14. one...another...    一个...另一个...(非限定的两者)
 
 ```
 嗜好因人而异。某甲可能喜欢游泳，某乙则可能喜欢远足
 Hobbies vary with people. One may enjoy swimming, while another may love hiking. 
 ```
 
-15. some...others...    -些...另-些...(非限定的两群)
+15. some...others...    一些...另一些...(非限定的两群)
 
 ```
 嗜好因人而异。有些人可能喜欢游泳，有些人则可能喜欢远足
 Hobbies vary with people. Some may enjoy swimming, while others may love hiking. 
 ```
 
-16. some...others...still others...    -些...-些...另-些...
+16. some...others...still others...    一些...一些...另一些...
 
 ```
 嗜好因人而异。有些人可能喜欢游泳，有些人可能喜欢蹦极，也有些人则喜欢远足
@@ -5803,10 +5803,10 @@ Only two students in my class passed the test. The others failed.
 1. 数词+名词
 
 ```
-这个计划会持续-年，但那个计划则会持续五年
+这个计划会持续一年，但那个计划则会持续五年
 This program will last one year, but that program will last five years.
-这项五年计划执行起来得超过五年(five-year中的名词为单数)
-This five-year plan may take more than five years to carry out.
+这项五年计划执行起来得超过五年(five一year中的名词为单数)
+This five一year plan may take more than five years to carry out.
 ```
 
 2. 数词+名词+形容词
@@ -5815,7 +5815,7 @@ This five-year plan may take more than five years to carry out.
 约翰五岁了
 John is five years old.
 约翰是五岁的男孩
-John is a five-year-old boy.
+John is a five一year一old boy.
 ```
 
 3. 名词+现在分词
@@ -5824,7 +5824,7 @@ John is a five-year-old boy.
 玛丽是个喜欢伤男孩子心的女孩
 Mary is a girl who likes to break boys' hearts.
 玛丽是个会伤人心的女孩
-Mary is a heart-breaking girl.
+Mary is a heart一breaking girl.
 ```
 
 4. 副词+现在分词
@@ -5833,7 +5833,7 @@ Mary is a heart-breaking girl.
 这块低洼地区淹水了
 The area which lay low was flooded.
 这块低洼地区淹水了
-The low-lying area was flooded.
+The low一lying area was flooded.
 ```
 
 5. 名词+过去分词
@@ -5842,42 +5842,42 @@ The low-lying area was flooded.
 我为那个心碎的男孩子感到难过
 I feel sorry for the boy whose heart is broken.
 我为那个心碎的男孩感到难过
-I feel sorry for the heart-broken boy.
+I feel sorry for the heart一broken boy.
 ```
 
 6. 形容词+名词变成的过去分词
 
 ```
 那个大眼睛的女孩子是谁
-Who is that big-eyed girl?
+Who is that big一eyed girl?
 ```
 
 7. well/ill+过去分词
 
 ```
-well-behaved    很守规矩的
-well-bred       很有教养的
-well-built      体格很棒的
-well-chosen     慎选的
-well-done       表现很棒的；（牛排）全熟的
-well-dressed    穿着体面的
-well-known      很出名的
-well-mannered   彬彬有礼的
-well-read       书读得很多的，饱读诗书的
-well-traveled   去过很多地方的，老马识途的
-ill-bred        没有教养的
-111-considered  考虑不周的
-111-fated       命运不好的，不幸的
-ill-gotten      用不正当手段获得的
+well一behaved    很守规矩的
+well一bred       很有教养的
+well一built      体格很棒的
+well一chosen     慎选的
+well一done       表现很棒的；（牛排）全熟的
+well一dressed    穿着体面的
+well一known      很出名的
+well一mannered   彬彬有礼的
+well一read       书读得很多的，饱读诗书的
+well一traveled   去过很多地方的，老马识途的
+ill一bred        没有教养的
+111一considered  考虑不周的
+111一fated       命运不好的，不幸的
+ill一gotten      用不正当手段获得的
 illjudged       判断不当的
-111-mannered    态度不好的
-111-natured     心地不好的，本性坏的
-good-natured    本性善良的（非well-attired )
+111一mannered    态度不好的
+111一natured     心地不好的，本性坏的
+good一natured    本性善良的（非well一attired )
 
 我喜欢这孩子，因为他很乖
-I like the child because he is well-behaved.
+I like the child because he is well一behaved.
 这位命苦的年轻人最后自杀了
-The ill-fated young man committed suicide in the long run.
+The ill一fated young man committed suicide in the long run.
 ```
 
 ## 介词用法
@@ -6598,8 +6598,8 @@ Everybody can do it except Peter.
 
 ```
 他人蛮不错，只不过是脾气不好
-She is quite nice except that he is bad-tempered.
-                         for his bad-tempered.
+She is quite nice except that he is bad一tempered.
+                         for his bad一tempered.
 ```
 
 ### behind
@@ -6673,7 +6673,7 @@ He is into classical music.
 ```
 act within the law     在法律范围内行事
 守法的公民应该依法行事
-A law-abiding citizen should act within the law.
+A law一abiding citizen should act within the law.
 ```
 
 ### without
@@ -7069,7 +7069,7 @@ He wandered around on the street through the day.
 =in addition to +（代）名词/动名词
 
 除了游泳，他也会溜冰
- Besides swimming, he can also roller-skate.
+ Besides swimming, he can also roller一skate.
 =In addition to swimming, ... 
 ```
 
