@@ -2965,7 +2965,7 @@ Would you mind doing it for me?
              if you do it for me?
 ```
 
-would you mind会比较客气。yould you mind从句中用过去式，do you mind从句中用现在式。
+would you mind会比较客气。would you mind从句中用过去式，do you mind从句中用现在式。
 
 #### can/could
 
@@ -3039,7 +3039,7 @@ I cannot but laugh.
 =I cannot help laughing.
 
 #cannot be too...: 再...也不会过
-#我们在择友时同志小心也不为过
+#我们在择友时再小心也不为过
 We cannot be too careful in choosing friends.
 
 #我一点儿也不在乎(我不能低于比现在不在乎的程度了)
@@ -3118,7 +3118,7 @@ You had better stay home.
 c.may as well+原形动词+as+原形动词    与其...倒不好...
 =had better+原型动词+than+原形动词
 ```
-#你倒不如留在家里，与其各他们出去。
+#你倒不如留在家里，与其和他们出去。
 You may as well stay home as go out with them.
 ```
 
@@ -3216,7 +3216,7 @@ He need not go.
 1.助动词
 ```
 dare not+原形动词    不敢...
-Dare one+原形动词    某人敢...吗？
+dare one+原形动词    某人敢...吗？
 
 #他不敢去
 He dare not go.
@@ -4493,7 +4493,7 @@ Our income has more than doubled in one year.
 17. more than与over的关系
 
 ```
-over作介词表“超过”时，可用rnore than代替:
+over作介词表“超过”时，可用more than代替:
 他已待在此地一年多
 He has stayed here over a year.
 He has stayed here more than a year.
@@ -4634,7 +4634,7 @@ b. highly表“高高地”，通常与“表扬” 、 “奖励” 、 “推�
 We think highly of him.
 ```
 
-24. nowhere（二in noplace）在任何地方都不
+24. nowhere（=in noplace）在任何地方都不
 
 ```
 此亦为否定副词，置于句首要采倒装句:
@@ -5066,6 +5066,9 @@ a. much(很多的)及little(很少的)修饰不可数名词：
 much    more   the most
 little  less   the least
 
+many    more   the most
+few     fewer  the fewest
+
 他有很多钱
  He has very much money.
 =He has a lot of money.(佳)
@@ -5466,15 +5469,15 @@ He has twice my money.
 3. He has more than twice my money.
 
 f. 下列词类均视为倍数词：
-one一third      三分之一
-two一thirds     三分之二
-three一fourths  四分之三
+one-third      三分之一
+two-thirds     三分之二
+three-fourths  四分之三
 
 我的年龄只有你的一半
 I am half as old as you.
 
 我的用功程度仅及他的三分之一
-I study only one一third as hard as he.
+I study only one-third as hard as he.
 
 她的体重有我的两倍
 She is twice my weight.
@@ -5629,8 +5632,8 @@ some
 half
 part
 the rest
-one一third
-two一thirds
+one-third
+two-thirds
 none
 
 大部分的钱都被窃了(money前不得加the)
@@ -7164,7 +7167,7 @@ He gets up early, doesn't he?
 他没来，是不是？
 He didn't come, did he?
 
-d. 与祈使句使用时，反意疑问句一律用wili you:
+d. 与祈使句使用时，反意疑问句一律用will you:
 
 来这里，好不好?
 Come here, will you?
