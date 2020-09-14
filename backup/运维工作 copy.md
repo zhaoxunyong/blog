@@ -1,3 +1,10 @@
+netsh interface portproxy add v4tov4 listenaddress=192.168.95.211 listenport=80 connectaddress=9.16.15.201 connectport=80
+
+netsh interface portproxy show v4tov4
+
+netsh interface portproxy delete v4tov4 listenaddress=192.168.95.211 listenport=80
+
+https://9.16.250.30/com/installClient.html#auto-common
 --------------------------------
 2019/12/2:
 Kevin:
