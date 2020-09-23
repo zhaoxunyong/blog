@@ -1,14 +1,14 @@
-一一一
+---
 title: A Guide to English Grammar
 date: 2019一08一28 09:01:32
 categories: ["English"]
 tags: ["English"]
 toc: true
-一一一
+---
 
 A guide to english grammar.
 
-<!一一 more 一一>
+<!-- more -->
 
 ## 句子的形成
 
@@ -131,7 +131,7 @@ l ) that从句
 
 他不读书令我生气
 he doesn't study makes me angry.
-一> That he doesn't study makes me angry.
+-> That he doesn't study makes me angry.
 他不相信我说的话
 That he doesn't believe my words.
 有很多工作要做
@@ -146,27 +146,27 @@ That there is lot of work to do.
 a）问句有be动词时：
 他是否快乐
 Is he happy? 
-一> whether he is happy
+-> whether he is happy
 
 b）问句有一般助动词（Can、will、may、should、ought to、must、have）时，主语与助动词还原，前面冠以whether：
 
 他是否能做这件事
 Can he do it? 
-一> whether he can do it.
+-> whether he can do it.
 
 他是否已做好此事
 Has he done it?
-一> Whether he has done it.
+-> Whether he has done it.
 
 c）问句有do、does、did等助动词时主语与助动词还原，再将do、does、did去掉，后面的动词依人称和时态变化:
 
 他是否来了
 Did he come? 
-一> whether he came.
+-> whether he came.
 
 他是否喜欢它
 Does he like it? 
-一> whether he likes it.
+-> whether he likes it.
 ```
 
 ##### 疑问词所引导的从句
@@ -180,7 +180,7 @@ Does he like it?
 
 他正在做什么
 What is he doing? 
-一> what he is doing.
+-> what he is doing.
 ```
 
 2. 问句有一般助动词时：
@@ -190,7 +190,7 @@ What is he doing?
 
 他在哪里能找到它
 Where can he find it? 
-一> where he can find it.
+-> where he can find it.
 ```
 
 3. 问句有do、does、did等助动词时：
@@ -200,29 +200,29 @@ Where can he find it?
 
 他写什么
 What did he write? 
-一> what he wrote.
+-> what he wrote.
 
 他何时来
 When did he come? 
-一> when he came.
+-> when he came.
 
 他怎么做这件事
 How does he do it? 
-一> how he does it.
+-> how he does it.
 
 who/what/which为疑问代词，若在问句中作主语，变成名词性从句时结构不变:
 
 谁来这儿
 Who came here? 
-一> who came here.
+-> who came here.
 
 昨晚发生什么事
 What happended last night? 
-一> what happended last night.
+-> what happended last night.
 
 哪个被买走
 Which was bought? 
-一> which was bought.
+-> which was bought.
 ```
 
 名词性从句的功能:
@@ -301,8 +301,8 @@ I am sure of that the team will win the game.(x)
 I am sure of the team's winning the game.
 
 (c) 从句若有以下助动词时，做下列变化：
-may 一> be likely to
-can 一> be able to
+may -> be likely to
+can -> be able to
 我很高兴他可能会来。
 I am happy about that he may come.(x)
 I am happy about his being likely to come.
@@ -1158,10 +1158,10 @@ How hard he studied!
 ### 并列连词
 
 ```
-and 一> both...and..            一方面...同时也...
-or  一> either...or...          要不就是...要不就是...
+and -> both...and..            一方面...同时也...
+or  -> either...or...          要不就是...要不就是...
        neither...nor...        既非...亦非...
-but 一> not...but...            并非...而是...
+but -> not...but...            并非...而是...
        not only...but also...  不仅...而且...
 as well as...                  以及
 rather than...                 而非
@@ -1486,18 +1486,18 @@ The girl who danced here yesterday is my sister.
 =The girl dancing here yesterday is my sister.
 
 Who is that boy that is standing over there?
-that is一>being一>省略
+that is->being->省略
 =Who is that boy standing over there?
 
 I like the car which is parked in front of the post office.
-which is>being一>省略
+which is>being->省略
 =I like the car parked in front of the post office.
 ```
 
 非限制性定语从句不能化简为分词短语。但Who/which + be + n可以化简为同位语
 ```
 I met John, who is a good friend of mine.
-who is一>being一>省略
+who is->being->省略
 =I met John, a good friend of mine.
 
 He works hard, which is a fact that is known to all of us.
@@ -3566,8 +3566,8 @@ He had already left when I came.
 
 过去完成时不能单独存在，要与另一个一般过去时从句或表过去的副词短语连用：
 
-先发生的动作一一一>用过去完成时表示
-后发生的动作一一一>用一般过去时表示
+先发生的动作--->用过去完成时表示
+后发生的动作--->用一般过去时表示
 
 ```
 I lost the book which my father had given me.
@@ -3677,19 +3677,19 @@ He is loved by everyone.
 ## 虚拟语气
 
 ```
-a. 纯条件的虚拟语气一一一用现在式
+a. 纯条件的虚拟语气---用现在式
 如果他在这儿，我会揍他
 If he is here, I will beat him.
 
-b. 与现在事实相反的虚拟语气一一一用过去时
+b. 与现在事实相反的虚拟语气---用过去时
 如果他现在在这儿，我会揍他
 If he were here, I would beat him.(But he is not here.)
 
-c. 与过去事实相反的虚拟语气一一一用过去完成时
+c. 与过去事实相反的虚拟语气---用过去完成时
 如果他当时在这儿，我会揍他
 If he had been here, I would have beaten him.(But he was not here.)
 
-d. 与将来状况相反的虚拟语气一一一if从句要用助动词should，译成“万一”，主句则用过去时或现在时助动词
+d. 与将来状况相反的虚拟语气---if从句要用助动词should，译成“万一”，主句则用过去时或现在时助动词
 万一他在这儿，我会揍他
 If he should be here, I would(或will) beat him.
 ```
@@ -3721,10 +3721,10 @@ If I were rich, I would help you.
 =As I am not rich, I can't help you.
 
 主句中的助动词一定为过去时助动词
-will一>would
-may一>might
-can一>could
-shall一>should或者ought to
+will->would
+may->might
+can->could
+shall->should或者ought to
 must只能表示现在或将来的状况，只用于纯条件的虚拟语气中。
 ```
 
@@ -3755,7 +3755,7 @@ If I had met her five years ago, she might be my wife today.
 a. 低可能性：主句要用过去时助动词
 If+主语+should+原形动词，主语 would(could/could/might/should/ought to)+原形动词
 
-万一你生病，会议将延期一一一你不太可能生病，会议不太可能延期
+万一你生病，会议将延期---你不太可能生病，会议不太可能延期
 If you should fall ill, the meeting would be put off
 
 If it should rain, I would stay home.
@@ -3763,13 +3763,13 @@ If it should rain, I would stay home.
 b. 高可能性：主句要用现在时助动词
 If+主语+should+原形动词，主语+will(can/may/should/ought to)+原形动词
 
-万一你生病，会议将延期一一一你可能会生病，而会议也可能延期
+万一你生病，会议将延期---你可能会生病，而会议也可能延期
 If you should fall ill, the meeting will be put off.
 
 If it should rain, I will stay home.
 
 也可能与祈祷句形成的主句连用
-万一我迟到，务必要等我一一一我可能会迟到
+万一我迟到，务必要等我---我可能会迟到
 If I should be late, be sure to wait for me.
 ```
 
@@ -3866,15 +3866,15 @@ b. 与过去事实相反：若非当时...就...
 ```
 =as though...    仿佛...(副词)
 
-a. 表极大的可能一>动词使用一般时态
+a. 表极大的可能->动词使用一般时态
 
 看过来好像要下雨了
 It looks as if it is going to rain.
 
-b. 表与现在事实相反一>动词使用一般过去时
+b. 表与现在事实相反->动词使用一般过去时
 Mr. Wang loves me as if I were his own child.
 
-c. 表与过去事实相反一>动词使用过去完成时
+c. 表与过去事实相反->动词使用过去完成时
 It looks as if nothing had happended.
 ```
 
@@ -4851,7 +4851,7 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 ```
 主语+不及物动词+地方副词
                地方副词短语
-一>
+->
 地方副词    +不及物动词+主语
 地方副词短语
 
@@ -4873,7 +4873,7 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 
 ```
 主语+be动词+过去分词+地方副词或地方副词短语
-一>
+->
 地方副词或地方副词短语+be动词+过去分词+主语
 
 门后锁着一个人
@@ -4889,7 +4889,7 @@ so...that或such...that倒装结构时，so或much及所引导的词类置于句
 
 ```
 主语+be动词+现在分词+地方副词或地方副词短语
-一>
+->
 现在分词+地方副词或地方副词短语+be动词+主语
 
 那儿有一个女孩在唱歌，她是我女友
