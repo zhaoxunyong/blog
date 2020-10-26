@@ -28,7 +28,7 @@
         <mirror>
             <id>nexus</id>
             <name>internalNexusRepository</name>
-            <url>http://nexus.aeasycredit.net/content/groups/public</url>
+            <url>http://nexus.zerofinance.net/content/groups/public</url>
             <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url> -->
             <mirrorOf>central</mirrorOf>
         </mirror>
@@ -41,7 +41,7 @@
             <repositories>
                 <repository>
                     <id>nexus</id>
-                    <url>http://nexus.aeasycredit.net/content/groups/public</url>
+                    <url>http://nexus.zerofinance.net/content/groups/public</url>
                     <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url> -->
                     <releases>
                         <enabled>true</enabled>
@@ -54,7 +54,7 @@
             <pluginRepositories>
                 <pluginRepository>
                     <id>nexus</id>
-                    <url>http://nexus.aeasycredit.net/content/groups/public</url>
+                    <url>http://nexus.zerofinance.net/content/groups/public</url>
                     <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url> -->
                     <releases>
                         <enabled>true</enabled>
