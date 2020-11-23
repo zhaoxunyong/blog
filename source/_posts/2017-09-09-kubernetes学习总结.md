@@ -867,6 +867,14 @@ kubectl create -f ./
 ### 最新命令汇总
 
 ```
+minikube addons list
+minikube addons enable ingress
+minikube addons enable heapster
+kubectl top node
+kubectl top pod --all-namespaces
+kubectl cluster-info
+minikube service monitoring-grafana -n kube-system
+kubectl get pod --watch
 kubectl delete all --all
 k get pod --show-labels
 k label pod xxx app=foo --overwrite
