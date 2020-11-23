@@ -149,8 +149,8 @@ nodeport 并没有完全解决外部访问service 的问题， 比如负载均�
 #### 创建deployment
 类似于docker run方式：
 ```bash
-[root@k8s-master ~]# kubectl run --image=nginx:1.12.1 nginx-app --port=80 --replicas=2    
-deployment "nginx-app" created
+[root@k8s-master ~]# kubectl create deploy --image=nginx:1.12.1 nginx-app
+deployment.apps/nginx-app created
 
 [root@k8s-master ~]# kubectl get deploy nginx-app   
 NAME        DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
@@ -863,6 +863,109 @@ kubectl create -f ./
 可以通过http://a.zhaoxy.com:8580/dashboard/访问监控服务。
 
 ![traefik-dashboard](/images/traefik-dashboard.png)
+
+### 最新命令汇总
+
+```
+kubectl delete all --all
+k get pod --show-labels
+k label pod xxx app=foo --overwrite
+
+#Creating by commands
+kubectl create deployment kubia --image=luksa/kubia
+#kubectl expose deployment kubia --type=NodePort --name kubia-http --port=80
+kubectl expose deployment kubia --type=LoadBalancer --name kubia-http --port=80
+minikube service kubia-http --url
+
+#Creating by yaml
+#kubia-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubia
+spec:
+  replicas: 2
+  #指定新创建的pod至少要成功运行多久才视为可用
+  #让k8s在pod就绪之后继续等待10秒后，才继续执行滚动升级
+  minReadySeconds: 10
+  revisionHistoryLimit: 8
+  progressDeadlineSeconds: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      #0确保升级过程中pod被挨个替换
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      name: kubia
+      labels:
+        app: kubia
+    spec:
+      containers:
+        - name: nodejs
+          image: luksa/kubia:v2
+          readinessProbe:
+            periodSeconds: 1
+            httpGet:
+              path: /
+              port: 8080
+  selector:
+    matchLabels:
+      app: kubia
+
+#--record会记录历史版本号
+kubectl create -f kubia-deployment.yaml --record
+
+#kubia-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia-http
+spec:
+#   sessionAffinity: ClientIP
+#  type: NodePort
+#  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+#      nodePort: 30123
+  selector:
+    app: kubia
+  sessionAffinity: ClientIP
+
+#kubia-ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubia
+spec:
+  rules:
+    - host: kubia.example.com
+      http:
+        paths:
+          - path: /kubia # 将 /kubia 子路径请求转发到 kubia-nodeport 服务的 80 端口
+            backend:
+              serviceName: kubia-http
+              servicePort: 80
+
+#Rollout
+kubectl create -f kubia-deployment.yaml --record
+#kubectl scale deployment kubia --replicas=3
+kubectl set image deployment kubia nodejs=luksa/kubia:v3
+kubectl rollout pause deployment kubia
+kubectl rollout resume deployment kubia
+kubectl rollout status deployment kubia
+kubectl rollout history deployment kubia
+kubectl rollout undo deployment kubia --to-revision=1
+kubectl patch deployment kubia -p '{"spec": {"revisionHistoryLimit": 5}}'
+#指定新创建的pod至少要成功运行多久才视为可用,让k8s在pod就绪之后继续等待10秒后，才继续执行滚动升级
+kubectl patch deployment kubia -p '{"spec": {"minReadySeconds": 10}}'
+#滚动失败的超时时间
+kubectl patch deployment kubia -p '{"spec": {"progressDeadlineSeconds": 15}}'
+#将本地网络端口转发到pod中的端口
+kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
+```
 
 
 ## 参考
