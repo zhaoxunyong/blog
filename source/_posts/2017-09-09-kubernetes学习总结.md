@@ -973,8 +973,8 @@ kubectl patch deployment kubia -p '{"spec": {"minReadySeconds": 10}}'
 kubectl patch deployment kubia -p '{"spec": {"progressDeadlineSeconds": 15}}'
 #将本地网络端口转发到pod中的端口
 kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
+kubectl port-forward service/hello-minikube 7080:8080
 ```
-
 
 ## 参考
 > http://blog.csdn.net/felix_yujing/article/details/51622132
@@ -991,3 +991,52 @@ kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
 > https://www.kubernetes.org.cn/1885.html
 > https://mritd.me/2017/03/04/how-to-use-nginx-ingress
 > http://huxos.me/kubernetes/2017/09/19/kubernetes-cluster-07-ingress.html
+
+yum install bash-completion -y 
+~/.bash_profile
+alias k=kubectl
+source <(kubectl completion bash | sed s/kubectl/k/g)
+source /usr/share/bash-completion/bash_completion
+ISTIO:
+CENTOS7:
+cul -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.3/bin/linux/amd64/kubectl
+chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+yum localinstall VirtualBox-6.1-6.1.16_140961_el7-1.x86_64.rpm
+yum localinstall kernel-devel-3.10.0-957.el7.x86_64.rpm 
+rcvboxdrv setup
+su - dev
+
+#https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/
+export http_proxy="http://192.168.101.175:1082"
+export https_proxy=$http_proxy
+export no_proxy="127.0.0.1,localhost,*.zerofinance.net,192.168.100.88,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24"
+minikube start --memory=8192 --cpus=4 --kubernetes-version=v1.18.3
+
+wget https://get.helm.sh/helm-v3.4.0-linux-amd64.tar.gz
+tar zvxf helm-v3.4.0-linux-amd64.tar.gz
+mv linux-amd64/helm /usr/local/bin/helm
+wget https://github.com/istio/istio/releases/download/1.6.14/istio-1.6.14-linux-amd64.tar.gz
+
+#Example:
+#https://learnk8s.io/spring-boot-kubernetes-guide
+docker network create knote
+docker run \
+  --name=mongo \
+  --rm \
+  --network=knote \
+  mongo
+docker run \
+  --name=knote-java \
+  --rm \
+  --network=knote \
+  -p 8080:8080 \
+  -e MONGO_URL=mongodb://mongo:27017/dev \
+  learnk8s/knote-java:1.0.0
+
+#https://spring.io/guides/gs/spring-boot-kubernetes/
+$ kubectl create deployment demo --image=springguides/demo --dry-run -o=yaml > deployment.yaml
+$ echo --- >> deployment.yaml
+$ kubectl create service clusterip demo --tcp=8080:8080 --dry-run -o=yaml >> deployment.yaml
+
+#https://spring.io/guides/topicals/spring-on-kubernetes/

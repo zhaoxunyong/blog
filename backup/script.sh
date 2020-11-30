@@ -140,8 +140,7 @@ systemctl start ntpd
 yum -y install bind-utils bridge-utils ntpdate setuptool iptables system-config-securitylevel-tui system-config-network-tui \
 ntsysv net-tools lrzsz bridge-utils \
 htop telnet lsof vim dos2unix unix2dos zip unzip \
-lsof openssl openssh-server openssh-clients initscripts rpcbind
-yum install psmisc -y
+lsof openssl openssh-server openssh-clients initscripts rpcbind psmisc
 systemctl enable sshd
 systemctl enable rpcbind
 
