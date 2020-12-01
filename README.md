@@ -65,6 +65,7 @@ yarn add hexo-generator-baidu-sitemap
 
 ```bash
 # 安装依赖项
+yarn add node-sass
 yarn install
 # Google 
 #yarn add hexo-generator-sitemap

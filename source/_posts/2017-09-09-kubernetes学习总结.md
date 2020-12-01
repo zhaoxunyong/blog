@@ -864,7 +864,7 @@ kubectl create -f ./
 
 ![traefik-dashboard](/images/traefik-dashboard.png)
 
-### 最新命令汇总
+## 最新命令汇总
 
 ```
 minikube addons list
@@ -976,48 +976,9 @@ kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
 kubectl port-forward service/hello-minikube 7080:8080
 ```
 
-## 参考
-> http://blog.csdn.net/felix_yujing/article/details/51622132
-> [docker与kubectl命令对比](http://www.pangxie.space/docker/157)
-> http://www.cnblogs.com/fengjian2016/p/6423455.html
-> https://github.com/feiskyer/kubernetes-handbook/blob/master/introduction/101.md
-> http://blog.csdn.net/xts_huangxin/article/details/51891709
-> https://www.stratoscale.com/blog/kubernetes/kubernetes-exposing-pods-service/
-> http://blog.csdn.net/u012804178/article/category/6861460
-> http://feisky.xyz/2016/09/11/Kubernetes%E4%B8%AD%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/
-> http://dockone.io/article/2247
-> https://www.kubernetes.org.cn/%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD
-> http://kubernetes.kansea.com/docs/
-> https://www.kubernetes.org.cn/1885.html
-> https://mritd.me/2017/03/04/how-to-use-nginx-ingress
-> http://huxos.me/kubernetes/2017/09/19/kubernetes-cluster-07-ingress.html
+## Example
 
-yum install bash-completion -y 
-~/.bash_profile
-alias k=kubectl
-source <(kubectl completion bash | sed s/kubectl/k/g)
-source /usr/share/bash-completion/bash_completion
-ISTIO:
-CENTOS7:
-cul -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.18.3/bin/linux/amd64/kubectl
-chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-yum localinstall VirtualBox-6.1-6.1.16_140961_el7-1.x86_64.rpm
-yum localinstall kernel-devel-3.10.0-957.el7.x86_64.rpm 
-rcvboxdrv setup
-su - dev
-
-#https://minikube.sigs.k8s.io/docs/handbook/vpn_and_proxy/
-export http_proxy="http://192.168.101.175:1082"
-export https_proxy=$http_proxy
-export no_proxy="127.0.0.1,localhost,*.zerofinance.net,192.168.100.88,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24"
-minikube start --memory=8192 --cpus=4 --kubernetes-version=v1.18.3
-
-wget https://get.helm.sh/helm-v3.4.0-linux-amd64.tar.gz
-tar zvxf helm-v3.4.0-linux-amd64.tar.gz
-mv linux-amd64/helm /usr/local/bin/helm
-wget https://github.com/istio/istio/releases/download/1.6.14/istio-1.6.14-linux-amd64.tar.gz
-
+```bash
 #Example:
 #https://learnk8s.io/spring-boot-kubernetes-guide
 docker network create knote
@@ -1040,3 +1001,22 @@ $ echo --- >> deployment.yaml
 $ kubectl create service clusterip demo --tcp=8080:8080 --dry-run -o=yaml >> deployment.yaml
 
 #https://spring.io/guides/topicals/spring-on-kubernetes/
+```
+
+## 参考
+> http://blog.csdn.net/felix_yujing/article/details/51622132
+> [docker与kubectl命令对比](http://www.pangxie.space/docker/157)
+> http://www.cnblogs.com/fengjian2016/p/6423455.html
+> https://github.com/feiskyer/kubernetes-handbook/blob/master/introduction/101.md
+> http://blog.csdn.net/xts_huangxin/article/details/51891709
+> https://www.stratoscale.com/blog/kubernetes/kubernetes-exposing-pods-service/
+> http://blog.csdn.net/u012804178/article/category/6861460
+> http://feisky.xyz/2016/09/11/Kubernetes%E4%B8%AD%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/
+> http://dockone.io/article/2247
+> https://www.kubernetes.org.cn/%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD
+> http://kubernetes.kansea.com/docs/
+> https://www.kubernetes.org.cn/1885.html
+> https://mritd.me/2017/03/04/how-to-use-nginx-ingress
+> http://huxos.me/kubernetes/2017/09/19/kubernetes-cluster-07-ingress.html
+
+
