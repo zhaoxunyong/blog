@@ -867,26 +867,9 @@ kubectl create -f ./
 ## 最新命令汇总
 
 ```
-#使用kind创建集群：https://www.kubernetes.org.cn/7723.html
-# Download the latest version of Kind
-curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-$(uname)-amd64
-# Make the binary executable
-chmod +x ./kind
-# Move the binary to your executable path
-sudo mv ./kind /usr/local/bin/
-
-# Check if the KUBECONFIG is not set
-echo $KUBECONFIG
-# Check if the .kube directory is created > if not, no need to create it
-ls $HOME/.kube
-# Create the cluster and give it a name (optional)
-kind create cluster --name wslkind
-# Check if the .kube has been created and populated with files
-ls $HOME/.kube
-kubectl get nodes
-
-----------------------
 minikube addons list
+minikube addons enable dashboard
+minikube addons enable metrics-server
 minikube addons enable ingress
 minikube addons enable heapster
 kubectl top node
@@ -900,8 +883,8 @@ k label pod xxx app=foo --overwrite
 
 #Creating by commands
 kubectl create deployment kubia --image=luksa/kubia
-#kubectl expose deployment kubia --type=NodePort --name kubia-http --port=80 --target-port=8080
-kubectl expose deployment kubia --type=LoadBalancer --name kubia-http --port=80 --target-port=8080
+kubectl expose deployment kubia --type=NodePort --name kubia-http --port=80 --target-port=8080
+#kubectl expose deployment kubia --type=LoadBalancer --name kubia-http --port=80 --target-port=8080
 minikube service kubia-http --url
 
 #Creating by yaml
