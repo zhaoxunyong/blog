@@ -67,7 +67,7 @@ cat >> /etc/systemd/system/docker.service.d/http-proxy.conf  << EOF
 [Service]
 Environment="HTTP_PROXY=http://thenorth.f.ftq.me:52579"
 Environment="HTTPS_PROXY=http://thenorth.f.ftq.me:52579"
-Environment="NO_PROXY=localhost,127.0.0.1,docker.io"
+Environment="NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net"
 EOF
 
 systemctl daemon-reload
