@@ -869,9 +869,10 @@ kubectl create -f ./
 ```
 minikube addons list
 minikube addons enable dashboard
+minikube addons enable heapster
 minikube addons enable metrics-server
 minikube addons enable ingress
-minikube addons enable heapster
+minikube addons enable ingress-dns
 kubectl top node
 kubectl top pod --all-namespaces
 kubectl cluster-info
@@ -975,7 +976,24 @@ kubectl patch deployment kubia -p '{"spec": {"minReadySeconds": 10}}'
 kubectl patch deployment kubia -p '{"spec": {"progressDeadlineSeconds": 15}}'
 #将本地网络端口转发到pod中的端口
 kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
-kubectl port-forward service/hello-minikube 7080:8080
+kubectl port-forward service/hello-minikube 7080:80
+
+Ingress:
+#helm delete <release-name>
+helm repo add nginx-stable https://helm.nginx.com/stable
+helm install nginx-ing nginx-stable/nginx-ingress
+
+
+Traefk:
+#https://helm.sh/docs/intro/install/
+#curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+sudo snap install helm --classic
+#https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart
+helm repo add traefik https://helm.traefik.io/traefik
+helm repo update
+helm install traefik traefik/traefik
+kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
+Accessible with the url: http://127.0.0.1:9000/dashboard/
 ```
 
 ## Example

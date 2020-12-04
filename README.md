@@ -21,6 +21,8 @@ nvm install v10.15.3
 
 ```bash
 #http://stevenshi.me/2017/05/23/ubuntu-hexo/
+npm config set registry https://registry.npm.taobao.org --global
+npm config set disturl https://npm.taobao.org/dist --global
 npm install  hexo-cli -g
 npm install hexo-server -g
 npm install hexo-deployer-git -g
@@ -28,8 +30,6 @@ npm install yarn -g
 npm install http-server -g
 yarn global add serve
 
-npm config set registry https://registry.npm.taobao.org --global
-npm config set disturl https://npm.taobao.org/dist --global
 yarn config set registry https://registry.npm.taobao.org --global
 yarn config set disturl https://npm.taobao.org/dist --global
 ```
