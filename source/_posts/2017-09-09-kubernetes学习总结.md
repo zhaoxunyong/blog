@@ -978,6 +978,11 @@ kubectl patch deployment kubia -p '{"spec": {"progressDeadlineSeconds": 15}}'
 kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
 kubectl port-forward service/hello-minikube 7080:80
 
+Helm:
+#https://helm.sh/docs/intro/install/
+#curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+sudo snap install helm --classic
+
 Ingress:
 #helm delete <release-name>
 helm repo add nginx-stable https://helm.nginx.com/stable
@@ -985,9 +990,6 @@ helm install nginx-ing nginx-stable/nginx-ingress
 
 
 Traefk:
-#https://helm.sh/docs/intro/install/
-#curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-sudo snap install helm --classic
 #https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
