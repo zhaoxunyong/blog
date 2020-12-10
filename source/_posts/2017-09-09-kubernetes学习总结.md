@@ -977,6 +977,14 @@ kubectl patch deployment kubia -p '{"spec": {"progressDeadlineSeconds": 15}}'
 #将本地网络端口转发到pod中的端口
 kubectl port-forward kubia-7d46fb6687-86th4 8888:8080
 kubectl port-forward service/hello-minikube 7080:80
+#获取docker内部IP:
+docker inspect  998f4f7b87c5|grep -i ip
+#Iptables
+iptables -t nat -nvL --line-number
+#删除：
+iptables -t nat -D PREROUTING 1
+iptables -t nat -D POSTROUTING 1
+docker run --name nginx-test -p 8080:80 -d nginx
 
 Helm:
 #https://helm.sh/docs/intro/install/
