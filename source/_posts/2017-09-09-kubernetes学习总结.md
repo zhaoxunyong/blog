@@ -986,8 +986,10 @@ sudo snap install helm --classic
 Ingress:
 #helm delete <release-name>
 helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo update
 helm install nginx-ing nginx-stable/nginx-ingress
-
+helm install nginx-ingress --namespace kube-system \
+--set "rbac.create=true,controller.service.externalIPs[0]=172.21.114.172,controller.service.externalIPs[1]=192.168.102.121" nginx-stable/nginx-ingress
 
 Traefk:
 #https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart
