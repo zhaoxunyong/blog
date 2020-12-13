@@ -149,7 +149,7 @@ nodeport 并没有完全解决外部访问service 的问题， 比如负载均�
 #### 创建deployment
 类似于docker run方式：
 ```bash
-[root@k8s-master ~]# kubectl create deploy --image=nginx:1.12.1 nginx-app
+[root@k8s-master ~]# kubectl create deploy --image=nginx nginx-app --port=80
 deployment.apps/nginx-app created
 
 [root@k8s-master ~]# kubectl get deploy nginx-app   
@@ -234,20 +234,34 @@ https://192.168.10.6:6443/api/v1/namespaces/default/endpoints/nginx-app
 
 前面虽然创建了Pod，但是在kubernetes中，Pod的IP地址会随着Pod的重启而变化，并不建议直接拿Pod的IP来交互。那如何来访问这些Pod提供的服务呢？使用Service。Service为一组Pod（通过labels来选择）提供一个统一的入口，并为它们提供负载均衡和自动服务发现。比如，可以为前面的nginx-app创建一个service：
 ```bash
+#kubectl create deployment hello-world --image=datawire/hello-world
+#kubectl expose deployment hello-world --type=LoadBalancer --port=8000
 $ kubectl expose deployment nginx-app --port=80 --target-port=80 --type=NodePort
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+nginx-app    NodePort    10.102.156.233   <none>        80:32295/TCP   2s
+curl 127.0.0.1:32295
+$ kubectl expose deployment nginx-app --port=8000 --target-port=80 --type=LoadBalancer
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+nginx-app    LoadBalancer   10.107.61.70   localhost     8000:31876/TCP   8m59s
+$ curl 127.0.0.1:8000
+#curl 127.0.0.1:31876 doesn't work
 service "nginx-app" exposed
 $ kubectl describe service nginx-app
-Name:  			nginx-app
-Namespace:     		default
-Labels:			run=nginx-app
-Selector:      		run=nginx-app
-Type:  			ClusterIP
-IP:    			10.0.0.66
-Port:  			<unset>	80/TCP
-NodePort:      		<unset>	30772/TCP
-Endpoints:     		172.17.0.3:80
-Session Affinity:      	None
-No events.
+Name:                     nginx-app
+Namespace:                default
+Labels:                   app=nginx-app
+Annotations:              <none>
+Selector:                 app=nginx-app
+Type:                     LoadBalancer
+IP:                       10.107.61.70
+LoadBalancer Ingress:     localhost
+Port:                     <unset>  8000/TCP
+TargetPort:               80/TCP
+NodePort:                 <unset>  31876/TCP
+Endpoints:                10.1.0.126:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
 ```
 
 该命令不能设置nodePort，如果需要指定nodePort，需要通过kubectl edit service nginx-app修改：
@@ -885,7 +899,8 @@ k label pod xxx app=foo --overwrite
 #Creating by commands
 kubectl create deployment kubia --image=luksa/kubia
 kubectl expose deployment kubia --type=NodePort --name kubia-http --port=80 --target-port=8080
-#kubectl expose deployment kubia --type=LoadBalancer --name kubia-http --port=80 --target-port=8080
+#Don't use port 80
+#kubectl expose deployment kubia --type=LoadBalancer --name kubia-http --port=8000 --target-port=8080
 minikube service kubia-http --url
 
 #Creating by yaml
