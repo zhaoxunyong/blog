@@ -897,10 +897,16 @@ k get pod --show-labels
 k label pod xxx app=foo --overwrite
 
 #Creating by commands
+#kubectl run nginx --image=nginx --port=3000 --targetPort=80 --expose
+kubectl create deployment nginx --image=nginx
+#kubectl create service nodeport nginx --tcp=81:80 --node-port=30000
+kubectl expose deployment nginx --type=NodePort --name nginx --port=80 --target-port=80
+
 kubectl create deployment kubia --image=luksa/kubia
 kubectl expose deployment kubia --type=NodePort --name kubia-http --port=80 --target-port=8080
 #Don't use port 80
 #kubectl expose deployment kubia --type=LoadBalancer --name kubia-http --port=8000 --target-port=8080
+#kubectl create service nodeport kubia --tcp=8080:80 --node-port=30000
 minikube service kubia-http --url
 
 #Creating by yaml
