@@ -285,8 +285,8 @@ get_ssl_cmd = "bash /root/.acme.sh/acme.sh  --issue --dns dns_dp -d " + domain +
 首先登陆DNSPod，在“用户中心”——“安全设置”中为acme.sh添加独立的Token, 生成你的 api id 和 api key, 都是免费的. 然后先执行：
 
 ```bash
-export DP_Id="200200"
-export DP_Key="7ab3e4f804118f084fceee4cc1a6c56d"
+export DP_Id=""
+export DP_Key=""
 acme.sh --issue --dns dns_dp -d gcalls.cn -d *.gcalls.cn
 #acme.sh --issue --dns dns_dp -d registry.gcalls.cn --keylength ec-256
 Your cert is in  /home/dev/.acme.sh/gcalls.cn/gcalls.cn.cer 
