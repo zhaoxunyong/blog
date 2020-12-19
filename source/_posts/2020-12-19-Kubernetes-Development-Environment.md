@@ -608,7 +608,7 @@ cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
 .maven-dockerinclude:
 target/*.jar
 
-#Dockerfile
+#src/man/docker/Dockerfile
 FROM java:8-jdk
 RUN mkdir /app
 WORKDIR /app
@@ -620,7 +620,7 @@ COPY target/${APPNAME}-${VERSION}.jar /app/
 ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /app/${APPNAME}-${VERSION}.jar --spring.config.location=${CONFIG} --spring.profiles.active=@spring.profile@"]
 EXPOSE 8100
 
-#account-service-deployment.yml
+#src/man/fabric8/account-service-deployment.yml
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -654,7 +654,7 @@ spec:
         ports:
         - containerPort: 8089
 
-#account-service-service.yml
+#src/man/fabric8/account-service-service.yml
 kind: Service
 apiVersion: v1
 metadata:
@@ -679,7 +679,7 @@ spec:
     provider: fabric8
 
 #Running:
-#If don't define the dockerHost parameter, using the following command:
+#If don't define the dockerHost or private registry parameter, using the following command:
 #export DOCKER_HOST="tcp://registry.gcalls.cn:2375"
 #mvn clean install fabric8:push fabric8:deploy -Pkubernetes -Ddocker.registry=registry.gcalls.cn
 #mvn clean install fabric8:push fabric8:deploy -Pkubernetes
