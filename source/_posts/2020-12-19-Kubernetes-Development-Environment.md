@@ -440,6 +440,7 @@ telepresence --new-deployment telepresence-k8s --run-shell
 #cat /Developer/apache-maven-3.3.9/bin/mvnDebug
 #MAVEN_DEBUG_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"
 >cd /mnt/d/Developer/workspace/telepresence-k8s/
+>export KUBERNETES_NAMESPACE=default
 >export PROFILES=basic
 >mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 #Preparing to Execute Maven in Debug Mode
@@ -500,11 +501,11 @@ demo:
 
 ```bash
 #account-service
-#mvn clean install fabric8:deploy -Dfabric8.generator.from=fabric8/java-jboss-openjdk8-jdk -Pkubernetes
+#mvn clean install fabric8:deploy -Dfabric8.generator.from=fabric8/java-jboss-openjdk8-jdk -Pk8s
 cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
-mvn clean install fabric8:deploy -Pkubernetes
+mvn clean install fabric8:deploy -Pk8s
 #cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-web-service
-#mvn clean install fabric8:deploy -Pkubernetes
+#mvn clean install fabric8:deploy -Pk8s
 #telepresence --swap-deployment web-service --run-shell
 telepresence --new-deployment web-service --run-shell
 #new-deployment will get the error message： 
@@ -681,7 +682,7 @@ spec:
 #Running:
 #If don't define the dockerHost or private registry parameter, using the following command:
 #export DOCKER_HOST="tcp://registry.gcalls.cn:2375"
-#mvn clean install fabric8:push fabric8:deploy -Pkubernetes -Ddocker.registry=registry.gcalls.cn
-#mvn clean install fabric8:push fabric8:deploy -Pkubernetes
-mvn clean install -Pkubernetes
+#mvn clean install fabric8:push fabric8:deploy -Pk8s -Ddocker.registry=registry.gcalls.cn
+#mvn clean install fabric8:push fabric8:deploy -Pk8s
+mvn clean install -Pk8s
 ```
