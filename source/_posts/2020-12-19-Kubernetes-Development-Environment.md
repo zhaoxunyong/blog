@@ -161,7 +161,9 @@ Reference: http://blog.gcalls.cn/blog/2018/12/ubuntu-os.html#Docker
 
 ### Kubernetes
 
-Recommending microk8s on Linux.
+#### microk8s
+
+Recommend using microk8s on Linux. It's the best performance.
 
 Reference：
 
@@ -171,27 +173,55 @@ https://microk8s.io/docs
 https://www.cnblogs.com/xiao987334176/p/10931290.html
 
 ```bash
+#For ubuntu:
+https://blog.flyfox.top/2020/04/03/microk8s%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/
+#For centos7:
+#sudo yum install epel-release
+sudo su - dev
+sudo yum install snapd
+sudo systemctl enable --now snapd.socket
+sudo ln -s /var/lib/snapd/snap /snap
 sudo snap install microk8s --classic
+#Notice: microk8s is using containerd, not docker any more.
+#Either log out and back in again or restart your system to ensure 
 #sudo vim /var/snap/microk8s/current/args/containerd-env
 HTTP_PROXY="http://192.168.101.175:1082"
 HTTPS_PROXY="http://192.168.101.175:1082"
-NO_PROXY="127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net,*.aliyun.com,*.163.com,*.docker-cn.com"
+NO_PROXY="127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net,*.aliyun.com,*.163.com,*.docker-cn.com,registry.gcalls.cn"
+sudo systemctl list-unit-files |grep -i microk8s
+sudo systemctl restart snap.microk8s.daemon-containerd.service
 microk8s.start
+#Addons: https://microk8s.io/docs/addons#heading--list
+#microk8s.enable dashboard dns ingress istio registry storage rbac
+microk8s.enable dashboard dns ingress storage
 microk8s status --wait-ready
 microk8s.kubectl describe pods -A
-#Addons: https://microk8s.io/docs/addons#heading--list
-microk8s.enable dashboard dns ingress istio registry storage rbac
 microk8s.inspect
 
-#服务端
-vim /etc/docker/daemon.json
-"insecure-registries" : ["localhost:32000", "192.168.95.233:32000"]
-#客户端
-"insecure-registries" : ["192.168.95.233:32000"]
-#并重启docker
+#bashboard:
+#https://medium.com/@junya.kaneko/quick-way-of-using-kubernetes-dashboard-on-microk8s-9c7b0e26be02
+#Skip login
+microk8s kubectl edit deployment/kubernetes-dashboard -n kube-system
+spec:
+    containers:
+    - args:
+    - --auto-generate-certificates
+    - --namespace=kube-system
+    - --enable-skip-login
+
+microk8s kubectl create clusterrolebinding kubernertes-dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+microk8s kubectl proxy --accept-hosts=.* --address=0.0.0.0
+http://192.168.80.98:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/login
+token=$(microk8s kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
+echo $token
+microk8s kubectl -n kube-system describe secret $token
+
+#uninstall microk8s
+sudo snap remove microk8s
+rm -fr /root/snap/microk8s /home/dev/snap/microk8s
 
 #https://microk8s.io/docs/working-with-kubectl
-#Export client's config
+#Export the config for clients
 cd $HOME
 mkdir .kube
 cd .kube
@@ -204,16 +234,157 @@ source <(kubectl completion bash | sed s/kubectl/k/g)
 source /usr/share/bash-completion/bash_completion
 ```
 
-## Local development with Java
+#### Harbor
 
-参考：
+Harbor is an open source trusted cloud native registry project that stores, signs, and scans content. Harbor extends the open source Docker Distribution by adding the functionalities usually required by users such as security, identity and management. Having a registry closer to the build and run environment can improve the image transfer efficiency. Harbor supports replication of images between registries, and also offers advanced security features such as user management, access control and activity auditing.
+
+```bash
+#Habor:
+#Using root enviroment:
+sudo yum install python3-pip
+#root
+pip3 install -U docker-compose
+#non-root
+#pip3 install --user docker-compose
+#https://goharbor.io/docs/2.1.0/install-config/configure-https/
+#Generating the certificate:
+#Using dev enviroment:
+sudo su - dev
+export DP_Id=""
+export DP_Key=""
+acme.sh --issue --dns dns_dp -d gcalls.cn -d *.gcalls.cn
+#acme.sh --issue --dns dns_dp -d registry.gcalls.cn --keylength ec-256
+Your cert is in  /home/dev/.acme.sh/gcalls.cn/gcalls.cn.cer 
+Your cert key is in  /home/dev/.acme.sh/gcalls.cn/gcalls.cn.key 
+The intermediate CA cert is in  /home/dev/.acme.sh/gcalls.cn/ca.cer 
+The full chain certs is there:  /home/dev/.acme.sh/gcalls.cn/fullchain.cer
+
+sudo mkdir -p /etc/docker/certs.d/registry.gcalls.cn
+sudo cp /home/dev/.acme.sh/gcalls.cn/gcalls.cn.cer /etc/docker/certs.d/registry.gcalls.cn/
+#must be gcalls.cn.cert
+sudo cp /home/dev/.acme.sh/gcalls.cn/fullchain.cer /etc/docker/certs.d/registry.gcalls.cn/gcalls.cn.cert
+sudo cp /home/dev/.acme.sh/gcalls.cn/gcalls.cn.key /etc/docker/certs.d/registry.gcalls.cn/
+sudo cp /home/dev/.acme.sh/gcalls.cn/ca.cer /etc/docker/certs.d/registry.gcalls.cn/
+cp -a harbor-offline-installer-v2.1.2.tgz /works/k8s/
+cd /works/k8s/
+tar zxvf harbor-offline-installer-v2.1.2.tgz
+sudo chown -R dev.dev /works/k8s/harbor
+#https://goharbor.io/docs/2.1.0/install-config/configure-yml-file/
+#Modifying the harbor.yml
+vim harbor.yml:
+hostname: registry.gcalls.cn
+https:
+  # The path of cert and key files for nginx
+  #certificate: /home/dev/.acme.sh/gcalls.cn/gcalls.cn.cer
+  certificate: /etc/docker/certs.d/registry.gcalls.cn/gcalls.cn.cert
+  private_key: /home/dev/.acme.sh/gcalls.cn/gcalls.cn.key
+ #Execting the script 
+./prepare
+sudo su - root
+cd /works/k8s/harbor
+#https://goharbor.io/docs/2.1.0/install-config/run-installer-script/
+./install.sh  
+#If Harbor is running, stop and remove the existing instance.Your image data remains in the file system, so no data is lost.
+#docker-compose down -v
+#Restarting
+docker-compose stop
+docker-compose up -d
+#Open a browser and enter https://yourdomain.com. It should display the Harbor interface
+https://registry.gcalls.cn
+admin/Harbor12345
+docker login registry.gcalls.cn
+#troubleshooting
+Get https://registry.gcalls.cn/v2/: net/http: TLS handshake timeout
+If you got the error above, it seems you are using the proxy, try to exclude "registry.gcalls.cn" in the "NO_PROXY", the file is located:
+/etc/systemd/system/docker.service.d/http-proxy.conf
+Environment="HTTP_PROXY=http://192.168.101.175:1082"
+Environment="HTTPS_PROXY=http://192.168.101.175:1082"
+Environment="NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net,*.aliyun.com,*.163.com,*.docker-cn.com,registry.gcalls.cn"
+systemctl daemon-reload && systemctl restart docker
+#Test
+docker pull hello-world
+#must include the project name, like xwallet, and created the project beforehand:
+docker tag hello-world registry.gcalls.cn/xwallet/hello-world
+docker push registry.gcalls.cn/xwallet/hello-world
+
+#If the registry work without http, need to add the following(https don't do it):
+#server-side
+#vim /etc/docker/daemon.json
+#"insecure-registries" : ["localhost:32000", "192.168.95.233:32000"]
+#client-side
+#"insecure-registries" : ["192.168.95.233:32000"]
+#Don't forget rebooting docker
+```
+
+#### kind
+
+Not Recommend.
+
+Reference：https://kind.sigs.k8s.io/docs/user/quick-start/
+
+```bash
+# Download the latest version of Kind
+curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.9.0/kind-$(uname)-amd64
+# Make the binary executable
+chmod +x ./kind
+# Move the binary to your executable path
+sudo mv ./kind /usr/local/bin/
+
+# Check if the KUBECONFIG is not set
+echo $KUBECONFIG
+# Check if the .kube directory is created > if not, no need to create it
+ls $HOME/.kube
+# Create the cluster and give it a name (optional)
+export http_proxy="http://192.168.101.175:1082"
+export https_proxy=$http_proxy
+export no_proxy="127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net,*.aliyun.com,*.163.com,*.docker-cn.com,registry.gcalls.cn"
+kind create cluster --name wslkind
+kind delete cluster --name wslkind
+kind get clusters
+# Check if the .kube has been created and populated with files
+ls $HOME/.kube
+kubectl get nodes
+```
+
+Notice: Kind clusters based on docker, cannot communicate with the internal docker container. Adding the extraPortMappings:
+
+Reference：https://kind.sigs.k8s.io/docs/user/using-wsl2/
+
+```bash
+# cluster-config.yml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 8080
+    hostPort: 8080
+    protocol: TCP
+  - containerPort: 30000
+    hostPort: 30000
+    protocol: TCP
+
+kind create cluster --config=cluster-config.yml
+#kubectl run nginx --image=nginx --port=3000 --targetPort=80 --expose
+kubectl create deployment nginx --image=nginx
+#kubectl create service nodeport nginx --tcp=81:80 --node-port=30000
+kubectl expose deployment nginx --type=NodePort --name nginx --port=80 --target-port=80
+
+
+#access service 
+curl localhost:30000
+```
+
+## Local development
+
+Reference：
 
 - https://www.telepresence.io/discussion/overview
 - https://github.com/cesartl/telepresence-k8s
 - https://kubernetes.io/zh/docs/tasks/debug-application-cluster/local-debugging/
 - https://cloud.google.com/community/tutorials/developing-services-with-k8s
 
-### Install
+### telepresence
 
 https://www.telepresence.io/reference/windows
 
@@ -232,7 +403,7 @@ curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/scr
 sudo apt install --no-install-recommends telepresence
 ```
 
-### Usage
+### Develop
 
 - https://anjia0532.github.io/2019/01/21/debug-cloud-native/
 - https://www.telepresence.io/tutorials/docker
@@ -265,22 +436,21 @@ qotm:
 #telepresence --swap-deployment hello-world --expose 8000 --run python3 -m http.server 8000 &
 telepresence --new-deployment telepresence-k8s --run-shell
 
-#spring-boot部分版本（2.0.0.RELEASE可以，其他版本不明）通过mvnDebug或者MAVEN_DEBUG_OPTS参数启动时，不支持remote debug:
+#Notice: Some of spring-boot versions don't support remote debug through mvnDebug or MAVEN_DEBUG_OPTS:
 #cat /Developer/apache-maven-3.3.9/bin/mvnDebug
 #MAVEN_DEBUG_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000"
 >cd /mnt/d/Developer/workspace/telepresence-k8s/
 >export PROFILES=basic
 >mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 #Preparing to Execute Maven in Debug Mode
-#此处会暂停，只到有remote debug过来才会继续往下, 如不希望，可修改以上MAVEN_DEBUG_OPTS中的suspend=n
+#It'll pause until the client is connected, you can set suspend=n to against it.
 #Listening for transport dt_socket at address: 8000
-#通过eclipse远程debug即可，注意：pom.xml不要开启以下，否则不能远程debug:
+#Notice：pom.xml musn't add the section，or you cannot remote debug:
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-devtools</artifactId>
     <optional>true</optional>
 </dependency>
-#以上当代码修改时会自动重启，没必要。
 #Testing:
 curl localhost:8080/rest/quote/cesar
 ```
@@ -302,7 +472,7 @@ http://update.zeroturnaround.com/update-site/update-site.zip
 #https://www.cnblogs.com/flyrock/archive/2019/09/23/11574617.html
 #Generating GUID  from: 
 https://www.guidgen.com/
-#服务器地址： Pasting the following url on the "Licensing service"
+#Activation Server URL： Pasting the following url on the "Licensing service"
 https://jrebel.qekang.com/{GUID}
 https://jrebel.qekang.com/d1b8919f-e1e9-4a8d-84da-0c43d75aa970
 aaa@bbb.com
@@ -315,12 +485,14 @@ cd /Developer/jrebel/bin
 #https://manuals.jrebel.com/jrebel/standalone/config.html#rebel-xml
 #https://www.javazhiyin.com/22460.html
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentpath:/Developer/jrebel/lib/libjrebel64.so"
-#注意：项目必须位于linux目录下才能生效，如果是/mnt下面的windows目录则不会生效。正常时会有以下提示：
+
+#!!!Important!!!: Project must be located at linux folder, a windows folder located won't take affect by JRebel.
+#If you see the following message, it works.
 2020-12-14 12:26:33 JRebel: Reloading class 'com.ctl.telepresencek8s.DummyRestController'.
 2020-12-14 12:26:38 JRebel: Reconfiguring bean 'dummyRestController' [com.ctl.telepresencek8s.DummyRestController]
 ```
 
-### demo
+demo:
 
 - https://github.com/zq2599/blog_demos
 - https://xinchen.blog.csdn.net/article/details/92394559
@@ -335,19 +507,22 @@ mvn clean install fabric8:deploy -Pkubernetes
 #mvn clean install fabric8:deploy -Pkubernetes
 #telepresence --swap-deployment web-service --run-shell
 telepresence --new-deployment web-service --run-shell
-#当为new-deployment时，调用服务时会报： Did not find any endpoints in ribbon in namespace [null] for name [account-service] and portName [null]
+#new-deployment will get the error message： 
+#Did not find any endpoints in ribbon in namespace [null] for name [account-service] and portName [null]
 #https://github.com/telepresenceio/telepresence/issues/947
+#You can fix this with:
 export KUBERNETES_NAMESPACE=default
 cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-web-service
-#spring-boot部分版本（2.0.0.RELEASE可以，其他版本不明）通过mvnDebug或者MAVEN_DEBUG_OPTS参数启动时，不支持remote debug:
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 curl 127.0.0.1:8080/account
 kubectl scale --replicas=0 deployment account-service
 ```
 
-注意：spring-boot部分版本通过mvnDebug启动时，不支持remote debug，具体原因不明，但可通过以下方式开启remote debug:
+Notice: Some of spring-boot versions don't support remote debug through mvnDebug or MAVEN_DEBUG_OPTS:
 
-#https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/maven-plugin/reference/html/
+https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/maven-plugin/reference/html/
+
+Fixed this by:
 
 ```bash
 <plugin>
@@ -368,8 +543,145 @@ kubectl scale --replicas=0 deployment account-service
 </plugin>
 ```
 
-或者：
+Or：
 
 ```bash
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+```
+
+### fabric8-maven-plugin
+
+```bash
+#Copying remote config into "~/.kube/config" of local
+#https://github.com/fabric8io/fabric8-maven-plugin/tree/master/samples
+cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
+#For private docker registry, the most mavenish way is to add a server to the Maven settings file /Developer/apache-maven-3.3.9/conf/settings.xml
+<server>
+    <id>registry.gcalls.cn</id>
+    <username>dave.zhao</username>
+    <password>Aa654321</password>
+</server>
+
+#Using the external Dockerfile and deployment.yaml/service.yaml：
+#https://maven.fabric8.io/#external-dockerfile
+<plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>fabric8-maven-plugin</artifactId>
+    <version>${fabric8.maven.plugin.version}</version>
+    <executions>
+        <execution>
+            <id>fmp</id>              
+            <properties>
+                <spring.profile>default</spring.profile>
+            </properties>
+            <goals>
+                <goal>resource</goal>
+                <goal>build</goal>
+                <goal>push</goal>
+                <goal>deploy</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>   
+        <dockerHost>tcp://registry.gcalls.cn:2375</dockerHost>
+        <images>
+            <image>
+            <name>registry.gcalls.cn/xwallet/${project.name}:${project.version}</name>
+            <build>
+                <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                <contextDir>${project.basedir}/</contextDir>
+                <filter>@</filter>
+            </build>
+            </image>
+        </images>
+        <enricher>
+            <config>
+                <fmp-service>
+                    <type>NodePort</type>
+                </fmp-service>
+            </config>
+        </enricher>
+    </configuration>
+</plugin>
+
+#Only include the jar file
+.maven-dockerinclude:
+target/*.jar
+
+#Dockerfile
+FROM java:8-jdk
+RUN mkdir /app
+WORKDIR /app
+ENV APPNAME=account-service \
+    VERSION=0.0.1-SNAPSHOT \
+    CONFIG=/config/
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+COPY target/${APPNAME}-${VERSION}.jar /app/
+ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /app/${APPNAME}-${VERSION}.jar --spring.config.location=${CONFIG} --spring.profiles.active=@spring.profile@"]
+EXPOSE 8100
+
+#account-service-deployment.yml
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: account-service
+  namespace: default
+  labels:
+    app: account-service
+    group: com.xwallet
+    version: 0.0.1-SNAPSHOT
+    provider: fabric8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-service
+      group: com.xwallet
+      version: 0.0.1-SNAPSHOT
+      provider: fabric8
+  template:
+    metadata:
+      labels:
+        app: account-service
+        group: com.xwallet
+        version: 0.0.1-SNAPSHOT
+        provider: fabric8
+    spec:
+      containers:
+      - name: account-service
+        #image: registry.gcalls.cn/xwallet/account-service:0.0.1-SNAPSHOT
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8089
+
+#account-service-service.yml
+kind: Service
+apiVersion: v1
+metadata:
+  name: account-service
+  namespace: default
+  labels:
+    app: account-service
+    group: com.xwallet
+    version: 0.0.1-SNAPSHOT
+    provider: fabric8
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: account-service
+    group: com.xwallet
+    version: 0.0.1-SNAPSHOT
+    provider: fabric8
+
+#Running:
+#If don't define the dockerHost parameter, using the following command:
+#export DOCKER_HOST="tcp://registry.gcalls.cn:2375"
+#mvn clean install fabric8:push fabric8:deploy -Pkubernetes -Ddocker.registry=registry.gcalls.cn
+#mvn clean install fabric8:push fabric8:deploy -Pkubernetes
+mvn clean install -Pkubernetes
 ```
