@@ -269,18 +269,30 @@ source <(curl -sL https://git.io/fNgqx) --remove
 - https://boxjan.com/2018/11/use_acme_sh_to_set_up_rsa_and_ecc.html
 - https://github.com/Neilpang/acme.sh/wiki/dnsapi
 
+install: 
+
+curl https://get.acme.sh | sh
+
 如果开启tls证书的话，因为80端口不能使用，需要使用acme.sh的dns方式生成证书。修改/usr/lib/python3.6/site-packages/v2ray_util/util_core/utils.py文件：
 
 ```bash
 #get_ssl_cmd = "bash /root/.acme.sh/acme.sh  --issue -d " + domain + "   --standalone  --keylength ec-256"
 get_ssl_cmd = "bash /root/.acme.sh/acme.sh  --issue --dns dns_dp -d " + domain + " --keylength ec-256"
 ```
-
+#https://ethanblog.com/tech/configure-and-anto-renew-let-s-encrypt-free-certificate-using-acme-sh-and-dnspod.html
+#https://blog.axis-studio.org/2019/04/05/%E8%85%BE%E8%AE%AF%E4%BA%91%E5%9F%9F%E5%90%8D%E4%BD%BF%E7%94%A8acme-sh%E7%AD%BE%E5%8F%91letsencrypt%E7%9A%84wildcard/index.html
+#https://console.dnspod.cn/account/token
 首先登陆DNSPod，在“用户中心”——“安全设置”中为acme.sh添加独立的Token, 生成你的 api id 和 api key, 都是免费的. 然后先执行：
 
 ```bash
 export DP_Id=""
 export DP_Key=""
+acme.sh --issue --dns dns_dp -d gcalls.cn -d *.gcalls.cn
+#acme.sh --issue --dns dns_dp -d registry.gcalls.cn --keylength ec-256
+Your cert is in  /home/dev/.acme.sh/gcalls.cn/gcalls.cn.cer 
+Your cert key is in  /home/dev/.acme.sh/gcalls.cn/gcalls.cn.key 
+The intermediate CA cert is in  /home/dev/.acme.sh/gcalls.cn/ca.cer 
+The full chain certs is there:  /home/dev/.acme.sh/gcalls.cn/fullchain.cer
 ```
 
 然后执行v2ray->3.更改配置->6.更改TLS设置->1.开启 TLS，输入对应的域名即可自动完成。
