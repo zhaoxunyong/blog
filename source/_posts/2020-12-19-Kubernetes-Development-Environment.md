@@ -563,6 +563,37 @@ cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
     <password>Aa654321</password>
 </server>
 
+#Generating the configuration automatically, remember don't adding "dockerHost" and "images" selection,
+#Or will be generated two image section in the deployment yaml file:
+<plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>fabric8-maven-plugin</artifactId>
+    <version>${fabric8.maven.plugin.version}</version>
+    <executions>
+        <execution>
+            <id>fmp</id>
+            <goals>
+                <goal>resource</goal>
+                <goal>build</goal>
+                <goal>push</goal>
+                <goal>deploy</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>   
+        <resources>
+            <imagePullPolicy>Always</imagePullPolicy>
+        </resources>
+        <enricher>
+            <config>
+                <fmp-service>
+                    <type>NodePort</type>
+                </fmp-service>
+            </config>
+        </enricher>
+    </configuration>
+</plugin>
+
 #Using the external Dockerfile and deployment.yaml/service.yaml：
 #https://maven.fabric8.io/#external-dockerfile
 <plugin>
