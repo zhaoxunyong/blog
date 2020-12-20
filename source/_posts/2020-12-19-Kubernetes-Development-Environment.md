@@ -51,7 +51,7 @@ Adding git-bash support：
 }
 ```
 
-## Install Docker(Optional)
+## Install Local Docker(Optional)
 
 If you want to use the remote development environment, don't need it. 
 
@@ -62,7 +62,7 @@ Reference:
 
 Just need to install Docker-Desktop for Windows, and select the ubuntu at "Setting->Resources/WSL Integration", that's all.
 
-## Installing Kubernetes(Optional)
+## Install Local Kubernetes(Optional)
 
 If you want to use the remote development environment, don't need it. 
 
