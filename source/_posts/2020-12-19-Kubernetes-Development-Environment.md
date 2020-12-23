@@ -716,4 +716,17 @@ spec:
 #mvn clean install fabric8:push fabric8:deploy -Pk8s -Ddocker.registry=registry.gcalls.cn
 #mvn clean install fabric8:push fabric8:deploy -Pk8s
 mvn clean install -Pk8s
+
+#Building by parameters
+#Dockerfile
+#ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /app/${APPNAME}-${VERSION}.jar --spring.profiles.active=@spring.profile@"]
+#OR
+<profiles>
+  <profile>
+      <id>k8s</id>
+        <properties>
+            <spring.profile>default</spring.profile>
+        </properties>
+#OR
+mvn clean install -Pk8s -Dspring.profile=dev
 ```
