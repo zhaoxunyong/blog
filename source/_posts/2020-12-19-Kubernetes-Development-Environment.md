@@ -228,10 +228,14 @@ cd .kube
 microk8s config > config
 
 #~/.bash_profile
-alias kubectl=microk8s.kubectl
+#yum install bash-completion -y 
+~/.bash_profile
 alias k=kubectl
 source <(kubectl completion bash | sed s/kubectl/k/g)
-source /usr/share/bash-completion/bash_completion
+#source /usr/share/bash-completion/bash_completion
+
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.4/bin/linux/amd64/kubectl
+chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 ```
 
 #### Harbor
