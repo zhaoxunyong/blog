@@ -4,6 +4,19 @@ netsh interface portproxy show v4tov4
 
 netsh interface portproxy delete v4tov4 listenaddress=192.168.95.211 listenport=80
 
+今年学习计划：
+1. 领域驱动设计
+2. 微服务设计模式
+3. Kubernetes
+4. spring alibaba cloud
+5. spring cloud kubernetes
+6. istio
+7. serverless
+8. hadoop flink spark hive
+9. kylin(已完成)
+10.Disruptor Netty
+-------------------------------------------------
+
 https://9.16.250.30/com/installClient.html#auto-common
 --------------------------------
 2019/12/2:
