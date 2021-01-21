@@ -781,4 +781,9 @@ sudo iptables -t nat -A PREROUTING  -p tcp -m tcp --dport 5100 -j DNAT --to-dest
 sudo iptables-save
 #docker port asset-app couldn't show the 5100, do this to view:
 sudo iptables -t nat -nvL | grep 10.244.47.4
+
+#Push images to aliyun
+docker login --username=zhaoxunyong@139.com registry.cn-shenzhen.aliyuncs.com
+docker tag [ImageId] registry.cn-shenzhen.aliyuncs.com/zerofinance/fisco:[镜像版本号]
+docker push registry.cn-shenzhen.aliyuncs.com/zerofinance/fisco:[镜像版本号]
 ```
