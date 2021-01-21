@@ -157,7 +157,19 @@ I'd recommend installing docker and kubernetes on the remote machine, and all of
 
 ### Docker
 
-Reference: http://blog.gcalls.cn/blog/2018/12/ubuntu-os.html#Docker
+Ubuntu Reference: http://blog.gcalls.cn/blog/2018/12/ubuntu-os.html#Docker
+
+For CentOS:
+
+```bash
+#https://www.cnblogs.com/763977251-sg/p/11837130.html
+#Docker installation
+#https://aka.ms/vscode-remote/samples/docker-from-docker
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+sudo yum makecache fast
+sudo yum -y install docker-ce
+```
 
 ### Kubernetes
 
@@ -234,8 +246,29 @@ alias k=kubectl
 source <(kubectl completion bash | sed s/kubectl/k/g)
 #source /usr/share/bash-completion/bash_completion
 
+#Kubectl installation:
 curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.4/bin/linux/amd64/kubectl
 chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+
+#OR
+#Kubectl For CentOS
+#https://blog.csdn.net/nklinsirui/article/details/80581286
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+yum install -y kubectl
+#Kubectl For Ubuntu
+#https://blog.csdn.net/nklinsirui/article/details/80581286
+curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
+echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" >> /etc/apt/sources.list
+apt-get update
+apt-get install -y kubectl
 ```
 
 #### Harbor
@@ -398,13 +431,16 @@ https://www.telepresence.io/reference/windows
 1. Install Windows Subsystem for Linux.
 2. Start the BASH.exe program.
 3. Install Telepresence by following the Ubuntu instructions above.
->wsl
-curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/script.deb.sh | sudo bash
-sudo apt install --no-install-recommends telepresence
 
 #For ubuntu:
 curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/script.deb.sh | sudo bash
 sudo apt install --no-install-recommends telepresence
+
+#For CentOS:
+sudo yum install torsocks sshfs conntrack python3 -y
+git clone https://github.com/telepresenceio/telepresence.git /Developer/telepresence \
+ && cd /Developer/telepresence \
+ && sudo env PREFIX=/usr/local ./install.sh
 ```
 
 ### Develop
