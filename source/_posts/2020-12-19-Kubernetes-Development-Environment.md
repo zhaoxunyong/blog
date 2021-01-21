@@ -769,4 +769,16 @@ mvn clean install -Pk8s
         </properties>
 #OR
 mvn clean install -Pk8s -Dspring.profile=dev
+
+#Exposing extra port of existing docker container 
+#https://blog.csdn.net/lsziri/article/details/69396990
+#Assuming docker container's name is: asset-app
+docker inspect asset-app | grep IPAddress
+docker port asset-app
+sudo iptables -t nat -nvL --line-number
+#Exposing 5100 of host -> 5100 of container 
+sudo iptables -t nat -A PREROUTING  -p tcp -m tcp --dport 5100 -j DNAT --to-destination  10.244.47.4:5100 
+sudo iptables-save
+#docker port asset-app couldn't show the 5100, do this to view:
+sudo iptables -t nat -nvL | grep 10.244.47.4
 ```
