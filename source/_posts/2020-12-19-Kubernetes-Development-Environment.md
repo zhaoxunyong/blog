@@ -15,7 +15,7 @@ reference: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
 I'd recommend you base on WSL system to develop, if you don't know what's the wsl, look at [this article](http://blog.gcalls.cn/blog/2020/12/WSL.html)
 
-Installing WSL As below:
+Installing WSL as below:
 
 ```bash
 #Step 1 - Enable WSL
@@ -495,6 +495,10 @@ telepresence --new-deployment telepresence-k8s --run-shell
 #Testing:
 curl localhost:8080/rest/quote/cesar
 ```
+
+Notice: 
+
+Making sure "KUBERNETES_NAMESPACE" is set in the OS environment. You can set it of "remoteEnv" of devcontainer.json file if you develop with VSCODE.
 
 ### JRebel
 
