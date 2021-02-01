@@ -4,6 +4,41 @@ netsh interface portproxy show v4tov4
 
 netsh interface portproxy delete v4tov4 listenaddress=192.168.95.211 listenport=80
 
+admin@zerofinance.com
+Xtyw3013*
+192.168.95.233  端口：22   用户名：root  密码：wlt.local
+
+未来工作：
+运维脚本升级python？
+web化运维工具研究
+skywalking推广
+SSO集群部署
+国内系统的OSS存储：建议换成阿里云NAS
+国内阿里云外网vpn拨号后不能访问
+员工管理系统改为集群
+外网供应商服务如何隔离
+jumpserver资产
+生产环境jenkins机器的权限：运维才能访问
+视频会议文件永久存储
+制度重新审视
+落实硬盘销毁的过程
+清理数据的证明
+迁移jumpserver
+整体迁移vpn到自建具体的时间
+root密码修改
+NC外网访问的问题
+禁止下载超大文件
+香港AD服务器的管理员回收
+梳理现网与其他环境的限制
+服务调用的token校验
+日志异常收集规范
+审核平台改为事务性队列
+香港所有账户密码的整理
+所有系统的数据库能jenkins mysql还原香港数据
+第3方安全测试：只做简单的，明年6月再考虑，类似于漏洞盒子那样的
+中安License时付款时，需要与袁总确认
+www.aeasycredit.com（阿里云DigiCert 免费版 SSL，完全满足要求，但需每年申请一次，2021-10-24 到期）
+
 今年学习计划：
 1. 领域驱动设计
 2. 微服务设计模式
