@@ -209,4 +209,6 @@ root     21396  0.0  0.0 113320  1600 ?        S    Jun09   0:00 /bin/sh /works/
 mysql    21907  3.6 21.5 16722256 14125472 ?   Sl   Jun09  53:49 /works/app/mysql/bin/mysqld --basedir=/works/app/mysql --datadir=/works/data/mydata --plugin-dir=/works/app/mysql/lib/plugin --user=mysql --log-error=sz-cos-80-98.err --pid-file=/works/app/mysql/mysql.pid --socket=/works/app/mysql/mysql.sock --port=3306
 
 mysqladmin  -uroot -p -S /works/app/mysql/mysql.sock shutdown
+6Aq2FuMVvWzsEFeJ4p84ctiwM
 /works/app/mysql/bin/mysqld_safe --datadir=/works/data/mydata &
+
