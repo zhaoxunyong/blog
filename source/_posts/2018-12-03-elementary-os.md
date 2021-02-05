@@ -193,7 +193,7 @@ gsettings set org.gnome.desktop.interface gtk-theme 'eOS-Sierra-Gtk'
 ```
 
 最终效果：
-![](/images/elementary_theme.png)
+![](/images/elementary-os/elementary_theme.png)
 
 #### vimix-gtk-themes
 
@@ -210,7 +210,7 @@ cd vimix-icon-theme
 ```
 
 最终效果：
-![](/images/vimix-gtk-themes.png)
+![](/images/elementary-os/vimix-gtk-themes.png)
 
 #### Sierra-gtk-theme
 
@@ -406,7 +406,7 @@ export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 source /etc/profile
 ```
 
-将[settings.xml](/files/settings.xml)放到~/.m2/目录下。注意修改localRepository与password为自己的配置。
+将[settings.xml](/files/elementary-os/settings.xml)放到~/.m2/目录下。注意修改localRepository与password为自己的配置。
 
 ## 其它一些常用工具
 ```bash

@@ -104,7 +104,7 @@ eureka:
 ```
 
 效果：
-![admin-dashboard.png](/images/admin-dashboard.png)
+![admin-dashboard.png](/images/spring-cloud-docker-prometheus-grafana监控/admin-dashboard.png)
 
 ### prometheus日志收集
 
@@ -160,11 +160,11 @@ public List<TaskDto> getErrorTaskList() {
 
 ```
 
-![prometheus-customer](/images/prometheus-customer.png)
+![prometheus-customer](/images/spring-cloud-docker-prometheus-grafana监控/prometheus-customer.png)
 
 访问：
 http://ip:port/ops/prometheus
-![prometheus.png](/images/prometheus.png)
+![prometheus.png](/images/spring-cloud-docker-prometheus-grafana监控/prometheus.png)
 
 ## prometheus
 
@@ -324,7 +324,7 @@ scrape_configs:
 http://ip:9090/graph
 
 效果：
-![prometheus-ui](/images/prometheus-ui.png)
+![prometheus-ui](/images/spring-cloud-docker-prometheus-grafana监控/prometheus-ui.png)
 
 ## grafna
 
@@ -345,23 +345,23 @@ http://192.168.64.178:3000
 ### 配置
 
 #### 添加数据源
-![grafana-config](/images/grafana-config.png)
+![grafana-config](/images/spring-cloud-docker-prometheus-grafana监控/grafana-config.png)
 
 #### 添加Templating
 
-![templating](/images/templating.png)
+![templating](/images/spring-cloud-docker-prometheus-grafana监控/templating.png)
 
 job:
-![templating-job](/images/templating-job.png)
+![templating-job](/images/spring-cloud-docker-prometheus-grafana监控/templating-job.png)
 
 instance:
-![templating-instance](/images/templating-instance.png)
+![templating-instance](/images/spring-cloud-docker-prometheus-grafana监控/templating-instance.png)
 
 apis:
-![templating-apis](/images/templating-apis.png)
+![templating-apis](/images/spring-cloud-docker-prometheus-grafana监控/templating-apis.png)
 
 效果
-![templating1](/images/templating1.png)
+![templating1](/images/spring-cloud-docker-prometheus-grafana监控/templating1.png)
 
 
 #### 添加panel
@@ -373,16 +373,16 @@ mem{job=~"[[job]]",instance=~"[[instance]]"}
 mem_free{job=~"[[job]]",instance=~"[[instance]]"}
 ```
 
-![grafana-panel1](/images/grafana-panel1.png)
+![grafana-panel1](/images/spring-cloud-docker-prometheus-grafana监控/grafana-panel1.png)
 
-![grafana-panel2](/images/grafana-panel2.png)
+![grafana-panel2](/images/spring-cloud-docker-prometheus-grafana监控/grafana-panel2.png)
 
-![grafana-panel3](/images/grafana-panel3.png)
+![grafana-panel3](/images/spring-cloud-docker-prometheus-grafana监控/grafana-panel3.png)
 
-![grafana-panel4](/images/grafana-panel4.png)
+![grafana-panel4](/images/spring-cloud-docker-prometheus-grafana监控/grafana-panel4.png)
 
 效果
-![grafana-panel5](/images/grafana-panel5.png)
+![grafana-panel5](/images/spring-cloud-docker-prometheus-grafana监控/grafana-panel5.png)
 
 ##### Heap
 
@@ -415,10 +415,10 @@ systemload_average{job=~"[[job]]",instance=~"[[instance]]"}
 {job=~"[[job]]",instance=~"[[instance]]",__name__=~"gauge_servo_response_api_.*"}
 ```
 
-具体的配置文件参考[prometheus.json](/files/prometheus.json)
+具体的配置文件参考[prometheus.json](/files/spring-cloud-docker-prometheus-grafana监控/prometheus.json)
 
 ### 整体效果
-![grafana-ui](/images/grafana-ui.png)
+![grafana-ui](/images/spring-cloud-docker-prometheus-grafana监控/grafana-ui.png)
 
 ## 容器监控
 
@@ -477,22 +477,22 @@ http://hostIp:4194/
         container_group: 192.168.64.179
 ```
 
-![prometheus-cadvisor](/images/prometheus-cadvisor.png)
+![prometheus-cadvisor](/images/spring-cloud-docker-prometheus-grafana监控/prometheus-cadvisor.png)
 
 ### grafana dashboard
 
 可以从grafana官网导入dashboard：https://grafana.com/dashboards
-![docker-dashboard](/images/docker-dashboard.png)
+![docker-dashboard](/images/spring-cloud-docker-prometheus-grafana监控/docker-dashboard.png)
 
 导入dashboard:
-![docker-dashboard-import1](/images/docker-dashboard-import1.png)
+![docker-dashboard-import1](/images/spring-cloud-docker-prometheus-grafana监控/docker-dashboard-import1.png)
 
-![docker-dashboard-import2](/images/docker-dashboard-import2.png)
+![docker-dashboard-import2](/images/spring-cloud-docker-prometheus-grafana监控/docker-dashboard-import2.png)
 
-![docker-dashboard-import3](/images/docker-dashboard-import3.png)
+![docker-dashboard-import3](/images/spring-cloud-docker-prometheus-grafana监控/docker-dashboard-import3.png)
 
 ### 效果
-![docker-dashboard1](/images/docker-dashboard1.png)
+![docker-dashboard1](/images/spring-cloud-docker-prometheus-grafana监控/docker-dashboard1.png)
 
 
 ## hystrix-dashboard
@@ -608,7 +608,7 @@ turbine:
 ```
 
 效果：
-![hystrix](/images/hystrix.png)
+![hystrix](/images/spring-cloud-docker-prometheus-grafana监控/hystrix.png)
 
 ## sleuth zipkin
 
@@ -874,7 +874,7 @@ zipkin:
     type: mysql
 ```
 
-[SQL文件](/files/zipkin-mysql.sql)
+[SQL文件](/files/spring-cloud-docker-prometheus-grafana监控/zipkin-mysql.sql)
 
 ##### Elasticsearch
 
@@ -967,9 +967,9 @@ openzipkin/zipkin-dependencies:1.5.4
 
 #### 效果
 
-![zipkin-server-ui](/images/zipkin-server-ui.png)
+![zipkin-server-ui](/images/spring-cloud-docker-prometheus-grafana监控/zipkin-server-ui.png)
 
-![zipkin-dependencies](/images/zipkin-dependencies.png)
+![zipkin-dependencies](/images/spring-cloud-docker-prometheus-grafana监控/zipkin-dependencies.png)
 
 可能sleuth收集了很多你不想要的接口请求，可能通过以下配置排除掉：
 ```yml
@@ -986,17 +986,17 @@ spring:
 
 zipkin的效果不太好，可以考虑使用jaeger，由Uber开源。Jaeger兼容OpenTracing的数据模型和instrumentation库，能够为每个服务/端点使用一致的采样方式。
 
-![jaeger_construnction](/images/jaeger_construnction.png)
+![jaeger_construnction](/images/spring-cloud-docker-prometheus-grafana监控/jaeger_construnction.png)
 
 分布式系统调用过程:
 
-![jaeger_process](/images/jaeger_process.png)
+![jaeger_process](/images/spring-cloud-docker-prometheus-grafana监控/jaeger_process.png)
 
 ### opentracing 协议
 
 opentracing是一套分布式追踪协议，与平台，语言无关，统一接口，方便开发接入不同的分布式追踪系统。
 
-![jaeger_opentracing](/images/jaeger_opentracing.png)
+![jaeger_opentracing](/images/spring-cloud-docker-prometheus-grafana监控/jaeger_opentracing.png)
 
 简单理解opentracing:
 
@@ -1009,7 +1009,7 @@ span：记录Trace在执行过程中的信息，如：查询的sql，请求的HT
 
 ### 安装
 
-可以通过docker-compose安装，请参考[docker-compose](/files/jaeger-docker-compose.zip)
+可以通过docker-compose安装，请参考[docker-compose](/files/spring-cloud-docker-prometheus-grafana监控/jaeger-docker-compose.zip)
 ```dompose
 ---
 version: '2'
@@ -1243,9 +1243,9 @@ opentracing:
 
 针对分布式系统的APM（应用性能监控）系统，特别针对微服务、cloud native和容器化(Docker, Kubernetes, Mesos)架构， 其核心是个分布式追踪系统。
 
-![skywalking-architecture](/images/skywalking-architecture.png)
+![skywalking-architecture](/images/spring-cloud-docker-prometheus-grafana监控/skywalking-architecture.png)
 
-![skywalking-screenshot](/images/skywalking-screenshot.png)
+![skywalking-screenshot](/images/spring-cloud-docker-prometheus-grafana监控/skywalking-screenshot.png)
 
 ### 安装
 

@@ -188,7 +188,7 @@ kubectl create -f registry-ds.yaml
 kubectl create -f registry-svc.yaml
 ```
 
-参考[registry.zip](/files/registry.zip)
+参考[registry.zip](/files/Kubernetes安装Docker-registry/registry.zip)
 
 ## 客户端
 如果要用docker pull或者docker push的客户端，都需要执行以下命令：

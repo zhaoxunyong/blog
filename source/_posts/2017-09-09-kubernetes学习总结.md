@@ -735,7 +735,7 @@ Ingress的引入主要解决创建入口站点规则的问题，主要作用于7
 
 考虑到[Traefik](https://github.com/containous/traefik)部署较为方便，使用traefik提供Ingress服务。
 
-![traefik](/images/traefik.png)
+![traefik](/images/kubernetes学习总结/traefik.png)
 
 ### 定义traefik需要的RBAC规则
 
@@ -863,7 +863,7 @@ spec:
 ```
 
 ### 创建
-参考[traefik.zip](/files/traefik.zip)
+参考[traefik.zip](/files/kubernetes学习总结/traefik.zip)
 ```bash
 kubectl create -f ./
 ```
@@ -876,7 +876,7 @@ kubectl create -f ./
 可以通过http://a.zhaoxy.com访问nginx-app的80服务。
 可以通过http://a.zhaoxy.com:8580/dashboard/访问监控服务。
 
-![traefik-dashboard](/images/traefik-dashboard.png)
+![traefik-dashboard](/images/kubernetes学习总结/traefik-dashboard.png)
 
 ## 最新命令汇总
 

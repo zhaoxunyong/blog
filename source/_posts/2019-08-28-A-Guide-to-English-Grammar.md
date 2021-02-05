@@ -5673,8 +5673,8 @@ All students love music.
 
 6. 人称代词
 
-![Grammar_it.png](/images/Grammar_it.png)
-![Grammar_it2.png](/images/Grammar_it2.png)
+![Grammar_it.png](/images/A-Guide-to-English-Grammar/Grammar_it.png)
+![Grammar_it2.png](/images/A-Guide-to-English-Grammar/Grammar_it2.png)
 
 ```
 她自杀了
@@ -5693,7 +5693,7 @@ He did it himself.
 
 8. a friend of mine/this book of hers的用法
 
-![Grammar_it3.png](/images/Grammar_it3.png)
+![Grammar_it3.png](/images/A-Guide-to-English-Grammar/Grammar_it3.png)
 
 ```
 他是我的一位朋友

@@ -165,8 +165,8 @@ systemctl restart docker
 #手动打通路由比较麻烦，建议通过Quagga打通
 docker pull index.alauda.cn/georce/router
 #保存至文件，下次可以直接导入，不用再下载
-#docker save -o /docker/works/images/k8s/tar/quagga.tar
-#docker load -i /docker/works/images/k8s/tar/quagga.tar
+#docker save -o /docker/works/images/Kubernetes集群搭建/k8s/tar/quagga.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/k8s/tar/quagga.tar
 docker run -itd --name=router --privileged --net=host index.alauda.cn/georce/router
 #注意，系统重启时要自动启动quagga，否则会有问题。可以把以下命令加到/etc/rc.local中：
 #docker start `docker ps -a |grep 'index.alauda.cn/georce/router'|awk '{print $1}'`
@@ -201,8 +201,8 @@ systemctl restart docker
 #手动打通路由比较麻烦，建议通过Quagga打通
 docker pull index.alauda.cn/georce/router
 #保存至文件，下次可以直接导入，不用再下载
-#docker save -o /docker/works/images/k8s/tar/quagga.tar
-#docker load -i /docker/works/images/k8s/tar/quagga.tar
+#docker save -o /docker/works/images/Kubernetes集群搭建/k8s/tar/quagga.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/k8s/tar/quagga.tar
 docker run -itd --name=router --privileged --net=host index.alauda.cn/georce/router
 #注意，系统重启时要自动启动quagga，否则会有问题。可以把以下命令加到/etc/rc.local中：
 #docker start `docker ps -a |grep 'index.alauda.cn/georce/router'|awk '{print $1}'`
@@ -237,8 +237,8 @@ systemctl restart docker
 #手动打通路由比较麻烦，建议通过Quagga打通
 docker pull index.alauda.cn/georce/router
 #保存至文件，下次可以直接导入，不用再下载
-#docker save -o /docker/works/images/k8s/tar/quagga.tar
-#docker load -i /docker/works/images/k8s/tar/quagga.tar
+#docker save -o /docker/works/images/Kubernetes集群搭建/k8s/tar/quagga.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/k8s/tar/quagga.tar
 docker run -itd --name=router --privileged --net=host index.alauda.cn/georce/router
 #注意，系统重启时要自动启动quagga，否则会有问题。可以把以下命令加到/etc/rc.local中：
 #docker start `docker ps -a |grep 'index.alauda.cn/georce/router'|awk '{print $1}'`
@@ -966,8 +966,8 @@ args:
 git clone https://github.com/kubernetes/kubernetes.git
 cd kubernetes/cluster/addons/dashboard/
 
-#docker load -i /docker/works/images/k8s/tar/kubernetes-dashboard-amd64.tar
-#docker load -i /docker/works/images/k8s/tar/pause-amd64.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/k8s/tar/kubernetes-dashboard-amd64.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/k8s/tar/pause-amd64.tar
 
 #create service
 [root@k8s-master ~]$ kubectl create -f dashboard-service.yaml 
@@ -1082,9 +1082,9 @@ kubernetes-dashboard-v1.5.0-8hsb9   1/1       Running   0          13m       10.
 
 先下载源码：
 ```bash
-#docker load -i /docker/works/images/others/redis-master.tar
-#docker load -i /docker/works/images/others/guestbook-redis-slave.tar
-#docker load -i /docker/works/images/others/guestbook-php-frontend.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/others/redis-master.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/others/guestbook-redis-slave.tar
+#docker load -i /docker/works/images/Kubernetes集群搭建/others/guestbook-php-frontend.tar
 git clone https://github.com/kubernetes/kubernetes.git
 cd examples/guestbook/
 ```
