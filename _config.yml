@@ -89,6 +89,7 @@ deploy:
   repo: 
     github: https://github.com/zhaoxunyong/zhaoxunyong.github.io.git
     # coding: https://git.coding.net/zhaoxunyong/blog.git
+    gitee: https://gitee.com/zhaoxunyong/blog.git
   # 分支名称。
   branch: master
 
