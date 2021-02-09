@@ -16,7 +16,12 @@ timezone: Asia/Shanghai
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://blog.gcalls.cn
 root: /
-permalink: blog/:year/:month/:title.html
+# permalink: blog/:year/:month/:title.html
+permalink: /:year/:month/:title.html
+#subdirectory
+# url: http://blog.gcalls.cn/blog
+# root: /blog
+# permalink: /:year/:month/:title.html
 permalink_defaults:
 
 # Directory
@@ -89,7 +94,7 @@ deploy:
   repo: 
     github: https://github.com/zhaoxunyong/zhaoxunyong.github.io.git
     # coding: https://git.coding.net/zhaoxunyong/blog.git
-    gitee: https://gitee.com/zhaoxunyong/blog.git
+    # gitee: https://gitee.com/zhaoxunyong/blog.git
   # 分支名称。
   branch: master
 
