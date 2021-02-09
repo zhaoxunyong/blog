@@ -545,11 +545,10 @@ demo:
 
 ```bash
 #account-service
-#mvn clean install fabric8:deploy -Dfabric8.generator.from=fabric8/java-jboss-openjdk8-jdk -Pk8s
 cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
-mvn clean install fabric8:deploy -Pk8s
+mvn clean install -Pk8s
 #cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-web-service
-#mvn clean install fabric8:deploy -Pk8s
+#mvn clean install -Pk8s
 #telepresence --swap-deployment web-service --run-shell
 telepresence --new-deployment web-service --run-shell
 #new-deployment will get the error message： 
@@ -594,25 +593,29 @@ Or：
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 ```
 
-### fabric8-maven-plugin
+### kubernetes-maven-plugin
+
+https://www.eclipse.org/jkube/docs/kubernetes-maven-plugin
+
+Building Kubernetes, strongly recommended.
 
 ```bash
 #Copying remote config into "~/.kube/config" of local
-#https://github.com/fabric8io/fabric8-maven-plugin/tree/master/samples
+#https://github.com/eclipse/jkube/tree/master/quickstarts/maven/
 cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
 #For private docker registry, the most mavenish way is to add a server to the Maven settings file /Developer/apache-maven-3.3.9/conf/settings.xml
 <server>
     <id>registry.gcalls.cn</id>
     <username>dave.zhao</username>
-    <password>Aa654321</password>
+    <password>******</password>
 </server>
 
 #Generating the configuration automatically, remember don't adding "dockerHost" and "images" selection,
 #Or will be generated two image section in the deployment yaml file:
 <plugin>
-    <groupId>io.fabric8</groupId>
-    <artifactId>fabric8-maven-plugin</artifactId>
-    <version>${fabric8.maven.plugin.version}</version>
+    <groupId>org.eclipse.jkube</groupId>
+    <artifactId>kubernetes-maven-plugin</artifactId>
+    <version>1.1.0</version>
     <executions>
         <execution>
             <id>fmp</id>
@@ -620,7 +623,7 @@ cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
                 <goal>resource</goal>
                 <goal>build</goal>
                 <goal>push</goal>
-                <goal>deploy</goal>
+                <goal>apply</goal>
             </goals>
         </execution>
     </executions>
@@ -639,33 +642,36 @@ cd /mnt/d/Developer/workspace/java-k8s/spring-cloud-k8s-account-service
 </plugin>
 
 #Using the external Dockerfile and deployment.yaml/service.yaml：
-#https://maven.fabric8.io/#external-dockerfile
+#https://www.eclipse.org/jkube/docs/kubernetes-maven-plugin#external-dockerfile
 <plugin>
-    <groupId>io.fabric8</groupId>
-    <artifactId>fabric8-maven-plugin</artifactId>
-    <version>${fabric8.maven.plugin.version}</version>
+    <groupId>org.eclipse.jkube</groupId>
+    <artifactId>kubernetes-maven-plugin</artifactId>
+    <version>1.1.0</version>
     <executions>
         <execution>
-            <id>fmp</id>              
-            <properties>
-                <spring.profile>default</spring.profile>
-            </properties>
+            <id>fmp</id>
             <goals>
-                <goal>resource</goal>
                 <goal>build</goal>
                 <goal>push</goal>
-                <goal>deploy</goal>
+                <goal>resource</goal>
+                #<!-- Don't use deploy, or twice build was triggered -->
+                <goal>apply</goal>
             </goals>
         </execution>
     </executions>
     <configuration>   
-        <dockerHost>tcp://registry.gcalls.cn:2375</dockerHost>
+        <!-- <dockerHost>tcp://registry.gcalls.cn:2375</dockerHost> -->
+        <dockerHost>tcp://localhost:2375</dockerHost>
         <images>
             <image>
             <name>registry.gcalls.cn/xwallet/${project.name}:${project.version}</name>
             <build>
-                <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
-                <contextDir>${project.basedir}/</contextDir>
+                <!-- https://github.com/eclipse/jkube/issues/149 -->
+                <assembly>
+                    <name>target</name>
+                </assembly>
+                <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile> 
+                <!-- <contextDir>${project.basedir}</contextDir>  -->
                 <filter>@</filter>
             </build>
             </image>
@@ -696,7 +702,7 @@ COPY target/${APPNAME}-${VERSION}.jar /app/
 ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /app/${APPNAME}-${VERSION}.jar --spring.config.location=${CONFIG} --spring.profiles.active=@spring.profile@"]
 EXPOSE 8100
 
-#src/man/fabric8/account-service-deployment.yml
+#src/man/jkube/account-service-deployment.yml
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -706,7 +712,7 @@ metadata:
     app: account-service
     group: com.xwallet
     version: 0.0.1-SNAPSHOT
-    provider: fabric8
+    provider: jkube
 spec:
   replicas: 1
   selector:
@@ -714,14 +720,14 @@ spec:
       app: account-service
       group: com.xwallet
       version: 0.0.1-SNAPSHOT
-      provider: fabric8
+      provider: jkube
   template:
     metadata:
       labels:
         app: account-service
         group: com.xwallet
         version: 0.0.1-SNAPSHOT
-        provider: fabric8
+        provider: jkube
     spec:
       containers:
       - name: account-service
@@ -730,7 +736,7 @@ spec:
         ports:
         - containerPort: 8089
 
-#src/man/fabric8/account-service-service.yml
+#src/man/jkube/account-service-service.yml
 kind: Service
 apiVersion: v1
 metadata:
@@ -740,7 +746,7 @@ metadata:
     app: account-service
     group: com.xwallet
     version: 0.0.1-SNAPSHOT
-    provider: fabric8
+    provider: jkube
 spec:
   type: NodePort
   ports:
@@ -752,13 +758,13 @@ spec:
     app: account-service
     group: com.xwallet
     version: 0.0.1-SNAPSHOT
-    provider: fabric8
+    provider: jkube
 
 #Running:
 #If don't define the dockerHost or private registry parameter, using the following command:
 #export DOCKER_HOST="tcp://registry.gcalls.cn:2375"
-#mvn clean install fabric8:push fabric8:deploy -Pk8s -Ddocker.registry=registry.gcalls.cn
-#mvn clean install fabric8:push fabric8:deploy -Pk8s
+#mvn clean install k8s:push k8s:deploy -Pk8s -Ddocker.registry=registry.gcalls.cn
+#mvn clean install k8s:build k8s:push k8s:resource k8s:apply -Dmaven.test.skip=true -Dspring.profile=dev -Pk8s
 mvn clean install -Pk8s
 
 #Building by parameters
@@ -790,4 +796,89 @@ sudo iptables -t nat -nvL | grep 10.244.47.4
 docker login --username=zhaoxunyong@139.com registry.cn-shenzhen.aliyuncs.com
 docker tag [ImageId] registry.cn-shenzhen.aliyuncs.com/zerofinance/fisco:[镜像版本号]
 docker push registry.cn-shenzhen.aliyuncs.com/zerofinance/fisco:[镜像版本号]
+```
+
+### fabric8-maven-plugin
+
+https://maven.fabric8.io/
+
+Building Kubernetes and Openshift, like kubernetes-maven-plugin, but alway generated both of them, not recommended.
+
+These are different:
+
+```bash
+#Zero-Config
+<plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>fabric8-maven-plugin</artifactId>
+    <version>${fabric8.maven.plugin.version}</version>
+    <executions>
+        <execution>
+            <id>fmp</id>
+            <goals>
+                <goal>resource</goal>
+                <goal>build</goal>
+                <goal>push</goal>
+                <goal>deploy</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>   
+        <resources>
+            <imagePullPolicy>Always</imagePullPolicy>
+        </resources>
+        <enricher>
+            <config>
+                <fmp-service>
+                    <type>NodePort</type>
+                </fmp-service>
+            </config>
+        </enricher>
+    </configuration>
+</plugin>
+
+#https://maven.fabric8.io/#external-dockerfile
+#External-Dockerfile
+<plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>fabric8-maven-plugin</artifactId>
+    <version>${fabric8.maven.plugin.version}</version>
+    <executions>
+        <execution>
+            <id>fmp</id>              
+            <properties>
+                <spring.profile>default</spring.profile>
+            </properties>
+            <goals>
+                <goal>resource</goal>
+                <goal>build</goal>
+                <goal>push</goal>
+                <goal>apply</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>   
+        <dockerHost>tcp://registry.gcalls.cn:2375</dockerHost>
+        <images>
+            <image>
+            <name>registry.gcalls.cn/xwallet/${project.name}:${project.version}</name>
+            <build>
+                <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                <contextDir>${project.basedir}/</contextDir>
+                <filter>@</filter>
+            </build>
+            </image>
+        </images>
+        <enricher>
+            <config>
+                <fmp-service>
+                    <type>NodePort</type>
+                </fmp-service>
+            </config>
+        </enricher>
+    </configuration>
+</plugin>
+
+#Build
+mvn clean install fabric8:build fabric8:push fabric8:resource fabric8:apply -Pk8s
 ```
