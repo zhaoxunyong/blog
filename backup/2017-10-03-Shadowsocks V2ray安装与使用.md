@@ -116,7 +116,7 @@ ss-local 4405 root    6u  IPv4  37703      0t0  TCP *:socks (LISTEN)
 
 浏览器配置proxy:
 如果是chrome浏览器，参考其他教程：安装个SwitchyOmega插件就行。
-具体可参考[SwitchyOmega.zip](/files/SwitchyOmega.zip)
+具体可参考[SwitchyOmega.zip](/files/Shadowsocks-V2ray安装与使用/SwitchyOmega.zip)
 如果是firefox，如下配置proxy：127.0.0.1:8899  类型选择sock5，并且勾选remote dns。
 如果不勾，照样无法使用ss翻墙。
 
@@ -225,21 +225,21 @@ https://github.com/shadowsocks/ShadowsocksX-NG/releases/download/v1.6.1/Shadowso
 
 #### 添加服务器
 
-![shadowsocks-01.png](/images/shadowsocks-01.png)
+![shadowsocks-01.png](/images/Shadowsocks-V2ray安装与使用/shadowsocks-01.png)
 
-![shadowsocks-02.png](/images/shadowsocks-02.png)
+![shadowsocks-02.png](/images/Shadowsocks-V2ray安装与使用/shadowsocks-02.png)
 
 #### 监控所有端口
 
 如果想将shadowsocks做为中转服务的话，可以将它监听本地所有端口，这样其他客户端配置SwitchyOmega的话，也可以通过这台的http服务中转。
 
-![shadowsocks-03.png](/images/shadowsocks-03.png)
+![shadowsocks-03.png](/images/Shadowsocks-V2ray安装与使用/shadowsocks-03.png)
 
 注意：ProxyServer为HTTP服务。
 
 #### 更新PAC
 
-![shadowsocks-04.png](/images/shadowsocks-04.png)
+![shadowsocks-04.png](/images/Shadowsocks-V2ray安装与使用/shadowsocks-04.png)
 
 ## v2ray
 
@@ -559,11 +559,11 @@ curl -L -s https://raw.githubusercontent.com/v2ray/v2ray-core/master/release/ins
 
 修改配置文件/etc/v2ray/config.json:
 
-![v2ray-server-config](/images/v2ray-server-config.png)
+![v2ray-server-config](/images/Shadowsocks-V2ray安装与使用/v2ray-server-config.png)
 
 还可以同时作为V2Ray和Shadowsocks的服务器，响应不同客户端的连接：
 
-![v2ray-shadowsocks-config](/images/v2ray-shadowsocks-config.png)
+![v2ray-shadowsocks-config](/images/Shadowsocks-V2ray安装与使用/v2ray-shadowsocks-config.png)
 
 ```bash
 systemctl start v2ray
@@ -583,11 +583,11 @@ wget https://github.com/v2ray/v2ray-core/releases/download/v3.25.1/v2ray-windows
 
 解压后，修改config.json文件：
 
-![v2ray-client-config](/images/v2ray-client-config.png)
+![v2ray-client-config](/images/Shadowsocks-V2ray安装与使用/v2ray-client-config.png)
 
 然后运行wv2ray.exe或者v2ray.exe文件启动即可。wv2ray.exe运行后没有命令行窗口。
 
-服务端与客户端的配置文件可以参考：[v2ray-config.zip](/files/v2ray-config.zip)
+服务端与客户端的配置文件可以参考：[v2ray-config.zip](/files/Shadowsocks-V2ray安装与使用/v2ray-config.zip)
 
 ### SwitchyOmega
 
@@ -610,8 +610,446 @@ https://github.com/2dust/v2rayN/releases
 https://github.com/yanue/V2rayU/releases/
 ```
 
+### 路由器
 
+- https://www.aplayerscreed.com/%E5%9C%A8asuswrt-merlin%E4%B8%8A%E5%AE%89%E8%A3%85v2ray/ 
+- https://yuanmomo.net/2019/11/03/router-v2ray-transparent-proxy/ 
+- https://guide.v2fly.org/app/transparent_proxy.html#%E8%AE%BE%E7%BD%AE%E6%AD%A5%E9%AA%A4 
+- https://enterpr1se.info/2017/10/v2ray-gfw-asuswrt-merlin/
 
+以RT-AC88U为例
+
+```bash
+wget https://udomain.dl.sourceforge.net/project/asuswrt-merlin/RT-AC88U/Release/RT-AC88U_386.1_2.zip
+#刷机，参考https://www.aplayerscreed.com/%E5%9C%A8asuswrt-merlin%E4%B8%8A%E5%AE%89%E8%A3%85v2ray/
+#上传RT-AC88U_386.1_2.trx。注意：上传时没有提示，会直接开始刷机
+#然后需要在Administration-System中允许写入JFFS分区和打开SSH。接着就可以用你喜欢的SSH工具连进去了。第一次要格式化JFFS分区，所以两个都选yes，然后重启。
+#登录路由器，密码为路由器网页的登录密码
+ssh admin@192.168.3.1
+cd /jffs
+mkdir v2ray
+cd v2ray/
+wget https://github.com/v2ray/v2ray-core/releases/download/v4.22.1/v2ray-linux-arm.zip
+unzip v2ray-linux-arm.zip
+rm v2ray_armv7 v2ray_armv6 v2ctl_armv7
+chmod +x v2ray v2ctl
+
+scp /d/config.json admin@192.168.3.1:/jffs/v2ray/config.json
+```
+
+config.json
+
+```json
+{
+  "policy": null,
+  "log": {
+    "access": "",
+    "error": "",
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 1080,
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "settings": {
+        "auth": "noauth",
+        "udp": true
+      }
+    },
+    {
+      "port": 1081,
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "settings": {
+        "auth": "noauth",
+        "udp": false
+      }
+    },
+    {
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "protocol": "vmess",
+      "settings": {
+        "vnext": [
+          {
+            "address": "x.x.x.x",
+            "port": 33333,
+            "users": [
+              {
+                "id": "xxxxxxxxxxxxxxxxxxxx",
+                "alterId": 2,
+                "email": "a@a.a",
+                "security": "auto"
+              }
+            ]
+          }
+        ],
+        "servers": null,
+        "response": null
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": null,
+        "tlsSettings": null,
+        "tcpSettings": null,
+        "kcpSettings": null,
+        "wsSettings": {
+          "connectionReuse": true,
+          "path": "/v7aea",
+          "headers": null
+        },
+        "httpSettings": null,
+        "quicSettings": null,
+        "sockopt": {
+          "mark": 255
+        }
+      },
+      "mux": {
+        "enabled": true,
+        "concurrency": 8
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "vnext": null,
+        "servers": null,
+        "response": null
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      },
+      "mux": null
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "vnext": null,
+        "servers": null,
+        "response": {
+          "type": "http"
+        }
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      },
+      "mux": null
+    }
+  ],
+  "stats": null,
+  "api": null,
+  "dns": null,
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": [
+          "api"
+        ],
+        "outboundTag": "api",
+        "ip": null,
+        "domain": null
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "proxy",
+        "ip": null,
+        "domain": [
+          "geosite:google",
+          "geosite:github",
+          "geosite:netflix",
+          "geosite:steam",
+          "geosite:telegram",
+          "geosite:tumblr",
+          "geosite:speedtest",
+          "geosite:bbc",
+          "domain:gvt1.com",
+          "domain:textnow.com",
+          "domain:twitch.tv",
+          "domain:wikileaks.org",
+          "domain:naver.com"
+        ]
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "proxy",
+        "ip": [
+          "91.108.4.0/22",
+          "91.108.8.0/22",
+          "91.108.12.0/22",
+          "91.108.20.0/22",
+          "91.108.36.0/23",
+          "91.108.38.0/23",
+          "91.108.56.0/22",
+          "149.154.160.0/20",
+          "149.154.164.0/22",
+          "149.154.172.0/22",
+          "74.125.0.0/16",
+          "173.194.0.0/16",
+          "172.217.0.0/16",
+          "216.58.200.0/24",
+          "216.58.220.0/24",
+          "91.108.56.116",
+          "91.108.56.0/24",
+          "109.239.140.0/24",
+          "149.154.167.0/24",
+          "149.154.175.0/24"
+        ],
+        "domain": null
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "direct",
+        "ip": null,
+        "domain": [
+          "domain:12306.com",
+          "domain:51ym.me",
+          "domain:52pojie.cn",
+          "domain:8686c.com",
+          "domain:abercrombie.com",
+          "domain:adobesc.com",
+          "domain:air-matters.com",
+          "domain:air-matters.io",
+          "domain:airtable.com",
+          "domain:akadns.net",
+          "domain:apache.org",
+          "domain:api.crisp.chat",
+          "domain:api.termius.com",
+          "domain:appshike.com",
+          "domain:appstore.com",
+          "domain:aweme.snssdk.com",
+          "domain:bababian.com",
+          "domain:battle.net",
+          "domain:beatsbydre.com",
+          "domain:bet365.com",
+          "domain:bilibili.cn",
+          "domain:ccgslb.com",
+          "domain:ccgslb.net",
+          "domain:chunbo.com",
+          "domain:chunboimg.com",
+          "domain:clashroyaleapp.com",
+          "domain:cloudsigma.com",
+          "domain:cloudxns.net",
+          "domain:cmfu.com",
+          "domain:culturedcode.com",
+          "domain:dct-cloud.com",
+          "domain:didialift.com",
+          "domain:douyutv.com",
+          "domain:duokan.com",
+          "domain:dytt8.net",
+          "domain:easou.com",
+          "domain:ecitic.net",
+          "domain:eclipse.org",
+          "domain:eudic.net",
+          "domain:ewqcxz.com",
+          "domain:fir.im",
+          "domain:frdic.com",
+          "domain:fresh-ideas.cc",
+          "domain:godic.net",
+          "domain:goodread.com",
+          "domain:haibian.com",
+          "domain:hdslb.net",
+          "domain:hollisterco.com",
+          "domain:hongxiu.com",
+          "domain:hxcdn.net",
+          "domain:images.unsplash.com",
+          "domain:img4me.com",
+          "domain:ipify.org",
+          "domain:ixdzs.com",
+          "domain:jd.hk",
+          "domain:jianshuapi.com",
+          "domain:jomodns.com",
+          "domain:jsboxbbs.com",
+          "domain:knewone.com",
+          "domain:kuaidi100.com",
+          "domain:lemicp.com",
+          "domain:letvcloud.com",
+          "domain:lizhi.io",
+          "domain:localizecdn.com",
+          "domain:lucifr.com",
+          "domain:luoo.net",
+          "domain:mai.tn",
+          "domain:maven.org",
+          "domain:miwifi.com",
+          "domain:moji.com",
+          "domain:moke.com",
+          "domain:mtalk.google.com",
+          "domain:mxhichina.com",
+          "domain:myqcloud.com",
+          "domain:myunlu.com",
+          "domain:netease.com",
+          "domain:nfoservers.com",
+          "domain:nssurge.com",
+          "domain:nuomi.com",
+          "domain:ourdvs.com",
+          "domain:overcast.fm",
+          "domain:paypal.com",
+          "domain:paypalobjects.com",
+          "domain:pgyer.com",
+          "domain:qdaily.com",
+          "domain:qdmm.com",
+          "domain:qin.io",
+          "domain:qingmang.me",
+          "domain:qingmang.mobi",
+          "domain:qqurl.com",
+          "domain:rarbg.to",
+          "domain:rrmj.tv",
+          "domain:ruguoapp.com",
+          "domain:sm.ms",
+          "domain:snwx.com",
+          "domain:soku.com",
+          "domain:startssl.com",
+          "domain:store.steampowered.com",
+          "domain:symcd.com",
+          "domain:teamviewer.com",
+          "domain:tmzvps.com",
+          "domain:trello.com",
+          "domain:trellocdn.com",
+          "domain:ttmeiju.com",
+          "domain:udache.com",
+          "domain:uxengine.net",
+          "domain:weather.bjango.com",
+          "domain:weather.com",
+          "domain:webqxs.com",
+          "domain:weico.cc",
+          "domain:wenku8.net",
+          "domain:werewolf.53site.com",
+          "domain:windowsupdate.com",
+          "domain:wkcdn.com",
+          "domain:workflowy.com",
+          "domain:xdrig.com",
+          "domain:xiaojukeji.com",
+          "domain:xiaomi.net",
+          "domain:xiaomicp.com",
+          "domain:ximalaya.com",
+          "domain:xitek.com",
+          "domain:xmcdn.com",
+          "domain:xslb.net",
+          "domain:xteko.com",
+          "domain:yach.me",
+          "domain:yixia.com",
+          "domain:yunjiasu-cdn.net",
+          "domain:zealer.com",
+          "domain:zgslb.net",
+          "domain:zimuzu.tv",
+          "domain:zmz002.com",
+          "domain:samsungdm.com"
+        ]
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "block",
+        "ip": null,
+        "domain": [
+          "geosite:category-ads"
+        ]
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "direct",
+        "ip": [
+          "geoip:private"
+        ],
+        "domain": null
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "direct",
+        "ip": [
+          "geoip:cn"
+        ],
+        "domain": null
+      },
+      {
+        "type": "field",
+        "port": null,
+        "inboundTag": null,
+        "outboundTag": "direct",
+        "ip": null,
+        "domain": [
+          "geosite:cn"
+        ]
+      }
+    ]
+  }
+}
+```
+
+接着我们要为V2Ray创建开机启动。services-start是梅林启动时会执行的shell脚本。
+
+nano /jffs/scripts/services-start
+
+```bash
+#!/bin/sh
+#v2ray start
+mkdir /var/log/v2ray/
+sleep 10
+nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
+#check v2ray every 15 minute
+#cru a check-v2ray "*/15 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+
+iptables -t nat -N V2RAY
+iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
+iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
+iptables -t nat -A V2RAY -d 10.0.0.0/8 -j RETURN
+iptables -t nat -A V2RAY -d 127.0.0.0/8 -j RETURN
+iptables -t nat -A V2RAY -d 169.254.0.0/16 -j RETURN
+iptables -t nat -A V2RAY -d 172.16.0.0/12 -j RETURN
+iptables -t nat -A V2RAY -d 192.168.0.0/16 -j RETURN
+iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
+iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
+
+iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
+iptables -t nat -A PREROUTING -p tcp -j V2RAY
+iptables -t nat -A OUTPUT -p tcp -j V2RAY
+```
+
+iptables相关的指令为设置路由器透明代理，这个路由器下的所有终端就可以直接实现代理了，包括在命令行下。参考：
+
+- https://guide.v2fly.org/app/transparent_proxy.html
+- https://yuanmomo.net/2019/11/03/router-v2ray-transparent-proxy/
+
+相关配置文件参考：[v2ray_router.zip](/files/Shadowsocks-V2ray安装与使用/v2ray_router.zip)
 
 
 

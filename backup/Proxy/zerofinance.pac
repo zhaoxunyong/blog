@@ -2,15 +2,16 @@
 // Update: 2021-02-23 02:14:14
 //
 
-const proxy = "PROXY 192.168.80.201:3128";
-// const proxy = "SOCKS5 192.168.80.98:8899";
+// const proxy = " ";
+const proxy = "SOCKS5 192.168.80.201:3128";
 const direct = "DIRECT;";
 
 const hasOwnProperty = Object.hasOwnProperty;
 
 const zerofinance_domains = {
   "ip138.com": 1,
-  "baidu.com": 1
+  "baidu.com": 1,
+  "zerofinance.net": 1
 };
 
 const subnet_ips = [
