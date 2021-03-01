@@ -1044,6 +1044,13 @@ iptables -t nat -A PREROUTING -p tcp -j V2RAY
 iptables -t nat -A OUTPUT -p tcp -j V2RAY
 ```
 
+赋权限并重启：
+
+```bash
+chmod +x /jffs/scripts/*
+reboot
+```
+
 iptables相关的指令为设置路由器透明代理，这个路由器下的所有终端就可以直接实现代理了，包括在命令行下。参考：
 
 - https://guide.v2fly.org/app/transparent_proxy.html
