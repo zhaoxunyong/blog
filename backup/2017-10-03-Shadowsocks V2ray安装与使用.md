@@ -650,6 +650,7 @@ config.json
   "inbounds": [
     {
       "port": 1080,
+      "listen":"192.168.3.1",
       "protocol": "socks",
       "sniffing": {
         "enabled": true,
@@ -662,6 +663,7 @@ config.json
     },
     {
       "port": 1081,
+      "listen":"192.168.3.1",
       "protocol": "http",
       "sniffing": {
         "enabled": true,
@@ -1015,6 +1017,12 @@ config.json
 }
 ```
 
+转换格式：
+
+```
+dos2unix /jffs/v2ray/config.json
+```
+
 接着我们要为V2Ray创建开机启动。services-start是梅林启动时会执行的shell脚本。
 
 nano /jffs/scripts/services-start
@@ -1028,6 +1036,7 @@ nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
 #check v2ray every 15 minute
 #cru a check-v2ray "*/15 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
 
+#Openning transparent proxy
 iptables -t nat -N V2RAY
 iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
 iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
@@ -1042,6 +1051,10 @@ iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
 iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
 iptables -t nat -A PREROUTING -p tcp -j V2RAY
 iptables -t nat -A OUTPUT -p tcp -j V2RAY
+
+#Openning proxy for socks and http
+iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
+iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
 ```
 
 赋权限并重启：
@@ -1049,6 +1062,17 @@ iptables -t nat -A OUTPUT -p tcp -j V2RAY
 ```bash
 chmod +x /jffs/scripts/*
 reboot
+```
+
+如果需要删除某条路由：
+
+```bash
+iptables -nvL
+iptables -nL --line-number
+#Only for INPUT
+iptables -nL INPUT --line-number
+#Delete rule
+iptables -D INPUT 2
 ```
 
 iptables相关的指令为设置路由器透明代理，这个路由器下的所有终端就可以直接实现代理了，包括在命令行下。参考：
