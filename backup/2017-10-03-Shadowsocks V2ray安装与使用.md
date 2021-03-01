@@ -657,7 +657,14 @@ config.json
         "destOverride": ["http", "tls"]
       },
       "settings": {
-        "auth": "noauth",
+        // "auth": "noauth",
+        "auth": "password",
+        "accounts": [
+          {
+            "user": "admin",
+            "pass": "111111"
+          }
+        ],
         "udp": true
       }
     },
