@@ -1032,6 +1032,8 @@ dos2unix /jffs/v2ray/config.json
 
 接着我们要为V2Ray创建开机启动。services-start是梅林启动时会执行的shell脚本。
 
+https://github.com/RMerl/asuswrt-merlin.ng/wiki/User-scripts
+
 nano /jffs/scripts/services-start
 
 ```bash
@@ -1067,7 +1069,7 @@ iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
 赋权限并重启：
 
 ```bash
-chmod +x /jffs/scripts/*
+chmod a+rx /jffs/scripts/*
 reboot
 ```
 
