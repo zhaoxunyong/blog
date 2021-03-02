@@ -1101,5 +1101,104 @@ iptables相关的指令为设置路由器透明代理，这个路由器下的所
 
 下载windows openvpn client: [OpenVPN-2.5.1-I601-amd64.msi](https://swupdate.openvpn.org/community/releases/OpenVPN-2.5.1-I601-amd64.msi)
 
+## DDNS
+
+scp ddns-start admin@192.168.3.1:/jffs/scripts/
+
+chmod +x /jffs/scripts/ddns-start，在DDNS页面中选择Cumstom，并输入域名：router.gcalls.cn
+
+登录dnspod后台创建域名router，ip随便指一下，后面会更新的。
+
+/jffs/scripts/ddns-start
+
+[https://koolshare.cn/thread-37553-1-1.html](https://koolshare.cn/thread-37553-1-1.html)
+
+```bash
+#!/bin/sh
+
+# 使用Token认证(推荐) 请去 https://www.dnspod.cn/console/user/security 获取
+arToken="ID,token"
+# 使用邮箱和密码认证
+arMail=""
+arPass=""
+
+# 获得外网地址
+arIpAdress() {
+    local inter=`nvram get wan0_ipaddr`
+    echo $inter
+}
+
+# 查询域名地址
+# 参数: 待查询域名
+arNslookup() {
+    local inter="http://119.29.29.29/d?dn="
+    wget --quiet --output-document=- $inter$1
+}
+
+# 读取接口数据
+# 参数: 接口类型 待提交数据
+arApiPost() {
+    local agent="AnripDdns/5.07(mail@anrip.com)"
+    local inter="https://dnsapi.cn/${1:?'Info.Version'}"
+    if [ "x${arToken}" = "x" ]; then # undefine token
+        local param="login_email=${arMail}&login_password=${arPass}&format=json&${2}"
+    else
+        local param="login_token=${arToken}&format=json&${2}"
+    fi
+    wget --quiet --no-check-certificate --output-document=- --user-agent=$agent --post-data $param $inter
+}
+
+# 更新记录信息
+# 参数: 主域名 子域名
+arDdnsUpdate() {
+    local domainID recordID recordRS recordCD
+    # 获得域名ID
+    domainID=$(arApiPost "Domain.Info" "domain=${1}")
+    domainID=$(echo $domainID | sed 's/.\+{"id":"\([0-9]\+\)".\+/\1/')
+    # 获得记录ID
+    recordID=$(arApiPost "Record.List" "domain_id=${domainID}&sub_domain=${2}")
+    recordID=$(echo $recordID | sed 's/.\+\[{"id":"\([0-9]\+\)".\+/\1/')
+    # 更新记录IP
+    recordRS=$(arApiPost "Record.Ddns" "domain_id=${domainID}&record_id=${recordID}&sub_domain=${2}&record_line=默认")
+    recordCD=$(echo $recordRS | sed 's/.\+{"code":"\([0-9]\+\)".\+/\1/')
+    # 输出记录IP
+    if [ "$recordCD" == "1" ]; then
+        echo $recordRS | sed 's/.\+,"value":"\([0-9\.]\+\)".\+/\1/'
+        return 1
+    fi
+    # 输出错误信息
+    echo $recordRS | sed 's/.\+,"message":"\([^"]\+\)".\+/\1/'
+}
+
+# 动态检查更新
+# 参数: 主域名 子域名
+arDdnsCheck() {
+    local postRS
+    local hostIP=$(arIpAdress)
+    local lastIP=$(arNslookup "${2}.${1}")
+    echo "hostIP: ${hostIP}"
+    echo "lastIP: ${lastIP}"
+    if [ "$lastIP" != "$hostIP" ]; then
+        postRS=$(arDdnsUpdate $1 $2)
+        echo "postRS: ${postRS}"
+        if [ $? -ne 1 ]; then
+            return 1
+        fi
+    fi
+    return 0
+}
+
+###################################################
+# 检查更新域名
+
+arDdnsCheck "gcalls.cn" "router"
+
+if [ $? -eq 0 ]; then
+    /sbin/ddns_custom_updated 1
+else
+    /sbin/ddns_custom_updated 0
+fi
+```
+
 
 
