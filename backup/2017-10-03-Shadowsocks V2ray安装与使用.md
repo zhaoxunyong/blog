@@ -1089,5 +1089,17 @@ iptables相关的指令为设置路由器透明代理，这个路由器下的所
 
 相关配置文件参考：[v2ray_router.zip](/files/Shadowsocks-V2ray安装与使用/v2ray_router.zip)
 
+## VPN
+
+在路由器开启OpenVPN，然后下载client1.ovpn文件，编辑文件，在最后添加，否则vpn后不能连接本地网络：
+
+```bash
+#https://community.openvpn.net/openvpn/wiki/IgnoreRedirectGateway
+#Method 1: filter the pushed option
+--pull-filter ignore redirect-gateway
+```
+
+下载windows openvpn client: [OpenVPN-2.5.1-I601-amd64.msi](https://swupdate.openvpn.org/community/releases/OpenVPN-2.5.1-I601-amd64.msi)
+
 
 
