@@ -1042,28 +1042,60 @@ nano /jffs/scripts/services-start
 mkdir /var/log/v2ray/
 sleep 10
 nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
+
+#iptables
+/jffs/scripts/router-iptables.sh
+
 #check v2ray every 15 minute
-#cru a check-v2ray "*/15 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+cru a check-v2ray "*/2 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+```
 
-#Openning transparent proxy
-iptables -t nat -N V2RAY
-iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
-iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
-iptables -t nat -A V2RAY -d 10.0.0.0/8 -j RETURN
-iptables -t nat -A V2RAY -d 127.0.0.0/8 -j RETURN
-iptables -t nat -A V2RAY -d 169.254.0.0/16 -j RETURN
-iptables -t nat -A V2RAY -d 172.16.0.0/12 -j RETURN
-iptables -t nat -A V2RAY -d 192.168.0.0/16 -j RETURN
-iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
-iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
+nano /jffs/scripts/router-iptables.sh
 
-iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
-iptables -t nat -A PREROUTING -p tcp -j V2RAY
-iptables -t nat -A OUTPUT -p tcp -j V2RAY
+```
+#!/bin/sh
 
-#Openning proxy for socks and http
-iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
-iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
+iptables -nL INPUT|grep 1080 > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "iptables was existing, starting..."
+    iptables -t nat -N V2RAY
+    iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
+    iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
+    iptables -t nat -A V2RAY -d 10.0.0.0/8 -j RETURN
+    iptables -t nat -A V2RAY -d 127.0.0.0/8 -j RETURN
+    iptables -t nat -A V2RAY -d 169.254.0.0/16 -j RETURN
+    iptables -t nat -A V2RAY -d 172.16.0.0/12 -j RETURN
+    iptables -t nat -A V2RAY -d 192.168.0.0/16 -j RETURN
+    iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
+    iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
+
+    iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
+    iptables -t nat -A PREROUTING -p tcp -j V2RAY
+    iptables -t nat -A OUTPUT -p tcp -j V2RAY
+
+    iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
+    iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
+fi
+```
+
+nano /jffs/scripts/v2ray-check.sh
+
+```
+#! /bin/sh
+case "$(pidof v2ray | wc -w)" in
+0)  echo "Restarting V2ray:     $(date)" >> /var/log/v2ray/v2ray-status.log
+    nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json >/dev/null 2>&1 &
+    #iptables
+    /jffs/scripts/router-iptables.sh >> /var/log/v2ray/v2ray-status.log
+    ;;
+1)  # all ok
+    #iptables
+    /jffs/scripts/router-iptables.sh >> /var/log/v2ray/v2ray-status.log
+    ;;
+*)  echo "Removed double V2ray: $(date)" >> /var/log/v2ray/v2ray-status.log
+    kill $(pidof v2ray | awk '{print $1}')
+    ;;
+esac
 ```
 
 赋权限并重启：
