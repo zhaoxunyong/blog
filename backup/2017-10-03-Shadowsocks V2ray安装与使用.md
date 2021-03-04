@@ -617,7 +617,7 @@ https://github.com/yanue/V2rayU/releases/
 - https://guide.v2fly.org/app/transparent_proxy.html#%E8%AE%BE%E7%BD%AE%E6%AD%A5%E9%AA%A4 
 - https://enterpr1se.info/2017/10/v2ray-gfw-asuswrt-merlin/
 
-以RT-AC88U为例
+For Merlin Version, 以RT-AC88U为例
 
 ```bash
 wget https://udomain.dl.sourceforge.net/project/asuswrt-merlin/RT-AC88U/Release/RT-AC88U_386.1_2.zip
@@ -1124,7 +1124,9 @@ iptables相关的指令为设置路由器透明代理，这个路由器下的所
 相关配置文件参考：[jffs.zip](/files/Shadowsocks-V2ray安装与使用/jffs.zip)
 
 
-原版固件开机自启动：
+## 原版固件开机自启动
+
+必须插入U盘才支持该功能，其原理就是利用U盘挂载时触发对应的脚本。
 
 https://www.pianshen.com/article/4824845820/
 
@@ -1136,6 +1138,7 @@ https://www.pianshen.com/article/4824845820/
 /opt/etc/init.d/S50servicesstart
 ```
 #内容就是上面的servicesstart中的内容
+chmod a+rx /opt/etc/init.d/S50servicesstart
 ```
 
 /opt/lib/ipkg/info/servicesstart.control
@@ -1145,7 +1148,7 @@ Enabled: yes
 
 ## VPN
 
-在路由器开启OpenVPN，然后下载client1.ovpn文件，编辑文件，在最后添加，否则vpn后不能连接本地网络：
+在路由器开启OpenVPN，然后下载client.ovpn文件，编辑文件，在最后添加，否则vpn后不能连接本地网络：
 
 ```bash
 #https://community.openvpn.net/openvpn/wiki/IgnoreRedirectGateway
@@ -1156,6 +1159,8 @@ Enabled: yes
 下载windows openvpn client: [OpenVPN-2.5.1-I601-amd64.msi](https://swupdate.openvpn.org/community/releases/OpenVPN-2.5.1-I601-amd64.msi)
 
 ## DDNS
+
+For Merlin Version
 
 scp ddns-start admin@192.168.3.1:/jffs/scripts/
 
