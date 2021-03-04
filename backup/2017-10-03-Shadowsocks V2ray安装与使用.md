@@ -1043,11 +1043,41 @@ mkdir /var/log/v2ray/
 sleep 10
 nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
 
-#iptables
-/jffs/scripts/router-iptables.sh
+#iptables, async load
+/jffs/scripts/router-iptables.sh &
 
-#check v2ray every 2 minute
-cru a check-v2ray "*/2 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+#dnspod
+/jffs/scripts/ddns-start
+
+#check v2ray every 5 minute
+cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+```
+
+设置国内ip源：
+
+- https://www.starx.ink/archives/%E5%9F%BA%E4%BA%8Eiptables%E7%9A%84%E5%88%86%E6%B5%81%E7%A7%91%E5%AD%A6%E7%BD%91%E5%85%B3/
+- https://www.ookangzheng.com/block-china-ip-by-iptables/
+- https://www.cnblogs.com/cash/p/13280800.html
+- https://gist.github.com/justinemter/5dcbb595b53e5671601bce9f8c096403
+- https://www.ichenfu.com/2020/01/07/block-ips-outside-china-with-iptables-and-ipset/
+
+nano /jffs/scripts/ipset-cn.sh
+
+```
+#!/bin/bash
+
+rm -f /jffs/scripts/cn.zone
+
+ipset destroy china
+ipset flush china
+ipset create china hash:net hashsize 1024 maxelem 65536
+
+#wget https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt -O /jffs/scripts/cn.zone
+wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /jffs/scripts/cn.zone
+for i in `cat /jffs/scripts/cn.zone`
+do
+  ipset add china $i
+done
 ```
 
 nano /jffs/scripts/router-iptables.sh
@@ -1058,8 +1088,10 @@ nano /jffs/scripts/router-iptables.sh
 iptables -nL INPUT|grep 1080 > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "iptables wasn't existing, starting:     $(date)"
+    /jffs/scripts/ipset-cn.sh
+    #新建一个名为 V2RAY 的链
     iptables -t nat -N V2RAY
-    iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
+    #内部流量不转发给V2RAY直通
     iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
     iptables -t nat -A V2RAY -d 10.0.0.0/8 -j RETURN
     iptables -t nat -A V2RAY -d 127.0.0.0/8 -j RETURN
@@ -1068,9 +1100,15 @@ if [ $? -ne 0 ]; then
     iptables -t nat -A V2RAY -d 192.168.0.0/16 -j RETURN
     iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
     iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
-
+    #直连中国的IP
+    iptables -t nat -A V2RAY -m set --match-set china dst -j RETURN
+    # 直连 SO_MARK为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面的 255)，此规则目的是避免代理本机(网关)流量出现回环问题
+    iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
+    # 其余流量转发到 12345 端口（即 V2Ray）
     iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
+    # 对局域网其他设备进行透明代理
     iptables -t nat -A PREROUTING -p tcp -j V2RAY
+    # 对本机进行透明代理
     iptables -t nat -A OUTPUT -p tcp -j V2RAY
 
     iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
@@ -1114,6 +1152,10 @@ iptables -nL --line-number
 iptables -nL INPUT --line-number
 #Delete rule
 iptables -D INPUT 2
+
+iptables -t nat -nL V2RAY
+iptables -t nat -nL V2RAY --line-number
+iptables -t nat -D V2RAY 11
 ```
 
 iptables相关的指令为设置路由器透明代理，这个路由器下的所有终端就可以直接实现代理了，包括在命令行下。参考：
