@@ -1046,7 +1046,7 @@ nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
 #iptables
 /jffs/scripts/router-iptables.sh
 
-#check v2ray every 15 minute
+#check v2ray every 2 minute
 cru a check-v2ray "*/2 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
 ```
 
@@ -1057,7 +1057,7 @@ nano /jffs/scripts/router-iptables.sh
 
 iptables -nL INPUT|grep 1080 > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    echo "iptables was existing, starting..."
+    echo "iptables wasn't existing, starting:     $(date)"
     iptables -t nat -N V2RAY
     iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
     iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
@@ -1121,7 +1121,27 @@ iptables相关的指令为设置路由器透明代理，这个路由器下的所
 - https://guide.v2fly.org/app/transparent_proxy.html
 - https://yuanmomo.net/2019/11/03/router-v2ray-transparent-proxy/
 
-相关配置文件参考：[v2ray_router.zip](/files/Shadowsocks-V2ray安装与使用/v2ray_router.zip)
+相关配置文件参考：[jffs.zip](/files/Shadowsocks-V2ray安装与使用/jffs.zip)
+
+
+原版固件开机自启动：
+
+https://www.pianshen.com/article/4824845820/
+
+需要在以下2个目录中设置
+1. /opt/etc/init.d/S50servicesstart
+2. /opt/lib/ipkg/info/servicesstart.control
+
+
+/opt/etc/init.d/S50servicesstart
+```
+#内容就是上面的servicesstart中的内容
+```
+
+/opt/lib/ipkg/info/servicesstart.control
+```
+Enabled: yes
+```
 
 ## VPN
 
