@@ -1060,6 +1060,7 @@ cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
 - https://www.cnblogs.com/cash/p/13280800.html
 - https://gist.github.com/justinemter/5dcbb595b53e5671601bce9f8c096403
 - https://www.ichenfu.com/2020/01/07/block-ips-outside-china-with-iptables-and-ipset/
+- http://blog.pzxbc.com/2019/01/06/home-router-auto-proxy/
 
 nano /jffs/scripts/ipset-cn.sh
 
@@ -1108,8 +1109,10 @@ if [ $? -ne 0 ]; then
     iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
     # 对局域网其他设备进行透明代理
     iptables -t nat -A PREROUTING -p tcp -j V2RAY
+    #iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp --dport 1:1024 -j V2RAY
     # 对本机进行透明代理
     iptables -t nat -A OUTPUT -p tcp -j V2RAY
+    #iptables -t nat -A OUTPUT -p tcp --dport 1:1024 -j V2RAY
 
     iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
     iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
