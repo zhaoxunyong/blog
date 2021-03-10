@@ -1043,11 +1043,15 @@ mkdir /var/log/v2ray/
 sleep 10
 nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
 
-#iptables, async load
-/jffs/scripts/router-iptables.sh &
-
-#dnspod
+#ddns
 /jffs/scripts/ddns-start
+
+#iptables
+/jffs/scripts/ipset-cn.sh
+/jffs/scripts/router-iptables.sh
+
+#check dnspod on 00:00 of every day
+cru a ddns-start "0 0 * * * /jffs/scripts/ddns-start > /dev/null"
 
 #check v2ray every 5 minute
 cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
@@ -1294,7 +1298,7 @@ arDdnsCheck() {
 
 ###################################################
 # 检查更新域名
-
+echo "Checking dnspod for router.gcalls.cn:     $(date)" >> /var/log/v2ray/v2ray-status.log
 arDdnsCheck "gcalls.cn" "router"
 
 if [ $? -eq 0 ]; then
