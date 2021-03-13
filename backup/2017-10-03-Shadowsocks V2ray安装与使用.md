@@ -1187,12 +1187,16 @@ https://www.pianshen.com/article/4824845820/
 /opt/etc/init.d/S50servicesstart
 ```
 #内容就是上面的servicesstart中的内容
-chmod a+rx /opt/etc/init.d/S50servicesstart
 ```
 
 /opt/lib/ipkg/info/servicesstart.control
 ```
 Enabled: yes
+```
+
+```
+chmod a+rx /opt/etc/init.d/S50servicesstart
+chmod a+rx /opt/lib/ipkg/info/servicesstart.control
 ```
 
 ## VPN
