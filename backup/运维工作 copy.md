@@ -8,100 +8,6 @@ admin@zerofinance.com
 Xtyw3013*
 192.168.95.233  端口：22   用户名：root  密码：wlt.local
 
-未来工作：
-运维脚本升级python？
-web化运维工具研究
-skywalking推广
-SSO集群部署
-国内系统的OSS存储：建议换成阿里云NAS
-国内阿里云外网vpn拨号后不能访问
-员工管理系统改为集群
-外网供应商服务如何隔离
-jumpserver资产
-生产环境jenkins机器的权限：运维才能访问
-视频会议文件永久存储
-制度重新审视
-落实硬盘销毁的过程
-清理数据的证明
-迁移jumpserver
-整体迁移vpn到自建具体的时间
-root密码修改
-NC外网访问的问题
-禁止下载超大文件
-香港AD服务器的管理员回收
-梳理现网与其他环境的限制
-服务调用的token校验
-日志异常收集规范
-审核平台改为事务性队列
-香港所有账户密码的整理
-所有系统的数据库能jenkins mysql还原香港数据
-第3方安全测试：只做简单的，明年6月再考虑，类似于漏洞盒子那样的
-中安License时付款时，需要与袁总确认
-www.aeasycredit.com（阿里云DigiCert 免费版 SSL，完全满足要求，但需每年申请一次，2021-10-24 到期）
-
-今年学习计划：
-1. 领域驱动设计
-2. 微服务设计模式
-3. Kubernetes
-4. spring alibaba cloud
-5. spring cloud kubernetes
-6. istio
-7. serverless
-8. hadoop flink spark hive
-9. kylin(已完成)
-10.Disruptor Netty
--------------------------------------------------
-
-https://9.16.250.30/com/installClient.html#auto-common
---------------------------------
-2019/12/2:
-Kevin:
-上线无问题
-沟通与学习能力加强
-沟通态度需要改进
-2020年:
-k8s/python
-
-学习能力强，做事踏实
-重要问题考虑不全，思维不够全
-
-
-Jerry:
-注重细节
-对事不对人
-包容心
-
-James:
-考虑事件比较细
-学习比较快
-拖延
-做事比较急，性格暴躁
-学习比较被动
-做事有头没尾
-
-
-----------------------------------------------
-
-
-改善地方：
-目前各个系统是在虚拟机上安装的docker，资源得不到利用
-运维脚本升级python？
-web化运维工具研究
-将所有机器去掉虚拟机并docker化(除报表windows系统外)
-推进k8s, 使服务器资源最优化
-所有业务系统有主备
-skywalking推广
-
-升级docker为1.17版本（香港现金货还没有升级）
-sso香港国内各部署一台
-备份外网vpn方案
-权限系统共同：数据权限
-阿里云vpn专线
-SSO集群部署
-通过jenkins自动推送gitlab中的脚本到服务端
-（不允许直接修改服务器上的脚本） --- 对现在有的脚本有较大的影响，暂停此工作
-zerofinance.cn的域名ssl，银联
-
 今年学习计划：
 1. 领域驱动设计
 2. 微服务设计模式
@@ -115,45 +21,52 @@ zerofinance.cn的域名ssl，银联
 -------------------------------------------------
 
 
-James:
-如何监控并杜绝类似的问题发生：点检表
+培训计划：
+VSCode开发
+k8s与java：http://blog.gcalls.cn/blog/2020/12/Kubernetes-Development-Environment.html
+Kylin
+serverless
+eclipse与vscode插件开发
 
-未来工作：
-南山办公室以新的vpn方案实施:深圳idc搬回后，将idc防火墙搬回后放到南山办公室
-国内阿里云外网vpn拨号后不能访问
-员工管理系统改为集群
-阿里云云企业网费用，打通所有阿里云内部网络
-阿里云VPN网关
-外网供应商服务如何隔离
-南山办公室所有的监控：包括系统/网络/访问外网等
-kingsoft备份
-jumpserver资产
-生产环境jenkins机器的权限：运维才能访问
-视频会议文件永久存储
-南山电话ok的邮件
-南山如何培训？（集团的培训）
-数据库底层编码需改
-过多的报警 --- jerry，mysql 备份空间
-日常点检的邮件改为每天早上6点
-日常点检的邮件一定要重视，有问题第一时间解决，并加入邮件的提醒
-空间的报警
+运维相关培训:
+mysql基础培训
+docker基础培训
+hadoop培训
 
-mount目录异常的报警
-cron本身的监控
-制定制度，只要是动生产服务器，检查所有相关的配置是否正常
+Kubernetes 容器服务的落地与实践
+Kubernetes 和istio 技术讲解和实践
+Linux shell脚本编写和实践
+Linux 系统常用知识讲解和实践
 
-百度人脸设备生产环境迁移方案：5.1后再定如何 --- kevin
-5.18号后清理测试环境 --- jerry
-人行报送系统的备份 --- jerry(5.20)
-Host2Host迁移 --- jerry
+linux入门基础     
+电脑硬件及软件基础常识
 
-国内系统异地灾备: 6/30完成
-制度9/30审批通过
-存储空间整理
-报表数据库备份，并加入邮件提醒
-jenkins mysql还原香港数据
+VSCode开发
+k8s与java
+serverless
+eclipse与vscode插件开发
 
+D:\MyScript.txt:
+connect 218.17.1.146
+y
+dave.zhao
+Zero5563*!Lz
 
-测试的生产数据保留一段时间后再删除（何雨）
-react 的hooks技术，在16版本后推出的，已经完全替代了class的写法，并且抽象性更好
+For Current User:
+"C:\Program Files (x86)\Cisco\Cisco AnyConnect Secure Mobility Client\vpncli.exe" -s < D:\Developer\Proxy\MyScript.txt
+"C:\Program Files (x86)\Cisco\Cisco AnyConnect Secure Mobility Client\vpncli.exe" disconnect
 
+reg import D:\Developer\Proxy\EnableProxy.reg
+reg import D:\Developer\Proxy\DisableProxy.reg
+
+#https://devopscube.com/setup-and-configure-proxy-server/
+curl -x http://192.168.80.201:3128 ipinfo.io
+curl ipinfo.io
+sudo yum -y install squid
+sudo systemctl start squid
+sudo systemctl enable squid
+#/etc/squid/squid.conf
+/usr/sbin/squid -f /etc/squid/squid.conf
+sudo systemctl restart squid
+
+ssh -q -N -f -D 0.0.0.0:8899 dave@172.26.163.70
