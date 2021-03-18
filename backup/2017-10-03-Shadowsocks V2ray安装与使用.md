@@ -1170,6 +1170,23 @@ iptables相关的指令为设置路由器透明代理，这个路由器下的所
 - https://guide.v2fly.org/app/transparent_proxy.html
 - https://yuanmomo.net/2019/11/03/router-v2ray-transparent-proxy/
 
+也可以弄一台同一网段的Linux(Ubuntu20)系统配置为透明上网网关，原理同路由器一样。客户端将网关IP改为这台Linux的IP即可。参考：[https://tstrs.me/1488.html](https://tstrs.me/1488.html)
+
+开机自启：
+```
+nano /etc/rc.local
+chmod +x /etc/rc.local
+
+#内容如下：
+#!/bin/bash
+
+nohup /works/app/v2ray/v2ray --config /works/app/v2ray/config.json &
+/works/app/v2ray/ipset-cn.sh
+/works/app/v2ray/router-iptables.sh
+
+exit 0
+```
+
 相关配置文件参考：[jffs.zip](/files/Shadowsocks-V2ray安装与使用/jffs.zip)
 
 
