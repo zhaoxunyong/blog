@@ -41,11 +41,6 @@ Linux 系统常用知识讲解和实践
 linux入门基础     
 电脑硬件及软件基础常识
 
-VSCode开发
-k8s与java
-serverless
-eclipse与vscode插件开发
-
 D:\MyScript.txt:
 connect 218.17.1.146
 y
