@@ -1,23 +1,39 @@
-netsh interface portproxy add v4tov4 listenaddress=192.168.95.211 listenport=80 connectaddress=9.16.15.201 connectport=80
+学习计划：
+serverless/istio
+rocketmq/seata
+hadoop/flink/spark/hive
+GraphQL
+DDD
+React(icejs/antd)
 
-netsh interface portproxy show v4tov4
+Kubernetes---ok
+spring cloud kubernetes---ok
+spring alibaba cloud---xxx
+kylin---ok
 
-netsh interface portproxy delete v4tov4 listenaddress=192.168.95.211 listenport=80
+书籍学习：
+支付平台架构
+精通以太坊
+超大系统分布式流量解决方案
+云原生应用管理
+istio服务网格技术解析与实践
+领域驱动设计
+微服务设计模式
 
-admin@zerofinance.com
-Xtyw3013*
-192.168.95.233  端口：22   用户名：root  密码：wlt.local
+其他学习：
+已经购买的一些学习视频（极客）
+微信公众号学习：
+Java架构师之路
+架构师之路
+高可用架构
+Java后端技术
+程序员DD
+阿里技术
+云时代架构
+51CTO技术栈
+淘系技术
+大数据云技术
 
-今年学习计划：
-1. 领域驱动设计
-2. 微服务设计模式
-3. Kubernetes
-4. spring alibaba cloud
-5. spring cloud kubernetes
-6. istio
-7. serverless
-8. hadoop flink spark hive
-9. kylin
 -------------------------------------------------
 
 
@@ -45,7 +61,7 @@ D:\MyScript.txt:
 connect 218.17.1.146
 y
 dave.zhao
-Zero5563*!Lz
+xxx
 
 For Current User:
 "C:\Program Files (x86)\Cisco\Cisco AnyConnect Secure Mobility Client\vpncli.exe" -s < D:\Developer\Proxy\MyScript.txt
@@ -65,3 +81,11 @@ sudo systemctl enable squid
 sudo systemctl restart squid
 
 ssh -q -N -f -D 0.0.0.0:8899 dave@172.26.163.70
+
+netsh interface portproxy add v4tov4 listenaddress=192.168.95.211 listenport=80 connectaddress=9.16.15.201 connectport=80
+
+netsh interface portproxy show v4tov4
+
+netsh interface portproxy delete v4tov4 listenaddress=192.168.95.211 listenport=80
+
+
