@@ -1093,7 +1093,7 @@ nano /jffs/scripts/router-iptables.sh
 iptables -nL INPUT|grep 1080 > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "iptables wasn't existing, starting:     $(date)"
-    /jffs/scripts/ipset-cn.sh
+    #/jffs/scripts/ipset-cn.sh
     #新建一个名为 V2RAY 的链
     iptables -t nat -N V2RAY
     #内部流量不转发给V2RAY直通
