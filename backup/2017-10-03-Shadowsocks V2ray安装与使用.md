@@ -1090,7 +1090,8 @@ nano /jffs/scripts/router-iptables.sh
 ```
 #!/bin/sh
 
-iptables -nL INPUT|grep 1080 > /dev/null 2>&1
+#iptables -nL INPUT|grep 1080 > /dev/null 2>&1
+iptables -t nat -nL V2RAY > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "iptables wasn't existing, starting:     $(date)"
     #/jffs/scripts/ipset-cn.sh
@@ -1106,17 +1107,19 @@ if [ $? -ne 0 ]; then
     iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
     iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
     #直连中国的IP
-    iptables -t nat -A V2RAY -m set --match-set china dst -j RETURN
+    #iptables -t nat -A V2RAY -m set --match-set china dst -j RETURN
     # 直连 SO_MARK为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面的 255)，此规则目的是避免代理本机(网关)流量出现回环问题
     iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
     # 其余流量转发到 12345 端口（即 V2Ray）
     iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
     # 对局域网其他设备进行透明代理
-    iptables -t nat -A PREROUTING -p tcp -j V2RAY
+    #iptables -t nat -A PREROUTING -p tcp -j V2RAY
     #iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp --dport 1:1024 -j V2RAY
+    iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp -j V2RAY
     # 对本机进行透明代理
-    iptables -t nat -A OUTPUT -p tcp -j V2RAY
+    #iptables -t nat -A OUTPUT -p tcp -j V2RAY
     #iptables -t nat -A OUTPUT -p tcp --dport 1:1024 -j V2RAY
+    iptables -t nat -A OUTPUT -s 192.168.0.0/16 -p tcp -j V2RAY
 
     iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
     iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
