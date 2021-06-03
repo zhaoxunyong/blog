@@ -629,7 +629,8 @@ ssh admin@192.168.3.1
 cd /jffs
 mkdir v2ray
 cd v2ray/
-wget https://github.com/v2ray/v2ray-core/releases/download/v4.22.1/v2ray-linux-arm.zip
+#wget https://github.com/v2ray/v2ray-core/releases/download/v4.22.1/v2ray-linux-arm.zip
+wget https://github.com/v2ray/v2ray-core/releases/download/v4.20.0/v2ray-linux-arm.zip
 unzip v2ray-linux-arm.zip
 rm v2ray_armv7 v2ray_armv6 v2ctl_armv7
 chmod +x v2ray v2ctl
