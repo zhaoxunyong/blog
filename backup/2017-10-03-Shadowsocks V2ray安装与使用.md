@@ -1117,7 +1117,7 @@ if [ $? -ne 0 ]; then
     #iptables -t nat -A PREROUTING -p tcp -j V2RAY
     #iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp --dport 1:1024 -j V2RAY
     iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp -j V2RAY
-    # 对本机进行透明代理
+    # 对本机进行透明代理(不开启不影响路由器其他设备访问)
     #iptables -t nat -A OUTPUT -p tcp -j V2RAY
     ##iptables -t nat -A OUTPUT -p tcp --dport 1:1024 -j V2RAY
     ##iptables -t nat -A OUTPUT -s 192.168.0.0/16 -p tcp -j V2RAY
