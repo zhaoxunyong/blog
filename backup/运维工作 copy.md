@@ -5,6 +5,8 @@ hadoop/flink/spark/hive
 GraphQL
 DDD
 React(icejs/antd)
+MyBatis-Plus(dynamic-datasource)
+minio/seaweedfs
 
 Kubernetes---ok
 spring cloud kubernetes---ok
@@ -12,7 +14,7 @@ spring alibaba cloud---xxx
 kylin---ok
 
 书籍学习：
-支付平台架构
+支付平台架构: 学习中
 精通以太坊
 超大系统分布式流量解决方案
 云原生应用管理
