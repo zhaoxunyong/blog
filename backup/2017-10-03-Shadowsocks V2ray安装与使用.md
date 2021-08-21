@@ -1167,6 +1167,19 @@ iptables -D INPUT 2
 iptables -t nat -nL V2RAY
 iptables -t nat -nL V2RAY --line-number
 iptables -t nat -D V2RAY 11
+
+#插入到INPUT链中的第7行位置
+iptables -I INPUT 7 -i ens192 -p tcp -m tcp --dport 11111 -j ACCEPT 
+#最前
+iptables -I
+#最后
+iptables -A
+
+#Delete
+iptables -D INPUT -i ens192 -p udp -m udp --dport 11111 -j ACCEPT 
+iptables -nL INPUT --line-number
+iptables -D INPUT 7
+
 ```
 
 iptables相关的指令为设置路由器透明代理，这个路由器下的所有终端就可以直接实现代理了，包括在命令行下。参考：
