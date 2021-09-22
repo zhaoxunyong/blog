@@ -897,9 +897,14 @@ k get pod --show-labels
 k label pod xxx app=foo --overwrite
 
 #Creating by commands
-#kubectl run nginx --image=nginx --port=3000 --targetPort=80 --expose
+#http://kubernetes.kansea.com/docs/user-guide/kubectl/kubectl_run/
+#Not recommend and cannot set the port of NodePort
+#kubectl run nginx --image=nginx --port=80 --expose
+#Recommend
 kubectl create deployment nginx --image=nginx
-#kubectl create service nodeport nginx --tcp=81:80 --node-port=30000
+#One way and can set the port of NodePort
+kubectl create service nodeport nginx --tcp=81:80 --node-port=30000
+#The other way, but cannot set the port of NodePort
 kubectl expose deployment nginx --type=NodePort --name nginx --port=80 --target-port=80
 
 kubectl create deployment kubia --image=luksa/kubia

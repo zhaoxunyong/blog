@@ -196,7 +196,7 @@ sudo ln -s /var/lib/snapd/snap /snap
 sudo snap install microk8s --classic
 #Notice: microk8s is using containerd, not docker any more.
 #Either log out and back in again or restart your system to ensure 
-#sudo vim /var/snap/microk8s/current/args/containerd-env
+sudo vim /var/snap/microk8s/current/args/containerd-env
 HTTP_PROXY="http://192.168.101.175:1082"
 HTTPS_PROXY="http://192.168.101.175:1082"
 NO_PROXY="127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net,*.aliyun.com,*.163.com,*.docker-cn.com,registry.gcalls.cn"
@@ -207,8 +207,20 @@ microk8s.start
 #microk8s.enable dashboard dns ingress istio registry storage rbac
 microk8s.enable dashboard dns ingress storage
 microk8s status --wait-ready
+#list all of enabled addons
+microk8s status
 microk8s.kubectl describe pods -A
 microk8s.inspect
+
+kubectl cluster-info
+Kubernetes master is running at https://192.168.95.234:16443
+Metrics-server is running at https://192.168.95.234:16443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+CoreDNS is running at https://192.168.95.234:16443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+
 
 #bashboard:
 #https://medium.com/@junya.kaneko/quick-way-of-using-kubernetes-dashboard-on-microk8s-9c7b0e26be02
