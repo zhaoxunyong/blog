@@ -1352,5 +1352,92 @@ else
 fi
 ```
 
+## OpenWRT_Koolshare
+
+通过Windows下的Hyper-V进行配置。
+
+参考：
+
+- https://blog.skk.moe/post/hyper-v-win10-lede/
+- https://blog.yoitsu.moe/tech_misc/hyper_v_with_openwrt.html
+- https://docs.microsoft.com/zh-cn/windows-server/storage/disk-management/manage-virtual-hard-disks
+- https://fw.koolcenter.com/LEDE_X64_fw867/
+- https://github.com/acgpiano/koolshare-v2ray-x64
+- https://downloads.openwrt.org/releases/21.02.0/targets/x86/64/
+
+### 软路由
+
+直接在“管理->磁盘管理”中创建VHD磁盘，注意选择vhdx，容量10G左右、动态扩容磁盘，启动格式为GPT。下载[rufus](https://rufus.ie)与[openwrt-koolshare-router](https://fw.koolcenter.com/LEDE_X64_fw867/openwrt-koolshare-router-v2.37-r17471-8ed31dafdf-x86-64-generic-squashfs-combined-efi.img.gz)并将openWRT img文件刷到VHD磁盘中。
+
+在Hyper的网络设置中创建一下网络：
+
+- 内部网络，命名: Internal(openwrt中设置桥接模式)，用于与宿主机通信
+- 外部网络，命名: LAN(openwrt中设置桥接模式，不要勾选“允许管理操作系统共享此网络适配器”)，用于连接AP设备
+- 外部网络，命名: WAN(openwrt中用于拨号，不要勾选“允许管理操作系统共享此网络适配器”)，用于连接光猫拨号
+
+虚拟机中设置：
+
+```bash
+安全：取消启动安全启动
+添加硬件：Internal、LAN、WLAN
+网络适配器：高级功能中勾选“启动MAC地址欺骗”
+自动启动操作：始终自动启动此虚拟机
+```
+
+具体安装参考：https://blog.skk.moe/post/hyper-v-win10-lede/
+
+安装完成后，修改windows宿主机中的vEthernet (Internal)的ip为:
+
+```bash
+192.168.1.10
+255.255.255.0
+192.168.1.1
+```
+
+默认login地址为：http://192.168.1.1，密码为：koolshare
+
+### 网关透明代理
+
+在Hyper的网络设置中创建一下网络：
+
+- 外部网络，命名: LAN(openwrt中设置桥接模式，勾选“允许管理操作系统共享此网络适配器”)
+
+虚拟机中设置：
+
+```bash
+安全：取消启动安全启动
+添加硬件：LAN
+网络适配器：高级功能中勾选“启动MAC地址欺骗”
+自动启动操作：始终自动启动此虚拟机
+```
+
+登录后将192.168.1.1 IP 修改为：192.168.3.10
+
+```bash
+vim /etc/config/network
+
+...
+        option type 'bridge'
+        option ifname 'eth0'
+        option proto 'static'
+        option ipaddr '192.168.3.10'
+        option netmask '255.255.255.0'
+        option gateway '192.168.3.1'
+
+reboot
+```
+
+login地址为：http://192.168.3.10，密码为：koolshare
+
+在酷软中安装v2ray插件：
+
+```bash
+wget https://github.com/acgpiano/koolshare-v2ray-x64/releases/download/v4.35.1/v2ray_4.35.1.tar.gz
+#ssh 或者网页打开终端运行（必要，解除系统安装限制）
+sed -i 's/\tdetect_package/\t# detect_package/g' /koolshare/scripts/ks_tar_install.sh
+#操作很简单，不再说明
+```
+
+其他设备采用192.168.3.10作为网关即可实现透明代理。
 
 
