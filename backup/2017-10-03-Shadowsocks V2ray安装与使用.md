@@ -120,6 +120,22 @@ ss-local 4405 root    6u  IPv4  37703      0t0  TCP *:socks (LISTEN)
 如果是firefox，如下配置proxy：127.0.0.1:8899  类型选择sock5，并且勾选remote dns。
 如果不勾，照样无法使用ss翻墙。
 
+推荐大陆白名单模式:
+
+https://www.vos.cn/other/440.html
+
+在SwitchOmega中的PAC设置：
+
+```bash
+#推荐
+https://raw.githubusercontent.com/pexcn/daily/gh-pages/pac/whitelist.pac
+#或者
+https://git.io/chinaip
+
+#将内容修改为：
+const proxy = "PROXY x.x.x.x:1082;";
+```
+
 ### ssh client
 
 可以找一台国外或者香港的服务器作为代理，然后在国内的服务器上，执行以下命令：
