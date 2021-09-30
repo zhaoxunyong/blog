@@ -1396,6 +1396,10 @@ fi
 
 默认login地址为：[http://192.168.1.1](http://192.168.1.1)，密码为：koolshare
 
+登录后设置：
+
+网路->DHCP/DNS：不要勾选：“重绑定保护”，不然ping不同公司内部的某些域名。
+
 ### 网关透明代理
 
 在Hyper的网络设置中创建一下网络：
@@ -1439,5 +1443,105 @@ sed -i 's/\tdetect_package/\t# detect_package/g' /koolshare/scripts/ks_tar_insta
 ```
 
 其他设备采用192.168.3.10作为网关即可实现透明代理。
+
+### Openconnect Client
+
+推荐：https://www.jianshu.com/p/1cb8c31319e8
+
+```bash
+opkg update
+opkg install luci-proto-openconnect openconnect
+#reboot
+```
+
+在interface中建立一个新接口，根据官方说明，最好命名为ocvpn，协议选择OpenConnect(CISCO AnyConnect):
+
+```bash
+#需要设置
+IP
+端口
+VPN 服务器证书的 SHA1 哈希值
+用户名
+密码
+```
+
+VPN 服务器证书的 SHA1 哈希值，通过一些命令获取：
+
+```bash
+openssl s_client -connect vpn.example.com:443 -showcerts 2>/dev/null </dev/null \
+| awk '/-----BEGIN/,/-----END/ { print $0 }' \
+| openssl x509 -noout -fingerprint -sha1 \
+| sed 's/Fingerprint=//' | sed 's/://g'
+```
+
+SHA1: 471FB1B45700272166B1E2DD798AC14E0E19B6E0
+
+将以上内容输入到VPN 服务器证书的 SHA1 哈希值中
+
+如果vpn后主机访问不了，可以在开机启动中加入以下路由，参考：
+
+- https://sparkydogx.github.io/2019/01/09/openwrt-service-startup/
+- https://whycan.com/t_7014.html
+
+vim /etc/init.d/openconnect
+
+```bash
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2011 OpenWrt.org
+
+START=99
+STOP=10
+
+boot() {
+    sleep 10
+    route add -net 192.168.101.0/24 dev br-lan
+}
+```
+
+在 /etc/rc.d/ 加一个 Sxx 开头的软链接才行:
+
+```bash
+chmod +x /etc/init.d/openconnect
+ln -s /etc/init.d/openconnect /etc/rc.d/S99openconnect
+/etc/init.d/openconnect enable
+/etc/init.d/openconnect boot
+```
+
+或者：
+
+```bash
+chmod +x /etc/rc.local
+vim /etc/rc.local
+
+#不sleep的话可能vpn还没有拨上
+sleep 15
+route add -net 192.168.101.0/24 dev br-lan
+exit 0
+```
+
+查看openconnect完整命令:
+
+```bash
+cat /proc/`ps |grep openconnect|grep vpnc|awk '{print $1}'`/cmdline
+```
+
+也可以通过脚本手动启动，不建议：
+
+```
+mkdir -p /etc/vpn
+cd /etc/vpn
+wget http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script
+chmod +x /etc/vpn/vpnc-script 
+
+openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443
+# 自动登录, 将密码写入MyScript.txt文件中即可
+openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
+--servercert pin-sha256:+PLuNZB2mIJy8y/Hx3Qwc3QmMhZfulMTOy1S5OakhdY= \
+--passwd-on-stdin < /etc/vpn/MyScript.txt
+```
+
+
+
+
 
 
