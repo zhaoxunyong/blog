@@ -1394,7 +1394,7 @@ fi
 192.168.1.1
 ```
 
-默认login地址为：http://192.168.1.1，密码为：koolshare
+默认login地址为：[http://192.168.1.1](http://192.168.1.1)，密码为：koolshare
 
 ### 网关透明代理
 
@@ -1427,7 +1427,7 @@ vim /etc/config/network
 reboot
 ```
 
-login地址为：http://192.168.3.10，密码为：koolshare
+login地址为：[http://192.168.3.10](http://192.168.3.10)，密码为：koolshare
 
 在酷软中安装v2ray插件：
 
