@@ -355,6 +355,9 @@ sudo wget http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:
 sudo chmod +x /etc/vpn/vpnc-script 
 # execute
 sudo openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x
+# 自动登录, 将密码写入MyScript.txt文件中即可
+openconnect -u aaa --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x --servercert pin-sha256:+PLuNZB2mIJy8y/Hx3Qwc3QmMh
+ZfulMTOy1S5OakhdY= --passwd-on-stdin < MyScript.txt
 ```
 
 也可以通过自动输入密码：
