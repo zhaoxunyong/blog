@@ -1600,6 +1600,7 @@ openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
 
 参考：
 
+- https://www.ioiox.com/archives/89.html
 - https://blog.vay1314.top/archives/194.html
 - https://gao4.top/293.html
 - https://cndaqiang.github.io/2017/09/27/openwrt-ocserv/
@@ -1619,17 +1620,17 @@ Enable Server: 打钩表示启动服务
 User Authentication: plain
 端口：7443
 AnyConnect client compatibility：打勾表示允许Cisco的AnyConnect client作为VPN客户端软件连接。
-VPN IPv4-Network-Address：192.168.100.0
-VPN-IPv4-Netmask：255.255.255.0
+VPN IPv4-Network-Address：192.168.0.80
+VPN-IPv4-Netmask：255.255.255.192
 ```
 
 Routing table:
 
+采取全局代理，不要添加任何路由信息。
+
 ```
 全局代理 - 当客户端连接 VPN 后,客户端所有内外网访问都将通过 VPN 所在的局域网代理.删除所有Routing table即可.
 内网代理 - 当客户端连接 VPN 后,客户端所有内网访问通过 VPN 所在的局域网代理,而外网访问则保持使用客户端当前网络.添加内网和VPN两个网段即可.
-
-添加：192.168.100.0  255.255.255.0，这样即可以正常网络走本机，又可以透明上网。
 ```
 
 在“User Settings”中配置登录用户名与密码。
