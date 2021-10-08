@@ -1402,25 +1402,45 @@ fi
 
 具体安装参考：https://blog.skk.moe/post/hyper-v-win10-lede/
 
-安装完成后，修改windows宿主机中的vEthernet (Internal)的ip为:
+安装完成后，登录后将192.168.1.1 IP 修改为：192.168.2.1（为了不与光猫网段重复）
 
 ```bash
-192.168.1.10
-255.255.255.0
-192.168.1.1
+vim /etc/config/network
+
+...
+        option type 'bridge'
+        option ifname 'eth0'
+        option proto 'static'
+        option ipaddr '192.168.2.1'
+        option netmask '255.255.255.0'
+        option gateway '192.168.2.1'
+
+reboot
 ```
 
-默认login地址为：[http://192.168.1.1](http://192.168.1.1)，密码为：koolshare
+修改windows宿主机中的vEthernet (Internal)的ip为:
+
+```bash
+192.168.2.38
+255.255.255.0
+192.168.2.1
+```
+
+默认login地址为：[http://192.168.2.1](http://192.168.2.1)，密码为：koolshare
 
 登录后设置：
 
 网路->DHCP/DNS：不要勾选：“重绑定保护”，不然ping不同公司内部的某些域名。
 
-LAN的IP设置为192.168.3.10，使用AP设备接到LAN端口即可。注意AP设备的ip也必须为192.168.3.x，否则不能上网。
+LAN的IP设置为192.168.0.1，使用AP设备接到LAN端口即可。注意AP设备的ip也必须为192.168.0.x，否则不能上网：
+
+AP路由器设备的IP设置为192.168.0.2，上网方式设置为AP模式。
 
 WLAN用于PPPoE拨号。
 
 ### 网关透明代理
+
+推荐使用，与现有的路由器一起工作，还可以使用这台安装的windows系统。
 
 在Hyper的网络设置中创建一下网络：
 
@@ -1435,7 +1455,7 @@ WLAN用于PPPoE拨号。
 自动启动操作：始终自动启动此虚拟机
 ```
 
-登录后将192.168.1.1 IP 修改为：192.168.3.10
+登录后将192.168.1.1 IP 修改为：192.168.0.10（必须与路由器相同网段）
 
 ```bash
 vim /etc/config/network
@@ -1444,14 +1464,14 @@ vim /etc/config/network
         option type 'bridge'
         option ifname 'eth0'
         option proto 'static'
-        option ipaddr '192.168.3.10'
+        option ipaddr '192.168.0.10'
         option netmask '255.255.255.0'
-        option gateway '192.168.3.1'
+        option gateway '192.168.0.1'
 
 reboot
 ```
 
-login地址为：[http://192.168.3.10](http://192.168.3.10)，密码为：koolshare
+login地址为：[http://192.168.0.10](http://192.168.0.10)，密码为：koolshare
 
 在酷软中安装v2ray插件：
 
@@ -1462,7 +1482,7 @@ sed -i 's/\tdetect_package/\t# detect_package/g' /koolshare/scripts/ks_tar_insta
 #操作很简单，不再说明
 ```
 
-其他设备采用192.168.3.10作为网关即可实现透明代理。
+其他设备采用192.168.0.10作为网关即可实现透明代理。
 
 ### Openconnect Client
 
@@ -1564,17 +1584,81 @@ openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
 
 ### 爱快
 
-直接使用rufus写到U盘，然后从U盘启动安装即可。注意：如果是安装的硬盘的话，会清空硬盘所以数据，一定要做好数据备份。
+推荐使用，不过就只能当做路由器了。直接使用rufus写到U盘，然后从U盘启动安装即可。注意：如果是安装的硬盘的话，会清空硬盘所以数据，一定要做好数据备份。
 
-设置好web访问地址为：http://192.68.0.1后，使用另外一台电脑访问即可。爱快没有图形界面。
+设置好web访问地址为：[http://192.68.0.1](http://192.68.0.1)后，使用另外一台电脑访问即可。爱快没有图形界面。
 
-最少需要两个网口。一个用于PPPoE拨号，一个用于LAN连接AP，LAN的IP设置为192.168.0.1(也就是在爱快中设置的web访问地址)，AP设备连接到LAN接口，IP设置为192.168.0.2，上网方式设置为AP模式。
+最少需要两个网口。一个WLAN用于PPPoE拨号，一个LAN用于连接AP，LAN的IP设置为192.168.0.1(也就是在爱快中设置的web访问地址)，AP设备连接到LAN接口，AP路由器设备的IP设置为192.168.0.2，上网方式设置为AP模式。
 
-使用虚拟机安装openwrt：
+#### 使用虚拟机安装openwrt
 
-使用StarWind V2V Converter将img文件转为vmdk，然后在虚拟机设置中添加“新建设备”->“磁盘”->“引用磁盘”->“开启半虚拟化模式”->“磁盘路径”。不能直接使用img，否则openwrt重启后数据会丢失。
+使用StarWind V2V Converter将img文件转为vmdk，并上传到爱快的文件管理中，然后在虚拟机设置中添加“新建设备”->“磁盘”->“引用磁盘”->“开启半虚拟化模式”->“磁盘路径(爱快的文件管理中vmdk文件路径)”。不能直接使用img，否则openwrt重启后数据会丢失。
 
-设置ip为192.168.0.3，然后将爱快的DHCP的网关修改为192.168.0.3就可以实现透明上网了。
+设置ip为192.168.0.3，在酷软中安装v2ray并配置相关信息，然后将爱快的DHCP的网关修改为192.168.0.3就可以实现透明上网了。
+
+#### openconnect server
+
+参考：
+
+- https://www.ioiox.com/archives/89.html
+- https://blog.vay1314.top/archives/194.html
+- https://gao4.top/293.html
+
+安装后设备使用vpn拨号也能实现透明上网。
+
+```bash
+opkg update
+opkg install ocserv luci-app-ocserv
+reboot
+```
+
+通过“服务”–“OpenConnect VPN”，进到“服务器设置”的“常规设置”，相关参数如下：
+
+```
+Enable Server: 打钩表示启动服务
+User Authentication: plain
+端口：7443
+AnyConnect client compatibility：打勾表示允许Cisco的AnyConnect client作为VPN客户端软件连接。
+VPN IPv4-Network-Address：192.168.0.80
+VPN-IPv4-Netmask：255.255.255.192
+```
+
+Routing table:
+
+```
+全局代理 - 当客户端连接 VPN 后,客户端所有内外网访问都将通过 VPN 所在的局域网代理.删除所有Routing table即可.
+内网代理 - 当客户端连接 VPN 后,客户端所有内网访问通过 VPN 所在的局域网代理,而外网访问则保持使用客户端当前网络.添加内网和VPN两个网段即可.
+```
+
+在“User Settings”中配置登录用户名与密码。
+
+添加iptables:
+
+网络->防火墙->自定义规则：
+
+```
+iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+```
+
+保持后生效。
+
+爱快添加7443端口映射：
+
+网络设置->端口映射：
+
+```
+内网地址：192.168.0.3
+内网端口：7443
+协议：tcp
+映射类型：外网接口
+外网地址：wan1	
+外网端口：7443
+备注：openconnect
+```
+
+保持后生效。
+
+手机或电脑需要安装OpenConnect-GUI VPN client。
 
 
 
