@@ -1640,7 +1640,11 @@ Routing table:
 网络->防火墙->自定义规则：
 
 ```
+#iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+
+iptables -t nat -I POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
 iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+iptables -I INPUT -i vpns+ -s 192.168.0.0/24 -j ACCEPT
 ```
 
 保持后生效。
