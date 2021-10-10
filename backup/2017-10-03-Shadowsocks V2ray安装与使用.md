@@ -1582,6 +1582,55 @@ openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
 --passwd-on-stdin < /etc/vpn/MyScript.txt
 ```
 
+完整的脚步如下：
+
+```bash
+#!/bin/bash
+
+cd /etc/vpn
+
+function start() {
+    ping y.y.y.y -c 3 > /dev/null 2>&1
+    if [[ $? != 0 ]]; then
+        echo "Starting VPN..."
+        nohup openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
+        --servercert pin-sha256:+PLuNZB2mIJy8y/Hx3Qwc3QmMhZfulMTOy1S5OakhdY= \
+        --passwd-on-stdin < /etc/vpn/MyScript.txt > /dev/null 2>&1 &
+    fi
+    echo "Openconnect has been started."
+}
+
+start
+
+while true
+do
+    #echo "Checking openconnect's status..."
+    ping y.y.y.y -c 3 > /dev/null 2>&1
+    if [[ $? != 0 ]]; then
+        #Failed, restart
+        echo "Openconnect's status is failed, restarting..."
+        kill `ps |grep openconnect|grep vpnc|awk '{print $1}'` > /dev/null 2>&1
+        start
+    fi
+    sleep 3
+done
+```
+
+其中/etc/vpn/MyScript.txt为密码保存的地方。然后添加到开机启动即可：
+
+chmod +x /etc/rc.local
+
+vim /etc/rc.local
+
+```bash
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+
+/etc/vpn/startVPN.sh > /etc/vpn/startVPN.log &
+exit 0
+```
+
 ### 爱快
 
 推荐使用，不过就只能当做路由器了。直接使用rufus写到U盘，然后从U盘启动安装即可。注意：如果是安装的硬盘的话，会清空硬盘所以数据，一定要做好数据备份。
