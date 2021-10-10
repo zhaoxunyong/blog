@@ -1582,7 +1582,7 @@ openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
 --passwd-on-stdin < /etc/vpn/MyScript.txt
 ```
 
-完整的脚步如下：
+完整的脚本如下：
 
 ```bash
 #!/bin/bash
