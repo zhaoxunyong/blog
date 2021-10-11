@@ -1387,22 +1387,39 @@ fi
 
 在Hyper的网络设置中创建一下网络：
 
-- 内部网络，命名: Internal(openwrt中设置桥接模式)，用于与宿主机通信
-- 外部网络，命名: LAN(openwrt中设置桥接模式，不要勾选“允许管理操作系统共享此网络适配器”)，用于连接AP设备
+~~- 内部网络，命名: Internal(openwrt中设置桥接模式)，用于与宿主机通信~~
+
+~~- 外部网络，命名: LAN(openwrt中设置桥接模式，不要勾选“允许管理操作系统共享此网络适配器”)，用于连接AP设备~~
+
+- 外部网络，命名: LAN(openwrt中设置桥接模式，勾选“允许管理操作系统共享此网络适配器”)，用于连接AP设备
 - 外部网络，命名: WAN(openwrt中用于拨号，不要勾选“允许管理操作系统共享此网络适配器”)，用于连接光猫拨号
 
 虚拟机中设置：
 
+~~添加硬件：Internal、LAN、WLAN~~
+
 ```bash
 安全：取消启动安全启动
-添加硬件：Internal、LAN、WLAN
+添加硬件：LAN、WLAN
 网络适配器：高级功能中勾选“启动MAC地址欺骗”
 自动启动操作：始终自动启动此虚拟机
 ```
 
+各个IP设置如下：
+
+~~Internal IP(bridge): 192.168.2.1~~
+
+LAN(bridge): 192.168.0.1
+
+WLAN: PPPoE
+
+AP路由器: 192.168.0.2
+
 具体安装参考：https://blog.skk.moe/post/hyper-v-win10-lede/
 
-安装完成后，登录后将192.168.1.1 IP 修改为：192.168.2.1（为了不与光猫网段重复）
+~~安装完成后，登录后将192.168.1.1 IP 修改为：192.168.2.1（为了不与光猫网段重复）~~
+
+安装完成后，登录后将192.168.1.1 IP 修改为：192.168.0.1（即网关的IP，记得添加option gateway参数）
 
 ```bash
 vim /etc/config/network
@@ -1411,36 +1428,39 @@ vim /etc/config/network
         option type 'bridge'
         option ifname 'eth0'
         option proto 'static'
-        option ipaddr '192.168.2.1'
+        option ipaddr '192.168.0.1'
         option netmask '255.255.255.0'
-        option gateway '192.168.2.1'
+        option gateway '192.168.0.1'
 
 reboot
 ```
 
-修改windows宿主机中的vEthernet (Internal)的ip为:
+~~修改windows宿主机中的vEthernet (Internal)的ip为:~~
+
+修改windows宿主机中的vEthernet (LAN)的ip为:
 
 ```bash
-192.168.2.38
+192.168.0.37
 255.255.255.0
-192.168.2.1
+192.168.0.1
 ```
 
-默认login地址为：[http://192.168.2.1](http://192.168.2.1)，密码为：koolshare
+~~LAN的IP设置为192.168.0.1，使用AP设备接到LAN端口即可。注意AP设备的ip也必须为192.168.0.x，否则不能上网：AP路由器设备的IP设置为192.168.0.2，上网方式设置为AP模式。~~
+
+设置完成后网口必须连接网线才能访问192.168.0.1（如果有设置内部网络则不用）。可以先设置好路由器：
+AP路由器设备的IP设置为192.168.0.2，上网方式设置为AP模式，OK后将LAN口与路由器连接起来。
+
+WLAN用于PPPoE拨号。
+
+访问OpenWrt设备，默认login地址为：[http://192.168.0.1](http://192.168.0.1)，密码为：koolshare
 
 登录后设置：
 
 网路->DHCP/DNS：不要勾选：“重绑定保护”，不然ping不同公司内部的某些域名。
 
-LAN的IP设置为192.168.0.1，使用AP设备接到LAN端口即可。注意AP设备的ip也必须为192.168.0.x，否则不能上网：
-
-AP路由器设备的IP设置为192.168.0.2，上网方式设置为AP模式。
-
-WLAN用于PPPoE拨号。
-
 ### 网关透明代理
 
-推荐使用，与现有的路由器一起工作，还可以使用这台安装的windows系统。
+推荐使用，与现有的路由器一起工作，还可以使用这台安装的windows系统。如果不想用现有的路由器拨号的话，只需添加一个WAN作为拨号即可，操作方式参考[软路由](#软路由)。
 
 在Hyper的网络设置中创建一下网络：
 
@@ -1455,7 +1475,7 @@ WLAN用于PPPoE拨号。
 自动启动操作：始终自动启动此虚拟机
 ```
 
-登录后将192.168.1.1 IP 修改为：192.168.0.10（必须与路由器相同网段）
+登录后将192.168.1.1 IP 修改为：192.168.0.10（假设路由器的IP为192.168.0.1, 必须与路由器相同网段）
 
 ```bash
 vim /etc/config/network
@@ -1590,7 +1610,7 @@ openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
 cd /etc/vpn
 
 function start() {
-    ping y.y.y.y -c 3 > /dev/null 2>&1
+    ping scloud.y.y.y -c 3 > /dev/null 2>&1
     if [[ $? != 0 ]]; then
         echo "Starting VPN..."
         nohup openconnect -u dave.zhao --script=/etc/vpn/vpnc-script --no-dtls x.x.x.x:7443 \
