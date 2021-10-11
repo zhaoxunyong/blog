@@ -1458,7 +1458,7 @@ WLAN用于PPPoE拨号。
 
 网路->DHCP/DNS：不要勾选：“重绑定保护”，不然ping不同公司内部的某些域名。
 
-这种方式不知道为什么Openconnect Client GUI不能连接，原因不明。可以使用脚本连接，参考下面的Openconnect Client中的"可以通过脚本启动"。
+这种方式不知道为什么Openconnect Client GUI不能连接，原因不明。可以使用脚本连接，参考下面的Openconnect Client中的[脚本启动](#脚本启动)。
 
 ### 网关透明代理
 
@@ -1509,6 +1509,8 @@ sed -i 's/\tdetect_package/\t# detect_package/g' /koolshare/scripts/ks_tar_insta
 ### Openconnect Client
 
 推荐：https://www.jianshu.com/p/1cb8c31319e8
+
+#### GUI
 
 ```bash
 opkg update
@@ -1589,7 +1591,9 @@ exit 0
 cat /proc/`ps |grep openconnect|grep vpnc|awk '{print $1}'`/cmdline
 ```
 
-也可以通过脚本启动，不建议：
+#### 脚本启动
+
+也可以通过脚本启动：
 
 ```
 mkdir -p /etc/vpn
