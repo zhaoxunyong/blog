@@ -1504,7 +1504,105 @@ sed -i 's/\tdetect_package/\t# detect_package/g' /koolshare/scripts/ks_tar_insta
 #操作很简单，不再说明
 ```
 
-其他设备采用192.168.0.10作为网关即可实现透明代理。
+其他设备采用192.168.0.10作为网关即可实现透明代理。不过这种方式当openwrt关机后就不能上网了，可以还是用192.168.0.1作为网关，通过iptables进行流量转发，主路由器为asus-merlin路由器：
+
+/jffs/scripts/ipset.sh
+```bash
+#!/bin/sh
+
+if test -z "$(ipset list -n)";
+then
+  echo "Ipset is not existing, recreating..."
+  wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /jffs/scripts/cn.zone
+  ipset create china_ip hash:net maxelem 1000000
+  for ip in $(cat '/jffs/scripts/cn.zone'); do
+    ipset add china_ip $ip
+  done
+  echo "Creating ipset successfully."
+else
+  echo "Ipset is existing, continute..."
+fi
+```
+
+设置iptables:
+
+参考：
+
+- https://post.smzdm.com/p/a9grmrn0/
+- https://blog.csdn.net/lee244868149/article/details/45113585
+
+```bash
+ip route add default gw 192.168.0.1
+ip route add default via 192.168.0.3 dev br0 table ovpnc1
+ip rule add fwmark 15 table ovpnc1
+iptables -t mangle -A PREROUTING -i br0 -s 192.168.0.0/24 -m set ! --match-set china_ip dst -j MARK --set-mark 15
+```
+
+完整的脚本如下:
+
+/jffs/scripts/oversea.sh
+
+```bash
+#!/bin/sh
+
+#Checking ipset rules
+/jffs/scripts/ipset.sh
+
+#Adding ovpnc1 routing table
+if test -z "$(ip route list table ovpnc1)"
+then
+    echo "The routing table[ovpnc1] isn't existing, adding:     $(date)"
+    ip route add default gw 192.168.0.1
+    ip route add default via 192.168.0.3 dev br0 table ovpnc1
+else
+    echo "The routing table[ovpnc1] has been existed, continute:     $(date)"
+fi
+
+#Adding the policy of routing table
+if test -z "$(ip rule | grep fwmark)"
+then
+    echo "The policy of routing table isn't existing, adding:     $(date)"
+    #The traffic marked 15 will forward according to routing table ovpnc1
+    ip rule add fwmark 15 table ovpnc1
+    echo "The policy of routing table is done:     $(date)"
+else
+    echo "The policy of routing table has been existed, continute:     $(date)"
+fi
+
+#Adding the rule of iptables
+if test -z "$(iptables-save | grep 'china_ip')"
+then
+    echo "The rule of iptables isn't existing, recreating:     $(date)"
+    #The oversea traffics marked 15 will forward to v2ray
+    iptables -t mangle -A PREROUTING -i br0 -s 192.168.0.0/24 -m set ! --match-set china_ip dst -j MARK --set-mark 15
+    echo "Creating the rule of iptables is done:     $(date)"
+    else
+    echo "The rule of iptables is existing, continute:     $(date)"
+fi
+```
+
+如果在web管理界面修改配置或者重新拨号后策略路由和iptables规则会被重置删掉，解决办法是使用linux的crontab定时任务：
+
+crontab -e
+
+chmod +x /jffs/scripts/oversea.sh
+
+每5分钟执行一次配置脚本:
+
+```bash
+
+*/5 * * * * /jffs/scripts/oversea.sh >> /var/log/oversea.log
+```
+
+nano /jffs/scripts/services-start
+
+```bash
+cru a check-oversea "*/5 * * * * /jffs/scripts/oversea.sh >> /var/log/oversea.log"
+
+/jffs/scripts/oversea.sh > /var/log/oversea.log
+```
+
+chmod +x /jffs/scripts/services-start
 
 ### Openconnect Client
 
