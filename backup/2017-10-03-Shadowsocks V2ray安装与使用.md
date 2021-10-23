@@ -1047,7 +1047,36 @@ config.json
 dos2unix /jffs/v2ray/config.json
 ```
 
-接着我们要为V2Ray创建开机启动。services-start是梅林启动时会执行的shell脚本。
+接着我们要为V2Ray创建开机启动。
+
+建议通过wan-event启动，wan connected后执行，详见: [wan-start]{https://github.com/RMerl/asuswrt-merlin.ng/wiki/User-scripts#wan-start}
+
+vi /jffs/scripts/wan-event
+
+```bash
+#!/bin/sh
+
+if test $2 = "connected"; then
+  #check v2ray every 5 minute
+  cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+
+  #check dnspod on 00:00 of every day
+  cru a ddns-start "0 0 * * * /jffs/scripts/ddns-start > /dev/null"
+
+  /jffs/scripts/ipset.sh
+  /jffs/scripts/startVPN.sh > /jffs/vpn/startVPN.log &
+
+  sleep 5
+  /jffs/scripts/v2ray-check.sh
+
+  ddns
+  /jffs/scripts/ddns-start
+fi
+```
+
+chmod +x /jffs/scripts/wan-event
+
+也可以通过开机启动，services-start是梅林启动时会执行的shell脚本：
 
 https://github.com/RMerl/asuswrt-merlin.ng/wiki/User-scripts
 
@@ -1074,33 +1103,6 @@ sleep 10
 #ddns
 /jffs/scripts/ddns-start
 ```
-
-或者通过wan-event启动，详见: [wan-start]{https://github.com/RMerl/asuswrt-merlin.ng/wiki/User-scripts#wan-start}
-
-vi /jffs/scripts/wan-event
-
-```bash
-#!/bin/sh
-
-if test $2 = "connected"; then
-  #check v2ray every 5 minute
-  cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
-
-  #check dnspod on 00:00 of every day
-  cru a ddns-start "0 0 * * * /jffs/scripts/ddns-start > /dev/null"
-
-  /jffs/scripts/ipset.sh
-  /jffs/scripts/startVPN.sh > /jffs/vpn/startVPN.log &
-
-  sleep 5
-  /jffs/scripts/v2ray-check.sh
-
-  ddns
-  /jffs/scripts/ddns-start
-fi
-```
-
-chmod +x /jffs/scripts/wan-event
 
 设置国内ip源：
 
