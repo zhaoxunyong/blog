@@ -1055,24 +1055,52 @@ nano /jffs/scripts/services-start
 
 ```bash
 #!/bin/sh
-#v2ray start
-mkdir /var/log/v2ray/
-sleep 10
-nohup /jffs/v2ray/v2ray --config=/jffs/v2ray/config.json > /dev/null 2>&1 &
 
-#ddns
-/jffs/scripts/ddns-start
+#cru a check-oversea "*/5 * * * * /jffs/scripts/oversea.sh >> /var/log/oversea.log"
+#/jffs/scripts/oversea.sh > /var/log/oversea.log
 
-#iptables
-/jffs/scripts/ipset-cn.sh
-/jffs/scripts/router-iptables.sh
+#check v2ray every 5 minute
+cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
 
 #check dnspod on 00:00 of every day
 cru a ddns-start "0 0 * * * /jffs/scripts/ddns-start > /dev/null"
 
-#check v2ray every 5 minute
-cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+/jffs/scripts/ipset.sh
+/jffs/scripts/startVPN.sh > /jffs/vpn/startVPN.log &
+
+sleep 10
+/jffs/scripts/v2ray-check.sh
+
+#ddns
+/jffs/scripts/ddns-start
 ```
+
+或者通过wan-event启动，详见: [wan-start]{https://github.com/RMerl/asuswrt-merlin.ng/wiki/User-scripts#wan-start}
+
+vi /jffs/scripts/wan-event
+
+```bash
+#!/bin/sh
+
+if test $2 = "connected"; then
+  #check v2ray every 5 minute
+  cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
+
+  #check dnspod on 00:00 of every day
+  cru a ddns-start "0 0 * * * /jffs/scripts/ddns-start > /dev/null"
+
+  /jffs/scripts/ipset.sh
+  /jffs/scripts/startVPN.sh > /jffs/vpn/startVPN.log &
+
+  sleep 5
+  /jffs/scripts/v2ray-check.sh
+
+  ddns
+  /jffs/scripts/ddns-start
+fi
+```
+
+chmod +x /jffs/scripts/wan-event
 
 设置国内ip源：
 
@@ -1083,23 +1111,22 @@ cru a check-v2ray "*/5 * * * * /jffs/scripts/v2ray-check.sh > /dev/null"
 - https://www.ichenfu.com/2020/01/07/block-ips-outside-china-with-iptables-and-ipset/
 - http://blog.pzxbc.com/2019/01/06/home-router-auto-proxy/
 
-nano /jffs/scripts/ipset-cn.sh
+nano /jffs/scripts/ipset.sh
 
 ```
-#!/bin/bash
+#!/bin/sh
 
-rm -f /jffs/scripts/cn.zone
-
-ipset destroy china
-ipset flush china
-ipset create china hash:net hashsize 1024 maxelem 65536
-
-#wget https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt -O /jffs/scripts/cn.zone
-wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /jffs/scripts/cn.zone
-for i in `cat /jffs/scripts/cn.zone`
-do
-  ipset add china $i
-done
+if test -z "$(ipset list -n)";
+then
+  echo "Ipset is not existing, recreating..."
+  ipset create china_ip hash:net maxelem 1000000
+  for ip in $(cat '/jffs/scripts/cn.zone'); do
+    ipset add china_ip $ip
+  done
+  echo "Creating ipset successfully."
+else
+  echo "Ipset is existing, continute..."
+fi
 ```
 
 nano /jffs/scripts/router-iptables.sh
