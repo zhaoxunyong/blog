@@ -1167,8 +1167,16 @@ if [ $? -ne 0 ]; then
     ##iptables -t nat -A OUTPUT -p tcp --dport 1:1024 -j V2RAY
     ##iptables -t nat -A OUTPUT -s 192.168.0.0/16 -p tcp -j V2RAY
 
+    #proxy as a client
     iptables -I INPUT -p tcp --dport 1080 -j ACCEPT
-    iptables -I INPUT -p tcp --dport 1081 -j ACCEPT
+    iptables -I INPUT -p tcp --dport 1082 -j ACCEPT
+    #ocserv port
+    iptables -I INPUT -p tcp --dport 7443 -j ACCEPT
+
+    #ocserv as a transparent proxy
+    iptables -t nat -I POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
+    iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+    iptables -I INPUT -i vpns+ -s 192.168.0.0/24 -j ACCEPT
 fi
 ```
 
