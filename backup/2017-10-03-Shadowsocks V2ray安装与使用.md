@@ -1390,7 +1390,7 @@ Starting openconnect server:
 It'll be started automatically when route is started, no need to start manually.
 ```
 
-The completing script of /opt/etc/ocserv/ocserv.conf as bellows:
+The completing script of /opt/etc/ocserv/ocserv.conf as bellows:[ocserv.conf](/files/Shadowsocks-V2ray安装与使用/ocserv.conf)
 
 ```bash
 auth = "plain[passwd=/opt/etc/ocserv/ocpasswordfile]"
