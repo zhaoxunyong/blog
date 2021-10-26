@@ -1329,8 +1329,40 @@ vi /opt/etc/ocserv/ocserv.conf
 1. Commented out the line: auth = "certificate"
 2. Added line: auth = "plain[passwd=/opt/etc/ocserv/ocpasswordfile]"
 3. Also, I changed the ports to 7443 (both tcp & udp)
-4. Generating username and password:
-   ocpasswd -c ocpasswordfile dave
+4. ipv4-network = 192.168.0.80
+   ipv4-netmask = 255.255.255.192
+   dns = 192.168.0.1
+   dns = 8.8.8.8
+   dns = 8.8.4.4
+5. Generating username and password:
+   ocpasswd -c /opt/etc/ocserv/ocpasswordfile dave
+6. Adding iptables:
+   iptables -I INPUT -p tcp --dport 7443 -j ACCEPT
+7. ocserv as a gateway:
+   iptables -t nat -I POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
+   iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+   iptables -I INPUT -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+```
+
+If can't connect to the server, executing the following scripts:
+
+```bash
+vim /opt/etc/ocserv/ocserv_iptables.sh
+#!/bin/sh
+OCconfig='/opt/etc/ocserv/ocserv.conf'
+TCPPORT=`grep tcp-port $OCconfig |awk '{print $3;}'`
+UDPPORT=`grep udp-port $OCconfig |awk '{print $3;}'`
+DEVICE=`grep '^\ *device' $OCconfig |awk '{print $3;}'`
+[ $TCPPORT -gt 0 ] && iptables -I INPUT -p tcp --destination-port $TCPPORT -j ACCEPT
+[ $UDPPORT -gt 0 ] && iptables -I INPUT -p udp --destination-port $UDPPORT -j ACCEPT
+[ -n $DEVICE ] && iptables -I INPUT -i ${DEVICE}+ -j ACCEPT
+[ -n $DEVICE ] && iptables -I FORWARD -i ${DEVICE}+ -j ACCEPT
+[ -n $DEVICE ] && iptables -I FORWARD -o ${DEVICE}+ -j ACCEPT
+[ -n $DEVICE ] && iptables -I OUTPUT -o ${DEVICE}+ -j ACCEPT
+
+chmod +x /opt/etc/ocserv/ocserv_iptables.sh
+$Just running once:
+/opt/etc/ocserv/ocserv_iptables.sh
 ```
 
 Generating certificate key:
