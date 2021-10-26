@@ -1336,20 +1336,24 @@ Modifying the configuration file:
 vi /opt/etc/ocserv/ocserv.conf
 1. Commented out the line: auth = "certificate"
 2. Added line: auth = "plain[passwd=/opt/etc/ocserv/ocpasswordfile]"
-3. Also, I changed the ports to 7443 (both tcp & udp)
-4. ipv4-network = 192.168.0.80
+3. Commented out the line: ipv6-network =  2001:xxx:xxx:xxx::/64, or cannot connect to the server.
+4. Also, I changed the ports to 7443 (both tcp & udp)
+5. ipv4-network = 192.168.0.80
    ipv4-netmask = 255.255.255.192
    dns = 192.168.0.1
    dns = 8.8.8.8
    dns = 8.8.4.4
-5. Generating username and password:
-   ocpasswd -c /opt/etc/ocserv/ocpasswordfile dave
-6. Adding iptables:
-   iptables -I INPUT -p tcp --dport 7443 -j ACCEPT
-7. ocserv as a gateway:
-   iptables -t nat -I POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
-   iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
-   iptables -I INPUT -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+
+Generating username and password:
+ocpasswd -c /opt/etc/ocserv/ocpasswordfile dave
+
+Adding iptables:
+iptables -I INPUT -p tcp --dport 7443 -j ACCEPT
+
+ocserv as a gateway:
+iptables -t nat -I POSTROUTING -s 192.168.0.0/24 -j MASQUERADE
+iptables -I FORWARD -i vpns+ -s 192.168.0.0/24 -j ACCEPT
+iptables -I INPUT -i vpns+ -s 192.168.0.0/24 -j ACCEPT
 ```
 
 If can't connect to the server, executing the following scripts:
