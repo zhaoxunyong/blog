@@ -1390,6 +1390,53 @@ Starting openconnect server:
 It'll be started automatically when route is started, no need to start manually.
 ```
 
+The completing script of /opt/etc/ocserv/ocserv.conf as bellows:
+
+```bash
+auth = "plain[passwd=/opt/etc/ocserv/ocpasswordfile]"
+tcp-port = 7443
+udp-port = 7443
+run-as-user = nobody
+run-as-group = nobody
+socket-file = /opt/var/run/ocserv-socket
+server-cert = /opt/etc/ocserv/cert/server-cert.pem
+server-key = /opt/etc/ocserv/cert/server-key.pem
+ca-cert = /opt/etc/ocserv/cert/ca-cert.pem
+max-clients = 0
+keepalive = 32400
+dpd = 90
+mobile-dpd = 1800
+try-mtu-discovery = true
+cert-user-oid = 0.9.2342.19200300.100.1.1
+tls-priorities = "NORMAL:%SERVER_PRECEDENCE:%COMPAT:-VERS-SSL3.0"
+auth-timeout = 40
+min-reauth-time = 3
+max-ban-score = 50
+ban-reset-time = 300
+cookie-timeout = 300
+cookie-rekey-time = 14400
+deny-roaming = false
+rekey-time = 172800
+rekey-method = ssl
+use-utmp = false
+pid-file = /opt/var/run/ocserv.pid
+device = vpns
+predictable-ips = true
+ipv4-network = 192.168.0.80
+ipv4-netmask = 255.255.255.192
+dns = 192.168.0.1
+dns = 8.8.8.8
+dns = 8.8.4.4
+ping-leases = false
+mtu = 1280
+route = default
+route-add-cmd = "/sbin/route add -net %{RI} dev %{D}"
+route-del-cmd = "/sbin/route del -net %{RI} dev %{D}"
+cisco-client-compat = true
+custom-header = "X-DTLS-MTU: 1280"
+custom-header = "X-CSTP-MTU: 1280"
+```
+
 ### OpenVPN
 
 在路由器开启OpenVPN，然后下载client.ovpn文件，编辑文件，在最后添加，否则vpn后不能连接本地网络：
