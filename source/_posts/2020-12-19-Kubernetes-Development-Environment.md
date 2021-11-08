@@ -320,6 +320,8 @@ tar zxvf harbor-offline-installer-v2.1.2.tgz
 sudo chown -R dev.dev /works/k8s/harbor
 #https://goharbor.io/docs/2.1.0/install-config/configure-yml-file/
 #Modifying the harbor.yml
+cd /works/k8s/harbor
+cp -a harbor.yml.tmpl harbor.yml
 vim harbor.yml:
 hostname: registry.gcalls.cn
 https:
@@ -363,6 +365,34 @@ docker push registry.gcalls.cn/xwallet/hello-world
 #client-side
 #"insecure-registries" : ["192.168.95.233:32000"]
 #Don't forget rebooting docker
+```
+
+#### docker registry2
+
+```bash
+sudo su - dev
+#ssl
+acme.sh --issue --dns dns_dp -d registry.gcalls.cn
+
+#install
+mkdir -p /works/docker/registry
+
+docker run -d \
+    --name private_registry  --restart=always \
+    -e SETTINGS_FLAVOUR=dev \
+    -e STORAGE_PATH=/registry-storage \
+    -v /works/docker/registry:/var/lib/registry \
+    -u root \
+    -p 5000:5000 \
+    -v /home/dev/.acme.sh/registry.gcalls.cn:/certs \
+    -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/fullchain.cer \
+    -e REGISTRY_HTTP_TLS_KEY=/certs/registry.gcalls.cn.key \
+    registry:2
+
+#test
+docker pull hello-world
+docker tag hello-world registry.gcalls.cn:5000/hello-world
+docker push registry.gcalls.cn:5000/hello-world
 ```
 
 #### kind
