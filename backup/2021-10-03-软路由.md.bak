@@ -328,17 +328,9 @@ vim /jffs/scripts/services-start
 swapon /tmp/mnt/sda1/myswap.swp
 ```
 
-### XRay
-
-```bash
-mkdir /jffs/xray
-cd /jffs/xray
-wget https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-arm32-v5.zip
-unzip Xray-linux-arm32-v5.zip
-chmod +x xray
-```
-
 ### Clash
+
+Highly recommend!
 
 - https://gist.github.com/dcb9/f10df2a8451ee53be22f12b18296f70a
 - https://github.com/iloahz/asus-router-stock-firmware-clash

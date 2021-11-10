@@ -7,6 +7,12 @@ toc: true
 ---
 为什么要设置代理，大家都懂的...
 
+本章内容也过期，不建议使用，推荐:xray/trojan：
+
+xray: vless+tcp+xtls
+
+trojan: trojan+xtls
+
 <!-- more -->
 
 ## 安装shadowsocks-libev
