@@ -156,7 +156,7 @@ if [ $? -ne 0 ]; then
     iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
     iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
     #直连中国的IP
-    #iptables -t nat -A V2RAY -m set --match-set china dst -j RETURN
+    #iptables -t nat -A V2RAY -m set --match-set china_ip dst -j RETURN
     # 直连 SO_MARK为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面的 255)，此规则目的是避免代理本机(网关)流量出现回环问题
     iptables -t nat -A V2RAY -p tcp -j RETURN -m mark --mark 0xff
     # 其余流量转发到 12345 端口（即 V2Ray）
