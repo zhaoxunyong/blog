@@ -1062,6 +1062,7 @@ $ kubectl create service clusterip demo --tcp=8080:8080 --dry-run -o=yaml >> dep
 ```
 
 ## 参考
+> https://kubernetes.io/zh/docs/reference/kubectl/cheatsheet/
 > http://blog.csdn.net/felix_yujing/article/details/51622132
 > [docker与kubectl命令对比](http://www.pangxie.space/docker/157)
 > http://www.cnblogs.com/fengjian2016/p/6423455.html
