@@ -1061,6 +1061,18 @@ $ kubectl create service clusterip demo --tcp=8080:8080 --dry-run -o=yaml >> dep
 #https://spring.io/guides/topicals/spring-on-kubernetes/
 ```
 
+## Context
+
+```bash
+#https://kubernetes.io/zh/docs/reference/kubectl/cheatsheet/
+#kubectl context config
+kubectl config get-contexts
+#current context config
+kubectl config current-context
+#switch config as alik8s-0
+kubectl config use-context alik8s-0
+```
+
 ## 参考
 > https://kubernetes.io/zh/docs/reference/kubectl/cheatsheet/
 > http://blog.csdn.net/felix_yujing/article/details/51622132

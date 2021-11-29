@@ -251,6 +251,14 @@ mkdir .kube
 cd .kube
 microk8s config > config
 
+#https://kubernetes.io/zh/docs/reference/kubectl/cheatsheet/
+#kubectl context config
+kubectl config get-contexts
+#current context config
+kubectl config current-context
+#switch config as alik8s-0
+kubectl config use-context alik8s-0
+
 #~/.bash_profile
 #yum install bash-completion -y 
 ~/.bash_profile
