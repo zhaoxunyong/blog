@@ -12,7 +12,10 @@ export NVM_DIR="$HOME/.nvm"
 
 ### 安装
 ```bash
-nvm install v10.15.3
+nvm install v12.22.6
+
+proxy_on
+choco install python
 ```
 
 ## 安装hexo
@@ -54,37 +57,45 @@ git config http.postBuffer 524288000
 ```bash
 # 初始化
 hexo init 
-yarn install
+npm install
 # Google 
-yarn add hexo-generator-sitemap
+npm instll hexo-generator-sitemap
 # Baidu
-yarn add hexo-generator-baidu-sitemap
+npm instll hexo-generator-baidu-sitemap
 ```
 
 #### 已有的项目
 
 ```bash
 # 安装依赖项
-yarn add node-sass
-yarn install
-# Google 
-#yarn add hexo-generator-sitemap
-# Baidu
-#yarn add hexo-generator-baidu-sitemap
+# 不要在vscode中的terminal中执行，可能会找不到python路径
+npm install
+
 #npm rebuild node-sass --force
 #npm uninstall node-sass
 #npm install node-sass
+
+# Google 
+#npm install hexo-generator-sitemap
+# Baidu
+#npm install hexo-generator-baidu-sitemap
+
 # ENOSPC错误解决
 #http://hexo.io/docs/troubleshooting.html
 #echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 #RPC failed; curl 55 SSL_write() returned SYSCALL, errno = 32
 ```
 
-#提交sitemap前注意：部分页面不想被收录的需要在front-matter前加sitemap: false与baidusitemap: false，比如404页面，比如站点确认文件等等。
-#此外我在config中设置网址为//开头，即没有指明协议，这样生成的sitemap中网址也是//开头，结果不能被google识别，所以需要写上协议才行。
-
 运行：
+
 ```bash
 hexo s
 ```
+
+创建新的文章：
+
+```bash
+hexo n "文件的名称"
+```
+
 
