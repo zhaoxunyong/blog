@@ -8,8 +8,8 @@ subtitle:
 description: 平时工作中所遇到的一些问题的总结
 author: zhaoxunyong
 # Just for theme: BlueLake
-# language: zh-CN
-language: zh-Hans
+language: zh-CN
+# language: zh-Hans
 timezone: Asia/Shanghai
 
 # URL
@@ -70,9 +70,9 @@ pagination_dir: page
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 ## Themes: http://hexo.io/themes/
-# theme: BlueLake
+theme: BlueLake
 # theme: Anisina
-theme: next
+# theme: next
 # theme: melody
 
 #since: 2014
