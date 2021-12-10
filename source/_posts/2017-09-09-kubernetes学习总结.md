@@ -1075,6 +1075,7 @@ kubectl config use-context alik8s-0
 
 ## 参考
 > https://kubernetes.io/zh/docs/reference/kubectl/cheatsheet/
+> https://kubernetes.io/zh/docs/reference/access-authn-authz/rbac/
 > http://blog.csdn.net/felix_yujing/article/details/51622132
 > [docker与kubectl命令对比](http://www.pangxie.space/docker/157)
 > http://www.cnblogs.com/fengjian2016/p/6423455.html
