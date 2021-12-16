@@ -9,10 +9,23 @@ toc: true
 
 <!-- more -->
 
+## DaemonSet
+
+DaemonSet能够让所有（或者一些特定）的Node节点运行同一个pod。当节点加入到kubernetes集群中，pod会被（DaemonSet）调度到该节点上运行，当节点从kubernetes集群中被移除，被（DaemonSet）调度的pod会被移除，如果删除DaemonSet，所有跟这个DaemonSet相关的pods都会被删除。
+
+在使用kubernetes来运行应用时，很多时候我们需要在一个区域（zone）或者所有Node上运行同一个守护进程（pod），例如如下场景：
+
+每个Node上运行一个分布式存储的守护进程，例如glusterd，ceph
+运行日志采集器在每个Node上，例如fluentd，logstash
+运行监控的采集端在每个Node，例如prometheus node exporter，collectd等
+在简单的情况下，一个DaemonSet可以覆盖所有的Node，来实现Only-One-Pod-Per-Node这种情形；在有的情况下，我们对不同的计算几点进行着色，或者把kubernetes的集群节点分为多个zone，DaemonSet也可以在每个zone上实现Only-One-Pod-Per-Node。
+
 ## Deployment
 Kubernetes Deployment提供了官方的用于更新Pod和Replica Set（下一代的Replication Controller）的方法，您可以在Deployment对象中只描述您所期望的理想状态（预期的运行状态），Deployment控制器为您将现在的实际状态转换成您期望的状态，例如，您想将所有的webapp:v1.0.9升级成webapp:v1.1.0，您只需创建一个Deployment，Kubernetes会按照Deployment自动进行升级。现在，您可以通过Deployment来创建新的资源（pod，rs，rc），替换已经存在的资源等。
 
 Deployment集成了上线部署、滚动升级、创建副本、暂停上线任务，恢复上线任务，回滚到以前某一版本（成功/稳定）的Deployment等功能，在某种程度上，Deployment可以帮我们实现无人值守的上线，大大降低我们的上线过程的复杂沟通、操作风险。
+
+
 
 Deployment的使用场景
 
@@ -122,11 +135,12 @@ Session Affinity:       None
 Events:                 <none>
 ```
 
-访问node IP ＋ node port ,可以访问页面。
+访问node IP ＋　node port ,可以访问页面。
 
 nodeport 并没有完全解决外部访问service 的问题， 比如负载均衡问题，如果有10 pod 节点， 如果是用谷歌的GCE公有云，那么可以把 service  type=NodePort 修改为 LoadBalancer。
 
 另外也可以通过设置pod(daemonset) hostNetwork=true, 将pod中所有容器的端口号直接映射到物理机上， 设置hostNetwork=true的时候需要注意，如果不指定hostport，默认hostport 等于containerport, 如果指定了hostPort, 则hostPort 必须等于containerPort的值。
+
 
 ## deployment创建部署
 
@@ -280,8 +294,10 @@ PING nginx-app (10.97.111.200): 56 data bytes
 1 packets transmitted, 0 packets received, 100% packet loss
 ```
 
+
 这样，在cluster内部就可以通过http://10.97.111.200和http://node-ip:32222来访问nginx-app。
 而在cluster外面，则只能通过http://node-ip:32222来访问。
+
 
 ### deployment部署文件
 ```bash
@@ -418,7 +434,7 @@ nginx-app-2778402574           1         1         1         34m
 把image镜像从 nginx:1.12.1 升级到 nginx:1.13
 kubectl set image deployment/tomcat-deployment nginx=nginx:1.13
 
-### 直接使用edit修改
+### 直接使用edit 修改
 ```bash
 kubectl edit deployment/nginx-deployment
 ```
