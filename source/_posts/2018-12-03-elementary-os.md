@@ -35,9 +35,15 @@ sudo apt install aria2
 
 ## 安装Tweaks
 ```bash
-sudo add-apt-repository ppa:philip.scott/elementary-tweaks
+#sudo add-apt-repository ppa:philip.scott/elementary-tweaks
+#sudo apt-get update
+#sudo apt-get install elementary-tweaks
+
+#https://github.com/pantheon-tweaks/pantheon-tweaks
+sudo add-apt-repository -y ppa:philip.scott/pantheon-tweaks
 sudo apt-get update
-sudo apt-get install elementary-tweaks
+sudo apt install -y pantheon-tweaks
+
 #sudo apt-get install dconf-editor
 sudo apt-get install dconf-tools
 #sudo apt install nautilus
