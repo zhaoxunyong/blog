@@ -14,6 +14,7 @@ export NVM_DIR="$HOME/.nvm"
 ```bash
 nvm install v12.22.6
 
+#Only for windows
 proxy_on
 choco install python
 ```
