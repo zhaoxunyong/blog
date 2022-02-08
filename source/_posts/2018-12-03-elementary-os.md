@@ -467,13 +467,22 @@ GXN1eh9FbDiX1ACdd7XKMV7hL7x0ClBJLUJ-zFfKofjaj2yxE53xauIfkqZ8FoLpcZ0Ux6McTyNmODDS
 
 ```bash
 wget http://dl2.xmind.cn/xmind-8-update8-linux.zip
-sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
-#run /opt/xmind-8/XMind_amd64/XMind
+sudo unzip xmind-8-update8-linux.zip -d /Developer/xmind-8
+#run /Developer/xmind-8/XMind_amd64/XMind
 #Put icon into applications, you should create a file:
-#cd /opt/xmind-8/XMind_amd64/
-#echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
+#cd /Developer/xmind-8/XMind_amd64/
+#echo "cd /Developer/xmind-8/XMind_amd64 && ./XMind" > xmind
 #chmod +x xmind
-#If you want to crack, please see: http://blog.slpro.cn/posts/eb75c5c4/
+#If you want to crack, please see: https://blog.csdn.net/weixin_40576010/article/details/89323313
+vim /Developer/xmind-8/XMind_amd64
+-javaagent:/Developer/xmind-8/XMind_amd64/XMindCrack.jar
+cd /Developer/xmind-8/XMind_amd64/
+./xmind
+断开网络(一定要这步骤）， 打开Xmind, 在帮助->序列号
+邮箱输入：x@iroader.me
+序列号：
+XAka34A2rVRYJ4XBIU35UZMUEEF64CMMIYZCK2FZZUQNODEKUHGJLFMSLIQMQUCUBXRENLK6NZL37JXP4PZXQFILMQ2RG5R7G4QNDO3PSOEUBOCDRYSSXZGRARV6MGA33TN2AMUBHEL4FXMWYTTJDEINJXUAV4BAYKBDCZQWVF3LWYXSDCXY546U3NBGOI3ZPAP2SO3CSQFNB7VVIY123456789012345
+点击确认，然后关闭xmind, 重开，点击帮助->关于xmind，如果显示激活为，就是成功
 ```
 
 ## virtualbox
