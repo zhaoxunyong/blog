@@ -485,6 +485,18 @@ XAka34A2rVRYJ4XBIU35UZMUEEF64CMMIYZCK2FZZUQNODEKUHGJLFMSLIQMQUCUBXRENLK6NZL37JXP
 点击确认，然后关闭xmind, 重开，点击帮助->关于xmind，如果显示激活为，就是成功
 ```
 
+## SecureCRT
+
+```bash
+sudo dpkg -i scrt-sfx-8.3.4-1699.ubuntu16-64.x86_64.deb
+#https://blog.csdn.net/duapple/article/details/117757050
+sudo add-apt-repository ppa:linuxuprising/libpng12 
+sudo apt update
+sudo apt install libpng12-0
+rm /tmp/.securecrt.tmp
+sudo perl securecrt_linux_crack.pl /usr/bin/SecureCRT
+```
+
 ## virtualbox
 
 下载virtualbox与Extension_Pack，直接安装即可。不过安装后虚拟机不能找到usb，是因为没有权限，通过以下命令解决：
