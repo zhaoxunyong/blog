@@ -488,11 +488,17 @@ XAka34A2rVRYJ4XBIU35UZMUEEF64CMMIYZCK2FZZUQNODEKUHGJLFMSLIQMQUCUBXRENLK6NZL37JXP
 ## SecureCRT
 
 ```bash
-sudo dpkg -i scrt-sfx-8.3.4-1699.ubuntu16-64.x86_64.deb
+wget wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb
+sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb
+sudo cp -a /snap/gnome-3-34-1804/77/usr/lib/x86_64-linux-gnu/libpython2.7.so.1.0 /usr/local/lib/
+sudo ldconfig -v
 #https://blog.csdn.net/duapple/article/details/117757050
 sudo add-apt-repository ppa:linuxuprising/libpng12 
 sudo apt update
 sudo apt install libpng12-0
+#install
+sudo dpkg -i scrt-sfx-8.3.4-1699.ubuntu16-64.x86_64.deb
+#crack
 rm /tmp/.securecrt.tmp
 sudo perl securecrt_linux_crack.pl /usr/bin/SecureCRT
 ```
