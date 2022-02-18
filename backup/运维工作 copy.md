@@ -1,25 +1,25 @@
 学习计划：
-serverless/istio
 rocketmq/seata
 hadoop/flink/spark/hive
 GraphQL
 DDD
-React(icejs/antd)
-MyBatis-Plus(dynamic-datasource)
 minio/seaweedfs
 
+serverless/istio ---ok
+React(icejs/antd) ---ok
+MyBatis-Plus(dynamic-datasource) ---ok
 Kubernetes---ok
 spring cloud kubernetes---ok
 spring alibaba cloud---xxx
 kylin---ok
 
 书籍学习：
-支付平台架构: 学习中
+支付平台架构
 精通以太坊
 超大系统分布式流量解决方案
 云原生应用管理
 istio服务网格技术解析与实践
-领域驱动设计
+领域驱动设计: 学习中
 微服务设计模式
 
 其他学习：
@@ -46,19 +46,7 @@ Kylin
 serverless
 eclipse与vscode插件开发
 
-运维相关培训:
-mysql基础培训
-docker基础培训
-hadoop培训
-
-Kubernetes 容器服务的落地与实践
-Kubernetes 和istio 技术讲解和实践
-Linux shell脚本编写和实践
-Linux 系统常用知识讲解和实践
-
-linux入门基础     
-电脑硬件及软件基础常识
-
+----------------------------------------------------
 D:\MyScript.txt:
 connect 218.17.1.146
 y
@@ -89,5 +77,41 @@ netsh interface portproxy add v4tov4 listenaddress=192.168.95.211 listenport=80 
 netsh interface portproxy show v4tov4
 
 netsh interface portproxy delete v4tov4 listenaddress=192.168.95.211 listenport=80
+
+
+
+Dave开发调研部分：
+日志异常收集规范
+审核平台改为事务性队列
+审批平台修改地址后旧的数据不能访问的问题
+时区的统一与培训
+
+
+联通方案邮件出来说明 
+联通方案：
+城域网光纤：20M, 24000/年
+拨号光纤：200M，2600元/年
+
+
+4. 租户管理中心(mc)
+http://192.168.101.158:8090
+user: admin
+password:  Kdadmin001
+
+5. 苍穹开发平台
+http://192.168.101.158:8080/ierp
+user: administrator
+password:  1234567
+user:  17092963696
+password:  123321qQ@
+
+https://dev.kingdee.com/index/docsNew/2c91ddac-02f7-4ba6-a7bb-e81589681624
+user: 17092963696
+密码： Z^cC#Fj7eQ~8
+
+https://www.cnblogs.com/xwgblog/p/13265593.html
+https://mp.baomidou.com/guide/interceptor-tenant-line.html#tenantlineinnerinterceptor
+https://cloud.tencent.com/developer/article/1497712
+
 
 

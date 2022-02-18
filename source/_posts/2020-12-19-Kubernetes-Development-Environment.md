@@ -173,6 +173,52 @@ sudo yum -y install docker-ce
 
 ### Kubernetes
 
+#### Kubectl
+
+Following the instructions to install the k8s client tools:
+
+```bash
+#For MAC
+#https://kubernetes.io/zh/docs/tasks/tools/install-kubectl-macos/
+#curl -LO "https://dl.k8s.io/release/v1.18.18/bin/darwin/amd64/kubectl"
+#chmod +x ./kubectl
+#sudo mv ./kubectl /usr/local/bin/kubectl
+#sudo chown root: /usr/local/bin/kubectl
+brew install kubectl
+mkdir .kube
+#the "config" file located in the root of project
+cp config ~/.kube/
+kubectl config use microk8s-0
+
+#For Windows
+Step 1:
+Downloading https://dl.k8s.io/release/v1.18.18/bin/windows/amd64/kubectl.exe, and put it to a executable environment path(I'd recommend putting it to the folder of GIT_HOME/bin), and make sure $GIT_HOME is in the PATH of your environment.
+
+Step 2: 
+Open the terminal of CMD, executing the following command(Press Win+R, and input "cmd"):
+cd %HOMEPATH%
+mkdir .kube
+
+Step 3: 
+Copying the "config" file located in the root folder of project to the ".kube" folder located in current user home(like: C:\Users\YourName\.kube).
+
+Step 4:
+Open the terminal of CMD again, executing the following command:
+kubectl config use microk8s-0
+
+Congratulations, That's all done.
+
+#For Linux
+#https://kubernetes.io/zh/docs/tasks/tools/install-kubectl-linux/
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+mkdir ~/.kube
+#the "config" file located in the root of project
+cp config ~/.kube/
+kubectl config use microk8s-0
+```
+
 #### microk8s
 
 Recommend using microk8s on Linux. It's the best performance.
