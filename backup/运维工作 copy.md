@@ -40,11 +40,14 @@ Java后端技术
 
 
 培训计划：
-VSCode开发
-k8s与java：http://blog.gcalls.cn/blog/2020/12/Kubernetes-Development-Environment.html
-Kylin
-serverless
-eclipse与vscode插件开发
+1. java单元测试与集成测试培训
+2. 领域驱动设计(DDD)系列一
+3. 领域驱动设计(DDD)系列二
+4. kubernetes istio培训
+5. eclipse与vscode插件开发
+6. SaaS多租户平台架构设计讲解
+7. Jenkins构建与代码质量检测
+8. kubernetes系列课程之二
 
 ----------------------------------------------------
 D:\MyScript.txt:
