@@ -185,6 +185,8 @@ scrape_configs:
       __path__: /works/log/saas/saas-notify-system/**/*.log
 ```
 
+Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
+
 ### Starting
 
 ```bash
