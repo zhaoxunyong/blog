@@ -292,9 +292,16 @@ Regex: ^(.+?)_logs$
 
 Host: https://github.com/grafana/grafana/issues/25205#issuecomment-782217006
 
-Query: label_values({job="${system}_logs"},  host)
+Query: label_values({job="${system}_logs"}, host)
 
 ![04.png](/images/Loki-Log-System/04.png)
+
+Filename:
+
+Query: label_values({job="${system}_logs"}, filename)
+Regex: /.*\/(.+\.log)/
+
+![10.png](/images/Loki-Log-System/10.png)
 
 Search: 
 
@@ -305,6 +312,8 @@ Search:
 ![06.png](/images/Loki-Log-System/06.png)
 
 ![07.png](/images/Loki-Log-System/07.png)
+
+Log browser: {env="dev", env="$env", job="${system}_logs", filename=~".*${filename}"}|~"(?i)$search"
 
 ![08.png](/images/Loki-Log-System/08.png)
 
