@@ -508,6 +508,10 @@ helm uninstall loki  -n loki
 #rm -fr /data/data/loki-data/loki/
 helm uninstall promtail  -n loki
 helm uninstall loki-grafana  -n loki
+#kubectl -n loki get pvc
+kubectl -n loki delete pvc loki-pv-claim
+#kubectl -n loki get pv
+kubectl delete pv loki-pv-volume
 ```
 
 ## Reference 
