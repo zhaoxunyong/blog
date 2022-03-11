@@ -313,14 +313,202 @@ Search:
 
 ![07.png](/images/Loki-Log-System/07.png)
 
-Log browser: {env="dev", env="$env", job="${system}_logs", filename=~".*${filename}"}|~"(?i)$search"
+Log browser: {env="$env", job="${system}_logs", host=~".*${host}", filename=~".*${filename}"}|~"(?i)$search"
 
 ![08.png](/images/Loki-Log-System/08.png)
 
 ![09.png](/images/Loki-Log-System/09.png)
 
+## Kubernetes
 
+Using helm to install loki on the k8s environment easyly, but recommend it by customed congratulation:
 
+Installing heml:
+
+```bash
+#https://helm.sh/docs/intro/install/#from-script
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+
+Pulling repositories:
+
+```bash
+#https://grafana.com/docs/loki/latest/installation/helm/
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+cd /works/loki
+
+kubectl create ns loki
+
+#helm pull grafana/loki-stack
+helm pull grafana/grafana
+helm pull grafana/loki
+helm pull grafana/promtail
+```
+
+Configure:
+
+```bash
+#Create PersistentVolume
+cat PersistentVolume.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: loki-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: loki
+  capacity:
+    storage: 30Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/data/loki-data"
+
+kubectl create -f PersistentVolume.yaml
+
+#PersistentVolumeClaim.yaml
+cat PersistentVolumeClaim.yaml 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-pv-claim
+  namespace: loki
+spec:
+  storageClassName: loki
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+
+kubectl create -f PersistentVolumeClaim.yaml
+
+#Notice: Since the persistence volume based on local system, make sure hostPath.path is shared with multiple machines that loki may be deployed on. or you can use nfs model of persistence volume.
+
+#Making sure k8s has privilege to access hostPath.path. refer to the following configuration:
+securityContext.fsGroup: 10001
+  runAsGroup: 10001
+  runAsNonRoot: true
+  runAsUser: 10001
+
+#chown hostPath.path:
+sudo chown -R 10001:10001 /data/data/loki-data/
+
+#configure loki
+vim loki/values.yaml
+#Enable persistence
+persistence:
+  enabled: true
+  accessModes:
+  - ReadWriteOnce
+  size: 30Gi
+  annotations: {}
+  # selector:
+  #   matchLabels:
+  #     app.kubernetes.io/name: loki
+  # subPath: ""
+  existingClaim: loki-pv-claim
+
+#configure promtail
+vim promtail/values.yaml
+  lokiAddress: http://loki:3100/loki/api/v1/push
+
+extraVolumes:
+  - name: journal
+    hostPath:
+      path: /var/log/journal
+  - name: logs
+    hostPath:
+      path: /works/log
+
+extraVolumeMounts:
+  - name: journal
+    mountPath: /var/log/journal
+    readOnly: true
+  - name: logs
+    mountPath: /works/log
+    readOnly: true
+
+    extraScrapeConfigs: |
+      - job_name: journal
+        journal:
+          path: /var/log/journal
+          max_age: 12h
+          labels:
+            job: systemd-journal
+        relabel_configs:
+          - source_labels: ['__journal__systemd_unit']
+            target_label: 'unit'
+          - source_labels: ['__journal__hostname']
+            target_label: 'hostname'
+            
+      - job_name: app-gateway-dev
+        pipeline_stages:
+        - match:
+            selector: '{app_name="app-gateway-dev"}'
+            stages:
+            - multiline:
+                firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+                max_lines: 10000
+            - regex:
+                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ (?P<message>(.*))$"
+            - labels:
+                time:
+                message:
+        static_configs:
+        - targets:
+            - localhost
+          labels:
+            app_name: app-gateway-dev
+            env: dev
+            __path__: /works/log/hkcash/dev/app-gateway/*.log
+```
+
+Installing the revlant components:
+
+```bash
+cd /works/loki/
+helm upgrade --install loki-grafana grafana/ -n loki
+helm upgrade --install loki loki/ -n loki
+helm upgrade --install promtail promtail/ --set "loki.serviceName=loki" -n loki
+
+#Waiting all of the pods are ready:
+kubectl get pods -n loki -w
+
+#grafana
+#Getting the grafana password using this:
+kubectl get secret --namespace loki loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+#Exposed 3000 port outsize so that you can access it on your browser:
+kubectl port-forward --namespace loki service/loki-grafana 3000:80 --address 0.0.0.0
+URL: http://192.168.80.98:3000/
+Datasource: http://loki:3100/
+k8s logs dashboard:
+https://grafana.com/grafana/dashboards/15141
+#Configure grafana
+env:	
+  label_values(env)		
+system:	
+  Query: label_values(app_name)
+  Regex: ^(.+?)-${env}$
+filename:	
+  Query: label_values({app_name="${system}-${env}"}, filename)
+Log browser:
+  {env="$env", app_name="${system}-${env}", filename=~"${filename}"}|~"(?i)$search"
+```
+
+Uninstalling the revlant components:
+
+```bash
+helm uninstall loki  -n loki
+#kubectl -n loki delete pvc storage-loki-0
+#rm -fr /data/data/loki-data/loki/
+helm uninstall promtail  -n loki
+helm uninstall loki-grafana  -n loki
+```
 
 ## Reference 
 
@@ -333,4 +521,8 @@ Log browser: {env="dev", env="$env", job="${system}_logs", filename=~".*${filena
 - https://grafana.com/docs/grafana/latest/variables/
 - https://grafana.com/docs/grafana/latest/datasources/loki/
 - https://www.jianshu.com/p/474a5034a501
-
+- https://www.jianshu.com/p/259a1d656745
+- https://www.jianshu.com/p/672173b609f7
+- https://www.cnblogs.com/ssgeek/p/11584870.html
+- https://grafana.com/docs/loki/latest/installation/helm/
+- https://blog.csdn.net/weixin_49366475/article/details/114384817

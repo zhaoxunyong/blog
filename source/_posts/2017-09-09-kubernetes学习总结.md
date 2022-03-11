@@ -483,6 +483,92 @@ spec:
             path: "/"
 ```
 
+### 持久卷
+
+静态供应需要管理员手动创建 PV，然后创建 PVC 绑定 PV，最后创建 Pod 声明使用 PVC
+
+创建 PV
+
+```bash
+cat PersistentVolume.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: task-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual #静态供应，名字可以任意取
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/works/loki/data" #在创建pod的节点上会新建该目录
+
+cat PersistentVolumeClaim.yaml 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: task-pv-claim
+spec:
+  storageClassName: manual #storageClassName要和PV中的一致
+  accessModes:
+    - ReadWriteOnce #accessMode要和PV中的一致
+  resources:
+    requests:
+      storage: 3Gi #申请3G容量，申请就近原则，如果有一个10G的和一个20G的PV满足要求，那么使用10G的PV
+
+#Test
+cat Nginx.yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-pv-pod
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: task-pv-claim  #使用的PVC的名字
+  containers:
+    - name: task-pv-container1
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html" #容器中挂载的目录    
+```
+
+创建后：
+
+```bash
+cd /works/loki/data
+echo "volume nginx" > index.html
+```
+
+curl一下kubectl get pod -o wide中的IP就可以显示了。注意：
+
+由于指定的是本地目录，如果飘逸到另外一台，目录会自动创建好。（可以考虑mount某个目录。多机器不建议。）
+
+删除要按照 Pod-->PVC-->PV 的顺序删除，如果先删除了 PVC 会等 Pod 删除掉，才会删除 PVC ，如果先删除了 PV，会等 pod 和 PVC 删除了才会删除 PV。
+
+清理：
+
+```bash
+kubectl delete po task-pv-pod
+kubectl delete pvc task-pv-claim
+kubectl delete pv task-pv-volume
+```
+
+还有NFS等模式，参考以下：
+
+- https://cloud.tencent.com/developer/article/1825527
+- https://blog.csdn.net/zhaikaiyun/article/details/104481456
+- https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/
+
+
+
 ## Namespace 
 命名空间
 Namespace 在很多情况下用于多租户的资源隔离，Namespace通过将集群内部的资源对象“分配”到不通的Namespace中， 形成逻辑上的分组的不同项目，小组或者 用户组，便于不同的分组在共享使用这个集群的资源的同时还能被分别管理。
