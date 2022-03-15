@@ -18,11 +18,9 @@ Loki is a log aggregation system designed to store and query logs from all your 
 
 Documents located in: https://grafana.com/docs/loki/latest/
 
-### Overview
+### Installation
 
 https://grafana.com/docs/loki/latest/fundamentals/overview/#overview
-
-### Installation
 
 There are losts of way to install Loki, here just show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
 
@@ -362,9 +360,8 @@ Regex: /.*\/(.+\.log)/
 ![10.png](/images/Loki-Log-System/10.png)
 
 Search: 
-```
+
 ![05.png](/images/Loki-Log-System/05.png)
-```
 
 #### Log Panel
 
