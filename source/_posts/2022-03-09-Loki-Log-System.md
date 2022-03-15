@@ -26,6 +26,8 @@ https://grafana.com/docs/loki/latest/fundamentals/overview/#overview
 
 There are losts of way to install Loki, here just show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
 
+#### docker-compose
+
 ```bash
 #depend on Linux: https://grafana.com/docs/loki/latest/installation/docker/
 #Install with Docker Compose
@@ -79,13 +81,15 @@ auth_enabled: false
 server:
   http_listen_port: 3100
   grpc_listen_port: 9096
+  grpc_server_max_recv_msg_size: 1572864000
+  grpc_server_max_send_msg_size: 1572864000
 
 common:
   path_prefix: /tmp/loki
   storage:
     filesystem:
-      chunks_directory: /tmp/loki/chunks
-      rules_directory: /tmp/loki/rules
+      chunks_directory: /loki/data/chunks
+      rules_directory: /loki/data/rules
   replication_factor: 1
   ring:
     instance_addr: 127.0.0.1
@@ -94,13 +98,33 @@ common:
 
 schema_config:
   configs:
-    - from: 2020-10-24
+    - from: 2021-10-24
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
       index:
         prefix: index_
         period: 24h
+
+limits_config:
+  ingestion_rate_mb: 32
+  ingestion_burst_size_mb: 64
+  max_streams_per_user: 0
+  max_global_streams_per_user: 0
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+
+query_range:
+  split_queries_by_interval: 0
+  parallelise_shardable_queries: false
+
+querier:
+  max_concurrent: 2048
+
+frontend:
+  max_outstanding_per_tenant: 4096
+  compress_responses: true
 
 ruler:
   alertmanager_url: http://localhost:9093
@@ -120,74 +144,48 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-- job_name: stms
+- job_name: saas-tenant-management-system
   pipeline_stages:
   - match:
-      selector: '{job="stms_logs"}'
+      selector: '{app_name="saas-tenant-management-system"}'
       stages:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 10000
       - regex:
-          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ (?P<message>(.*))$"
+          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
       - labels:
           time:
-          message:
   static_configs:
   - targets:
-      - 192.168.3.2
+      - localhost
     labels:
-      job: stms_logs
-      env: dev
-      host: 192.168.3.2
-      __path__: /works/log/saas/saas-tenant-management-system/**/*.log
-- job_name: slbs
+      app_name: saas-tenant-management-system
+      __path__: /works/log/alphatimes/**/saas-tenant-management-system/*.log
+      
+- job_name: saas-loan-business-system
   pipeline_stages:
   - match:
-      selector: '{job="slbs_logs"}'
+      selector: '{app_name="saas-loan-business-system"}'
       stages:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 10000
       - regex:
-          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ (?P<message>(.*))$"
+          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
       - labels:
           time:
-          message:
   static_configs:
   - targets:
-      - 192.168.3.3
+      - localhost
     labels:
-      job: slbs_logs
-      env: dev
-      host: 192.168.3.3
-      __path__: /works/log/saas/saas-loan-business-system/**/*.log
-- job_name: notify
-  pipeline_stages:
-  - match:
-      selector: '{job="notify_logs"}'
-      stages:
-      - multiline:
-          firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-          max_lines: 10000
-      - regex:
-          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ (?P<message>(.*))$"
-      - labels:
-          time:
-          message:
-  static_configs:
-  - targets:
-      - 192.168.3.4
-    labels:
-      job: notify_logs
-      env: dev
-      host: 192.168.3.4
-      __path__: /works/log/saas/saas-notify-system/**/*.log
+      app_name: saas-loan-business-system
+      __path__: /works/log/alphatimes/**/saas-loan-business-system/*.log
 ```
 
 Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
 
-### Starting
+Starting:
 
 ```bash
 #Starting:
@@ -205,6 +203,70 @@ http://localhost:3100/metrics
 ```
 
 Grafana URL is: http://localhost:3000/, default account is admin/admin
+
+#### Docker
+
+If you clients are distributed on individual machines, you can use docker:
+
+Installing:
+
+```bash
+#loki
+docker run -d --name loki \
+-v /etc/localtime:/etc/localtime:ro \
+-v /works/loki/data:/loki/data \
+-v /works/loki/docker:/mnt/config \
+-p 3100:3100 grafana/loki:2.4.2 \
+-config.file=/mnt/config/loki-config.yaml
+
+#grafana
+docker run -d --name grafana \
+-v /etc/localtime:/etc/localtime:ro \
+-p 3000:3000 grafana/grafana:latest
+
+#promtail
+docker run -d --name promtail \
+-v /etc/localtime:/etc/localtime:ro \
+-v /works/promtail/docker:/mnt/config \
+-v /works/log:/works/log \
+grafana/promtail:2.4.2 \
+-config.file=/mnt/config/promtail-config.yaml
+```
+
+Uninstalling:
+
+```bash
+#loki
+docker rm -vf loki
+/bin/rm -fr /works/loki/data/*
+mkdir -p /works/loki/data/
+#docker exec loki id
+#uid=10001(loki) gid=10001(loki) groups=10001(loki)
+chown -R 10001.10001 /works/loki/data/
+
+#promtail
+docker rm -vf promtail
+
+#grafana
+#docker rm -vf grafana
+```
+
+#### Grafana Configuration
+
+```bash
+env:
+  Query: label_values(filename)
+  Regex: /works\/log\/.+?\/(.+?)\/.*/
+system:
+  Query: label_values(app_name)
+filename:
+  Query: label_values({app_name="${system}"}, filename)
+  Regex: /.*\/(.+\.log)/
+search:
+  Type: Text box
+Log browser:
+  {app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+```
 
 ## promtail
 
@@ -277,35 +339,32 @@ Creating a new dashboard named "Loki"(just first time), entering "dashboards set
 ![01.png](/images/Loki-Log-System/01.png)
 
 Env: 
-
-Query: label_values(env)
+```
+Query: label_values(filename)
+Regex: /works\/log\/.+?\/(.+?)\/.*/
+```
 
 ![02.png](/images/Loki-Log-System/02.png)
 
 System: 
-
-Query: label_values(job)
-#cut the "_logs"
-Regex: ^(.+?)_logs$  
+```
+Query: label_values(app_name)
+```
 
 ![03.png](/images/Loki-Log-System/03.png)
 
-Host: https://github.com/grafana/grafana/issues/25205#issuecomment-782217006
-
-Query: label_values({job="${system}_logs"}, host)
-
-![04.png](/images/Loki-Log-System/04.png)
-
 Filename:
-
-Query: label_values({job="${system}_logs"}, filename)
+```
+Query: label_values({app_name="${system}"}, filename)
 Regex: /.*\/(.+\.log)/
+```
 
 ![10.png](/images/Loki-Log-System/10.png)
 
 Search: 
-
+```
 ![05.png](/images/Loki-Log-System/05.png)
+```
 
 #### Log Panel
 
@@ -313,7 +372,10 @@ Search:
 
 ![07.png](/images/Loki-Log-System/07.png)
 
-Log browser: {env="$env", job="${system}_logs", host=~".*${host}", filename=~".*${filename}"}|~"(?i)$search"
+Log browser: 
+```
+{app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+```
 
 ![08.png](/images/Loki-Log-System/08.png)
 
@@ -322,6 +384,8 @@ Log browser: {env="$env", job="${system}_logs", host=~".*${host}", filename=~".*
 ## Kubernetes
 
 Using helm to install loki on the k8s environment easyly, but recommend it by customed congratulation:
+
+### Heml
 
 Installing heml:
 
@@ -434,39 +498,46 @@ extraVolumeMounts:
     readOnly: true
 
     extraScrapeConfigs: |
-      - job_name: journal
-        journal:
-          path: /var/log/journal
-          max_age: 12h
-          labels:
-            job: systemd-journal
-        relabel_configs:
-          - source_labels: ['__journal__systemd_unit']
-            target_label: 'unit'
-          - source_labels: ['__journal__hostname']
-            target_label: 'hostname'
-            
-      - job_name: app-gateway-dev
+      - job_name: saas-tenant-management-system
         pipeline_stages:
         - match:
-            selector: '{app_name="app-gateway-dev"}'
+            selector: '{app_name="saas-tenant-management-system"}'
             stages:
             - multiline:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
                 max_lines: 10000
             - regex:
-                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ (?P<message>(.*))$"
+                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
             - labels:
                 time:
-                message:
         static_configs:
         - targets:
             - localhost
           labels:
-            app_name: app-gateway-dev
-            env: dev
-            __path__: /works/log/hkcash/dev/app-gateway/*.log
+            app_name: saas-tenant-management-system
+            __path__: /works/log/alphatimes/**/saas-tenant-management-system/*.log
+            
+      - job_name: saas-loan-business-system
+        pipeline_stages:
+        - match:
+            selector: '{app_name="saas-loan-business-system"}'
+            stages:
+            - multiline:
+                firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+                max_lines: 10000
+            - regex:
+                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+            - labels:
+                time:
+        static_configs:
+        - targets:
+            - localhost
+          labels:
+            app_name: saas-loan-business-system
+            __path__: /works/log/alphatimes/**/saas-loan-business-system/*.log
 ```
+
+### Installation
 
 Installing the revlant components:
 
@@ -486,19 +557,29 @@ kubectl get secret --namespace loki loki-grafana -o jsonpath="{.data.admin-passw
 kubectl port-forward --namespace loki service/loki-grafana 3000:80 --address 0.0.0.0
 URL: http://192.168.80.98:3000/
 Datasource: http://loki:3100/
+
+#Configure grafana
+
+#Loki Kubernetes Logs
 k8s logs dashboard:
 https://grafana.com/grafana/dashboards/15141
-#Configure grafana
-env:	
-  label_values(env)		
-system:	
+
+#Zerofinance Logs
+env:
+  Query: label_values(filename)
+  Regex: /works\/log\/.+?\/(.+?)\/.*/
+system:
   Query: label_values(app_name)
-  Regex: ^(.+?)-${env}$
-filename:	
-  Query: label_values({app_name="${system}-${env}"}, filename)
+filename:
+  Query: label_values({app_name="${system}"}, filename)
+  Regex: /.*\/(.+\.log)/
+search:
+  Type: Text box
 Log browser:
-  {env="$env", app_name="${system}-${env}", filename=~"${filename}"}|~"(?i)$search"
+  {app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
 ```
+
+### Uninstallation
 
 Uninstalling the revlant components:
 
@@ -513,6 +594,26 @@ kubectl -n loki delete pvc loki-pv-claim
 #kubectl -n loki get pv
 kubectl delete pv loki-pv-volume
 ```
+
+## Troubleshooting
+
+error: code = ResourceExhausted desc = trying to send message larger than max
+
+- https://blog.csdn.net/qq_41980563/article/details/122186703
+
+429 Too Many Requests Ingestion rate limit exceeded
+
+- https://www.codeleading.com/article/71834625328/
+
+Maximum active stream limit exceeded
+
+- https://izsk.me/2021/03/18/Loki-Prombles/
+- https://www.bboy.app/2020/07/08/%E4%BD%BF%E7%94%A8loki%E8%BF%9B%E8%A1%8C%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86/
+
+Loki: Bad Request. 400. invalid query, through
+
+- https://zhuanlan.zhihu.com/p/457985915
+- https://blog.csdn.net/u010948569/article/details/108387324
 
 ## Reference 
 
