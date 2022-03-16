@@ -47,6 +47,7 @@ services:
   loki:
     image: grafana/loki:2.4.1
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - .:/mnt/config
     ports:
       - "3100:3100"
@@ -57,6 +58,7 @@ services:
   promtail:
     image: grafana/promtail:2.4.1
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - .:/mnt/config
       - /mnt/d/works/log:/works/log
     command: -config.file=/mnt/config/promtail-config.yaml
@@ -65,6 +67,10 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /works/loki/docker/grafana.ini:/etc/grafana/grafana.ini
+    command: -config.file=/mnt/config/promtail-config.yaml
     ports:
       - "3000:3000"
     networks:
@@ -151,14 +157,14 @@ scrape_configs:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 10000
       - regex:
-          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+          expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
       - labels:
-          time:
   static_configs:
   - targets:
       - localhost
     labels:
       app_name: saas-tenant-management-system
+      host: k8s-node1
       __path__: /works/log/alphatimes/**/saas-tenant-management-system/*.log
       
 - job_name: saas-loan-business-system
@@ -170,15 +176,38 @@ scrape_configs:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 10000
       - regex:
-          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+          expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
       - labels:
-          time:
   static_configs:
   - targets:
       - localhost
     labels:
       app_name: saas-loan-business-system
+      host: k8s-node1
       __path__: /works/log/alphatimes/**/saas-loan-business-system/*.log
+```
+
+/etc/grafana/grafana.ini
+
+```yaml
+...
+domain = 192.168.3.1
+
+[smtp]
+enabled = true
+host = smtp.exmail.qq.com:465
+user = 
+# If the password contains # or ; you have to wrap it with triple quotes. Ex """
+password = 
+;cert_file =
+;;key_file =
+;skip_verify = true
+from_address = 
+from_name = Grafana
+;# EHLO identity in SMTP dialog (defaults to instance_name)
+;;ehlo_identity = dashboard.example.com
+# SMTP startTLS policy (defaults to 'OpportunisticStartTLS')
+startTLS_policy = StartTLS
 ```
 
 Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
@@ -218,8 +247,16 @@ docker run -d --name loki \
 -config.file=/mnt/config/loki-config.yaml
 
 #grafana
+# docker run -d --name grafana \
+# -v /etc/localtime:/etc/localtime:ro \
+# -e "GF_SMTP_ENABLED=true" \
+# -e "GF_SMTP_HOST=smtp.example.com" \
+# -e "GF_SMTP_USER=myuser" \
+# -e "GF_SMTP_PASSWORD=mysecret" \
+# -p 3000:3000 grafana/grafana:latest
 docker run -d --name grafana \
 -v /etc/localtime:/etc/localtime:ro \
+-v /works/loki/docker/grafana.ini:/etc/grafana/grafana.ini \
 -p 3000:3000 grafana/grafana:latest
 
 #promtail
@@ -504,14 +541,14 @@ extraVolumeMounts:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
                 max_lines: 10000
             - regex:
-                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+                expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
             - labels:
-                time:
         static_configs:
         - targets:
             - localhost
           labels:
             app_name: saas-tenant-management-system
+            host: k8s-node1
             __path__: /works/log/alphatimes/**/saas-tenant-management-system/*.log
             
       - job_name: saas-loan-business-system
@@ -523,14 +560,14 @@ extraVolumeMounts:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
                 max_lines: 10000
             - regex:
-                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+                expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
             - labels:
-                time:
         static_configs:
         - targets:
             - localhost
           labels:
             app_name: saas-loan-business-system
+            host: k8s-node1
             __path__: /works/log/alphatimes/**/saas-loan-business-system/*.log
 ```
 
@@ -542,7 +579,9 @@ Installing the revlant components:
 cd /works/loki/
 helm upgrade --install loki-grafana grafana/ -n loki
 helm upgrade --install loki loki/ -n loki
-helm upgrade --install promtail promtail/ --set "loki.serviceName=loki" -n loki
+#helm upgrade --install promtail promtail/ --set "loki.serviceName=loki" -n loki
+#If deploying a individual machine, don't need "--set" parameter
+helm upgrade --install promtail promtail/ -n loki
 
 #Waiting all of the pods are ready:
 kubectl get pods -n loki -w
@@ -611,6 +650,18 @@ Loki: Bad Request. 400. invalid query, through
 
 - https://zhuanlan.zhihu.com/p/457985915
 - https://blog.csdn.net/u010948569/article/details/108387324
+
+Searching data slowly
+
+This reason may occur by some inappropriate configured labels, using the following command to diagnose:
+
+```
+logcli series --analyze-labels '{app_name="hkcash-server"}'
+```
+
+You can  this article to see how to avoid this issue:
+
+https://grafana.com/docs/loki/latest/best-practices/
 
 ## Reference 
 
