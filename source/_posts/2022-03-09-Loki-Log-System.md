@@ -61,7 +61,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - .:/mnt/config
       - /mnt/d/works/log:/works/log
-    command: -config.file=/mnt/config/promtail-config.yaml
+    command: -config.file=/mnt/config/promtail-config.yaml -client.external-labels=hostname=${HOSTNAME}
     networks:
       - loki
 
@@ -89,7 +89,7 @@ server:
   grpc_server_max_send_msg_size: 1572864000
 
 common:
-  path_prefix: /tmp/loki
+  path_prefix: /loki
   storage:
     filesystem:
       chunks_directory: /loki/data/chunks
@@ -102,7 +102,7 @@ common:
 
 schema_config:
   configs:
-    - from: 2021-10-24
+    - from: 2022-01-01
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
@@ -111,8 +111,8 @@ schema_config:
         period: 24h
 
 limits_config:
-  ingestion_rate_mb: 32
-  ingestion_burst_size_mb: 64
+  ingestion_rate_mb: 50
+  ingestion_burst_size_mb: 100
   max_streams_per_user: 0
   max_global_streams_per_user: 0
   enforce_metric_name: false
@@ -130,8 +130,12 @@ frontend:
   max_outstanding_per_tenant: 4096
   compress_responses: true
 
-ruler:
-  alertmanager_url: http://localhost:9093
+table_manager:
+  retention_deletes_enabled: true
+  retention_period: 336h
+
+#ruler:
+#  alertmanager_url: http://localhost:9093
 ```
 
 promtail-config.yaml:
@@ -155,36 +159,19 @@ scrape_configs:
       stages:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-          max_lines: 10000
+          max_lines: 500
       - regex:
-          expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
-      - labels:
+          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+      - timestamp:
+          format: RFC3339Nano
+          source: timestamp
   static_configs:
   - targets:
       - localhost
     labels:
       app_name: saas-tenant-management-system
-      host: k8s-node1
-      __path__: /works/log/alphatimes/**/saas-tenant-management-system/*.log
-      
-- job_name: saas-loan-business-system
-  pipeline_stages:
-  - match:
-      selector: '{app_name="saas-loan-business-system"}'
-      stages:
-      - multiline:
-          firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-          max_lines: 10000
-      - regex:
-          expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
-      - labels:
-  static_configs:
-  - targets:
-      - localhost
-    labels:
-      app_name: saas-loan-business-system
-      host: k8s-node1
-      __path__: /works/log/alphatimes/**/saas-loan-business-system/*.log
+      belongs: alphatimes
+      __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
 ```
 
 /etc/grafana/grafana.ini
@@ -239,10 +226,10 @@ Installing:
 
 ```bash
 #loki
-docker run -d --name loki \
+docker run -d --name loki --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /works/loki/data:/loki/data \
--v /works/loki/docker:/mnt/config \
+-v /works/conf/loki:/mnt/config \
 -p 3100:3100 grafana/loki:2.4.2 \
 -config.file=/mnt/config/loki-config.yaml
 
@@ -254,18 +241,19 @@ docker run -d --name loki \
 # -e "GF_SMTP_USER=myuser" \
 # -e "GF_SMTP_PASSWORD=mysecret" \
 # -p 3000:3000 grafana/grafana:latest
-docker run -d --name grafana \
+docker run -d --name grafana --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /works/loki/docker/grafana.ini:/etc/grafana/grafana.ini \
 -p 3000:3000 grafana/grafana:latest
 
 #promtail
-docker run -d --name promtail \
+docker run -d --name promtail --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
--v /works/promtail/docker:/mnt/config \
+-v /works/conf/promtail:/mnt/config \
 -v /works/log:/works/log \
 grafana/promtail:2.4.2 \
--config.file=/mnt/config/promtail-config.yaml
+-config.file=/mnt/config/promtail-config.yaml \
+-client.external-labels=hostname=${HOSTNAME}
 ```
 
 Uninstalling:
@@ -424,10 +412,15 @@ Using helm to install loki on the k8s environment easyly, but recommend it by cu
 Installing heml:
 
 ```bash
+#Linux:
 #https://helm.sh/docs/intro/install/#from-script
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
+
+#Windows:
+#Members of the Helm community have contributed a Helm package build to Chocolatey. This package is generally up to date. run as administrator:
+choco install kubernetes-helm
 ```
 
 Pulling repositories:
@@ -443,7 +436,9 @@ kubectl create ns loki
 #helm pull grafana/loki-stack
 helm pull grafana/grafana
 helm pull grafana/loki
+
 helm pull grafana/promtail
+tar zxvf promtail-3.11.0.tgz
 ```
 
 Configure:
@@ -513,6 +508,12 @@ persistence:
 
 #configure promtail
 vim promtail/values.yaml
+
+extraArgs:
+  - -client.external-labels=hostname=$(HOSTNAME)
+
+config:
+  ...  
   lokiAddress: http://loki:3100/loki/api/v1/push
 
 extraVolumes:
@@ -539,36 +540,19 @@ extraVolumeMounts:
             stages:
             - multiline:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-                max_lines: 10000
+                max_lines: 500
             - regex:
-                expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
-            - labels:
+                expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+            - timestamp:
+                format: RFC3339Nano
+                source: timestamp
         static_configs:
         - targets:
             - localhost
           labels:
             app_name: saas-tenant-management-system
-            host: k8s-node1
-            __path__: /works/log/alphatimes/**/saas-tenant-management-system/*.log
-            
-      - job_name: saas-loan-business-system
-        pipeline_stages:
-        - match:
-            selector: '{app_name="saas-loan-business-system"}'
-            stages:
-            - multiline:
-                firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-                max_lines: 10000
-            - regex:
-                expression: "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}\\.\\d+ .*$"
-            - labels:
-        static_configs:
-        - targets:
-            - localhost
-          labels:
-            app_name: saas-loan-business-system
-            host: k8s-node1
-            __path__: /works/log/alphatimes/**/saas-loan-business-system/*.log
+            belongs: alphatimes
+            __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
 ```
 
 ### Installation
@@ -581,6 +565,9 @@ helm upgrade --install loki-grafana grafana/ -n loki
 helm upgrade --install loki loki/ -n loki
 #helm upgrade --install promtail promtail/ --set "loki.serviceName=loki" -n loki
 #If deploying a individual machine, don't need "--set" parameter
+#kubectl get nodes --show-labels
+helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=192.168.80.201
+helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=k8s-master-cluster
 helm upgrade --install promtail promtail/ -n loki
 
 #Waiting all of the pods are ready:
