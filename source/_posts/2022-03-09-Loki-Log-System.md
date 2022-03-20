@@ -305,33 +305,33 @@ All of the rule of collecting logs will be configured in the "promtail-config.ya
 
 ```
 scrape_configs:
-- job_name: stms
+- job_name: saas-tenant-management-system
   pipeline_stages:
   - match:
-      selector: '{job="stms_logs"}'
+      selector: '{app_name="saas-tenant-management-system"}'
       stages:
       #https://grafana.com/docs/loki/latest/clients/promtail/stages/multiline/
       #Working on collecting the multiline, like exception logs
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-          max_lines: 10000
+          max_lines: 500
       #https://grafana.com/docs/loki/latest/clients/promtail/stages/regex/
       - regex:
-          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ (?P<message>(.*))$"
+          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
       #https://grafana.com/docs/loki/latest/fundamentals/labels/
       #Working for the variables of searching.
-      - labels:
-          time:
-          message:
+      #- labels:
+      #    time:
+      - timestamp:
+          format: RFC3339Nano
+          source: timestamp
   static_configs:
   - targets:
-      - 192.168.3.2
+      - localhost
     labels:
-      job: stms_logs
-      env: dev
-      host: 192.168.3.2
-      __path__: /works/log/saas/saas-tenant-management-system/**/*.log
-- job_name: slbs
+      app_name: saas-tenant-management-system
+      belongs: alphatimes
+      __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
 ......
 ```
 
@@ -371,14 +371,21 @@ Regex: /works\/log\/.+?\/(.+?)\/.*/
 
 System: 
 ```
-Query: label_values(app_name)
+Query: label_values({filename=~".*${env}.*"}, app_name)
 ```
 
 ![03.png](/images/Loki-Log-System/03.png)
 
+Hostname:
+```
+Query: label_values({app_name="${system}", filename=~".*/${env}/.*"}, hostname)
+```
+
+![04.png](/images/Loki-Log-System/04.png)
+
 Filename:
 ```
-Query: label_values({app_name="${system}"}, filename)
+Query: label_values({app_name="${system}", filename=~".*${env}.*", filename!~".*(?:error|tmlog).*"}, filename)
 Regex: /.*\/(.+\.log)/
 ```
 
@@ -396,7 +403,7 @@ Search:
 
 Log browser: 
 ```
-{app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+{app_name="${system}", hostname=~".*${hostname}.*", filename=~"/works/log/.+?/${env}/${system}/.*${filename}.*"}|~"(?i)$search"
 ```
 
 ![08.png](/images/Loki-Log-System/08.png)
