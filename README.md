@@ -25,8 +25,8 @@ nvm install v12.22.6
 
 ```bash
 #http://stevenshi.me/2017/05/23/ubuntu-hexo/
-npm config set registry https://registry.npm.taobao.org --global
-npm config set disturl https://npm.taobao.org/dist --global
+npm config set registry https://registry.npmmirror.com --global
+npm config set disturl https://npmmirror.com/dist --global
 npm install  hexo-cli -g
 npm install hexo-server -g
 npm install hexo-deployer-git -g
@@ -34,8 +34,8 @@ npm install yarn -g
 npm install http-server -g
 yarn global add serve
 
-yarn config set registry https://registry.npm.taobao.org --global
-yarn config set disturl https://npm.taobao.org/dist --global
+yarn config set registry https://registry.npmmirror.com --global
+yarn config set disturl https://npmmirror.com/dist --global
 ```
 
 ### 安装git
