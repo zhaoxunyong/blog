@@ -22,7 +22,7 @@ Documents located in: https://grafana.com/docs/loki/latest/
 
 https://grafana.com/docs/loki/latest/fundamentals/overview/#overview
 
-There are losts of way to install Loki, here just show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
+There are losts of way to install Loki, here show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
 
 #### docker-compose
 
@@ -149,36 +149,44 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: http://loki:3100/loki/api/v1/push
+  - url: http://192.168.80.196:3100/loki/api/v1/push
 
 scrape_configs:
 - job_name: saas-tenant-management-system
   pipeline_stages:
   - match:
-      selector: '{app_name="saas-tenant-management-system"}'
+      selector: '{belongs="zerofinance"}'
       stages:
+      - regex:
+          source: filename
+          expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+      - labels:
+          org:
+          env:
+          app_name:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 500
       - regex:
-          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*$"
       - timestamp:
-          format: RFC3339Nano
           source: timestamp
+          format: "2022-03-23 16:35:42 +08:00"
   static_configs:
   - targets:
       - localhost
     labels:
-      app_name: saas-tenant-management-system
-      belongs: alphatimes
-      __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
+      belongs: zerofinance
+      __path__: /works/log/*/*/*/**/*.log
 ```
 
 /etc/grafana/grafana.ini
 
 ```yaml
 ...
-domain = 192.168.3.1
+domain = logs.zerofinance.net
+
+root_url = https://%(domain)s/
 
 [smtp]
 enabled = true
@@ -278,17 +286,19 @@ docker rm -vf promtail
 
 ```bash
 env:
-  Query: label_values(filename)
-  Regex: /works\/log\/.+?\/(.+?)\/.*/
+  Query: label_values(env)
 system:
-  Query: label_values(app_name)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+  Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
+hostname:
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
 filename:
-  Query: label_values({app_name="${system}"}, filename)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
   Regex: /.*\/(.+\.log)/
 search:
   Type: Text box
 Log browser:
-  {app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+  {env="${env}", app_name="${system}", hostname=~".*${hostname}.*", filename=~".*${filename}.*"}|~"(?i)$search"
 ```
 
 ## promtail
@@ -363,29 +373,29 @@ Creating a new dashboard named "Loki"(just first time), entering "dashboards set
 
 Env: 
 ```
-Query: label_values(filename)
-Regex: /works\/log\/.+?\/(.+?)\/.*/
+Query: label_values(env)
 ```
 
 ![02.png](/images/Loki-Log-System/02.png)
 
 System: 
 ```
-Query: label_values({filename=~".*${env}.*"}, app_name)
+Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
 ```
 
 ![03.png](/images/Loki-Log-System/03.png)
 
 Hostname:
 ```
-Query: label_values({app_name="${system}", filename=~".*/${env}/.*"}, hostname)
+Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
 ```
 
 ![04.png](/images/Loki-Log-System/04.png)
 
 Filename:
 ```
-Query: label_values({app_name="${system}", filename=~".*${env}.*", filename!~".*(?:error|tmlog).*"}, filename)
+Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
 Regex: /.*\/(.+\.log)/
 ```
 
@@ -403,7 +413,7 @@ Search:
 
 Log browser: 
 ```
-{app_name="${system}", hostname=~".*${hostname}.*", filename=~"/works/log/.+?/${env}/${system}/.*${filename}.*"}|~"(?i)$search"
+{env="${env}", app_name="${system}", hostname=~".*${hostname}.*", filename=~".*${filename}.*"}|~"(?i)$search"
 ```
 
 ![08.png](/images/Loki-Log-System/08.png)
@@ -413,6 +423,8 @@ Log browser:
 ## Kubernetes
 
 Using helm to install loki on the k8s environment easyly, but recommend it by customed congratulation:
+
+Notice: It's weird the way of Kubernetes couldn't collection the logs completely, finally I used the docker to deploy.
 
 ### Heml
 
@@ -543,23 +555,29 @@ extraVolumeMounts:
       - job_name: saas-tenant-management-system
         pipeline_stages:
         - match:
-            selector: '{app_name="saas-tenant-management-system"}'
+            selector: '{belongs="zerofinance"}'
             stages:
+            - regex:
+                source: filename
+                expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+            - labels:
+                org:
+                env:
+                app_name:
             - multiline:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
                 max_lines: 500
             - regex:
-                expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+                expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*$"
             - timestamp:
-                format: RFC3339Nano
                 source: timestamp
+                format: "2022-03-23 16:35:42 +08:00"
         static_configs:
         - targets:
             - localhost
           labels:
-            app_name: saas-tenant-management-system
-            belongs: alphatimes
-            __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
+            belongs: zerofinance
+            __path__: /works/log/*/*/*/**/*.log
 ```
 
 ### Installation
@@ -573,8 +591,8 @@ helm upgrade --install loki loki/ -n loki
 #helm upgrade --install promtail promtail/ --set "loki.serviceName=loki" -n loki
 #If deploying a individual machine, don't need "--set" parameter
 #kubectl get nodes --show-labels
-helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=192.168.80.201
-helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=k8s-master-cluster
+#helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=192.168.80.201
+#helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=k8s-master-cluster
 helm upgrade --install promtail promtail/ -n loki
 
 #Waiting all of the pods are ready:
@@ -596,17 +614,19 @@ https://grafana.com/grafana/dashboards/15141
 
 #Zerofinance Logs
 env:
-  Query: label_values(filename)
-  Regex: /works\/log\/.+?\/(.+?)\/.*/
+  Query: label_values(env)
 system:
-  Query: label_values(app_name)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+  Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
+hostname:
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
 filename:
-  Query: label_values({app_name="${system}"}, filename)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
   Regex: /.*\/(.+\.log)/
 search:
   Type: Text box
 Log browser:
-  {app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+  {env="${env}", app_name="${system}", hostname=~".*${hostname}.*", filename=~".*${filename}.*"}|~"(?i)$search"
 ```
 
 ### Uninstallation
