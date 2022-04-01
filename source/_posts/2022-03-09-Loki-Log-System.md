@@ -88,17 +88,23 @@ server:
   grpc_server_max_recv_msg_size: 1572864000
   grpc_server_max_send_msg_size: 1572864000
 
-common:
-  path_prefix: /loki
-  storage:
-    filesystem:
-      chunks_directory: /loki/data/chunks
-      rules_directory: /loki/data/rules
-  replication_factor: 1
-  ring:
-    instance_addr: 127.0.0.1
-    kvstore:
-      store: inmemory
+ingester:
+  wal:
+    enabled: true
+    dir: /loki/data/wal
+    replay_memory_ceiling: 10G
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+      heartbeat_timeout: 10m
+    final_sleep: 0s
+  chunk_idle_period: 1h
+  max_chunk_age: 2h
+  chunk_retain_period: 30s
+  chunk_target_size: 1572864
 
 schema_config:
   configs:
@@ -110,6 +116,20 @@ schema_config:
         prefix: index_
         period: 24h
 
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/data/index
+    cache_location: /loki/data/boltdb-shipper-cache
+    cache_ttl: 24h
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/data/chunks
+
+compactor:
+  working_directory: /loki/data/boltdb-shipper-compactor
+  shared_store: filesystem
+
 limits_config:
   ingestion_rate_mb: 50
   ingestion_burst_size_mb: 100
@@ -119,23 +139,9 @@ limits_config:
   reject_old_samples: true
   reject_old_samples_max_age: 168h
 
-query_range:
-  split_queries_by_interval: 0
-  parallelise_shardable_queries: false
-
-querier:
-  max_concurrent: 2048
-
-frontend:
-  max_outstanding_per_tenant: 4096
-  compress_responses: true
-
 table_manager:
   retention_deletes_enabled: true
   retention_period: 336h
-
-#ruler:
-#  alertmanager_url: http://localhost:9093
 ```
 
 promtail-config.yaml:
@@ -236,7 +242,7 @@ Installing:
 #loki
 docker run -d --name loki --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
--v /works/loki/data:/loki/data \
+-v /data/loki/data:/loki/data \
 -v /works/conf/loki:/mnt/config \
 -p 3100:3100 grafana/loki:2.4.2 \
 -config.file=/mnt/config/loki-config.yaml
@@ -269,11 +275,11 @@ Uninstalling:
 ```bash
 #loki
 docker rm -vf loki
-/bin/rm -fr /works/loki/data/*
-mkdir -p /works/loki/data/
+/bin/rm -fr /data/loki/data/*
+mkdir -p /data/loki/data/
 #docker exec loki id
 #uid=10001(loki) gid=10001(loki) groups=10001(loki)
-chown -R 10001.10001 /works/loki/data/
+chown -R 10001.10001 /data/loki/data/
 
 #promtail
 docker rm -vf promtail
@@ -645,6 +651,10 @@ kubectl -n loki delete pvc loki-pv-claim
 kubectl delete pv loki-pv-volume
 ```
 
+## Optimize
+
+https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
+
 ## Troubleshooting
 
 error: code = ResourceExhausted desc = trying to send message larger than max
@@ -664,6 +674,10 @@ Loki: Bad Request. 400. invalid query, through
 
 - https://zhuanlan.zhihu.com/p/457985915
 - https://blog.csdn.net/u010948569/article/details/108387324
+
+insane quantity of files in chunks directory
+
+- https://github.com/grafana/loki/issues/1258
 
 Searching data slowly
 
@@ -693,3 +707,4 @@ https://grafana.com/docs/loki/latest/best-practices/
 - https://www.cnblogs.com/ssgeek/p/11584870.html
 - https://grafana.com/docs/loki/latest/installation/helm/
 - https://blog.csdn.net/weixin_49366475/article/details/114384817
+- https://blog.luxifan.com/blog/post/lucifer/1.%E5%88%9D%E8%AF%86Loki-%E4%B8%80
