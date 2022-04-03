@@ -158,8 +158,12 @@ clients:
   - url: http://192.168.80.196:3100/loki/api/v1/push
 
 scrape_configs:
-- job_name: saas-tenant-management-system
+- job_name: zerofinance-job 
   pipeline_stages:
+  - match:
+      selector: '{belongs="zerofinance", filename=~".*(?:error|tmlog).*"}'
+      action: drop
+      drop_counter_reason: promtail_noisy_error
   - match:
       selector: '{belongs="zerofinance"}'
       stages:
@@ -170,20 +174,24 @@ scrape_configs:
           org:
           env:
           app_name:
+  - match:
+      selector: '{org=~".+"}'
+      stages:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 500
       - regex:
-          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*$"
+          expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*"
       - timestamp:
-          source: timestamp
-          format: "2022-03-23 16:35:42 +08:00"
+          source: time
+          format: '2006-01-02 15:04:05'
+          location: Asia/Shanghai
   static_configs:
   - targets:
       - localhost
     labels:
       belongs: zerofinance
-      __path__: /works/log/*/*/*/**/*.log
+      __path__: /works/log/**/*.log
 ```
 
 /etc/grafana/grafana.ini
@@ -558,8 +566,12 @@ extraVolumeMounts:
     readOnly: true
 
     extraScrapeConfigs: |
-      - job_name: saas-tenant-management-system
+      - job_name: zerofinance-job 
         pipeline_stages:
+        - match:
+            selector: '{belongs="zerofinance", filename=~".*(?:error|tmlog).*"}'
+            action: drop
+            drop_counter_reason: promtail_noisy_error
         - match:
             selector: '{belongs="zerofinance"}'
             stages:
@@ -570,20 +582,24 @@ extraVolumeMounts:
                 org:
                 env:
                 app_name:
+        - match:
+            selector: '{org=~".+"}'
+            stages:
             - multiline:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
                 max_lines: 500
             - regex:
-                expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*$"
+                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*"
             - timestamp:
-                source: timestamp
-                format: "2022-03-23 16:35:42 +08:00"
+                source: time
+                format: '2006-01-02 15:04:05'
+                location: Asia/Shanghai
         static_configs:
         - targets:
             - localhost
           labels:
             belongs: zerofinance
-            __path__: /works/log/*/*/*/**/*.log
+            __path__: /works/log/**/*.log
 ```
 
 ### Installation
