@@ -22,7 +22,7 @@ Documents located in: https://grafana.com/docs/loki/latest/
 
 https://grafana.com/docs/loki/latest/fundamentals/overview/#overview
 
-There are losts of way to install Loki, here just show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
+There are losts of way to install Loki, here show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
 
 #### docker-compose
 
@@ -88,17 +88,23 @@ server:
   grpc_server_max_recv_msg_size: 1572864000
   grpc_server_max_send_msg_size: 1572864000
 
-common:
-  path_prefix: /loki
-  storage:
-    filesystem:
-      chunks_directory: /loki/data/chunks
-      rules_directory: /loki/data/rules
-  replication_factor: 1
-  ring:
-    instance_addr: 127.0.0.1
-    kvstore:
-      store: inmemory
+ingester:
+  wal:
+    enabled: true
+    dir: /loki/data/wal
+    replay_memory_ceiling: 10G
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+      heartbeat_timeout: 10m
+    final_sleep: 0s
+  chunk_idle_period: 1h
+  max_chunk_age: 2h
+  chunk_retain_period: 30s
+  chunk_target_size: 1572864
 
 schema_config:
   configs:
@@ -110,6 +116,20 @@ schema_config:
         prefix: index_
         period: 24h
 
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/data/index
+    cache_location: /loki/data/boltdb-shipper-cache
+    cache_ttl: 24h
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/data/chunks
+
+compactor:
+  working_directory: /loki/data/boltdb-shipper-compactor
+  shared_store: filesystem
+
 limits_config:
   ingestion_rate_mb: 50
   ingestion_burst_size_mb: 100
@@ -119,23 +139,9 @@ limits_config:
   reject_old_samples: true
   reject_old_samples_max_age: 168h
 
-query_range:
-  split_queries_by_interval: 0
-  parallelise_shardable_queries: false
-
-querier:
-  max_concurrent: 2048
-
-frontend:
-  max_outstanding_per_tenant: 4096
-  compress_responses: true
-
 table_manager:
   retention_deletes_enabled: true
   retention_period: 336h
-
-#ruler:
-#  alertmanager_url: http://localhost:9093
 ```
 
 promtail-config.yaml:
@@ -149,36 +155,44 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: http://loki:3100/loki/api/v1/push
+  - url: http://192.168.80.196:3100/loki/api/v1/push
 
 scrape_configs:
 - job_name: saas-tenant-management-system
   pipeline_stages:
   - match:
-      selector: '{app_name="saas-tenant-management-system"}'
+      selector: '{belongs="zerofinance"}'
       stages:
+      - regex:
+          source: filename
+          expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+      - labels:
+          org:
+          env:
+          app_name:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
           max_lines: 500
       - regex:
-          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+          expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*$"
       - timestamp:
-          format: RFC3339Nano
           source: timestamp
+          format: "2022-03-23 16:35:42 +08:00"
   static_configs:
   - targets:
       - localhost
     labels:
-      app_name: saas-tenant-management-system
-      belongs: alphatimes
-      __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
+      belongs: zerofinance
+      __path__: /works/log/*/*/*/**/*.log
 ```
 
 /etc/grafana/grafana.ini
 
 ```yaml
 ...
-domain = 192.168.3.1
+domain = logs.zerofinance.net
+
+root_url = https://%(domain)s/
 
 [smtp]
 enabled = true
@@ -228,7 +242,7 @@ Installing:
 #loki
 docker run -d --name loki --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
--v /works/loki/data:/loki/data \
+-v /data/loki/data:/loki/data \
 -v /works/conf/loki:/mnt/config \
 -p 3100:3100 grafana/loki:2.4.2 \
 -config.file=/mnt/config/loki-config.yaml
@@ -261,11 +275,11 @@ Uninstalling:
 ```bash
 #loki
 docker rm -vf loki
-/bin/rm -fr /works/loki/data/*
-mkdir -p /works/loki/data/
+/bin/rm -fr /data/loki/data/*
+mkdir -p /data/loki/data/
 #docker exec loki id
 #uid=10001(loki) gid=10001(loki) groups=10001(loki)
-chown -R 10001.10001 /works/loki/data/
+chown -R 10001.10001 /data/loki/data/
 
 #promtail
 docker rm -vf promtail
@@ -278,17 +292,19 @@ docker rm -vf promtail
 
 ```bash
 env:
-  Query: label_values(filename)
-  Regex: /works\/log\/.+?\/(.+?)\/.*/
+  Query: label_values(env)
 system:
-  Query: label_values(app_name)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+  Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
+hostname:
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
 filename:
-  Query: label_values({app_name="${system}"}, filename)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
   Regex: /.*\/(.+\.log)/
 search:
   Type: Text box
 Log browser:
-  {app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+  {env="${env}", app_name="${system}", hostname=~".*${hostname}.*", filename=~".*${filename}.*"}|~"(?i)$search"
 ```
 
 ## promtail
@@ -363,29 +379,29 @@ Creating a new dashboard named "Loki"(just first time), entering "dashboards set
 
 Env: 
 ```
-Query: label_values(filename)
-Regex: /works\/log\/.+?\/(.+?)\/.*/
+Query: label_values(env)
 ```
 
 ![02.png](/images/Loki-Log-System/02.png)
 
 System: 
 ```
-Query: label_values({filename=~".*${env}.*"}, app_name)
+Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
 ```
 
 ![03.png](/images/Loki-Log-System/03.png)
 
 Hostname:
 ```
-Query: label_values({app_name="${system}", filename=~".*/${env}/.*"}, hostname)
+Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
 ```
 
 ![04.png](/images/Loki-Log-System/04.png)
 
 Filename:
 ```
-Query: label_values({app_name="${system}", filename=~".*${env}.*", filename!~".*(?:error|tmlog).*"}, filename)
+Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
 Regex: /.*\/(.+\.log)/
 ```
 
@@ -403,7 +419,7 @@ Search:
 
 Log browser: 
 ```
-{app_name="${system}", hostname=~".*${hostname}.*", filename=~"/works/log/.+?/${env}/${system}/.*${filename}.*"}|~"(?i)$search"
+{env="${env}", app_name="${system}", hostname=~".*${hostname}.*", filename=~".*${filename}.*"}|~"(?i)$search"
 ```
 
 ![08.png](/images/Loki-Log-System/08.png)
@@ -413,6 +429,8 @@ Log browser:
 ## Kubernetes
 
 Using helm to install loki on the k8s environment easyly, but recommend it by customed congratulation:
+
+Notice: It's weird the way of Kubernetes couldn't collection the logs completely, finally I used the docker to deploy.
 
 ### Heml
 
@@ -543,23 +561,29 @@ extraVolumeMounts:
       - job_name: saas-tenant-management-system
         pipeline_stages:
         - match:
-            selector: '{app_name="saas-tenant-management-system"}'
+            selector: '{belongs="zerofinance"}'
             stages:
+            - regex:
+                source: filename
+                expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+            - labels:
+                org:
+                env:
+                app_name:
             - multiline:
                 firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
                 max_lines: 500
             - regex:
-                expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2})\\.\\d+ .*$"
+                expression: "^(?P<timestamp>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*$"
             - timestamp:
-                format: RFC3339Nano
                 source: timestamp
+                format: "2022-03-23 16:35:42 +08:00"
         static_configs:
         - targets:
             - localhost
           labels:
-            app_name: saas-tenant-management-system
-            belongs: alphatimes
-            __path__: /works/log/alphatimes/**/saas-tenant-management-system/**/*.log
+            belongs: zerofinance
+            __path__: /works/log/*/*/*/**/*.log
 ```
 
 ### Installation
@@ -573,8 +597,8 @@ helm upgrade --install loki loki/ -n loki
 #helm upgrade --install promtail promtail/ --set "loki.serviceName=loki" -n loki
 #If deploying a individual machine, don't need "--set" parameter
 #kubectl get nodes --show-labels
-helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=192.168.80.201
-helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=k8s-master-cluster
+#helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=192.168.80.201
+#helm upgrade --install promtail promtail/ -n loki --set nodeSelector."kubernetes\.io/hostname"=k8s-master-cluster
 helm upgrade --install promtail promtail/ -n loki
 
 #Waiting all of the pods are ready:
@@ -596,17 +620,19 @@ https://grafana.com/grafana/dashboards/15141
 
 #Zerofinance Logs
 env:
-  Query: label_values(filename)
-  Regex: /works\/log\/.+?\/(.+?)\/.*/
+  Query: label_values(env)
 system:
-  Query: label_values(app_name)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+  Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
+hostname:
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
 filename:
-  Query: label_values({app_name="${system}"}, filename)
+  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
   Regex: /.*\/(.+\.log)/
 search:
   Type: Text box
 Log browser:
-  {app_name="${system}", filename=~"/works/log/.+?/${env}/${system}/${filename}.*"}|~"(?i)$search"
+  {env="${env}", app_name="${system}", hostname=~".*${hostname}.*", filename=~".*${filename}.*"}|~"(?i)$search"
 ```
 
 ### Uninstallation
@@ -624,6 +650,10 @@ kubectl -n loki delete pvc loki-pv-claim
 #kubectl -n loki get pv
 kubectl delete pv loki-pv-volume
 ```
+
+## Optimize
+
+https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
 
 ## Troubleshooting
 
@@ -644,6 +674,10 @@ Loki: Bad Request. 400. invalid query, through
 
 - https://zhuanlan.zhihu.com/p/457985915
 - https://blog.csdn.net/u010948569/article/details/108387324
+
+insane quantity of files in chunks directory
+
+- https://github.com/grafana/loki/issues/1258
 
 Searching data slowly
 
@@ -673,3 +707,4 @@ https://grafana.com/docs/loki/latest/best-practices/
 - https://www.cnblogs.com/ssgeek/p/11584870.html
 - https://grafana.com/docs/loki/latest/installation/helm/
 - https://blog.csdn.net/weixin_49366475/article/details/114384817
+- https://blog.luxifan.com/blog/post/lucifer/1.%E5%88%9D%E8%AF%86Loki-%E4%B8%80
