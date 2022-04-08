@@ -1,17 +1,18 @@
 学习计划：
-rocketmq/seata
+seata
 hadoop/flink/spark/hive
 GraphQL
 DDD
 minio/seaweedfs
+spring alibaba cloud---xxx
 
 serverless/istio ---ok
 React(icejs/antd) ---ok
 MyBatis-Plus(dynamic-datasource) ---ok
 Kubernetes---ok
 spring cloud kubernetes---ok
-spring alibaba cloud---xxx
 kylin---ok
+rocketmq---ok
 
 书籍学习：
 支付平台架构
