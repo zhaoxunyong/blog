@@ -41,8 +41,8 @@ Java后端技术
 
 
 培训计划：
-1. java单元测试与集成测试培训
-2. 领域驱动设计(DDD)系列一
+1. java单元测试与集成测试培训 --- ok
+2. 领域驱动设计(DDD)系列一 --- ok
 3. 领域驱动设计(DDD)系列二
 4. kubernetes istio培训
 5. eclipse与vscode插件开发
