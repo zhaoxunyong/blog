@@ -37,7 +37,7 @@ sudo apt-get update && sudo apt-get install vagrant
 wget https://download.virtualbox.org/virtualbox/6.1.34/virtualbox-6.1_6.1.34-150636.1~Ubuntu~eoan_amd64.deb
 dpkg -i virtualbox-6.1_6.1.34-150636.1~Ubuntu~eoan_amd64.deb
 sudo /sbin/vboxconfig
-#If some error occured, just following the messge to resolve.
+#If some error occurred, just following the messge to resolve.
 ```
 
 ## Configuration
