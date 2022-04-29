@@ -24,58 +24,11 @@ https://grafana.com/docs/loki/latest/fundamentals/overview/#overview
 
 There are losts of way to install Loki, here show it by docker. the other ways please refer to: https://grafana.com/docs/loki/latest/installation/
 
-#### docker-compose
+#### Docker
 
-```bash
-#depend on Linux: https://grafana.com/docs/loki/latest/installation/docker/
-#Install with Docker Compose
-wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/production/docker-compose.yaml -O docker-compose.yaml
-docker-compose -f docker-compose.yaml up
-```
+If you clients are distributed on individual machines, you can use docker:
 
-The modified docker-compose.yaml as follows:
-
-docker-compose.yaml:
-
-```yaml
-version: "3"
-
-networks:
-  loki:
-
-services:
-  loki:
-    image: grafana/loki:2.4.1
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - .:/mnt/config
-    ports:
-      - "3100:3100"
-    command: -config.file=/mnt/config/loki-config.yaml
-    networks:
-      - loki
-
-  promtail:
-    image: grafana/promtail:2.4.1
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - .:/mnt/config
-      - /mnt/d/works/log:/works/log
-    command: -config.file=/mnt/config/promtail-config.yaml -client.external-labels=hostname=${HOSTNAME}
-    networks:
-      - loki
-
-  grafana:
-    image: grafana/grafana:latest
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /works/loki/docker/grafana.ini:/etc/grafana/grafana.ini
-    command: -config.file=/mnt/config/promtail-config.yaml
-    ports:
-      - "3000:3000"
-    networks:
-      - loki
-```
+Configuration:
 
 loki-config.yaml:
 
@@ -221,29 +174,6 @@ startTLS_policy = StartTLS
 
 Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
 
-Starting:
-
-```bash
-#Starting:
-docker-compose -f docker-compose.yaml up
-
-#Deleting:
-docker-compose -f docker-compose.yaml rm -vf
-```
-
-When it's started, you can check the status using the following url:
-
-```
-http://localhost:3100/ready
-http://localhost:3100/metrics
-```
-
-Grafana URL is: http://localhost:3000/, default account is admin/admin
-
-#### Docker
-
-If you clients are distributed on individual machines, you can use docker:
-
 Installing:
 
 ```bash
@@ -295,6 +225,80 @@ docker rm -vf promtail
 #grafana
 #docker rm -vf grafana
 ```
+
+#### docker-compose
+
+Not recommend, just for local study.
+
+```bash
+#depend on Linux: https://grafana.com/docs/loki/latest/installation/docker/
+#Install with Docker Compose
+wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/production/docker-compose.yaml -O docker-compose.yaml
+docker-compose -f docker-compose.yaml up
+```
+
+The modified docker-compose.yaml as follows:
+
+docker-compose.yaml:
+
+```yaml
+version: "3"
+
+networks:
+  loki:
+
+services:
+  loki:
+    image: grafana/loki:2.4.1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - .:/mnt/config
+    ports:
+      - "3100:3100"
+    command: -config.file=/mnt/config/loki-config.yaml
+    networks:
+      - loki
+
+  promtail:
+    image: grafana/promtail:2.4.1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - .:/mnt/config
+      - /mnt/d/works/log:/works/log
+    command: -config.file=/mnt/config/promtail-config.yaml -client.external-labels=hostname=${HOSTNAME}
+    networks:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /works/loki/docker/grafana.ini:/etc/grafana/grafana.ini
+    command: -config.file=/mnt/config/promtail-config.yaml
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
+```
+
+Starting:
+
+```bash
+#Starting:
+docker-compose -f docker-compose.yaml up
+
+#Deleting:
+docker-compose -f docker-compose.yaml rm -vf
+```
+
+When it's started, you can check the status using the following url:
+
+```
+http://localhost:3100/ready
+http://localhost:3100/metrics
+```
+
+Grafana URL is: http://localhost:3000/, default account is admin/admin
 
 #### Grafana Configuration
 
