@@ -26,9 +26,10 @@ Here just show you how to install vagrant on Ubuntu:
 
 ```bash
 #https://www.vagrantup.com/downloads
-wget https://releases.hashicorp.com/vagrant/2.2.19/vagrant_2.2.19_linux_amd64.zip
-unzip vagrant_2.2.19_linux_amd64.zip
-#OR
+#The executable 'bsdtar' Vagrant is trying to run was not found in the PATH variable. This is an error. Please verify this software is installed and on the path.
+# wget https://releases.hashicorp.com/vagrant/2.2.19/vagrant_2.2.19_linux_amd64.zip
+# unzip vagrant_2.2.19_linux_amd64.zip
+#Recommend:
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 sudo apt-get update && sudo apt-get install vagrant
@@ -36,8 +37,15 @@ sudo apt-get update && sudo apt-get install vagrant
 #VirtualBox
 wget https://download.virtualbox.org/virtualbox/6.1.34/virtualbox-6.1_6.1.34-150636.1~Ubuntu~eoan_amd64.deb
 dpkg -i virtualbox-6.1_6.1.34-150636.1~Ubuntu~eoan_amd64.deb
+##If some error occurred, executing the following command, and run again:
+# sudo apt install -f
+# dpkg -i virtualbox-6.1_6.1.34-150636.1~Ubuntu~eoan_amd64.deb
+sudo apt install -y gcc make perl
 sudo /sbin/vboxconfig
 #If some error occurred, just following the messge to resolve.
+
+#extpack
+VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.1.34.vbox-extpack
 ```
 
 ## Configuration
@@ -63,6 +71,13 @@ http://vagrantcloud.com/gusztavvargadr/boxes/windows-10/versions/2102.0.2204/pro
 ```
 
 ### Ubuntu
+
+Adding box:
+
+```
+sudo vagrant box add ubuntu20.04 box/ubuntu-20.04.box
+sudo vagrant plugin install vagrant-disksize
+```
 
 Vagrantfile:
 
@@ -181,18 +196,18 @@ systemctl stop firewalld
 timedatectl set-timezone Asia/Shanghai
 
 #logined limit
-cat /etc/security/limits.conf|grep 100000 > /dev/null
+cat /etc/security/limits.conf|grep 100000|egrep "^\*" > /dev/null
 if [[ $? != 0 ]]; then
-		cat >> /etc/security/limits.conf  << EOF
-*               -    nofile             100000
-*               -    nproc              100000
+cat >> /etc/security/limits.conf  << EOF
+*                -       nofile          100000
+*                -       nproc           100000
 EOF
 fi
 
 #systemd service limit
 cat /etc/systemd/system.conf|egrep '^DefaultLimitCORE' > /dev/null
 if [[ $? != 0 ]]; then
-		cat >> /etc/systemd/system.conf << EOF
+cat >> /etc/systemd/system.conf << EOF
 DefaultLimitCORE=infinity
 DefaultLimitNOFILE=100000
 DefaultLimitNPROC=100000
@@ -251,7 +266,19 @@ interact
 #expect eof
 ```
 
+Starting:
+
+```
+vagrant up
+```
+
 ### CentOS
+
+Adding box:
+
+```
+sudo vagrant box add centos7 box/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box
+```
 
 Vagrantfile
 
@@ -464,7 +491,19 @@ sed -i 's;#PasswordAuthentication yes;PasswordAuthentication yes;g' /etc/ssh/ssh
 systemctl restart sshd
 ```
 
+Starting:
+
+```
+vagrant up
+```
+
 ### Windows10
+
+Adding box:
+
+```
+sudo vagrant box add win10 box/win10.box
+```
 
 Vagrantfile
 
@@ -490,6 +529,54 @@ Vagrant.configure("2") do |config|
     ROUTE ADD 0.0.0.0  MASK 0.0.0.0  192.168.101.254  METRIC 25
   SHELL
 end
+```
+
+Starting:
+
+```
+vagrant up
+```
+
+### MacOS
+
+It doesn't work, reslove it later.
+
+Adding box:
+
+```
+sudo vagrant box add macos box/macos-10.15.box
+```
+
+Vagrantfile
+
+```bash
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "macos"
+  config.vm.hostname = "node4"
+  config.vm.network "public_network", ip: "192.168.101.86", netmask: "255.255.255.0", gateway: "192.168.101.254", bridge: "enp2s0"
+  config.vm.provider "virtualbox" do |vb|
+    #vb.gui = true
+    vb.cpus = 2
+    vb.memory = "2048"
+  end
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    #netsh advfirewall set allprofiles state off
+    #ROUTE ADD 0.0.0.0  MASK 0.0.0.0  192.168.101.254  METRIC 25
+  SHELL
+end
+```
+
+Starting:
+
+```
+vagrant up
 ```
 
 ## Command Usage
