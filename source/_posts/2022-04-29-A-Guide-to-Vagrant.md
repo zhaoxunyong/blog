@@ -619,9 +619,11 @@ Modifying the directory of VirtualBox:
 #https://www.jianshu.com/p/12cf1ecb224b
 #https://www.cnblogs.com/csliwei/p/5860005.html
 mv ~/.vagrant.d/ /data/vagrant/
-vim ~/.bashrc
-export VAGRANT_HOME='/data/vagrant'
+#vim /etc/profile.d/java.sh
+export VAGRANT_HOME='/data/vagrant/.vagrant.d'
 export VAGRANT_DISABLE_VBOXSYMLINKCREATE=1
+
+source /etc/profile
 
 #VBoxManage setproperty machinefolder  /data/vagrant/
 sudo mkdir -p "/data/vagrant/"
