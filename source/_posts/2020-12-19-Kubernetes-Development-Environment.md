@@ -232,7 +232,11 @@ https://www.cnblogs.com/xiao987334176/p/10931290.html
 
 ```bash
 #For ubuntu:
-https://blog.flyfox.top/2020/04/03/microk8s%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/
+#https://blog.flyfox.top/2020/04/03/microk8s%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/
+#https://microk8s.io/#install-microk8s
+#Ubuntu 20.04 has been installed with snap pre-installed
+sudo snap install microk8s --classic
+
 #For centos7:
 #sudo yum install epel-release
 sudo su - dev
@@ -240,6 +244,7 @@ sudo yum install snapd
 sudo systemctl enable --now snapd.socket
 sudo ln -s /var/lib/snapd/snap /snap
 sudo snap install microk8s --classic
+
 #Notice: microk8s is using containerd, not docker any more.
 #Either log out and back in again or restart your system to ensure 
 sudo vim /var/snap/microk8s/current/args/containerd-env
