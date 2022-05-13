@@ -178,6 +178,12 @@ Installing:
 
 ```bash
 #loki
+mkdir -p /data/loki/data/
+#Getting the loki id from the following command:
+#docker exec loki id
+#Like: uid=10001(loki) gid=10001(loki) groups=10001(loki)
+chown -R 10001.10001 /data/loki/data/
+#Creating the container:
 docker run -d --name loki --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /data/loki/data:/loki/data \
