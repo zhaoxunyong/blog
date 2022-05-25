@@ -111,7 +111,7 @@ Vagrant.configure("2") do |config|
     d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
     d.privileged = true
     d.cmd = ["/sbin/init"]
-    d.ports = [ "8080:80" ]
+    d.ports = ["8080:80"]
   end
 
 end
@@ -137,7 +137,6 @@ Vagrant.configure("2") do |config|
       d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
       d.privileged = true
       d.cmd = ["/sbin/init"]
-      d.ports = [ "8080:80" ]
     end
   end
 
@@ -149,7 +148,6 @@ Vagrant.configure("2") do |config|
       d.create_args = ["--hostname=node2", "-v","/data/fabric:/data/fabric"]
       d.privileged = true
       d.cmd = ["/sbin/init"]
-      d.ports = [ "8081:80" ]
     end
   end
 
