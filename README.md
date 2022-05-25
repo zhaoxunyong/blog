@@ -100,3 +100,33 @@ hexo n "文件的名称"
 ```
 
 
+npm_release:vi5TKBakvgZTdCXJ
+npm_view:    1uCWUSqbfGjMYgE3
+
+
+npm config set registry http://nexus.zerofinance.net/content/groups/publicnpm/
+
+~/.npmrc
+registry=http://nexus.zerofinance.net/content/groups/publicnpm/
+always-auth=true
+email=dave.zhao@zerofinance.com
+_auth="bnBtX3JlbGVhc2U6dmk1VEtCYWt2Z1pUZENYSg=="
+
+
+A request has been made to list all accounts. 
+You can select which accounts the caller can see
+  [x] 0x4FbCCAb5BCD9a85264964f362129acE0BB686314
+    URL: keystore:///data/eth/geth-tutorial/keystore/UTC--2022-05-06T09-45-52.235883825Z--4fbccab5bcd9a85264964f362129ace0bb686314
+
+
+    0x4fbccab5bcd9a85264964f362129ace0bb686314
+
+
+
+mkdir geth-tutorial/keystore
+clef newaccount --keystore geth-tutorial/keystore
+clef --keystore geth-tutorial/keystore --configdir geth-tutorial/clef --chainid 5
+geth --datadir geth-tutorial --signer=geth-tutorial/clef/clef.ipc --ropsten --syncmode snap --http
+geth attach http://127.0.0.1:8545
+
+560
