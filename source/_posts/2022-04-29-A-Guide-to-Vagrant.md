@@ -22,7 +22,21 @@ Vagrant works on Mac, Linux, Windows, and more. Remote development environments 
 
 ## Installation
 
-Here just show you how to install vagrant on Ubuntu:
+### vagrant+docker
+
+Recommanding by vagrant plus docker:
+
+https://www.vagrantup.com/docs/providers/docker
+
+```bash
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt-get update && sudo apt-get install vagrant
+
+#Installing docker following this: http://blog.gcalls.cn/blog/2018/12/ubuntu-os.html#Docker
+```
+
+### vagrant+virtualbox
 
 ```bash
 #https://www.vagrantup.com/downloads
@@ -49,6 +63,74 @@ VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-6.1.34.vbox-extpa
 ```
 
 ## Configuration
+
+### vagrant+docker
+
+Dockerfile:
+
+```bash
+#Version: 1.0.0
+
+FROM ubuntu:20.04
+
+ENV WORK_SHELL /data/shell
+WORKDIR $WORK_SHELL
+
+#ADD ./sources.list /etc/apt/sources.list
+#RUN apt update && apt install -y init
+
+ADD ./script.sh $WORK_SHELL/
+RUN $WORK_SHELL/script.sh
+
+#CMD ["bash", "-c" ,"$WORK_SHELL/init.sh"]
+```
+
+Building docker image:
+
+```bash
+docker build -t dave/ubuntu:20.04 .
+```
+
+Vagrangfile:
+
+```bash
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
+  config.vm.provider "docker" do |d|
+    #Using a existing docker images:
+    d.image = "dave/ubuntu:20.04"
+    #Building docker images from Dockerfile:
+    #d.build_dir = "."
+    d.create_args = ["-v","/data/fabric:/data/fabric"]
+    d.privileged = true
+    d.cmd = ["/sbin/init"]
+  end
+
+end
+```
+
+Starting:
+
+```
+vagrant up
+```
+
+Entering the container:
+
+```bash
+vagrant docker-exec -it -- /bin/bash
+#Or
+docker exec -it dockerid /bin/bash
+```
+
+### vagrant+virtualbox
 
 How to get the box images?
 
