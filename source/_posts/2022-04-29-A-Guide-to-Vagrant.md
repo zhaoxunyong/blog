@@ -155,6 +155,36 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+Installing docker in dokcer:
+
+docker.sh:
+
+```bash
+#!/bin/bash
+
+apt-get -y install apt-transport-https ca-certificates software-properties-common
+curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | apt-key add -
+add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
+apt-get -y update
+apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+mkdir -p /etc/docker/
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "dns" : [
+     "8.8.4.4",
+     "8.8.8.8",
+     "114.114.114.114"
+  ],
+  "registry-mirrors": [
+    "https://registry.docker-cn.com",
+    "https://3laho3y3.mirror.aliyuncs.com",
+    "http://hub-mirror.c.163.com"
+  ]
+}
+EOF
+```
+
 Starting:
 
 ```
