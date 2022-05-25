@@ -111,6 +111,7 @@ Vagrant.configure("2") do |config|
     d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
     d.privileged = true
     d.cmd = ["/sbin/init"]
+    #Ports to expose from the container to the host. These should be in the format of host:container
     d.ports = ["8080:80"]
   end
 
