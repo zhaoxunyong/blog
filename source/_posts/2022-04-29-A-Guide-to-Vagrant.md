@@ -103,14 +103,51 @@ Vagrangfile:
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
-  config.vm.provider "docker" do |d|
+  config.vm.provider "node1" do |d|
     #Using a existing docker images:
     d.image = "dave/ubuntu:20.04"
     #Building docker images from Dockerfile:
     #d.build_dir = "."
-    d.create_args = ["-v","/data/fabric:/data/fabric"]
+    d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
     d.privileged = true
     d.cmd = ["/sbin/init"]
+  end
+
+end
+```
+
+Or multiple nodes with Vagrantfile:
+
+```bash
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+
+  config.vm.define "node1"  do |node1|
+    node1.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
+    node1.vm.provider "docker" do |d|
+      d.image = "dave/ubuntu:20.04"
+      #d.build_dir = "."
+      d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
+      d.privileged = true
+      d.cmd = ["/sbin/init"]
+    end
+  end
+
+  config.vm.define "node2"  do |node2|
+    node2.vm.network :public_network, ip: "192.168.101.84", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
+    node2.vm.provider "docker" do |d|
+      d.image = "dave/ubuntu:20.04"
+      #d.build_dir = "."
+      d.create_args = ["--hostname=node2", "-v","/data/fabric:/data/fabric"]
+      d.privileged = true
+      d.cmd = ["/sbin/init"]
+    end
   end
 
 end
