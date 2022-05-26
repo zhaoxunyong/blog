@@ -108,7 +108,7 @@ Vagrant.configure("2") do |config|
     d.image = "dave/ubuntu:20.04"
     #Building docker images from Dockerfile:
     #d.build_dir = "."
-    d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
+    d.create_args = ["--hostname=node1", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
     d.privileged = true
     d.cmd = ["/sbin/init"]
     #Ports to expose from the container to the host. These should be in the format of host:container
@@ -133,9 +133,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "node1"  do |node1|
     node1.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
     node1.vm.provider "docker" do |d|
-      d.image = "dave/ubuntu:20.04"
+      d.image = "dave/docker:20.04"
       #d.build_dir = "."
-      d.create_args = ["--hostname=node1", "-v","/data/fabric:/data/fabric"]
+      d.create_args = ["--hostname=node1", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
       d.privileged = true
       d.cmd = ["/sbin/init"]
     end
@@ -144,9 +144,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "node2"  do |node2|
     node2.vm.network :public_network, ip: "192.168.101.84", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
     node2.vm.provider "docker" do |d|
-      d.image = "dave/ubuntu:20.04"
+      d.image = "dave/docker:20.04"
       #d.build_dir = "."
-      d.create_args = ["--hostname=node2", "-v","/data/fabric:/data/fabric"]
+      d.create_args = ["--hostname=node2", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
       d.privileged = true
       d.cmd = ["/sbin/init"]
     end
@@ -385,9 +385,8 @@ fi
 
 su - root -c "ulimit -a"
 
-# echo "192.168.10.6   k8s-master
-# 192.168.10.7   k8s-node1
-# 192.168.10.8   k8s-node2" >> /etc/hosts
+echo "140.82.112.4 github.com
+185.199.110.133 raw.githubusercontent.com" >> /etc/hosts
 
 #tee /etc/resolv.conf << EOF
 #search myk8s.com
