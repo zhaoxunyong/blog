@@ -79,11 +79,41 @@ WORKDIR $WORK_SHELL
 #ADD ./sources.list /etc/apt/sources.list
 #RUN apt update && apt install -y init
 
+ADD changepwd.sh $WORK_SHELL/
+ADD docker-entrypoint.sh $WORK_SHELL/
+
 ADD ./script.sh $WORK_SHELL/
 RUN $WORK_SHELL/script.sh
 
+ENTRYPOINT ["/data/shell/docker-entrypoint.sh"]
 #CMD ["bash", "-c" ,"$WORK_SHELL/init.sh"]
 ```
+
+docker-entrypoint.sh:
+```bash
+#!/bin/bash
+
+/data/shell/changepwd.sh && rm -fr /data/shell/changpwd.sh
+
+# run the command given as arguments from CMD
+exec "$@"
+```
+
+changepwd.sh:
+```bash
+#!/usr/bin/expect
+set timeout -1
+set PWD "newpwd"
+spawn passwd 
+expect "New password:" 
+send "$PWD\r"
+expect "Retype new password:"
+send "$PWD\r"
+interact
+#expect eof
+```
+
+script.sh: Finding the details from belows.
 
 Building docker image:
 
@@ -102,17 +132,29 @@ Vagrangfile:
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
-  config.vm.provider "node1" do |d|
-    #Using a existing docker images:
-    d.image = "dave/ubuntu:20.04"
-    #Building docker images from Dockerfile:
-    #d.build_dir = "."
-    d.create_args = ["--hostname=node1", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
-    d.privileged = true
-    d.cmd = ["/sbin/init"]
-    #Ports to expose from the container to the host. These should be in the format of host:container
-    d.ports = ["8080:80"]
+
+  config.vm.define "node1"  do |node1|
+    node1.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
+    node1.vm.provider "docker" do |d|
+      d.image = "dave/fabric:2.4.3"
+      #d.build_dir = "."
+      d.create_args = ["--hostname=node1", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
+      d.privileged = true
+      d.cmd = ["/sbin/init"]
+      #Ports to expose from the container to the host. These should be in the format of host:container
+      #d.ports = ["8080:80"]
+    end
+  end
+
+  config.vm.define "node2"  do |node2|
+    node2.vm.network :public_network, ip: "192.168.101.84", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
+    node2.vm.provider "docker" do |d|
+      d.image = "dave/fisco:3.0.0"
+      #d.build_dir = "."
+      d.create_args = ["--hostname=node2", "-v", "/data/fisco:/data/fisco"]
+      d.privileged = true
+      d.cmd = ["/sbin/init"]
+    end
   end
 
 end
