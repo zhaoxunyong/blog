@@ -97,7 +97,7 @@ metadata:
   labels:
     app: hello
 spec:
-  type: NodePort
+  #type: NodePort
   ports:
   - protocol: TCP
     name: http
@@ -133,7 +133,7 @@ spec:
 
 ---
 
-apiVersion: networking.k8s.io/v1beta1 # for versions before 1.14 use extensions/v1beta1
+apiVersion: networking.k8s.io/v1 # for versions before 1.14 use extensions/v1beta1
 kind: Ingress
 metadata:
   name: hello
@@ -146,9 +146,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: hello
-          servicePort: 8080
+          service: 
+            name: hello
+            port:
+              number: 8080
 ```
 
 ## Remote Kubernetes Environment
@@ -236,6 +239,8 @@ https://www.cnblogs.com/xiao987334176/p/10931290.html
 #https://microk8s.io/#install-microk8s
 #Ubuntu 20.04 has been installed with snap pre-installed
 sudo snap install microk8s --classic
+apt install bash-completion -y
+source /usr/share/bash-completion/bash_completion
 
 #For centos7:
 #sudo yum install epel-release
@@ -244,6 +249,8 @@ sudo yum install snapd
 sudo systemctl enable --now snapd.socket
 sudo ln -s /var/lib/snapd/snap /snap
 sudo snap install microk8s --classic
+yum install bash-completion -y
+source /usr/share/bash-completion/bash_completion
 
 #Notice: microk8s is using containerd, not docker any more.
 #Either log out and back in again or restart your system to ensure 
@@ -256,7 +263,7 @@ sudo systemctl restart snap.microk8s.daemon-containerd.service
 microk8s.start
 #Addons: https://microk8s.io/docs/addons#heading--list
 #microk8s.enable dashboard dns ingress istio registry storage rbac
-microk8s.enable dashboard dns ingress storage
+microk8s.enable dashboard dns ingress hostpath-storage
 microk8s status --wait-ready
 #list all of enabled addons
 microk8s status
