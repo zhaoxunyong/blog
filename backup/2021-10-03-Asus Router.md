@@ -83,7 +83,7 @@ iptables -t nat -N Clash
 iptables -t nat -A Clash -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A Clash -p tcp -j REDIRECT --to-ports 7892
 iptables -t nat -A PREROUTING -p tcp -j Clash
-iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 7892
+#iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 7892
 
 #透明代理后google.com不能访问(google.com.hk可以)，修改路由器dns：
 外部网络(WAN)->互联网连接：
