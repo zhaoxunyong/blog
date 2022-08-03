@@ -530,7 +530,13 @@ sudo unzip xmind-8-update8-linux.zip -d /opt/xmind-8
 #cd /opt/xmind-8/XMind_amd64/
 #echo "cd /opt/xmind-8/XMind_amd64 && ./XMind" > xmind
 #chmod +x xmind
-#If you want to crack, please see: http://blog.slpro.cn/posts/eb75c5c4/
+crack:
+1.找到 XMind 安装目录, 如: F:\Xmind\XMind 8 Update 8，将下载的破解补丁复制到这个目录中。
+2.以文本格式打开安装目录中 XMind.ini，
+3.在 XMind.ini 最后追加一个字段-javaagent，然后加上XMindCrack.jar的绝对路径。例如：
+-javaagent:F:\Xmind\XMind 8 Update 8\XMindCrack.jar
+打开Xmind->帮助->序列号->输入序列号
+XAka34A2rVRYJ4XBIU35UZMUEEF64CMMIYZCK2FZZUQNODEKUHGJLFMSLIQMQUCUBXRENLK6NZL37JXP4PZXQFILMQ2RG5R7G4QNDO3PSOEUBOCDRYSSXZGRARV6MGA33TN2AMUBHEL4FXMWYTTJDEINJXUAV4BAYKBDCZQWVF3LWYXSDCXY546U3NBGOI3ZPAP2SO3CSQFNB7VVIY123456789012345
 ```
 
 ## 网易云音乐
