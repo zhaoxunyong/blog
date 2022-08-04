@@ -169,6 +169,14 @@ if [ $? -ne 0 ]; then
 fi
 ```
 
+清除iptables:
+
+```bash
+sudo iptables -t nat -D OUTPUT -p tcp -j CLASH
+sudo iptables -t nat -F CLASH
+sudo iptables -t nat -X CLASH
+```
+
 /jffs/scripts/wan-event:
 
 (wan-event只适用于merlin系统，原版固件统一放在/jffs/scripts/services-start中)
@@ -381,7 +389,7 @@ rules:
 /tmp/mnt/sda5/clash/clash-linux-armv5 -f /tmp/mnt/sda5/clash/config.yaml
 ```
 
-启动时需要系统时间为当前时间，否则会报错：
+用在路由器不太合适：因为在启动时需要系统时间为当前时间，否则会报错：
 ```bash
 FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
 ```
@@ -480,6 +488,14 @@ if [ $? -ne 0 ]; then
     # 对本机进行透明代理(不开启不影响路由器其他设备访问)
     #iptables -t nat -A OUTPUT -p tcp -j XRAY
 fi
+```
+
+清除iptables:
+
+```bash
+sudo iptables -t nat -D OUTPUT -p tcp -j XRAY
+sudo iptables -t nat -F XRAY
+sudo iptables -t nat -X XRAY
 ```
 
 xray-kill.sh:
