@@ -48,7 +48,7 @@ git config --global core.safecrlf warn
 git config --global core.filemode false
 git config --global core.whitespace cr-at-eol
 git config --global credential.helper store
-git config http.postBuffer 524288000
+#git config http.postBuffer 524288000
 ```
 
 ### blog配置
