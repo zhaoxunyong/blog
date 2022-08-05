@@ -209,6 +209,72 @@ cru a clash-subscribe "0 0 * * *  /tmp/mnt/sda5/clash/subscribe.sh"
 cru a clash-iptables "*/1 * * * *  /tmp/mnt/sda5/clash/clash-iptables.sh"
 ```
 
+Subscribe:
+
+```bash
+port: 1082
+socks-port: 1080
+allow-lan: true
+redir-port: 7892
+mode: Rule
+log-level: info
+external-controller: :9090
+external-ui: /tmp/mnt/sda5/clash/clash-dashboard
+secret: 'Aa123456'
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:5354
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 192.168.3.1
+
+proxy-providers:
+  provider1:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
+    interval: 3600
+    path: ./nodes.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    use:
+      - provider1
+    proxies:
+      - AUTO
+      - DIRECT
+
+  - name: AUTO
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - provider1
+
+rules:
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN-KEYWORD,google,PROXY
+  - DOMAIN,google.com,PROXY
+  - DOMAIN-SUFFIX,ad.com,REJECT
+  - GEOIP,CN,DIRECT
+  - SRC-PORT,7777,DIRECT
+  - DST-PORT,80,DIRECT
+  - MATCH,PROXY
+```
+
 ### Clash Premium
 
 Premium下载地址：https://github.com/Dreamacro/clash/releases/tag/premium
