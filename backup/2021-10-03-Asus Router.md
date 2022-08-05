@@ -231,32 +231,94 @@ dns:
     - 192.168.3.1
 
 proxy-providers:
-  provider1:
+  TW:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28TW%7C%E5%8F%B0%E6%B9%BE%7C%E5%8F%B0%E7%81%A3%29&list=true"
     interval: 3600
-    path: ./nodes.yaml
+    path: ./TW.yaml
     health-check:
       enable: true
       interval: 600
       # lazy: true
       url: http://www.gstatic.com/generate_204
+  HK:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E9%A6%99%E6%B8%AF%29&list=true"
+    interval: 3600
+    path: ./HK.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  SG:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28%E6%96%B0%E5%8A%A0%E5%9D%A1%29&list=true"
+    interval: 3600
+    path: ./SG.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  USA:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E7%BE%8E%E5%9B%BD%7C%E7%BE%8E%E5%9C%8B%29&list=true"
+    interval: 3600
+    path: ./USA.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  JP:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28JP%7C%E6%97%A5%E6%9C%AC%29&list=true"
+    interval: 3600
+    path: ./JP.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  KR:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28KR%7C%E9%9F%A9%E5%9B%BD%7C%E9%9F%93%E5%9C%8B%29&list=true"
+    interval: 3600
+    path: ./KR.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  ALL:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
+    interval: 3600
+    path: ./ALL.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  
 
 proxy-groups:
   - name: PROXY
     type: select
     use:
-      - provider1
+      - USA
+      - SG
     proxies:
-      - AUTO
-      - DIRECT
+      - PROXY-AUTO
 
-  - name: AUTO
+  - name: PROXY-AUTO
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     use:
-      - provider1
+      - USA
+      - SG
 
 rules:
   - DOMAIN-SUFFIX,local,DIRECT
