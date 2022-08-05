@@ -34,6 +34,9 @@ secret: '123456'
 
 #启动clash
 nohup /tmp/mnt/sda5/clash/clash-linux-armv5 -d /tmp/mnt/sda5/clash/ > /tmp/mnt/sda5/clash/clash.log &
+用-f指定文件启动会出现以下的信息，建议用-d指定目录：
+INFO[0000] Can't find MMDB, start download
+
 #访问地址为:http://ip:9090/ui
 #外部控制设置为：192.168.3.1:9090
 ```
