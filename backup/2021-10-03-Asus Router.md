@@ -448,14 +448,16 @@ rules:
   - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
   - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
   - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,youtubekids.com,PROXY-KIDS
+  - DOMAIN-KEYWORD,youtubekids,PROXY
+  - DOMAIN,youtubekids.com,PROXY
   - DOMAIN-SUFFIX,google.com,PROXY
   - DOMAIN-KEYWORD,google,PROXY
   - DOMAIN,google.com,PROXY
-  - DOMAIN-SUFFIX,youtubekids.com,PROXY-KIDS
   - DOMAIN-SUFFIX,ad.com,REJECT
   - GEOIP,CN,DIRECT
-  - SRC-PORT,7777,DIRECT
-  - DST-PORT,80,DIRECT
+  #- SRC-PORT,7777,DIRECT
+  #- DST-PORT,80,DIRECT
   - MATCH,PROXY
 ```
 
