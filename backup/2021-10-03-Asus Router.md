@@ -180,11 +180,51 @@ sudo iptables -t nat -F CLASH
 sudo iptables -t nat -X CLASH
 ```
 
+clash-check.sh:
+
+```bash
+#! /bin/sh
+case "$(pidof clash-linux-armv5 | wc -w)" in
+0)  echo "Restarting clash:     $(date)"
+    nohup /tmp/mnt/sda5/clash/clash-linux-armv5 -d /tmp/mnt/sda5/clash/ >> /tmp/mnt/sda5/clash/clash.log &
+    #iptables
+    #/tmp/mnt/sda5/clash/clash-iptables.sh
+    ;;
+1)  # all ok
+    #iptables
+    #/tmp/mnt/sda5/clash/clash-iptables.sh
+    ;;
+*)  echo "Removed double clash: $(date)"
+    kill $(pidof clash-linux-armv5 | awk '{print $1}')
+    ;;
+esac
+```
+
+clash-daemon.sh:
+
+```bash
+#!/bin/bash
+
+while true
+do
+  /tmp/mnt/sda5/clash/clash-check.sh
+  sleep 5
+done
+```
+
 /jffs/scripts/wan-event:
 
 (wan-event只适用于merlin系统，原版固件统一放在/jffs/scripts/services-start中)
 
 ```bash
+#!/bin/bash
+
+while true
+do
+  /tmp/mnt/sda5/clash/clash-check.sh
+  sleep 5
+done
+admin@RT-AX82U-E5A8:/tmp/mnt/sda5/clash# cat /jffs/scripts/wan-event 
 #!/bin/sh
 
 if test $2 = "connected"; then
@@ -195,11 +235,8 @@ if test $2 = "connected"; then
   /tmp/mnt/sda5/clash/subconverter/subconverter &
 
   sleep 5
-  /tmp/mnt/sda5/clash/subscribe.sh
-  #/tmp/mnt/sda5/clash/clash-linux-armv5 -d /tmp/mnt/sda5/clash/ &
-  /tmp/mnt/sda5/clash/clash-iptables.sh 
-
-  #/jffs/scripts/xray-daemon.sh > /tmp/mnt/sda5/xray/xray.log &
+  #/tmp/mnt/sda5/clash/subscribe.sh
+  /tmp/mnt/sda5/clash/clash-daemon.sh >> /tmp/mnt/sda5/clash/clash.log &
 fi
 ```
 
@@ -208,8 +245,8 @@ fi
 ```bash
 #!/bin/sh
 
-cru a clash-subscribe "0 0 * * *  /tmp/mnt/sda5/clash/subscribe.sh"
-cru a clash-iptables "*/1 * * * *  /tmp/mnt/sda5/clash/clash-iptables.sh"
+#cru a clash-subscribe "0 0 * * *  /tmp/mnt/sda5/clash/subscribe.sh"
+#cru a clash-iptables "*/1 * * * *  /tmp/mnt/sda5/clash/clash-iptables.sh"
 ```
 
 自动更新订阅地址:
