@@ -224,8 +224,8 @@ clash-daemon.sh:
 
 while true
 do
-  /tmp/mnt/sda5/clash/clash-check.sh
   /tmp/mnt/sda5/clash/subconverter-check.sh
+  /tmp/mnt/sda5/clash/clash-check.sh
   sleep 5
 done
 ```
