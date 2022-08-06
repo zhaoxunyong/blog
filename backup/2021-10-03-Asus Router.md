@@ -217,14 +217,6 @@ done
 (wan-event只适用于merlin系统，原版固件统一放在/jffs/scripts/services-start中)
 
 ```bash
-#!/bin/bash
-
-while true
-do
-  /tmp/mnt/sda5/clash/clash-check.sh
-  sleep 5
-done
-admin@RT-AX82U-E5A8:/tmp/mnt/sda5/clash# cat /jffs/scripts/wan-event 
 #!/bin/sh
 
 if test $2 = "connected"; then
