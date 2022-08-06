@@ -212,7 +212,7 @@ cru a clash-subscribe "0 0 * * *  /tmp/mnt/sda5/clash/subscribe.sh"
 cru a clash-iptables "*/1 * * * *  /tmp/mnt/sda5/clash/clash-iptables.sh"
 ```
 
-Subscribe:
+自动更新订阅地址:
 
 ```bash
 port: 1082
@@ -236,7 +236,7 @@ dns:
 proxy-providers:
   TW:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28TW%7C%E5%8F%B0%E6%B9%BE%7C%E5%8F%B0%E7%81%A3%29&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28TW%7C%E5%8F%B0%E6%B9%BE%7C%E5%8F%B0%E7%81%A3%29&list=true"
     interval: 3600
     path: ./TW.yaml
     health-check:
@@ -246,7 +246,7 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
   HK:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E9%A6%99%E6%B8%AF%29&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E9%A6%99%E6%B8%AF%29&list=true"
     interval: 3600
     path: ./HK.yaml
     health-check:
@@ -256,7 +256,7 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
   SG:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28%E6%96%B0%E5%8A%A0%E5%9D%A1%29&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28%E6%96%B0%E5%8A%A0%E5%9D%A1%29&list=true"
     interval: 3600
     path: ./SG.yaml
     health-check:
@@ -266,7 +266,7 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
   USA:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E7%BE%8E%E5%9B%BD%7C%E7%BE%8E%E5%9C%8B%29&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E7%BE%8E%E5%9B%BD%7C%E7%BE%8E%E5%9C%8B%29&list=true"
     interval: 3600
     path: ./USA.yaml
     health-check:
@@ -276,7 +276,7 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
   JP:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28JP%7C%E6%97%A5%E6%9C%AC%29&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28JP%7C%E6%97%A5%E6%9C%AC%29&list=true"
     interval: 3600
     path: ./JP.yaml
     health-check:
@@ -286,7 +286,7 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
   KR:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28KR%7C%E9%9F%A9%E5%9B%BD%7C%E9%9F%93%E5%9C%8B%29&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28KR%7C%E9%9F%A9%E5%9B%BD%7C%E9%9F%93%E5%9C%8B%29&list=true"
     interval: 3600
     path: ./KR.yaml
     health-check:
@@ -294,9 +294,19 @@ proxy-providers:
       interval: 600
       # lazy: true
       url: http://www.gstatic.com/generate_204
+  NETFLIX:             
+    type: http    
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28NF%29&list=true"
+    interval: 3600
+    path: ./NETFLIX.yaml      
+    health-check: 
+      enable: true
+      interval: 600      
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
   ALL:
     type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fnicecs.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
     interval: 3600
     path: ./ALL.yaml
     health-check:
@@ -309,19 +319,80 @@ proxy-providers:
 proxy-groups:
   - name: PROXY
     type: select
+    proxies:
+      - PROXY-KIDS
+      - PROXY-NF
+      - PROXY-TW
+      - PROXY-HK
+      - PROXY-SG
+      - PROXY-USA
+      - PROXY-JP
+      - PROXY-KR
+      - PROXY-ALL
+
+  - name: PROXY-TW 
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:          
+      - TW
+
+  - name: PROXY-HK
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - HK
+          
+  - name: PROXY-SG
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - SG
+          
+  - name: PROXY-USA
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
     use:
       - USA
-      - SG
-    proxies:
-      - PROXY-AUTO
+        
+  - name: PROXY-JP
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:          
+      - JP
+        
+  - name: PROXY-KR
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - KR
 
-  - name: PROXY-AUTO
+  - name: PROXY-NF
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - NETFLIX
+
+  - name: PROXY-KIDS
     type: url-test
     url: http://www.gstatic.com/generate_204
     interval: 300
     use:
       - USA
       - SG
+
+  - name: PROXY-ALL                         
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - ALL
 
 rules:
   - DOMAIN-SUFFIX,local,DIRECT
@@ -333,6 +404,7 @@ rules:
   - DOMAIN-SUFFIX,google.com,PROXY
   - DOMAIN-KEYWORD,google,PROXY
   - DOMAIN,google.com,PROXY
+  - DOMAIN-SUFFIX,youtubekids.com,PROXY-KIDS
   - DOMAIN-SUFFIX,ad.com,REJECT
   - GEOIP,CN,DIRECT
   - SRC-PORT,7777,DIRECT
