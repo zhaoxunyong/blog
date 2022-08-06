@@ -200,6 +200,23 @@ case "$(pidof clash-linux-armv5 | wc -w)" in
 esac
 ```
 
+subconverter-check.sh:
+
+```bash
+#! /bin/sh
+case "$(pidof subconverter | wc -w)" in
+0)  echo "Restarting subconverter:     $(date)"
+    nohup /tmp/mnt/sda5/clash/subconverter/subconverter >> /tmp/mnt/sda5/clash/clash.log &
+    ;;
+1)  # all ok
+    #iptables
+    ;;
+*)  echo "Removed double subconverter: $(date)"
+    kill $(pidof subconverter | awk '{print $1}')
+    ;;
+esac
+```
+
 clash-daemon.sh:
 
 ```bash
@@ -208,6 +225,7 @@ clash-daemon.sh:
 while true
 do
   /tmp/mnt/sda5/clash/clash-check.sh
+  /tmp/mnt/sda5/clash/subconverter-check.sh
   sleep 5
 done
 ```
