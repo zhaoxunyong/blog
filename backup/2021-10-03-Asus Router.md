@@ -55,9 +55,14 @@ wget https://github.com/tindy2013/subconverter/releases/download/v0.7.2/subconve
 #参数：
 #https://github.com/tindy2013/subconverter/blob/master/README-cn.md#%E7%AE%80%E6%98%93%E7%94%A8%E6%B3%95
 sub?target=%TARGET%&url=%URL%&config=%CONFIG%
-target=clash
-url=encode后的订阅地址
-config不用传
+target=clash	# 转换结果为 clash 配置
+url=https://nfnf.xyz/link/abcdefg?mu=4	# 机场订阅链接
+include=(TW|台湾|台灣)	# 只匹配台湾节点
+list=true	# 生成 provider 链接
+# 将 url 和 include 内容均 urlencode：
+url=https%3a%2f%2fnfnf.xyz%2flink%2fabcdefg%3fmu%3d4
+include=(TW%7c%e5%8f%b0%e6%b9%be%7c%e5%8f%b0%e7%81%a3)
+
 类似于：http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fxxx.xxx%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%223343
 ```
 
