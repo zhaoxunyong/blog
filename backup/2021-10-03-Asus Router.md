@@ -454,8 +454,8 @@ rules:
   - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
   - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
   - DOMAIN-SUFFIX,youtubekids.com,PROXY-KIDS
-  - DOMAIN-KEYWORD,youtubekids,PROXY
-  - DOMAIN,youtubekids.com,PROXY
+  - DOMAIN-KEYWORD,youtubekids,PROXY-KIDS
+  - DOMAIN,youtubekids.com,PROXY-KIDS
   - DOMAIN-SUFFIX,google.com,PROXY
   - DOMAIN-KEYWORD,google,PROXY
   - DOMAIN,google.com,PROXY
