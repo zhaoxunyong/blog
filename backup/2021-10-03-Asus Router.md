@@ -34,6 +34,9 @@ secret: '123456'
 
 #启动clash
 nohup /tmp/mnt/sda5/clash/clash-linux-armv5 -d /tmp/mnt/sda5/clash/ > /tmp/mnt/sda5/clash/clash.log &
+用-f指定文件启动会出现以下的信息，建议用-d指定目录：
+INFO[0000] Can't find MMDB, start download
+
 #访问地址为:http://ip:9090/ui
 #外部控制设置为：192.168.3.1:9090
 ```
@@ -52,9 +55,14 @@ wget https://github.com/tindy2013/subconverter/releases/download/v0.7.2/subconve
 #参数：
 #https://github.com/tindy2013/subconverter/blob/master/README-cn.md#%E7%AE%80%E6%98%93%E7%94%A8%E6%B3%95
 sub?target=%TARGET%&url=%URL%&config=%CONFIG%
-target=clash
-url=encode后的订阅地址
-config不用传
+target=clash	# 转换结果为 clash 配置
+url=https://nfnf.xyz/link/abcdefg?mu=4	# 机场订阅链接
+include=(TW|台湾|台灣)	# 只匹配台湾节点
+list=true	# 生成 provider 链接
+# 将 url 和 include 内容均 urlencode：
+url=https%3a%2f%2fnfnf.xyz%2flink%2fabcdefg%3fmu%3d4
+include=(TW%7c%e5%8f%b0%e6%b9%be%7c%e5%8f%b0%e7%81%a3)
+
 类似于：http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fxxx.xxx%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%223343
 ```
 
@@ -177,6 +185,56 @@ sudo iptables -t nat -F CLASH
 sudo iptables -t nat -X CLASH
 ```
 
+clash-check.sh:
+
+```bash
+#! /bin/sh
+case "$(pidof clash-linux-armv5 | wc -w)" in
+0)  echo "Restarting clash:     $(date)"
+    nohup /tmp/mnt/sda5/clash/clash-linux-armv5 -d /tmp/mnt/sda5/clash/ >> /tmp/mnt/sda5/clash/clash.log &
+    #iptables
+    #/tmp/mnt/sda5/clash/clash-iptables.sh
+    ;;
+1)  # all ok
+    #iptables
+    #/tmp/mnt/sda5/clash/clash-iptables.sh
+    ;;
+*)  echo "Removed double clash: $(date)"
+    kill $(pidof clash-linux-armv5 | awk '{print $1}')
+    ;;
+esac
+```
+
+subconverter-check.sh:
+
+```bash
+#! /bin/sh
+case "$(pidof subconverter | wc -w)" in
+0)  echo "Restarting subconverter:     $(date)"
+    nohup /tmp/mnt/sda5/clash/subconverter/subconverter >> /tmp/mnt/sda5/clash/clash.log &
+    ;;
+1)  # all ok
+    #iptables
+    ;;
+*)  echo "Removed double subconverter: $(date)"
+    kill $(pidof subconverter | awk '{print $1}')
+    ;;
+esac
+```
+
+clash-daemon.sh:
+
+```bash
+#!/bin/bash
+
+while true
+do
+  /tmp/mnt/sda5/clash/subconverter-check.sh
+  /tmp/mnt/sda5/clash/clash-check.sh
+  sleep 5
+done
+```
+
 /jffs/scripts/wan-event:
 
 (wan-event只适用于merlin系统，原版固件统一放在/jffs/scripts/services-start中)
@@ -192,11 +250,8 @@ if test $2 = "connected"; then
   /tmp/mnt/sda5/clash/subconverter/subconverter &
 
   sleep 5
-  /tmp/mnt/sda5/clash/subscribe.sh
-  #/tmp/mnt/sda5/clash/clash-linux-armv5 -d /tmp/mnt/sda5/clash/ &
-  /tmp/mnt/sda5/clash/clash-iptables.sh 
-
-  #/jffs/scripts/xray-daemon.sh > /tmp/mnt/sda5/xray/xray.log &
+  #/tmp/mnt/sda5/clash/subscribe.sh
+  /tmp/mnt/sda5/clash/clash-daemon.sh >> /tmp/mnt/sda5/clash/clash.log &
 fi
 ```
 
@@ -205,8 +260,210 @@ fi
 ```bash
 #!/bin/sh
 
-cru a clash-subscribe "0 0 * * *  /tmp/mnt/sda5/clash/subscribe.sh"
-cru a clash-iptables "*/1 * * * *  /tmp/mnt/sda5/clash/clash-iptables.sh"
+#cru a clash-subscribe "0 0 * * *  /tmp/mnt/sda5/clash/subscribe.sh"
+#cru a clash-iptables "*/1 * * * *  /tmp/mnt/sda5/clash/clash-iptables.sh"
+```
+
+自动更新订阅地址:
+
+```bash
+port: 1082
+socks-port: 1080
+allow-lan: true
+redir-port: 7892
+mode: Rule
+log-level: info
+external-controller: :9090
+external-ui: /tmp/mnt/sda5/clash/clash-dashboard
+secret: 'Aa123456'
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:5354
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 192.168.3.1
+
+proxy-providers:
+  TW:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28TW%7C%E5%8F%B0%E6%B9%BE%7C%E5%8F%B0%E7%81%A3%29&list=true"
+    interval: 3600
+    path: ./TW.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  HK:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E9%A6%99%E6%B8%AF%29&list=true"
+    interval: 3600
+    path: ./HK.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  SG:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28%E6%96%B0%E5%8A%A0%E5%9D%A1%29&list=true"
+    interval: 3600
+    path: ./SG.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  USA:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E7%BE%8E%E5%9B%BD%7C%E7%BE%8E%E5%9C%8B%29&list=true"
+    interval: 3600
+    path: ./USA.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  JP:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28JP%7C%E6%97%A5%E6%9C%AC%29&list=true"
+    interval: 3600
+    path: ./JP.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  KR:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28KR%7C%E9%9F%A9%E5%9B%BD%7C%E9%9F%93%E5%9C%8B%29&list=true"
+    interval: 3600
+    path: ./KR.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  NETFLIX:             
+    type: http    
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28NF%29&list=true"
+    interval: 3600
+    path: ./NETFLIX.yaml      
+    health-check: 
+      enable: true
+      interval: 600      
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  ALL:
+    type: http
+    url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
+    interval: 3600
+    path: ./ALL.yaml
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: http://www.gstatic.com/generate_204
+  
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - PROXY-KIDS
+      - PROXY-NF
+      - PROXY-TW
+      - PROXY-HK
+      - PROXY-SG
+      - PROXY-USA
+      - PROXY-JP
+      - PROXY-KR
+      - PROXY-ALL
+
+  - name: PROXY-TW 
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:          
+      - TW
+
+  - name: PROXY-HK
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - HK
+          
+  - name: PROXY-SG
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - SG
+          
+  - name: PROXY-USA
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - USA
+        
+  - name: PROXY-JP
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:          
+      - JP
+        
+  - name: PROXY-KR
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - KR
+
+  - name: PROXY-NF
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - NETFLIX
+
+  - name: PROXY-KIDS
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - USA
+      - SG
+
+  - name: PROXY-ALL                         
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    use:
+      - ALL
+
+rules:
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,youtubekids.com,PROXY-KIDS
+  - DOMAIN-KEYWORD,youtubekids,PROXY-KIDS
+  - DOMAIN,youtubekids.com,PROXY-KIDS
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN-KEYWORD,google,PROXY
+  - DOMAIN,google.com,PROXY
+  - DOMAIN-SUFFIX,ad.com,REJECT
+  - GEOIP,CN,DIRECT
+  #- SRC-PORT,7777,DIRECT
+  #- DST-PORT,80,DIRECT
+  - MATCH,PROXY
 ```
 
 ### Clash Premium
