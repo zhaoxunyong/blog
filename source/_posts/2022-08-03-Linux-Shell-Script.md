@@ -10,6 +10,8 @@ toc: true
 
 <!-- more -->
 
+## cat
+
 ```bash
 #输出多行到屏幕：
 cat << USAGE >&2
@@ -41,3 +43,47 @@ net.ipv4.tcp_syncookies = 1
 EOF
 
 ```
+
+## 插入换行
+
+```bash
+sed $'s;AAA;\\\nAAA;g' my.txt
+```
+
+## 多个匹配
+
+```bash
+sed '1,3s/my/your/g; 3,$s/This/That/g' my.txt
+
+sed -e '1,3s/my/your/g' -e '3,$s/This/That/g' my.txt
+```
+
+我们可以使用&来当做被匹配的变量，然后可以在基本左右加点东西：
+
+```bash
+$ sed 's/my/[&]/g' my.txt
+This is [my] cat, [my] cat's name is betty
+This is [my] dog, [my] dog's name is frank
+This is [my] fish, [my] fish's name is george
+This is [my] goat, [my] goat's name is adam
+```
+
+### 圆括号匹配
+
+```bash
+sed 's/This is my \([^,&]*\),.*is \(.*\)/\1:\2/g' my.txt
+cat:betty
+dog:frank
+fish:george
+goat:adam
+```
+
+也就是：
+&匹配所有的内容；
+\1匹配到的第一个 \\ ( \\)中的内容；
+\2匹配到的第二个\\ ( \\)内容。
+
+## 参考
+
+- https://www.yiibai.com/sed/sed_regular_expressions.html
+- https://coolshell.cn/articles/9104.html
