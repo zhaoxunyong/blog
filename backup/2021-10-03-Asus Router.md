@@ -827,6 +827,221 @@ cru a chinaip-update "0 2 * * * /tmp/mnt/sda5/xray/chinaips_update.sh >> /tmp/mn
 nohup /tmp/mnt/sda5/xray/xray-daemon.sh >> /tmp/mnt/sda5/xray/xray.log &
 ```
 
+## Trojan
+
+### Server 
+
+server.json:
+```bash
+#https://p4gefau1t.github.io/trojan-go/basic/config/
+{
+    "run_type": "server",
+    "local_addr": "0.0.0.0",
+    "local_port": 31091,
+    "remote_addr": "127.0.0.1",
+    "remote_port": 80,
+    "password": [
+        "gPt7R7hw4Y"
+    ],
+    "ssl": {
+        "cert": "/usr/local/etc/xray/cert/xray.crt",
+        "key": "/usr/local/etc/xray/cert/xray.key",
+        "fallback_port": 31090
+    }
+}
+```
+
+启动：
+```bash
+./trojan-go -config ./server.json
+```
+
+### Windows Client
+
+```bash
+port: 1082
+socks-port: 1080
+allow-lan: true
+# redir-port: 7892
+mode: Rule
+log-level: info
+external-controller: :9090
+external-ui: D:\Developer\Proxy\clash\clash-dashboard
+secret: '111111'
+tun:
+  enable: true
+  stack: gvisor # or system
+  dns-hijack:
+    - 198.18.0.2:53 # when `fake-ip-range` is 198.18.0.1/16, should hijack 198.18.0.2:53
+  auto-route: true # auto set global route for Windows
+  # It is recommended to use `interface-name`
+  auto-detect-interface: true # auto detect interface, conflict with `interface-name`
+
+dns:
+  enable: true
+  ipv6: false
+  listen: '0.0.0.0:8053'
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 114.114.114.114
+    - 'tcp://223.5.5.5'
+  fallback:
+    - 'tls://223.5.5.5:853'
+    - 'https://223.5.5.5/dns-query'
+  fallback-filter:
+    geoip: true
+    ipcidr:
+      - 240.0.0.0/4
+
+proxies:
+  # - name: "scloud"
+  #   type: trojan
+  #   server: aaa.bbb.com
+  #   port: 31091
+  #   password: 111111
+  #   # udp: true
+  #   sni: aaa.bbb.com # aka server name
+  #   alpn:
+  #     - h2
+  #     - http/1.1
+  #   skip-cert-verify: true
+
+  - { name: 'scloud', type: trojan, server: aaa.bbb.com, port: 31091, password: 111111, sni: aaa.bbb.com }
+
+proxy-groups:
+  - { name: 'PROXY', type: select, proxies: ['scloud'] }
+
+
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  greatfire:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/greatfire.txt"
+    path: ./ruleset/greatfire.yaml
+    interval: 86400
+
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
+
+
+rules:
+  - RULE-SET,applications,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - RULE-SET,private,DIRECT
+  - RULE-SET,reject,REJECT
+  - RULE-SET,icloud,DIRECT
+  - RULE-SET,apple,DIRECT
+  - RULE-SET,google,DIRECT
+  - RULE-SET,proxy,PROXY
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,lancidr,DIRECT
+  - RULE-SET,cncidr,DIRECT
+  - RULE-SET,telegramcidr,PROXY
+  - GEOIP,,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
+```
+
+启动:
+
+```bash
+#手动启动
+D:\Developer\Proxy\clash\clash-windows-amd64.exe -d D:\Developer\Proxy\clash\
+#添加服务
+sc create Clash binpath= "D:\Developer\Proxy\clash\clash-windows-amd64.exe -d D:\Developer\Proxy\clash\" start= auto
+sc description Clash "Clash Service"
+```
+
 ## 原版固件开机启动
 
 ### 安装
