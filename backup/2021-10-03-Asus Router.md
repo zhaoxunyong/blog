@@ -646,7 +646,7 @@ rules:
 /tmp/mnt/sda5/clash/clash-linux-armv5 -f /tmp/mnt/sda5/clash/config.yaml
 ```
 
-用在路由器不太合适：因为在启动时需要系统时间为当前时间，否则会报错：
+用在路由器不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可以是由于用-f指定文件造成的，后面再研究)：
 ```bash
 FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
 ```
@@ -1037,9 +1037,31 @@ rules:
 ```bash
 #手动启动
 D:\Developer\Proxy\clash\clash-windows-amd64.exe -d D:\Developer\Proxy\clash\
-#添加服务
-sc create Clash binpath= "D:\Developer\Proxy\clash\clash-windows-amd64.exe -d D:\Developer\Proxy\clash\" start= auto
-sc description Clash "Clash Service"
+
+#无窗口启动
+#clash-start.vbs：
+Set MyScript    = CreateObject("WScript.Shell")
+MyScript.Run "D:\Developer\Proxy\clash\clash-windows-amd64.exe -d D:\Developer\Proxy\clash\", 0, False
+
+#clash-start.bat
+cscript D:\Developer\Proxy\clash\clash-start.vbs
+
+#开机启动：
+#https://www.windowscentral.com/how-create-and-run-batch-file-windows-10
+1. Open Start.
+2. Search for Task Scheduler and click the top result to open the app.
+3. Right-click the "Task Scheduler Library" branch and select the New Folder option.
+4. Confirm a name for the folder — for example, MyScripts.
+5. Quick note: You don't need to create a folder, but keeping the system and your tasks separate is recommended.
+6. Click the OK button.
+7. Expand the "Task Scheduler Library" branch.
+8. Right-click the MyScripts folder.
+9. Select the Create Basic Task option.
+Notice the following configurations: 
+Change User or Group as a correct option.
+Run only when user is logged on.
+Run with highest privileges.
+Configure for: Windows 10.
 ```
 
 ## 原版固件开机启动
