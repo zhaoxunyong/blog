@@ -485,13 +485,19 @@ secret: 'Aa123456'
 dns:
   enable: true
   ipv6: false
-  listen: 0.0.0.0:5354
+  listen: '0.0.0.0:8053'
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   nameserver:
-    - 192.168.3.1
+    - 114.114.114.114
+    - 'tcp://223.5.5.5'
   fallback:
-    - 8.8.8.8
+    - 'tls://223.5.5.5:853'
+    - 'https://223.5.5.5/dns-query'
+  fallback-filter:
+    geoip: true
+    ipcidr:
+      - 240.0.0.0/4
 
 proxy-providers:
   provider1:
@@ -858,6 +864,10 @@ server.json:
 
 ### Windows Client
 
+https://github.com/Dreamacro/clash/wiki/premium-core-features
+
+go to https://www.wintun.net and download the latest release, copy the right wintun.dll into Clash home directory.
+
 ```bash
 port: 1082
 socks-port: 1080
@@ -1030,6 +1040,21 @@ rules:
   - GEOIP,,DIRECT
   - GEOIP,CN,DIRECT
   - MATCH,PROXY
+```
+
+注意：Linux下的tun配置为：
+
+```bash
+tun:
+  enable: true
+  stack: system # or gvisor
+  # dns-hijack:
+  #   - 8.8.8.8:53
+  #   - tcp://8.8.8.8:53
+  #   - any:53
+  #   - tcp://any:53
+  auto-route: true # auto set global route
+  auto-detect-interface: true # conflict with interface-name
 ```
 
 启动:
