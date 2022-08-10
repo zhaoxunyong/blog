@@ -65,6 +65,64 @@ url=https%3a%2f%2fnfnf.xyz%2flink%2fabcdefg%3fmu%3d4
 include=(TW%7c%e5%8f%b0%e6%b9%be%7c%e5%8f%b0%e7%81%a3)
 
 类似于：http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fxxx.xxx%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%223343
+
+#pref.ini
+mv pref.toml pref.toml.bak
+cp -a pref.example.ini pref.ini
+#vi pref.ini
+default_url=https://xxx?token=xxx
+
+enable_filter=true
+filter_script=path:./script.js
+
+ruleset=DIRECT,surge:rules/LocalAreaNetwork.list
+
+;ruleset=!!import:snippets/rulesets.txt
+ruleset=PROXY,[]DOMAIN-SUFFIX,youtubekids.com
+ruleset=PROXY,[]DOMAIN-KEYWORD,youtubekids
+ruleset=PROXY,[]DOMAIN,youtubekids.com
+ruleset=PROXY,[]DOMAIN-SUFFIX,google.com
+ruleset=PROXY,[]DOMAIN-KEYWORD,google
+ruleset=PROXY,[]DOMAIN,google.com
+ruleset=REJECT,[]DOMAIN-SUFFIX,ad.com
+ruleset=DIRECT,[]GEOIP,CN
+ruleset=PROXY,[]MATCH
+
+;custom_proxy_group=!!import:snippets/groups.txt
+custom_proxy_group=PROXY`select`script:./custom_proxy_script.js
+
+#vi script.js
+function filter(node) {
+    //console.log(JSON.stringify(node));
+    //console.log(node.Remark);
+    //https://github.com/netchx/netch/blob/268bdb7730999daf9f27b4a81cfed5c36366d1ce/GSF.md
+    if(node.Group.includes('Trojan')) {
+        // false means: include
+        return false;
+    }
+    // true means: exclude
+    return true;
+}
+
+#vi custom_proxy_script.js
+function filter(filters) {
+    // console.log(filters);
+    // console.log(JSON.stringify(filters));
+    var nodes = "";
+    filters.forEach(function (filter) {
+        // console.log(filter.Remark);
+        nodes =  nodes + "\n" + filter.Remark;
+    });
+    // console.log(filter.Group);
+    // if(filter.Group.includes('Trojan')) {
+    //     return true;
+    // }
+    //此处应返回一个包含所有节点名称的字符串，使用换行符 \n 隔开
+    return nodes;
+}
+
+#订阅:
+http://192.168.3.1:25500/sub?target=clash
 ```
 
 ### 透明代理
