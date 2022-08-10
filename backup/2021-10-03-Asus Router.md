@@ -470,195 +470,6 @@ rules:
 
 Premium下载地址：https://github.com/Dreamacro/clash/releases/tag/premium
 
-#### Linux Client
-
-```bash
-#https://www.izhaong.com/pages/0dc79d/
-#https://github.com/Dreamacro/clash/wiki/configuration
-port: 1082
-socks-port: 1080
-allow-lan: true
-redir-port: 7892
-mode: Rule
-log-level: info
-external-controller: :9090
-external-ui: /tmp/mnt/sda5/clash/clash-dashboard
-secret: 'Aa123456'
-dns:
-  enable: true
-  ipv6: false
-  listen: '0.0.0.0:8053'
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  nameserver:
-    - 114.114.114.114
-    - 'tcp://223.5.5.5'
-  fallback:
-    - 'tls://223.5.5.5:853'
-    - 'https://223.5.5.5/dns-query'
-  fallback-filter:
-    geoip: true
-    ipcidr:
-      - 240.0.0.0/4
-
-proxy-providers:
-  provider1:
-    type: http
-    url: "http://192.168.3.1:25500/sub?target=clash&url=encode后的订阅地址&list=true"
-    interval: 3600
-    path: ./nodes.yaml
-    health-check:
-      enable: true
-      interval: 600
-      # lazy: true
-      url: http://www.gstatic.com/generate_204
-
-proxy-groups:
-  - name: PROXY
-    type: select
-    use:
-      - provider1
-    proxies:
-      - AUTO
-      - DIRECT
-
-  - name: AUTO
-    type: url-test
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    use:
-      - provider1
-
-rule-providers:
-  reject:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
-    path: ./ruleset/reject.yaml
-    interval: 86400
-
-  icloud:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
-    path: ./ruleset/icloud.yaml
-    interval: 86400
-
-  apple:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
-    path: ./ruleset/apple.yaml
-    interval: 86400
-
-  google:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
-    path: ./ruleset/google.yaml
-    interval: 86400
-
-  proxy:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
-    path: ./ruleset/proxy.yaml
-    interval: 86400
-
-  direct:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
-    path: ./ruleset/direct.yaml
-    interval: 86400
-
-  private:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
-    path: ./ruleset/private.yaml
-    interval: 86400
-
-  gfw:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
-    path: ./ruleset/gfw.yaml
-    interval: 86400
-
-  greatfire:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/greatfire.txt"
-    path: ./ruleset/greatfire.yaml
-    interval: 86400
-
-  tld-not-cn:
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
-    path: ./ruleset/tld-not-cn.yaml
-    interval: 86400
-
-  telegramcidr:
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
-    path: ./ruleset/telegramcidr.yaml
-    interval: 86400
-
-  cncidr:
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
-    path: ./ruleset/cncidr.yaml
-    interval: 86400
-
-  lancidr:
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
-    path: ./ruleset/lancidr.yaml
-    interval: 86400
-
-  applications:
-    type: http
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
-    path: ./ruleset/applications.yaml
-    interval: 86400
-
-
-rules:
-  - RULE-SET,applications,DIRECT
-  - DOMAIN,clash.razord.top,DIRECT
-  - DOMAIN,yacd.haishan.me,DIRECT
-  - RULE-SET,private,DIRECT
-  - RULE-SET,reject,REJECT
-  - RULE-SET,icloud,DIRECT
-  - RULE-SET,apple,DIRECT
-  - RULE-SET,google,DIRECT
-  - RULE-SET,proxy,PROXY
-  - RULE-SET,direct,DIRECT
-  - RULE-SET,lancidr,DIRECT
-  - RULE-SET,cncidr,DIRECT
-  - RULE-SET,telegramcidr,PROXY
-  - GEOIP,,DIRECT
-  - GEOIP,CN,DIRECT
-  - MATCH,PROXY
-```
-
-启动:
-
-```bash
-/tmp/mnt/sda5/clash/clash-linux-armv5 -f /tmp/mnt/sda5/clash/config.yaml
-```
-
-用在路由器不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可能是由于用-f指定文件造成的，后面再研究)：
-```bash
-FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
-```
-
 #### Windows Client
 
 https://github.com/Dreamacro/clash/wiki/premium-core-features
@@ -854,6 +665,14 @@ tun:
   #   - tcp://any:53
   auto-route: true # auto set global route
   auto-detect-interface: true # conflict with interface-name
+```
+
+Linux下建议用Iptables实现透明代理。
+
+
+用在路由器可能不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可能是由于用-f指定文件造成的，后面再研究)：
+```bash
+FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
 ```
 
 启动:
