@@ -470,6 +470,8 @@ rules:
 
 Premium下载地址：https://github.com/Dreamacro/clash/releases/tag/premium
 
+#### Linux Client
+
 ```bash
 #https://www.izhaong.com/pages/0dc79d/
 #https://github.com/Dreamacro/clash/wiki/configuration
@@ -652,221 +654,18 @@ rules:
 /tmp/mnt/sda5/clash/clash-linux-armv5 -f /tmp/mnt/sda5/clash/config.yaml
 ```
 
-用在路由器不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可以是由于用-f指定文件造成的，后面再研究)：
+用在路由器不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可能是由于用-f指定文件造成的，后面再研究)：
 ```bash
 FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
 ```
 
-## Xray
-
-### 安装与配置
-
-```bash
-mkdir -p /tmp/mnt/sda5/xray
-cd /tmp/mnt/sda5/xray
-wget https://github.com/XTLS/Xray-core/releases/download/v1.5.9/Xray-linux-arm32-v5.zip
-unzip Xray-linux-arm32-v5.zip
-chmod +x xray
-#Downloading rule files from https://github.com/Loyalsoldier/v2ray-rules-dat:
-#curl -oL /tmp/mnt/sda5/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-#curl -oL /tmp/mnt/sda5/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-#Copying config.json
-#scp /d/config.json admin@192.168.0.1:/tmp/mnt/sda5/xray/config.json
-#Starting
-/tmp/mnt/sda5/xray/xray -c /tmp/mnt/sda5/xray/config.json
-```
-
-### 完整脚本
-
-xray-check.sh:
-
-```bash
-#! /bin/sh
-case "$(pidof xray | wc -w)" in
-0)  echo "Restarting xray:     $(date)"
-    nohup /tmp/mnt/sda5/xray/xray -c /tmp/mnt/sda5/xray/config.json > /tmp/mnt/sda5/xray/xray-access.log 2>&1 &
-    #iptables
-    /tmp/mnt/sda5/xray/xray-iptables.sh
-    ;;
-1)  # all ok
-    #iptables
-    /tmp/mnt/sda5/xray/xray-iptables.sh
-    ;;
-*)  echo "Removed double xray: $(date)"
-    kill $(pidof xray | awk '{print $1}')
-    ;;
-esac
-```
-
-xray-daemon.sh:
-
-```bash
-#!/bin/bash
-
-while true
-do
-  /tmp/mnt/sda5/xray/xray-check.sh
-  sleep 5
-done
-```
-
-xray-iptables.sh:
-
-```bash
-#!/bin/sh
-
-#iptables -nL INPUT|grep 1080 > /dev/null 2>&1
-iptables -t nat -nL XRAY > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "iptables wasn't existing, starting:     $(date)"
-    /tmp/mnt/sda5/xray/ipset.sh
-    #新建一个名为 XRAY 的链
-    iptables -t nat -N XRAY
-    #内部流量不转发给XRAY直通
-    iptables -t nat -A XRAY -d 0.0.0.0/8 -j RETURN
-    iptables -t nat -A XRAY -d 10.0.0.0/8 -j RETURN
-    iptables -t nat -A XRAY -d 127.0.0.0/8 -j RETURN
-    iptables -t nat -A XRAY -d 169.254.0.0/16 -j RETURN
-    iptables -t nat -A XRAY -d 172.16.0.0/12 -j RETURN
-    iptables -t nat -A XRAY -d 192.168.0.0/16 -j RETURN
-    iptables -t nat -A XRAY -d 224.0.0.0/4 -j RETURN
-    iptables -t nat -A XRAY -d 240.0.0.0/4 -j RETURN
-    #Chinese IPs
-    iptables -t nat -A XRAY -p tcp -m set --match-set china_ip dst -j RETURN
-    # 直连 SO_MARK为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面的 255)，此规则目的是避免代理本机(网关)流量出现回环问题
-    iptables -t nat -A XRAY -p tcp -j RETURN -m mark --mark 0xff
-    
-    # 其余流量转发到 12345 端口（即 V2Ray）
-    iptables -t nat -A XRAY -p tcp -j REDIRECT --to-ports 12345
-    
-    # 对局域网其他设备进行透明代理
-    #iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp -j XRAY
-
-    #Desktop Computer
-    iptables -t nat -A PREROUTING -s 192.168.3.35 -p tcp -j XRAY
-
-    #For ocserv client ip
-    #iptables -t nat -A PREROUTING -s 192.168.3.110 -p tcp -j XRAY
-    
-    # 对本机进行透明代理(不开启不影响路由器其他设备访问)
-    #iptables -t nat -A OUTPUT -p tcp -j XRAY
-fi
-```
-
-清除iptables:
-
-```bash
-sudo iptables -t nat -D OUTPUT -p tcp -j XRAY
-sudo iptables -t nat -F XRAY
-sudo iptables -t nat -X XRAY
-```
-
-xray-kill.sh:
-
-```bash
-#! /bin/sh
-
-echo "Killing xray: $(date)"
-kill $(pidof xray | awk '{print $1}')
-```
-
-ipset.sh:
-
-```bash
-#!/bin/sh
-
-if test -z "$(ipset list -n)";
-then
-  echo "Ipset is not existing, recreating..."
-  [[ ! -f /tmp/mnt/sda5/xray/cn.zone ]] && wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /tmp/mnt/sda5/xray/cn.zone
-  ipset create china_ip hash:net maxelem 1000000
-  for ip in $(cat '/tmp/mnt/sda5/xray/cn.zone'); do
-    ipset add china_ip $ip
-  done
-  echo "Creating ipset successfully."
-else
-  echo "Ipset is existing, continute..."
-fi
-```
-
-chinaips_update.sh:
-
-```bash
-#!/bin/sh
-
-echo "Updating china ips repositories...     $(date)"
-wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /tmp/mnt/sda5/xray/cn.zone
-echo "Updating china ips is done.     $(date)"
-```
-
-geodat-update.sh:
-
-```bash
-#!/bin/sh
-
-#curl -x http://192.168.3.1:1082 -L -o /tmp/mnt/sda5/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-curl -L -o /tmp/mnt/sda5/xray/geoip.dat https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
-
-#curl -x http://192.168.3.1:1082 -L -o /tmp/mnt/sda5/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-curl -L -o /tmp/mnt/sda5/xray/geosite.dat https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
-
-```
-
-services-start:
-
-```bash
-#!/bin/sh
-
-#swap on
-sleep 5
-swapon /tmp/mnt/sda5/myswap.swp
-
-#kill xray pid on 05:00 every day, it'll be started by xray-daemon.sh
-cru a xray-kill "0 5 * * *  /tmp/mnt/sda5/xray/xray-kill.sh  >> /tmp/mnt/sda5/xray/xray.log"
-
-#check geoip and geosite on 01:00 of every day
-cru a geodat-update "0 1 * * * /tmp/mnt/sda5/xray/geodat-update.sh >> /tmp/mnt/sda5/xray/xray.log"
-
-#check chinaip on 02:00 of every day
-cru a chinaip-update "0 2 * * * /tmp/mnt/sda5/xray/chinaips_update.sh >> /tmp/mnt/sda5/xray/xray.log"
-
-nohup /tmp/mnt/sda5/xray/xray-daemon.sh >> /tmp/mnt/sda5/xray/xray.log &
-```
-
-## Trojan
-
-### Server 
-
-server.json:
-```bash
-#https://p4gefau1t.github.io/trojan-go/basic/config/
-{
-    "run_type": "server",
-    "local_addr": "0.0.0.0",
-    "local_port": 31091,
-    "remote_addr": "127.0.0.1",
-    "remote_port": 80,
-    "password": [
-        "gPt7R7hw4Y"
-    ],
-    "ssl": {
-        "cert": "/usr/local/etc/xray/cert/xray.crt",
-        "key": "/usr/local/etc/xray/cert/xray.key",
-        "fallback_port": 31090
-    }
-}
-```
-
-启动：
-```bash
-./trojan-go -config ./server.json
-```
-
-### Windows Client
+#### Windows Client
 
 https://github.com/Dreamacro/clash/wiki/premium-core-features
 
 go to https://www.wintun.net and download the latest release, copy the right wintun.dll into Clash home directory.
+
+开启全局透明代理：
 
 ```bash
 port: 1082
@@ -1087,6 +886,182 @@ Change User or Group as a correct option.
 Run only when user is logged on.
 Run with highest privileges.
 Configure for: Windows 10.
+```
+
+## Xray
+
+### 安装与配置
+
+```bash
+mkdir -p /tmp/mnt/sda5/xray
+cd /tmp/mnt/sda5/xray
+wget https://github.com/XTLS/Xray-core/releases/download/v1.5.9/Xray-linux-arm32-v5.zip
+unzip Xray-linux-arm32-v5.zip
+chmod +x xray
+#Downloading rule files from https://github.com/Loyalsoldier/v2ray-rules-dat:
+#curl -oL /tmp/mnt/sda5/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+#curl -oL /tmp/mnt/sda5/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+#Copying config.json
+#scp /d/config.json admin@192.168.0.1:/tmp/mnt/sda5/xray/config.json
+#Starting
+/tmp/mnt/sda5/xray/xray -c /tmp/mnt/sda5/xray/config.json
+```
+
+### 完整脚本
+
+xray-check.sh:
+
+```bash
+#! /bin/sh
+case "$(pidof xray | wc -w)" in
+0)  echo "Restarting xray:     $(date)"
+    nohup /tmp/mnt/sda5/xray/xray -c /tmp/mnt/sda5/xray/config.json > /tmp/mnt/sda5/xray/xray-access.log 2>&1 &
+    #iptables
+    /tmp/mnt/sda5/xray/xray-iptables.sh
+    ;;
+1)  # all ok
+    #iptables
+    /tmp/mnt/sda5/xray/xray-iptables.sh
+    ;;
+*)  echo "Removed double xray: $(date)"
+    kill $(pidof xray | awk '{print $1}')
+    ;;
+esac
+```
+
+xray-daemon.sh:
+
+```bash
+#!/bin/bash
+
+while true
+do
+  /tmp/mnt/sda5/xray/xray-check.sh
+  sleep 5
+done
+```
+
+xray-iptables.sh:
+
+```bash
+#!/bin/sh
+
+#iptables -nL INPUT|grep 1080 > /dev/null 2>&1
+iptables -t nat -nL XRAY > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "iptables wasn't existing, starting:     $(date)"
+    /tmp/mnt/sda5/xray/ipset.sh
+    #新建一个名为 XRAY 的链
+    iptables -t nat -N XRAY
+    #内部流量不转发给XRAY直通
+    iptables -t nat -A XRAY -d 0.0.0.0/8 -j RETURN
+    iptables -t nat -A XRAY -d 10.0.0.0/8 -j RETURN
+    iptables -t nat -A XRAY -d 127.0.0.0/8 -j RETURN
+    iptables -t nat -A XRAY -d 169.254.0.0/16 -j RETURN
+    iptables -t nat -A XRAY -d 172.16.0.0/12 -j RETURN
+    iptables -t nat -A XRAY -d 192.168.0.0/16 -j RETURN
+    iptables -t nat -A XRAY -d 224.0.0.0/4 -j RETURN
+    iptables -t nat -A XRAY -d 240.0.0.0/4 -j RETURN
+    #Chinese IPs
+    iptables -t nat -A XRAY -p tcp -m set --match-set china_ip dst -j RETURN
+    # 直连 SO_MARK为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面的 255)，此规则目的是避免代理本机(网关)流量出现回环问题
+    iptables -t nat -A XRAY -p tcp -j RETURN -m mark --mark 0xff
+    
+    # 其余流量转发到 12345 端口（即 V2Ray）
+    iptables -t nat -A XRAY -p tcp -j REDIRECT --to-ports 12345
+    
+    # 对局域网其他设备进行透明代理
+    #iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp -j XRAY
+
+    #Desktop Computer
+    iptables -t nat -A PREROUTING -s 192.168.3.35 -p tcp -j XRAY
+
+    #For ocserv client ip
+    #iptables -t nat -A PREROUTING -s 192.168.3.110 -p tcp -j XRAY
+    
+    # 对本机进行透明代理(不开启不影响路由器其他设备访问)
+    #iptables -t nat -A OUTPUT -p tcp -j XRAY
+fi
+```
+
+清除iptables:
+
+```bash
+sudo iptables -t nat -D OUTPUT -p tcp -j XRAY
+sudo iptables -t nat -F XRAY
+sudo iptables -t nat -X XRAY
+```
+
+xray-kill.sh:
+
+```bash
+#! /bin/sh
+
+echo "Killing xray: $(date)"
+kill $(pidof xray | awk '{print $1}')
+```
+
+ipset.sh:
+
+```bash
+#!/bin/sh
+
+if test -z "$(ipset list -n)";
+then
+  echo "Ipset is not existing, recreating..."
+  [[ ! -f /tmp/mnt/sda5/xray/cn.zone ]] && wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /tmp/mnt/sda5/xray/cn.zone
+  ipset create china_ip hash:net maxelem 1000000
+  for ip in $(cat '/tmp/mnt/sda5/xray/cn.zone'); do
+    ipset add china_ip $ip
+  done
+  echo "Creating ipset successfully."
+else
+  echo "Ipset is existing, continute..."
+fi
+```
+
+chinaips_update.sh:
+
+```bash
+#!/bin/sh
+
+echo "Updating china ips repositories...     $(date)"
+wget http://www.ipdeny.com/ipblocks/data/countries/cn.zone -O /tmp/mnt/sda5/xray/cn.zone
+echo "Updating china ips is done.     $(date)"
+```
+
+geodat-update.sh:
+
+```bash
+#!/bin/sh
+
+#curl -x http://192.168.3.1:1082 -L -o /tmp/mnt/sda5/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+curl -L -o /tmp/mnt/sda5/xray/geoip.dat https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
+
+#curl -x http://192.168.3.1:1082 -L -o /tmp/mnt/sda5/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+curl -L -o /tmp/mnt/sda5/xray/geosite.dat https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
+
+```
+
+services-start:
+
+```bash
+#!/bin/sh
+
+#swap on
+sleep 5
+swapon /tmp/mnt/sda5/myswap.swp
+
+#kill xray pid on 05:00 every day, it'll be started by xray-daemon.sh
+cru a xray-kill "0 5 * * *  /tmp/mnt/sda5/xray/xray-kill.sh  >> /tmp/mnt/sda5/xray/xray.log"
+
+#check geoip and geosite on 01:00 of every day
+cru a geodat-update "0 1 * * * /tmp/mnt/sda5/xray/geodat-update.sh >> /tmp/mnt/sda5/xray/xray.log"
+
+#check chinaip on 02:00 of every day
+cru a chinaip-update "0 2 * * * /tmp/mnt/sda5/xray/chinaips_update.sh >> /tmp/mnt/sda5/xray/xray.log"
+
+nohup /tmp/mnt/sda5/xray/xray-daemon.sh >> /tmp/mnt/sda5/xray/xray.log &
 ```
 
 ## 原版固件开机启动
