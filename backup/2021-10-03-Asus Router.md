@@ -57,8 +57,8 @@ wget https://github.com/tindy2013/subconverter/releases/download/v0.7.2/subconve
 sub?target=%TARGET%&url=%URL%&config=%CONFIG%
 target=clash	# 转换结果为 clash 配置
 url=https://nfnf.xyz/link/abcdefg?mu=4	# 机场订阅链接
-include=(TW|台湾|台灣)	# 只匹配台湾节点
-include=(^(?!.*(美国|日本)).*) #不包括美国或日本
+include=(TW|台湾|台灣)	# 只匹配台湾的节点
+include=(^(?!.*(美国|日本)).*) #不包括美国或日本的节点
 list=true	# 生成 provider 链接
 # 将 url 和 include 内容均 urlencode：
 url=https%3a%2f%2fnfnf.xyz%2flink%2fabcdefg%3fmu%3d4
