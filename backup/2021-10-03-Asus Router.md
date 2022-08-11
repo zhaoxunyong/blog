@@ -726,13 +726,7 @@ tun:
   auto-detect-interface: true # conflict with interface-name
 ```
 
-Linux下建议用Iptables实现透明代理。
-
-
-用在路由器可能不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可能是由于用-f指定文件造成的，后面再研究)：
-```bash
-FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
-```
+Linux下建议用Iptables实现透明代理，用tun有一些代理节点不能使用，比较奇怪。
 
 启动:
 
