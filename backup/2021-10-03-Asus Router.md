@@ -349,7 +349,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28TW%7C%E5%8F%B0%E6%B9%BE%7C%E5%8F%B0%E7%81%A3%29&list=true"
     interval: 3600
-    path: ./TW.yaml
+    path: ./yaml/TW.yaml
     health-check:
       enable: true
       interval: 600
@@ -359,7 +359,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E9%A6%99%E6%B8%AF%29&list=true"
     interval: 3600
-    path: ./HK.yaml
+    path: ./yaml/HK.yaml
     health-check:
       enable: true
       interval: 600
@@ -369,7 +369,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28%E6%96%B0%E5%8A%A0%E5%9D%A1%29&list=true"
     interval: 3600
-    path: ./SG.yaml
+    path: ./yaml/SG.yaml
     health-check:
       enable: true
       interval: 600
@@ -379,7 +379,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E7%BE%8E%E5%9B%BD%7C%E7%BE%8E%E5%9C%8B%29&list=true"
     interval: 3600
-    path: ./USA.yaml
+    path: ./yaml/USA.yaml
     health-check:
       enable: true
       interval: 600
@@ -389,7 +389,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28JP%7C%E6%97%A5%E6%9C%AC%29&list=true"
     interval: 3600
-    path: ./JP.yaml
+    path: ./yaml/JP.yaml
     health-check:
       enable: true
       interval: 600
@@ -399,7 +399,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28KR%7C%E9%9F%A9%E5%9B%BD%7C%E9%9F%93%E5%9C%8B%29&list=true"
     interval: 3600
-    path: ./KR.yaml
+    path: ./yaml/KR.yaml
     health-check:
       enable: true
       interval: 600
@@ -409,7 +409,7 @@ proxy-providers:
     type: http    
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28NF%29&list=true"
     interval: 3600
-    path: ./NETFLIX.yaml      
+    path: ./yaml/NETFLIX.yaml      
     health-check: 
       enable: true
       interval: 600      
@@ -419,7 +419,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
     interval: 3600
-    path: ./ALL.yaml
+    path: ./yaml/ALL.yaml
     health-check:
       enable: true
       interval: 600
