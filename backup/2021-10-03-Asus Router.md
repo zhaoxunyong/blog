@@ -1034,6 +1034,8 @@ remote_port = 54231
 type = http
 local_port = 80
 custom_domains = router.abc.com
+http_user = 自定义用户名
+http_pwd = 自定义密码
 
 #Start
 ./frpc -c frpc.ini
