@@ -996,3 +996,45 @@ swapon /tmp/mnt/sda1/myswap.swp
 ```
 chmod a+rx /jffs/scripts/services-start
 ```
+
+## frp内网穿透
+
+- https://gofrp.org/docs/examples/ssh/
+- https://gofrp.org/docs/examples/vhost-http/
+
+### frps
+
+```bash
+#Server Side:
+#vim frps.ini:
+[common]
+bind_port = 54123
+vhost_http_port = 54456
+
+#Start
+./frps -c frps.ini
+```
+
+### frpc
+
+```bash
+#Client Side:
+#vim frpc.ini:
+[common]
+server_addr = 111.111.111.111
+server_port = 54123
+
+[ssh]
+type = tcp
+local_ip = 192.168.3.1
+local_port = 22
+remote_port = 54231
+
+[web2]
+type = http
+local_port = 80
+custom_domains = router.abc.com
+
+#Start
+./frpc -c frpc.ini
+```
