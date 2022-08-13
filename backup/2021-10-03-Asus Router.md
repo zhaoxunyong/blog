@@ -1010,6 +1010,7 @@ chmod a+rx /jffs/scripts/services-start
 [common]
 bind_port = 54123
 vhost_http_port = 54456
+token = A String Token
 
 #Start
 ./frps -c frps.ini
@@ -1023,6 +1024,7 @@ vhost_http_port = 54456
 [common]
 server_addr = 111.111.111.111
 server_port = 54123
+token = A String Token
 
 [ssh]
 type = tcp
