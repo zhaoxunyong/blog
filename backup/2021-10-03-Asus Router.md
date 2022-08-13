@@ -1032,10 +1032,10 @@ local_ip = 192.168.3.1
 local_port = 22
 remote_port = 54231
 
-[web2]
+[web]
 type = http
 local_port = 80
-custom_domains = router.abc.com
+custom_domains = ip ro domain
 http_user = 自定义用户名
 http_pwd = 自定义密码
 
