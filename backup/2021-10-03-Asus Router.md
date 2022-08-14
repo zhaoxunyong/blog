@@ -239,9 +239,9 @@ fi
 清除iptables:
 
 ```bash
-sudo iptables -t nat -D OUTPUT -p tcp -j CLASH
-sudo iptables -t nat -F CLASH
-sudo iptables -t nat -X CLASH
+iptables -t nat -D OUTPUT -p tcp -j CLASH
+iptables -t nat -F CLASH
+iptables -t nat -X CLASH
 ```
 
 clash-check.sh:
