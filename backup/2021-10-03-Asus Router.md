@@ -239,9 +239,9 @@ fi
 清除iptables:
 
 ```bash
-sudo iptables -t nat -D OUTPUT -p tcp -j CLASH
-sudo iptables -t nat -F CLASH
-sudo iptables -t nat -X CLASH
+iptables -t nat -D OUTPUT -p tcp -j CLASH
+iptables -t nat -F CLASH
+iptables -t nat -X CLASH
 ```
 
 clash-check.sh:
@@ -349,7 +349,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28TW%7C%E5%8F%B0%E6%B9%BE%7C%E5%8F%B0%E7%81%A3%29&list=true"
     interval: 3600
-    path: ./TW.yaml
+    path: ./yaml/TW.yaml
     health-check:
       enable: true
       interval: 600
@@ -359,7 +359,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E9%A6%99%E6%B8%AF%29&list=true"
     interval: 3600
-    path: ./HK.yaml
+    path: ./yaml/HK.yaml
     health-check:
       enable: true
       interval: 600
@@ -369,7 +369,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28%E6%96%B0%E5%8A%A0%E5%9D%A1%29&list=true"
     interval: 3600
-    path: ./SG.yaml
+    path: ./yaml/SG.yaml
     health-check:
       enable: true
       interval: 600
@@ -379,7 +379,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28USA%7C%E7%BE%8E%E5%9B%BD%7C%E7%BE%8E%E5%9C%8B%29&list=true"
     interval: 3600
-    path: ./USA.yaml
+    path: ./yaml/USA.yaml
     health-check:
       enable: true
       interval: 600
@@ -389,7 +389,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28JP%7C%E6%97%A5%E6%9C%AC%29&list=true"
     interval: 3600
-    path: ./JP.yaml
+    path: ./yaml/JP.yaml
     health-check:
       enable: true
       interval: 600
@@ -399,7 +399,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28KR%7C%E9%9F%A9%E5%9B%BD%7C%E9%9F%93%E5%9C%8B%29&list=true"
     interval: 3600
-    path: ./KR.yaml
+    path: ./yaml/KR.yaml
     health-check:
       enable: true
       interval: 600
@@ -409,7 +409,7 @@ proxy-providers:
     type: http    
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&include=%28NF%29&list=true"
     interval: 3600
-    path: ./NETFLIX.yaml      
+    path: ./yaml/NETFLIX.yaml      
     health-check: 
       enable: true
       interval: 600      
@@ -419,7 +419,7 @@ proxy-providers:
     type: http
     url: "http://192.168.3.1:25500/sub?target=clash&url=https%3A%2F%2Fzhaoxy.xyz%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D4f17968855a2667e07e7699f046d0eb6&list=true"
     interval: 3600
-    path: ./ALL.yaml
+    path: ./yaml/ALL.yaml
     health-check:
       enable: true
       interval: 600
@@ -726,13 +726,7 @@ tun:
   auto-detect-interface: true # conflict with interface-name
 ```
 
-Linux下建议用Iptables实现透明代理。
-
-
-用在路由器可能不太合适：因为在启动时需要系统时间为当前时间，否则会报错(可能是由于用-f指定文件造成的，后面再研究)：
-```bash
-FATA[0000] Initial configuration directory error: can't initial MMDB: can't download MMDB: Get "https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb": x509: certificate has expired or is not yet valid: current time 2018-05-05T13:07:47+08:00 is before 2022-03-21T10:50:15Z
-```
+Linux下建议用Iptables实现透明代理，用tun有一些代理节点不能使用，比较奇怪。
 
 启动:
 
@@ -1001,4 +995,62 @@ swapon /tmp/mnt/sda1/myswap.swp
 
 ```
 chmod a+rx /jffs/scripts/services-start
+```
+
+## frp内网穿透
+
+- https://gofrp.org/docs/examples/ssh/
+- https://gofrp.org/docs/examples/vhost-http/
+
+### frps
+
+```bash
+#Server Side:
+#vim frps.ini:
+[common]
+bind_port = 54123
+vhost_http_port = 54456
+token = A String Token
+
+#Start
+./frps -c frps.ini
+```
+
+### frpc
+
+```bash
+#Client Side:
+#vim frpc.ini:
+[common]
+server_addr = 111.111.111.111
+server_port = 54123
+token = A String Token
+
+[ssh]
+type = tcp
+local_ip = 192.168.3.1
+local_port = 22
+remote_port = 54231
+
+[web]
+type = http
+local_port = 80
+custom_domains = ip ro domain
+http_user = 自定义用户名
+http_pwd = 自定义密码
+
+#Start
+./frpc -c frpc.ini
+```
+
+## HarmonyOS Google
+
+```bash
+#https://zhuanlan.zhihu.com/p/505632099
+#https://bishua666.com/huagu2/#/
+先使用华谷套件到第9步
+
+#10. 解决Play认证弹窗
+#https://www.hetudt.com/434/
+然后直接跳到：第五步：重启后挂上梯子->2.打开设置-应用和服务-应用管理，强行停止Google Play 商店，强行停止Google 服务框架并删除数据，强行停止Google 账户管理程序并清除数据。
 ```
