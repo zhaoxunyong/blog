@@ -1042,3 +1042,15 @@ http_pwd = 自定义密码
 #Start
 ./frpc -c frpc.ini
 ```
+
+## HarmonyOS Google
+
+```bash
+#https://zhuanlan.zhihu.com/p/505632099
+#https://bishua666.com/huagu2/#/
+先使用华谷套件到第9步
+
+#10. 解决Play认证弹窗
+#https://www.hetudt.com/434/
+然后直接跳到：第五步：重启后挂上梯子->2.打开设置-应用和服务-应用管理，强行停止Google Play 商店，强行停止Google 服务框架并删除数据，强行停止Google 账户管理程序并清除数据。
+```
