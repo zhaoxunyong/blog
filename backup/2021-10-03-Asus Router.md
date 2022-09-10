@@ -233,6 +233,9 @@ if [ $? -ne 0 ]; then
     
     # 对本机进行透明代理(不开启不影响路由器其他设备访问)
     #iptables -t nat -A OUTPUT -p tcp -j CLASH
+    
+    #DNS Forward
+    iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.3.1:5354
 fi
 ```
 
@@ -559,7 +562,7 @@ tun:
 dns:
   enable: true
   ipv6: false
-  listen: '0.0.0.0:8053'
+  listen: '0.0.0.0:5354'
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   nameserver:
@@ -853,6 +856,9 @@ if [ $? -ne 0 ]; then
     
     # 对本机进行透明代理(不开启不影响路由器其他设备访问)
     #iptables -t nat -A OUTPUT -p tcp -j XRAY
+    
+    #DNS Forward to Fark-dns
+    #iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.3.1:5354
 fi
 ```
 
