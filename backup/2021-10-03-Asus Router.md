@@ -227,15 +227,13 @@ if [ $? -ne 0 ]; then
 
     #Desktop Computer
     iptables -t nat -A PREROUTING -s 192.168.3.35 -p tcp -j CLASH
+    iptables -t nat -A PREROUTING -s 192.168.3.35 -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.3.1:5354
 
     #For ocserv client ip
     #iptables -t nat -A PREROUTING -s 192.168.3.110 -p tcp -j CLASH
     
     # 对本机进行透明代理(不开启不影响路由器其他设备访问)
     #iptables -t nat -A OUTPUT -p tcp -j CLASH
-    
-    #DNS Forward
-    iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.3.1:5354
 fi
 ```
 
@@ -856,9 +854,6 @@ if [ $? -ne 0 ]; then
     
     # 对本机进行透明代理(不开启不影响路由器其他设备访问)
     #iptables -t nat -A OUTPUT -p tcp -j XRAY
-    
-    #DNS Forward to Fark-dns
-    #iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.3.1:5354
 fi
 ```
 
