@@ -93,9 +93,9 @@ docker run -d --name alertmanager --restart=always \
 alertmanager-config.yaml:
 global:
   smtp_smarthost: 'smtp.exmail.qq.com:25'
-  smtp_from: 'notify@zerofinance.com'
-  smtp_auth_username: 'notify@zerofinance.com'
-  smtp_auth_password: 'NotAeasy8396*'
+  smtp_from: 'xxx@zerofinance.com'
+  smtp_auth_username: 'xxx@zerofinance.com'
+  smtp_auth_password: 'xxxxxx'
   smtp_require_tls: false
   resolve_timeout: 10m
 templates:
