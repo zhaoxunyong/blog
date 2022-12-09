@@ -111,6 +111,11 @@ clients:
   - url: http://192.168.80.196:3100/loki/api/v1/push
 
 scrape_configs:
+# - job_name: service_log
+#   file_sd_configs:
+#     - files:
+#       - ./config/*.yaml #从config目录下加载配置文件
+#       refresh_interval: 1m
 - job_name: zerofinance-job 
   pipeline_stages:
   - match:
@@ -716,6 +721,15 @@ logcli series --analyze-labels '{app_name="hkcash-server"}'
 You can  this article to see how to avoid this issue:
 
 https://grafana.com/docs/loki/latest/best-practices/
+
+## Alarmmanager
+
+https://www.bilibili.com/read/cv17329220
+
+```shell
+wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+
+```
 
 ## Reference 
 
