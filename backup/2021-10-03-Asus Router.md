@@ -1060,3 +1060,26 @@ http_pwd = 自定义密码
 ->把（4.完成）里的GMS文件复制到手机上并安装，安装完成后重启手机，就完成全部安装了。
 安装完成后，关闭谷歌商店的自动更新软件功能。
 ```
+
+
+## Format USB
+
+```bash
+fdisk -l
+fdisk /dev/sda
+d：删除分区
+n: 创建分区
+   n->e->1->enter->enter
+   n->l->enter->enter
+p: 查看分区
+w: 保存
+
+格式化：
+mkfs.ext3 /dev/sda5
+
+Entware:
+amtm->i->ep
+虚拟内存：
+amtm->i->sw
+
+```

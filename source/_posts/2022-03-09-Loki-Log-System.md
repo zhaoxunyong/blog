@@ -487,19 +487,28 @@ fluent-bit/fluent-bit.conf
 
 [INPUT]
     Name             tail
-    Tag              account
+    Tag              dev
     path_key         filename
-    read_from_head   true
+    #read_from_head   true
     #multiline.parser multiline-regex-test
-    Path             /works/log/xpay/dev/account-server/*.log
+    Path             /works/log/xpay/dev/*/*.log
 
 [INPUT]
     Name             tail
-    Tag              configuration
+    Tag              test
     path_key         filename
-    read_from_head   true
+    #read_from_head   true
     #multiline.parser multiline-regex-test
-    Path             /works/log/xpay/dev/configuration-server/*.log
+    Path             /works/log/xpay/test/*/*.log
+
+
+[INPUT]
+    Name             tail
+    Tag              uat
+    path_key         filename
+    #read_from_head   true
+    #multiline.parser multiline-regex-test
+    Path             /works/log/xpay/uat/*/*.log
 
 # [FILTER]
 #     name             parser
@@ -515,22 +524,21 @@ fluent-bit/fluent-bit.conf
 
 [OUTPUT]
     Name        kafka
-    Match       account
-    Brokers     192.168.102.82:9092
-    Topics      account
+    Match       dev
+    Brokers     192.168.80.98:9092
+    Topics      dev
 
 [OUTPUT]
     Name        kafka
-    Match       configuration
-    Brokers     192.168.102.82:9092
-    Topics      configuration
+    Match       test
+    Brokers     192.168.80.98:9092
+    Topics      test
 
-    # name                   loki
-    # match                  *
-    # host                   192.168.102.82
-    # port                   3100
-    # labels                 job=fluentbit
-    # label_keys             $sub['stream']
+[OUTPUT]
+    Name        kafka
+    Match       uat
+    Brokers     192.168.80.98:9092
+    Topics      uat
 ```
 
 fluent-bit/parsers_multiline.conf(if need)
