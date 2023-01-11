@@ -227,6 +227,7 @@ if [ $? -ne 0 ]; then
 
     #Desktop Computer
     iptables -t nat -A PREROUTING -s 192.168.3.35 -p tcp -j CLASH
+    iptables -t nat -A PREROUTING -s 192.168.3.35 -p udp -m udp --dport 53 -j DNAT --to-destination 192.168.3.1:5354
 
     #For ocserv client ip
     #iptables -t nat -A PREROUTING -s 192.168.3.110 -p tcp -j CLASH
@@ -559,7 +560,7 @@ tun:
 dns:
   enable: true
   ipv6: false
-  listen: '0.0.0.0:8053'
+  listen: '0.0.0.0:5354'
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   nameserver:
@@ -1052,5 +1053,33 @@ http_pwd = 自定义密码
 
 #10. 解决Play认证弹窗
 #https://www.hetudt.com/434/
-然后直接跳到：第五步：重启后挂上梯子->2.打开设置-应用和服务-应用管理，强行停止Google Play 商店，强行停止Google 服务框架并删除数据，强行停止Google 账户管理程序并清除数据。
+然后直接跳到：第五步：重启后挂上梯子
+->2.打开设置-应用和服务-应用管理，强行停止Google Play 商店，强行停止Google 服务框架并删除数据，强行停止Google 账户管理程序并清除数据。
+->重启手机->挂上梯子，打开谷歌商店，能正常显示就可以，也没有弹出错误通知。
+->打开设置-应用和服务-应用管理，打开Google Play服务-存储，管理空间-清除所有数据-确定。
+->把（4.完成）里的GMS文件复制到手机上并安装，安装完成后重启手机，就完成全部安装了。
+安装完成后，关闭谷歌商店的自动更新软件功能。
+```
+
+
+## Format USB
+
+```bash
+fdisk -l
+fdisk /dev/sda
+d：删除分区
+n: 创建分区
+   n->e->1->enter->enter
+   n->l->enter->enter
+p: 查看分区
+w: 保存
+
+格式化：
+mkfs.ext3 /dev/sda5
+
+Entware:
+amtm->i->ep
+虚拟内存：
+amtm->i->sw
+
 ```

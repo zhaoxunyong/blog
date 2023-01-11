@@ -32,10 +32,13 @@ Configuration:
 
 loki-config.yaml:
 
+For local file:
+
 ```yaml
 auth_enabled: false
 
 server:
+  log_level: error
   http_listen_port: 3100
   grpc_listen_port: 9096
   grpc_server_max_recv_msg_size: 1572864000
@@ -97,7 +100,96 @@ table_manager:
   retention_period: 336h
 ```
 
+For Aliyun OSS:
+
+```yaml
+auth_enabled: false
+
+server:
+  log_level: error
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+  grpc_server_max_recv_msg_size: 1572864000
+  grpc_server_max_send_msg_size: 1572864000
+
+ingester:
+  wal:
+    enabled: true
+    dir: /loki/data/wal
+    replay_memory_ceiling: 10G
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+      heartbeat_timeout: 10m
+    final_sleep: 0s
+  # chunk_idle_period: 1h
+  # max_chunk_age: 2h
+  # chunk_retain_period: 30s
+  # chunk_target_size: 1572864
+
+schema_config:
+  configs:
+    - from: 2022-01-01
+      index:
+        period: 24h
+        prefix: index_
+      object_store: aws
+      schema: v11
+      store: boltdb-shipper
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/data/boltdb-shipper-active
+    cache_location: /loki/data/boltdb-shipper-cache
+    cache_ttl: 24h
+    shared_store: s3
+  aws:
+    s3forcepathstyle: false
+    bucketnames: loki-files
+    endpoint: https://oss-cn-shenzhen.aliyuncs.com
+    access_key_id: xxxx
+    secret_access_key: xxxx
+    insecure: true
+
+analytics:
+  reporting_enabled: false
+
+compactor:
+  working_directory: /loki/data/boltdb-shipper-compactor
+  shared_store: s3
+
+# table_manager:
+#   retention_deletes_enabled: true
+#   retention_period: 336h
+
+limits_config:
+  ingestion_rate_mb: 50
+  ingestion_burst_size_mb: 100
+  max_streams_per_user: 0
+  max_global_streams_per_user: 0
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /mnt/config/rules
+  rule_path: /loki/data/rules-temp
+  alertmanager_url: http://192.168.102.82:9093
+  ring:
+    kvstore:
+      store: inmemory
+  enable_api: true
+```
+
 promtail-config.yaml:
+
+For log files:
 
 ```yaml
 server:
@@ -111,14 +203,19 @@ clients:
   - url: http://192.168.80.196:3100/loki/api/v1/push
 
 scrape_configs:
-- job_name: zerofinance-job 
+# - job_name: service_log
+#   file_sd_configs:
+#     - files:
+#       - ./config/*.yaml #从config目录下加载配置文件
+#       refresh_interval: 1m
+- job_name: company-job 
   pipeline_stages:
   - match:
-      selector: '{belongs="zerofinance", filename=~".*(?:error|tmlog).*"}'
+      selector: '{belongs="company", filename=~".*(?:error|tmlog).*"}'
       action: drop
       drop_counter_reason: promtail_noisy_error
   - match:
-      selector: '{belongs="zerofinance"}'
+      selector: '{belongs="company"}'
       stages:
       - regex:
           source: filename
@@ -143,15 +240,221 @@ scrape_configs:
   - targets:
       - localhost
     labels:
-      belongs: zerofinance
+      belongs: company
       __path__: /works/log/**/*.log
+```
+
+Recoverying local files automatically:
+
+```yaml
+...
+scrape_configs:
+- job_name: service_log
+  file_sd_configs:
+    - files:
+      - ./config/*.yaml #从config目录下加载配置文件
+      refresh_interval: 1m
+- job_name: company-job 
+...
+```
+
+config/pipeline_stages.yaml
+
+```yaml
+- targets:
+    - localhost
+  labels:
+    belongs: company
+    __path__: /works/log/**/*.log
+    #env: {{ENV}}
+    #hostname: {{BINDIP}}
+    # service_name: var-log-messages
+    # log_type: var-log-messages
+```
+
+For Kafka:
+
+```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://192.168.102.82:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: kafka
+    # file_sd_configs:
+    #   - files:
+    #     - /mnt/config/config/*.yaml
+    #     refresh_interval: 1m
+    kafka:
+      brokers: 
+      - 192.168.102.82:9092
+      topics: 
+      - account
+      - configuration
+      group_id: promtail-account
+      labels:
+        job: kafka
+    relabel_configs:
+      - action: replace
+        source_labels:
+          - __meta_kafka_topic
+        target_label: topic
+      - action: replace
+        source_labels:
+          - __meta_kafka_partition
+        target_label: partition
+      - action: replace
+        source_labels:
+          - __meta_kafka_group_id
+        target_label: group
+      - action: replace
+        source_labels:
+          - __meta_kafka_message_key
+        target_label: message_key
+    pipeline_stages:
+      - match:
+          selector: '{job="kafka"}'
+          stages:
+          - json:
+              expressions:
+                log: log
+                filename: filename
+          - labels:
+              filename:
+      - match:
+          selector: '{job="kafka"}'
+          stages:
+          - regex:
+              source: filename
+              expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+          - labels:
+              org:
+              env:
+              app_name:
+          - output:
+              source: log
+      - match:
+          selector: '{org=~".+"}'
+          stages:
+          - multiline:
+              firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+              max_lines: 500
+          - regex:
+              expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*"
+          # - pack:
+          #     labels:
+          #       - time
+          # - labels:
+          #     time:
+          - timestamp:
+              source: times
+              format: '2006-01-02 15:04:05'
+              location: Asia/Shanghai
+```
+
+For collectiing specific contexts:
+
+```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://192.168.80.196:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: kakafka_payinfo2
+    # file_sd_configs:
+    #   - files:
+    #     - /mnt/config/config/*.yaml
+    #     refresh_interval: 1m
+    kafka:
+      brokers: 
+      - 192.168.80.98:9092
+      topics: 
+      - dev
+      - test
+      - uat
+      group_id: promtail_payinfo2
+      labels:
+        job: kakafka_payinfo2
+    relabel_configs:
+      - action: replace
+        source_labels:
+          - __meta_kafka_topic
+        target_label: topic
+      - action: replace
+        source_labels:
+          - __meta_kafka_partition
+        target_label: partition
+      - action: replace
+        source_labels:
+          - __meta_kafka_group_id
+        target_label: group
+      - action: replace
+        source_labels:
+          - __meta_kafka_message_key
+        target_label: message_key
+    pipeline_stages:
+      - match:
+          selector: '{job="kakafka_payinfo2"} !~ ".*PAYMENT_REFERENCE_LOG.*"'
+          action: drop
+          drop_counter_reason: promtail_noisy_error
+      - match:
+          selector: '{job="kakafka_payinfo2"}'
+          stages:
+          - json:
+              expressions:
+                log: log
+                filename: filename
+          - labels:
+              filename:
+      - match:
+          selector: '{job="kakafka_payinfo2"}'
+          stages:
+          - regex:
+              source: filename
+              expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+          - labels:
+              org:
+              env:
+              app_name:
+              payinfo:
+          - output:
+              source: log
+      - match:
+          selector: '{job="kakafka_payinfo2", app_name="payment-server"} |~ "PAYMENT_REFERENCE_LOG"'
+          stages:
+          - multiline:
+              firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+              max_lines: 500
+          - regex:
+              expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*"
+          # - pack:
+          #     labels:
+          #       - time
+          # - labels:
+          #     time:
+          - timestamp:
+              source: times
+              format: '2006-01-02 15:04:05'
+              location: Asia/Shanghai
 ```
 
 /etc/grafana/grafana.ini
 
 ```yaml
 ...
-domain = logs.zerofinance.net
+domain = logs.company.net
 
 root_url = https://%(domain)s/
 
@@ -172,23 +475,255 @@ from_name = Grafana
 startTLS_policy = StartTLS
 ```
 
+fluent-bit/fluent-bit.conf
+
+```yaml
+[SERVICE]
+    Parsers_File parser.conf # 解析文件位置
+    Flush        5           # 5秒写入一次ES
+    Daemon       Off
+    Log_Level    debug
+    parsers_file parsers_multiline.conf
+
+[INPUT]
+    Name             tail
+    Tag              dev
+    path_key         filename
+    #read_from_head   true
+    #multiline.parser multiline-regex-test
+    Path             /works/log/xpay/dev/*/*.log
+
+[INPUT]
+    Name             tail
+    Tag              test
+    path_key         filename
+    #read_from_head   true
+    #multiline.parser multiline-regex-test
+    Path             /works/log/xpay/test/*/*.log
+
+
+[INPUT]
+    Name             tail
+    Tag              uat
+    path_key         filename
+    #read_from_head   true
+    #multiline.parser multiline-regex-test
+    Path             /works/log/xpay/uat/*/*.log
+
+# [FILTER]
+#     name             parser
+#     match            *
+#     key_name         log
+#     parser           named-capture-test
+
+# [FILTER]
+#     Name    grep
+#     Match   configuration
+#     #Exclude log level=INFO 
+#     Regex    log =WARN
+
+[OUTPUT]
+    Name        kafka
+    Match       dev
+    Brokers     192.168.80.98:9092
+    Topics      dev
+
+[OUTPUT]
+    Name        kafka
+    Match       test
+    Brokers     192.168.80.98:9092
+    Topics      test
+
+[OUTPUT]
+    Name        kafka
+    Match       uat
+    Brokers     192.168.80.98:9092
+    Topics      uat
+```
+
+fluent-bit/parsers_multiline.conf(if need)
+
+```yaml
+[MULTILINE_PARSER]
+    name          multiline-regex-test
+    type          regex
+    flush_timeout 1000
+    #
+    # Regex rules for multiline parsing
+    # ---------------------------------
+    #
+    # configuration hints:
+    #
+    #  - first state always has the name: start_state
+    #  - every field in the rule must be inside double quotes
+    #
+    # rules |   state name  | regex pattern                  | next state
+    # ------|---------------|--------------------------------------------
+    rule      "start_state"   "/^\d{4}\-\d{2}\-\d{2} \d{1,2}\:\d{2}\:\d{2}.*/"  "cont"
+    rule      "cont"          "/^[\sa-zA-Z]+.*/"                     "cont"
+
+
+
+[PARSER]
+    Name named-capture-test
+    Format regex
+    Regex /^(?<date>\d{4}\-\d{2}\-\d{2} \d{1,2}\:\d{2}\:\d{2})\.\d{3}\s+(?<message>.*)/m
+```
+
+Kakfa docker-compose.yml
+
+```yaml
+#https://segmentfault.com/a/1190000021746086
+#https://github.com/wurstmeister/kafka-docker
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    volumes:
+      - ./data:/data
+    ports:
+      - 2182:2181
+
+  kafka9094:
+    image: wurstmeister/kafka
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 0
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.102.82:9092
+      KAFKA_CREATE_TOPICS: "account:3:0,configuration:3:0"   #kafka启动后初始化一个有2个partition(分区)0个副本名的topic
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    volumes:
+      - ./kafka-logs:/kafka
+    depends_on:
+      - zookeeper
+```
+
+alertmanager-config.yaml
+
+```yaml
+global:
+  smtp_smarthost: 'smtp.exmail.qq.com:25'
+  smtp_from: 'xxx@xxx'
+  smtp_auth_username: 'xxx@xxx'
+  smtp_auth_password: 'xxx*'
+  smtp_require_tls: false
+  resolve_timeout: 10m
+templates:
+- '/etc/alertmanager/config/*.tmpl'
+route:
+  group_by: ['alertname']
+  group_wait: 3s
+  group_interval: 5s
+  repeat_interval: 10s
+  #receiver: 'web.hook'
+  receiver: 'wecomreceivers'
+  # routes:
+  # - receiver: 'wechat'
+  #   continue: true
+receivers:
+  - name: 'web.hook'
+    email_configs:
+    - to: 'xxx@xxx'
+      send_resolved: true
+  - name: allreceivers
+    webhook_configs:
+      - url: http://192.168.102.82:8080/adapter/wx
+        send_resolved: true
+    #webhook_configs:
+    #  - url: 'http://127.0.0.1:5001/'
+  - name: 'wecomreceivers'
+    wechat_configs:
+    - send_resolved: true
+      corp_id: 'xxx'
+      to_user: 'SZ122'
+      #to_party: 'SZ122 | SZ097'
+      message: '{{ template "wechat.default.message" . }}'
+      agent_id: 'xxx'
+      api_secret: 'xxx'
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+```
+
+loki/rules/fake/rules.yaml
+
+```yaml
+groups:
+    - name: service OutOfMemoryError
+      rules:
+        # 关键字监控
+        - alert: loki check words error
+          expr: sum by (org, env, app_name) (count_over_time({env=~"\\w+"} |= "level=ERROR" [1m]) > 1)
+          #用于表示只有当触发条件持续一段时间后才发送告警。在等待期间新产生告警的状态为pending。
+          for: 5s
+          labels:
+            severity: critical
+          annotations:
+            description: '{{$labels.env}} {{$labels.hostname}} file {{$labels.filename}} has  {{ $value }} error'
+            summary: java has error
+```
+
+config/WebCom.tmpl
+
+```yaml
+{{ define "wechat.default.message" }}
+{{- if gt (len .Alerts.Firing) 0 -}}
+{{- range $index, $alert := .Alerts -}}
+{{- if eq $index 0 -}}
+**********告警通知**********
+告警类型: {{ $alert.Labels.alertname }}
+告警级别: {{ $alert.Labels.severity }}
+{{- end }}
+=====================
+告警主题: {{ $alert.Annotations.summary }}
+告警详情: {{ $alert.Annotations.description }}
+故障时间: {{ $alert.StartsAt.Local }}
+{{ if gt (len $alert.Labels.instance) 0 -}}故障实例: {{ $alert.Labels.instance }}{{- end -}}
+{{- end }}
+{{- end }}
+
+{{- if gt (len .Alerts.Resolved) 0 -}}
+{{- range $index, $alert := .Alerts -}}
+{{- if eq $index 0 -}}
+**********恢复通知**********
+告警类型: {{ $alert.Labels.alertname }}
+告警级别: {{ $alert.Labels.severity }}
+{{- end }}
+=====================
+告警主题: {{ $alert.Annotations.summary }}
+告警详情: {{ $alert.Annotations.description }}
+故障时间: {{ $alert.StartsAt.Local }}
+恢复时间: {{ $alert.EndsAt.Local }}
+{{ if gt (len $alert.Labels.instance) 0 -}}故障实例: {{ $alert.Labels.instance }}{{- end -}}
+{{- end }}
+{{- end }}
+{{- end }}
+```
+
+
+
+
 Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
 
 Installing:
 
 ```bash
 #loki
-mkdir -p /data/loki/data/
+mkdir -p /data/loki/data/ /works/conf/loki/
 #Getting the loki id from the following command:
 #docker exec loki id
 #Like: uid=10001(loki) gid=10001(loki) groups=10001(loki)
-chown -R 10001.10001 /data/loki/data/
+chown -R 10001.10001 /data/loki/data/ /works/conf/loki/
 #Creating the container:
 docker run -d --name loki --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /data/loki/data:/loki/data \
 -v /works/conf/loki:/mnt/config \
--p 3100:3100 grafana/loki:2.4.2 \
+-p 3100:3100 grafana/loki:2.7.0 \
 -config.file=/mnt/config/loki-config.yaml
 
 #grafana
@@ -199,19 +734,45 @@ docker run -d --name loki --restart=always \
 # -e "GF_SMTP_USER=myuser" \
 # -e "GF_SMTP_PASSWORD=mysecret" \
 # -p 3000:3000 grafana/grafana:latest
-docker run -d --name grafana --restart=always \
+docker run -d --name grafana9 --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
--v /works/loki/docker/grafana.ini:/etc/grafana/grafana.ini \
--p 3000:3000 grafana/grafana:latest
+-v /data/grafana/:/var/lib/grafana \
+-v /data/grafana/grafana.ini:/etc/grafana/grafana.ini \
+-p 3000:3000 grafana/grafana-oss:9.3.1
 
 #promtail
 docker run -d --name promtail --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /works/conf/promtail:/mnt/config \
 -v /works/log:/works/log \
-grafana/promtail:2.4.2 \
+grafana/promtail:2.7.0 \
 -config.file=/mnt/config/promtail-config.yaml \
 -client.external-labels=hostname=${HOSTNAME}
+
+#fluent-bit
+docker run  --name fluent-bit --restart=always --network host -d \
+-v /data/fluent-bit/:/fluent-bit/etc \
+-v /works/log:/works/log \
+cr.fluentbit.io/fluent/fluent-bit:2.0
+
+#kafka
+docker-compose up -d
+#Test
+docker exec -it kafka-kafka9094-1 sh
+运行消费者,进行消息的监听
+kafka-console-consumer.sh --bootstrap-server 192.168.102.82:9092 --topic account --from-beginning
+
+docker exec -it kafka-kafka9094-1 sh
+打开一个新的ssh窗口,同样进入kafka的容器中,执行下面这条命令生产消息
+kafka-console-producer.sh --broker-list 192.168.102.82:9092 --topic account
+
+#alertmanager
+chown -R 65534:65534 /data/alertmanager/
+
+docker run -d --name alertmanager --restart=always \
+-v /data/alertmanager:/etc/alertmanager \
+-p 9093:9093 prom/alertmanager:v0.24.0 \
+--config.file=/etc/alertmanager/alertmanager-config.yaml
 ```
 
 Uninstalling:
@@ -232,6 +793,22 @@ docker rm -vf promtail
 #docker rm -vf grafana
 ```
 
+迁移grafana:
+
+https://www.jianshu.com/p/bc37e2fc15e7
+
+#### Collecting type
+
+There is 2 way to collect logs:
+
+```
+1: fluent bit--->kafka--->promtail--->loki
+                      --->logstash--->ES
+2: promtail--->loki
+3: fluent bit--->loki
+```
+Recommended: fluent bit--->kafka--->promtail--->loki
+
 #### docker-compose
 
 Not recommend, just for local study.
@@ -239,7 +816,7 @@ Not recommend, just for local study.
 ```bash
 #depend on Linux: https://grafana.com/docs/loki/latest/installation/docker/
 #Install with Docker Compose
-wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/production/docker-compose.yaml -O docker-compose.yaml
+wget https://raw.githubusercontent.com/grafana/loki/v2.7.0/production/docker-compose.yaml -O docker-compose.yaml
 docker-compose -f docker-compose.yaml up
 ```
 
@@ -312,12 +889,12 @@ Grafana URL is: http://localhost:3000/, default account is admin/admin
 env:
   Query: label_values(env)
 system:
-  Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+  Query: label_values({belongs="company", filename=~".*${env}.*"}, filename)
   Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
 hostname:
-  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
+  Query: label_values({belongs="company", filename=~".*${env}/${system}.*"}, hostname)
 filename:
-  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
+  Query: label_values({belongs="company", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
   Regex: /.*\/(.+\.log)/
 search:
   Type: Text box
@@ -404,7 +981,7 @@ Query: label_values(env)
 
 System: 
 ```
-Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+Query: label_values({belongs="company", filename=~".*${env}.*"}, filename)
 Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
 ```
 
@@ -412,14 +989,14 @@ Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
 
 Hostname:
 ```
-Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
+Query: label_values({belongs="company", filename=~".*${env}/${system}.*"}, hostname)
 ```
 
 ![04.png](/images/Loki-Log-System/04.png)
 
 Filename:
 ```
-Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
+Query: label_values({belongs="company", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
 Regex: /.*\/(.+\.log)/
 ```
 
@@ -576,14 +1153,14 @@ extraVolumeMounts:
     readOnly: true
 
     extraScrapeConfigs: |
-      - job_name: zerofinance-job 
+      - job_name: company-job 
         pipeline_stages:
         - match:
-            selector: '{belongs="zerofinance", filename=~".*(?:error|tmlog).*"}'
+            selector: '{belongs="company", filename=~".*(?:error|tmlog).*"}'
             action: drop
             drop_counter_reason: promtail_noisy_error
         - match:
-            selector: '{belongs="zerofinance"}'
+            selector: '{belongs="company"}'
             stages:
             - regex:
                 source: filename
@@ -608,7 +1185,7 @@ extraVolumeMounts:
         - targets:
             - localhost
           labels:
-            belongs: zerofinance
+            belongs: company
             __path__: /works/log/**/*.log
 ```
 
@@ -644,16 +1221,16 @@ Datasource: http://loki:3100/
 k8s logs dashboard:
 https://grafana.com/grafana/dashboards/15141
 
-#Zerofinance Logs
+#company Logs
 env:
   Query: label_values(env)
 system:
-  Query: label_values({belongs="zerofinance", filename=~".*${env}.*"}, filename)
+  Query: label_values({belongs="company", filename=~".*${env}.*"}, filename)
   Regex: /works\/log\/.+?\/.+?\/(.+?)\/.*/
 hostname:
-  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*"}, hostname)
+  Query: label_values({belongs="company", filename=~".*${env}/${system}.*"}, hostname)
 filename:
-  Query: label_values({belongs="zerofinance", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
+  Query: label_values({belongs="company", filename=~".*${env}/${system}.*", filename!~".*(?:error|tmlog).*"}, filename)
   Regex: /.*\/(.+\.log)/
 search:
   Type: Text box
@@ -716,6 +1293,15 @@ logcli series --analyze-labels '{app_name="hkcash-server"}'
 You can  this article to see how to avoid this issue:
 
 https://grafana.com/docs/loki/latest/best-practices/
+
+## Alarmmanager
+
+https://www.bilibili.com/read/cv17329220
+
+```shell
+wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+
+```
 
 ## Reference 
 
