@@ -492,6 +492,8 @@ fluent-bit/fluent-bit.conf
     #read_from_head   true
     #multiline.parser multiline-regex-test
     Path             /works/log/xpay/dev/*/*.log
+    Buffer_Chunk_Size 320KB
+    Buffer_Max_Size   520KB
 
 [INPUT]
     Name             tail
@@ -500,6 +502,8 @@ fluent-bit/fluent-bit.conf
     #read_from_head   true
     #multiline.parser multiline-regex-test
     Path             /works/log/xpay/test/*/*.log
+    Buffer_Chunk_Size 320KB
+    Buffer_Max_Size   520KB
 
 
 [INPUT]
@@ -509,6 +513,8 @@ fluent-bit/fluent-bit.conf
     #read_from_head   true
     #multiline.parser multiline-regex-test
     Path             /works/log/xpay/uat/*/*.log
+    Buffer_Chunk_Size 320KB
+    Buffer_Max_Size   520KB
 
 # [FILTER]
 #     name             parser
@@ -590,7 +596,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 0
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.102.82:9092
-      KAFKA_CREATE_TOPICS: "account:3:0,configuration:3:0"   #kafka启动后初始化一个有2个partition(分区)0个副本名的topic
+      KAFKA_CREATE_TOPICS: "dev:3:0,test:3:0,uat:3:0"   #kafka启动后初始化一个有2个partition(分区)0个副本名的topic
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
     volumes:
