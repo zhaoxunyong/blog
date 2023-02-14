@@ -305,6 +305,7 @@ Vagrant.configure("2") do |config|
     node1.vm.box = "ubuntu20.04"
     node1.vm.hostname = "node1"
     node1.vm.network "public_network", ip: "192.168.101.83", netmask: "255.255.255.0", gateway: "192.168.101.254", bridge: "enp2s0"
+    #excel01_prod.vm.network "public_network", bridge: "enp0s31f6", auto_config: false
     #node1.vm.synced_folder "/home/dev/vagrant", "/data/vagrant"
     node1.vm.provider "virtualbox" do |vb|
       #vb.gui = true
@@ -315,6 +316,10 @@ Vagrant.configure("2") do |config|
       #cp -a /vagrant/sources.list /etc/apt/sources.list
       #apt-get install sudo net-tools -y
       #sudo route del default gw 10.0.2.2
+      #ifconfig eth1 192.168.69.200 netmask 255.255.255.0 up
+      #route add default gw 192.168.69.254
+      #If cannot ping from remote server, do the following command, but it won't be login by vagrant ssh:
+      #ip link set eth0 down
     SHELL
     node1.vm.provision "shell" do |s|
       s.path = "script.sh"
@@ -338,6 +343,8 @@ Vagrant.configure("2") do |config|
       #cp -a /vagrant/sources.list /etc/apt/sources.list
       #apt-get install sudo net-tools -y
       #sudo route del default gw 10.0.2.2
+      #If cannot ping from remote server, do the following command, but it won't be login by vagrant ssh:
+      #ip link set eth0 down
     SHELL
     node2.vm.provision "shell" do |s|
       s.path = "script.sh"
@@ -840,3 +847,9 @@ vagrant halt && vagrant up
 ```
 
 Note: this will not work with vagrant reload
+
+## Refrence
+
+- https://www.ityoudao.cn/posts/vagrant-network/
+- http://sunyongfeng.com/201703/programmer/tools/vagrant
+- https://cn.opensuse.org/Virtualbox_Network_Bridging
