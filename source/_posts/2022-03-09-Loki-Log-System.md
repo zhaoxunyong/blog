@@ -759,7 +759,7 @@ grafana/promtail:2.7.0 \
 docker run  --name fluent-bit --restart=always --network host -d \
 -v /data/fluent-bit/:/fluent-bit/etc \
 -v /works/log:/works/log \
-cr.fluentbit.io/fluent/fluent-bit:2.0
+fluent/fluent-bit:2.0.8
 
 #kafka
 docker-compose up -d

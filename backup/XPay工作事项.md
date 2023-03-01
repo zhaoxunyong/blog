@@ -1,21 +1,24 @@
 1. 数据库加密字段的salt修改到application.yaml中；--- 已完成
 2. 服务的优雅停机；--- 已完成
+     lifecycle.timeout-per-shutdown-phase: 30s
 3. xwallet与xpay登陆的问题; --- 已完成
 4. 开启单元测试的覆盖率检测，暂定50%；--- 已完成
 5. 跨域添加指定域名;--- 已完成
 7. 单点登陆可前端独立部署（项目是将前端的项目打包在后端的项目中的，需要跟justin一起解决）；--- 已完成
 6. openapi-sdk的对外封装（上传到外网maven仓库）；--- 已完成。创建了相关的公网账号
+12. sleuth传递authtoken（已优化，还是采用原来的方式）；--- 已完成
+14. merchantcenter认证方式优化；--- 已完成
+16. 导航页、sso、employee、审批平台、notify单独部署（共用一套代码版本）；--- 已完成
+17. 加解密代码review；--- 已完成
+20. SSO测试https；--- 已完成
 
 8. 业务类的监控梳理：哪些业务是需要做监控告警的等等；
 9. 公共组件的监控梳理：MQ的消息堆积等；
+   参考这个进行配置：https://help.aliyun.com/document_detail/451215.html
 10. 监控的级别：哪些是需要立刻处理、哪些可以延迟处理的，做标记并同步到禅道中；
 11. 灰度发布；
-12. sleuth传递authtoken（不急，现有也解决，可以优化）；
 13. sharding-jdbc分区的检查；
-14. merchantcenter认证方式优化；
 15. 数据库版本管理；
-16. 导航页、sso、employee、审批平台、notify单独部署（共用一套代码版本）。
-17. 加解密代码review。
 18. 夜间事务处理过长的问题。
 19. 防幂等表分库。
-20. SSO测试https。
+ 
