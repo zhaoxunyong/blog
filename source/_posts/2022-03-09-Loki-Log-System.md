@@ -773,6 +773,7 @@ docker exec -it kafka-kafka9094-1 sh
 kafka-console-producer.sh --broker-list 192.168.102.82:9092 --topic account
 
 #alertmanager
+mkdir -p /data/alertmanager/
 chown -R 65534:65534 /data/alertmanager/
 
 docker run -d --name alertmanager --restart=always \
