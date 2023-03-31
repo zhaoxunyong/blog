@@ -740,10 +740,12 @@ docker run -d --name loki --restart=always \
 # -e "GF_SMTP_USER=myuser" \
 # -e "GF_SMTP_PASSWORD=mysecret" \
 # -p 3000:3000 grafana/grafana:latest
+chown -R 10001.10001 /data/grafana/
 docker run -d --name grafana9 --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /data/grafana/:/var/lib/grafana \
 -v /data/grafana/grafana.ini:/etc/grafana/grafana.ini \
+--user 10001:10001 \
 -p 3000:3000 grafana/grafana-oss:9.3.1
 
 #promtail
@@ -767,6 +769,7 @@ docker-compose up -d
 docker exec -it kafka-kafka9094-1 sh
 运行消费者,进行消息的监听
 kafka-console-consumer.sh --bootstrap-server 192.168.102.82:9092 --topic account --from-beginning
+#docker exec -it kafka-kafka9094-1 kafka-console-consumer.sh --bootstrap-server 192.168.101.82:9092 --topic dev --from-beginning
 
 docker exec -it kafka-kafka9094-1 sh
 打开一个新的ssh窗口,同样进入kafka的容器中,执行下面这条命令生产消息
