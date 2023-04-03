@@ -482,7 +482,7 @@ fluent-bit/fluent-bit.conf
     Parsers_File parser.conf # 解析文件位置
     Flush        5           # 5秒写入一次ES
     Daemon       Off
-    Log_Level    debug
+    Log_Level    warn
     parsers_file parsers_multiline.conf
 
 [INPUT]
@@ -490,20 +490,20 @@ fluent-bit/fluent-bit.conf
     Tag              dev
     path_key         filename
     #read_from_head   true
-    #multiline.parser multiline-regex-test
-    Path             /works/log/xpay/dev/*/*.log
-    Buffer_Chunk_Size 320KB
-    Buffer_Max_Size   520KB
+    #multiline.parser multiline-regex
+    Path             /works/log/*/dev/*/*.log
+    Buffer_Chunk_Size 4096KB
+    Buffer_Max_Size   10240KB
 
 [INPUT]
     Name             tail
     Tag              test
     path_key         filename
     #read_from_head   true
-    #multiline.parser multiline-regex-test
-    Path             /works/log/xpay/test/*/*.log
-    Buffer_Chunk_Size 320KB
-    Buffer_Max_Size   520KB
+    #multiline.parser multiline-regex
+    Path             /works/log/*/test/*/*.log
+    Buffer_Chunk_Size 4096KB
+    Buffer_Max_Size   10240KB
 
 
 [INPUT]
@@ -511,10 +511,10 @@ fluent-bit/fluent-bit.conf
     Tag              uat
     path_key         filename
     #read_from_head   true
-    #multiline.parser multiline-regex-test
-    Path             /works/log/xpay/uat/*/*.log
-    Buffer_Chunk_Size 320KB
-    Buffer_Max_Size   520KB
+    #multiline.parser multiline-regex
+    Path             /works/log/*/uat/*/*.log
+    Buffer_Chunk_Size 4096KB
+    Buffer_Max_Size   10240KB
 
 # [FILTER]
 #     name             parser
@@ -551,7 +551,7 @@ fluent-bit/parsers_multiline.conf(if need)
 
 ```yaml
 [MULTILINE_PARSER]
-    name          multiline-regex-test
+    name          multiline-regex
     type          regex
     flush_timeout 1000
     #
@@ -566,14 +566,14 @@ fluent-bit/parsers_multiline.conf(if need)
     # rules |   state name  | regex pattern                  | next state
     # ------|---------------|--------------------------------------------
     rule      "start_state"   "/^\d{4}\-\d{2}\-\d{2} \d{1,2}\:\d{2}\:\d{2}.*/"  "cont"
-    rule      "cont"          "/^[\sa-zA-Z]+.*/"                     "cont"
+    rule      "cont"          "/^([a-zA-Z]|\s)+.*/"                     "cont"
 
 
 
-[PARSER]
-    Name named-capture-test
-    Format regex
-    Regex /^(?<date>\d{4}\-\d{2}\-\d{2} \d{1,2}\:\d{2}\:\d{2})\.\d{3}\s+(?<message>.*)/m
+#[PARSER]
+#    Name named-capture-test
+#    Format regex
+#    Regex /^(?<date>\d{4}\-\d{2}\-\d{2} \d{1,2}\:\d{2}\:\d{2})\.\d{3}\s+(?<message>.*)/m
 ```
 
 Kakfa docker-compose.yml
