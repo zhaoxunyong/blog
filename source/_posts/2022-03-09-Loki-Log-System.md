@@ -1173,6 +1173,13 @@ grafana/promtail:2.7.0 \
 -config.file=/mnt/config/promtail-config.yaml \
 -client.external-labels=hostname=${HOSTNAME}
 
+docker run -d --name promtail-monitor --restart=always \
+-v /etc/localtime:/etc/localtime:ro \
+-v /works/conf/promtail/biz:/mnt/config \
+grafana/promtail:2.7.0 \
+-config.file=/mnt/config/promtail-config.yaml \
+-client.external-labels=hostname=${HOSTNAME}
+
 #fluent-bit
 docker run  --name fluent-bit --restart=always --network host -d \
 -v /data/fluent-bit/:/fluent-bit/etc \
@@ -1200,7 +1207,8 @@ docker run -d --name alertmanager --restart=always \
 -v /data/alertmanager:/etc/alertmanager \
 -p 9093:9093 prom/alertmanager:v0.24.0 \
 --config.file=/etc/alertmanager/alertmanager-config.yaml \
---web.external-url=http://192.168.101.82:9093 \
+--web.external-url=http://192.168.80.98:9093 \
+--cluster.advertise-address=0.0.0.0:9093 \
 --log.level=debug
 ```
 
