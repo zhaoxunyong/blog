@@ -64,7 +64,7 @@ ingester:
 
 schema_config:
   configs:
-    - from: 2022-01-01
+    - from: 2023-04-01
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
@@ -97,7 +97,24 @@ limits_config:
 
 table_manager:
   retention_deletes_enabled: true
-  retention_period: 336h
+  retention_period: 168h
+
+#https://grafana.com/docs/loki/latest/configuration/
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /mnt/config/rules
+  rule_path: /loki/data/rules-temp
+  alertmanager_url: http://192.168.101.82:9093
+  # How frequently to evaluate rules.
+  evaluation_interval: 5s
+  # How frequently to poll for rule changes.
+  poll_interval: 5s
+  ring:
+    kvstore:
+      store: inmemory
+  enable_api: true
 ```
 
 For Aliyun OSS:
@@ -283,7 +300,7 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: http://192.168.102.82:3100/loki/api/v1/push
+  - url: http://192.168.101.82:3100/loki/api/v1/push
 
 scrape_configs:
   - job_name: kafka
@@ -293,11 +310,12 @@ scrape_configs:
     #     refresh_interval: 1m
     kafka:
       brokers: 
-      - 192.168.102.82:9092
+      - 192.168.80.98:9092
       topics: 
-      - account
-      - configuration
-      group_id: promtail-account
+      - dev
+      - test
+      - uat
+      group_id: promtail_davetest
       labels:
         job: kafka
     relabel_configs:
@@ -328,6 +346,10 @@ scrape_configs:
           - labels:
               filename:
       - match:
+          selector: '{job="kafka", filename=~".*(?:error|tmlog).*"}'
+          action: drop
+          drop_counter_reason: promtail_noisy_error
+      - match:
           selector: '{job="kafka"}'
           stages:
           - regex:
@@ -342,37 +364,25 @@ scrape_configs:
       - match:
           selector: '{org=~".+"}'
           stages:
-          - multiline:
-              firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-              max_lines: 500
+          #- multiline:
+          #  firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+          #  max_lines: 500
           - regex:
+              #expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).+?\\[bizKey=(?P<biz_key>.*?)\\,bizValue=(?P<biz_value>.*?)\\].*"
               expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*"
-          # - pack:
-          #     labels:
-          #       - time
-          # - labels:
-          #     time:
+          #- pack:
+          #    labels:
+          #      - time
+          #      - biz_key
+          #- labels:
+          #    biz_key:
+          #    biz_value:
           - timestamp:
               source: times
               format: '2006-01-02 15:04:05'
               location: Asia/Shanghai
-```
 
-For collectiing specific contexts:
-
-```yaml
-server:
-  http_listen_port: 9080
-  grpc_listen_port: 0
-
-positions:
-  filename: /tmp/positions.yaml
-
-clients:
-  - url: http://192.168.80.196:3100/loki/api/v1/push
-
-scrape_configs:
-  - job_name: kakafka_payinfo2
+  - job_name: kakfka_payinfo
     # file_sd_configs:
     #   - files:
     #     - /mnt/config/config/*.yaml
@@ -384,9 +394,9 @@ scrape_configs:
       - dev
       - test
       - uat
-      group_id: promtail_payinfo2
+      group_id: promtail_payinfo_davetest
       labels:
-        job: kakafka_payinfo2
+        job: kakfka_payinfo
     relabel_configs:
       - action: replace
         source_labels:
@@ -406,11 +416,11 @@ scrape_configs:
         target_label: message_key
     pipeline_stages:
       - match:
-          selector: '{job="kakafka_payinfo2"} !~ ".*PAYMENT_REFERENCE_LOG.*"'
+          selector: '{job="kakfka_payinfo"} !~ ".*(PAYMENT_REFERENCE_LOG|CHECKOUT_PAYMENT_LOG).*"'
           action: drop
           drop_counter_reason: promtail_noisy_error
       - match:
-          selector: '{job="kakafka_payinfo2"}'
+          selector: '{job="kakfka_payinfo"}'
           stages:
           - json:
               expressions:
@@ -419,7 +429,7 @@ scrape_configs:
           - labels:
               filename:
       - match:
-          selector: '{job="kakafka_payinfo2"}'
+          selector: '{job="kakfka_payinfo"}'
           stages:
           - regex:
               source: filename
@@ -432,11 +442,11 @@ scrape_configs:
           - output:
               source: log
       - match:
-          selector: '{job="kakafka_payinfo2", app_name="payment-server"} |~ "PAYMENT_REFERENCE_LOG"'
+          selector: '{job="kakfka_payinfo", app_name="payment-server"} |~ "PAYMENT_REFERENCE_LOG|CHECKOUT_PAYMENT_LOG"'
           stages:
-          - multiline:
-              firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
-              max_lines: 500
+          #- multiline:
+          #    firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+          #  max_lines: 500
           - regex:
               expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).*"
           # - pack:
@@ -448,6 +458,87 @@ scrape_configs:
               source: times
               format: '2006-01-02 15:04:05'
               location: Asia/Shanghai
+
+  - job_name: kafka_monitor
+    # file_sd_configs:
+    #   - files:
+    #     - /mnt/config/config/*.yaml
+    #     refresh_interval: 1m
+    kafka:
+      brokers:
+        - 192.168.80.98:9092
+      topics:
+        - dev
+        - test
+        - uat
+      group_id: promtail_monitor_davetest
+      labels:
+        job: kafka_monitor
+    relabel_configs:
+      - action: replace
+        source_labels:
+          - __meta_kafka_topic
+        target_label: topic
+      - action: replace
+        source_labels:
+          - __meta_kafka_partition
+        target_label: partition
+      - action: replace
+        source_labels:
+          - __meta_kafka_group_id
+        target_label: group
+      - action: replace
+        source_labels:
+          - __meta_kafka_message_key
+        target_label: message_key
+    pipeline_stages:
+      - match:
+          selector: '{job="kafka_monitor"}'
+          stages:
+            - json:
+                expressions:
+                  log: log
+                  filename: filename
+            - labels:
+                filename:
+      - match:
+          selector: '{job="kafka_monitor", filename=~".*(?:error|tmlog).*"}'
+          action: drop
+          drop_counter_reason: promtail_noisy_error
+      - match:
+          selector: '{job="kafka_monitor"}'
+          stages:
+            - regex:
+                source: filename
+                expression: "^/works/log/(?P<org>.+?)/(?P<env>.+?)/(?P<app_name>.+?)/.+\\.log$"
+            - labels:
+                org:
+                env:
+                app_name:
+            - output:
+                source: log
+      - match:
+          selector: '{org=~".+"}'
+          stages:
+            #- multiline:
+            #  firstline: '^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}:\d{2}'
+            #  max_lines: 500
+            - regex:
+                #[bizGroup=default, bizKey=TRANSFER_MONEY_FAILED, bizDesc=交易异常-订单超时-转账, bizValue={"orderId":"orderNo1234567","time":"2023-04-07 12:40:37"}]
+                expression: "^(?P<time>\\d{4}\\-\\d{2}\\-\\d{2} \\d{1,2}\\:\\d{2}\\:\\d{2}).+?\\[bizGroup=(?P<biz_group>.*?)\\,\\s*bizKey=(?P<biz_key>.*?)\\,\\s*bizDesc=(?P<biz_desc>.*?)\\,\\s*bizValue=(?P<biz_value>.*?)\\].*"
+            #- pack:
+            #    labels:
+            #      - time
+            #      - biz_key
+            - labels:
+                biz_group:
+                biz_key:
+                biz_desc:
+                biz_value:
+            - timestamp:
+                source: times
+                format: '2006-01-02 15:04:05'
+                location: Asia/Shanghai
 ```
 
 /etc/grafana/grafana.ini
@@ -479,7 +570,7 @@ fluent-bit/fluent-bit.conf
 
 ```yaml
 [SERVICE]
-    Parsers_File parser.conf # 解析文件位置
+    #Parsers_File parser.conf # 解析文件位置
     Flush        5           # 5秒写入一次ES
     Daemon       Off
     Log_Level    warn
@@ -490,8 +581,9 @@ fluent-bit/fluent-bit.conf
     Tag              dev
     path_key         filename
     #read_from_head   true
-    #multiline.parser multiline-regex
-    Path             /works/log/*/dev/*/*.log
+    multiline.parser multiline-regex
+    Exclude_Path     /works/log/*/dev/**/*-error.log
+    Path             /works/log/*/dev/**/*.log
     Buffer_Chunk_Size 4096KB
     Buffer_Max_Size   10240KB
 
@@ -500,19 +592,42 @@ fluent-bit/fluent-bit.conf
     Tag              test
     path_key         filename
     #read_from_head   true
-    #multiline.parser multiline-regex
-    Path             /works/log/*/test/*/*.log
+    multiline.parser multiline-regex
+    Exclude_Path     /works/log/*/test/**/*-error.log
+    Path             /works/log/*/test/**/*.log
     Buffer_Chunk_Size 4096KB
     Buffer_Max_Size   10240KB
 
+[INPUT]
+    Name             tail
+    Tag              selftest
+    path_key         filename
+    #read_from_head   true
+    multiline.parser multiline-regex
+    Exclude_Path     /works/log/*/selftest/**/*-error.log
+    Path             /works/log/*/selftest/**/*.log
+    Buffer_Chunk_Size 4096KB
+    Buffer_Max_Size   10240KB
+
+[INPUT]
+    Name             tail
+    Tag              sandbox
+    path_key         filename
+    #read_from_head   true
+    multiline.parser multiline-regex
+    Exclude_Path     /works/log/*/sandbox/**/*-error.log
+    Path             /works/log/*/sandbox/**/*.log
+    Buffer_Chunk_Size 4096KB
+    Buffer_Max_Size   10240KB
 
 [INPUT]
     Name             tail
     Tag              uat
     path_key         filename
     #read_from_head   true
-    #multiline.parser multiline-regex
-    Path             /works/log/*/uat/*/*.log
+    multiline.parser multiline-regex
+    Exclude_Path     /works/log/*/uat/**/*-error.log
+    Path             /works/log/*/uat/**/*.log
     Buffer_Chunk_Size 4096KB
     Buffer_Max_Size   10240KB
 
@@ -542,6 +657,18 @@ fluent-bit/fluent-bit.conf
 
 [OUTPUT]
     Name        kafka
+    Match       selftest
+    Brokers     192.168.80.98:9092
+    Topics      selftest
+
+[OUTPUT]
+    Name        kafka
+    Match       sandbox
+    Brokers     192.168.80.98:9092
+    Topics      sandbox
+
+[OUTPUT]
+    Name        kafka
     Match       uat
     Brokers     192.168.80.98:9092
     Topics      uat
@@ -553,7 +680,7 @@ fluent-bit/parsers_multiline.conf(if need)
 [MULTILINE_PARSER]
     name          multiline-regex
     type          regex
-    flush_timeout 1000
+    flush_timeout 3000
     #
     # Regex rules for multiline parsing
     # ---------------------------------
@@ -581,6 +708,7 @@ Kakfa docker-compose.yml
 ```yaml
 #https://segmentfault.com/a/1190000021746086
 #https://github.com/wurstmeister/kafka-docker
+version: '2'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
@@ -595,8 +723,8 @@ services:
       - 9092:9092
     environment:
       KAFKA_BROKER_ID: 0
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.102.82:9092
-      KAFKA_CREATE_TOPICS: "dev:3:0,test:3:0,uat:3:0"   #kafka启动后初始化一个有2个partition(分区)0个副本名的topic
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.80.98:9092
+      KAFKA_CREATE_TOPICS: "dev:3:1,test:3:1,selftest:3:1,uat:3:1,sandbox:3:1"   #kafka启动后初始化一个有3个partition(分区)1个副本名的topic
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
     volumes:
@@ -607,37 +735,87 @@ services:
 
 alertmanager-config.yaml
 
+https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/alert/alert-manager-config
+
 ```yaml
 global:
   smtp_smarthost: 'smtp.exmail.qq.com:25'
-  smtp_from: 'xxx@xxx'
-  smtp_auth_username: 'xxx@xxx'
-  smtp_auth_password: 'xxx*'
+  smtp_from: 'xxx@zerofinance.com'
+  smtp_auth_username: 'xxx@zerofinance.com'
+  smtp_auth_password: 'xxx'
   smtp_require_tls: false
+  #该参数定义了当Alertmanager持续多长时间未接收到告警后标记告警状态为resolved（已解决）。该参数的定义可能会影响到告警恢复通知的接收时间，读者可根据自己的实际场景进行定义，其默认值为5分钟
   resolve_timeout: 10m
+
 templates:
-- '/etc/alertmanager/config/*.tmpl'
+- '/etc/alertmanager/config/*-resolved.tmpl'
+- 
+# 路由分组
+#https://blog.csdn.net/bluuusea/article/details/104619235
+#https://github.com/prometheus/alertmanager/blob/main/doc/examples/simple.yml
+#https://kebingzao.com/2022/11/29/prometheus-4-alertmanager/
+#https://zhuanlan.zhihu.com/p/63270049
+#https://blog.csdn.net/qq_37843943/article/details/120665690
+#https://blog.51cto.com/u_14205795/4561323
 route:
-  group_by: ['alertname']
-  group_wait: 3s
-  group_interval: 5s
-  repeat_interval: 10s
-  #receiver: 'web.hook'
-  receiver: 'wecomreceivers'
-  # routes:
-  # - receiver: 'wechat'
-  #   continue: true
+  # 该节点中的警报会按'env', 'alertname', 'biz_group', 'biz_key'做 Group，每个分组中最多每group_interval发送一条警报，同样的警报最多repeat_interval发送一次
+  # 分组规则，如果满足group_by中包含的标签，则这些报警会合并为一个通知发给receiver
+  group_by: ['env', 'alertname', 'biz_group', 'biz_key']
+  # 设置等待时间，在此等待时间内如果接收到多个报警，则会合并成一个通知发送给receiver
+  group_wait: 30s
+  # 收到相同的分组告警通知的时间间隔(上下两组发送告警的间隔时间)，如果满足，则再会查找是否已经满足repeat_interval，如果满足，则会再次发送
+  # https://www.dianbanjiu.com/post/alertmanager-%E4%B8%AD%E4%B8%89%E4%B8%AA%E6%97%B6%E9%97%B4%E5%8F%82%E6%95%B0%E4%B8%8A%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/
+  # 再次发送时间在(group_interval+repeat_interval)左右
+  group_interval: 5m
+  # 发送相同告警的时间间隔，如：4h，表示4小时内不会发送相同的报警
+  repeat_interval: 4h
+  # 顶级路由配置的接收者（匹配不到子级路由，会使用根路由发送报警）
+  receiver: 'emailreceivers'
+
+  # 上面所有的属性都由所有子路由继承，并且可以在每个子路由上进行覆盖。
+  routes:
+      #用于系统默认BaseException的异常
+    - receiver: emailreceivers
+      group_by: ['env', 'alertname', 'biz_group', 'biz_key', 'biz_value']
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 3m
+      #默认为false。false：配置到满足条件的子节点点后直接返回，true：匹配到子节点后还会继续遍历后续子节点
+      continue: false
+      matchers:
+        - biz_group="XPAY-SYSTEM-ERROR"
+
+      #用于业务告警
+    - receiver: alertmanager-webhook
+    #- receiver: emailreceivers
+    #- receiver: wecomreceivers
+      group_by: ['env', 'alertname', 'biz_group', 'biz_key', 'biz_value']
+      group_wait: 0s
+      group_interval: 1m
+      repeat_interval: 2m
+      #默认为false。false：配置到满足条件的子节点点后直接返回，true：匹配到子节点后还会继续遍历后续子节点
+      continue: false
+      matchers:
+        - biz_group!~"XPAY-SYSTEM-ERROR"
+
+
+#定义所有接收者
 receivers:
-  - name: 'web.hook'
-    email_configs:
-    - to: 'xxx@xxx'
-      send_resolved: true
-  - name: allreceivers
+  - name: 'alertmanager-webhook'
     webhook_configs:
-      - url: http://192.168.102.82:8080/adapter/wx
+      - url: 'http://192.168.101.82:8088/alert'
         send_resolved: true
-    #webhook_configs:
-    #  - url: 'http://127.0.0.1:5001/'
+
+  - name: 'emailreceivers'
+    email_configs:
+    - to: 'xxx@zerofinance.com'
+      html: '{{ template "email.to.html" . }}'
+      headers: 
+        #subject: ' {{ .CommonAnnotations.summary }} {{ if eq .Status "firing" }} DOWN {{ else if eq .Status "resolved" }} UP {{end}}'
+        subject: '[{{ .Status }}]{{ .CommonAnnotations.summary }}'
+        #subject: '预警通知'
+      send_resolved: true
+
   - name: 'wecomreceivers'
     wechat_configs:
     - send_resolved: true
@@ -647,30 +825,235 @@ receivers:
       message: '{{ template "wechat.default.message" . }}'
       agent_id: 'xxx'
       api_secret: 'xxx'
+
+# 抑制器配置：抑制是指当某以此告警发出后，可以停止重复发送由此告警引发的其他告警的机制
+# https://blog.csdn.net/qq_42883074/article/details/115544031
+#当我们前面已经有一个告警了，那么后面的告警规则在触发的时候会先翻一下前面的已经触发的告警，去查看是否有severity: 'critical'的标签
+#如果有了，那么去对比['alertname', 'biz_group', 'biz_key']标签是不是相同，如果是的话，
+#那么去查看一下自己准备发的告警里标签是否存在severity: 'warning'，如果是，就不告警了
 inhibit_rules:
+  # 源标签警报触发时抑制含有目标标签的警报
   - source_match:
+      # 此处的抑制匹配一定在最上面的route中配置不然，会提示找不key。
+      # 前一个告警规则的标签
       severity: 'critical'
     target_match:
-      severity: 'warning'
-    equal: ['alertname', 'dev', 'instance']
+      # 目标标签值正则匹配，可以是正则表达式如: ".*MySQL.*"
+      # 后面触发告警规则的标签
+      severity: 'High'
+    # 确保这个配置下的标签内容相同才会抑制，也就是说警报中必须有这三个标签值才会被抑制。
+    equal: ['env', 'alertname', 'biz_group', 'biz_key']
 ```
 
 loki/rules/fake/rules.yaml
 
 ```yaml
 groups:
-    - name: service OutOfMemoryError
-      rules:
-        # 关键字监控
-        - alert: loki check words error
-          expr: sum by (org, env, app_name) (count_over_time({env=~"\\w+"} |= "level=ERROR" [1m]) > 1)
-          #用于表示只有当触发条件持续一段时间后才发送告警。在等待期间新产生告警的状态为pending。
-          for: 5s
-          labels:
-            severity: critical
-          annotations:
-            description: '{{$labels.env}} {{$labels.hostname}} file {{$labels.filename}} has  {{ $value }} error'
-            summary: java has error
+  - name: 系统日志
+    rules:
+      - alert: 系统日志-系统统一错误日志
+        #=: exactly equal
+        #!=: not equal
+        #=~: regex matches
+        #!~: regex does not match
+        #expr: sum by (env, app_name) (count_over_time({env=~"dev", app_name="account-server"}|unpack|bizKey=~"\\w+"[1m]) >=1)
+        #必须大于loki-config.yaml中的"evaluation_interval: 3s"的值
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-SYSTEM-ERROR",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #emails: "dave.zhao@zerofinance.com"
+          #emailTemplate: "email1"
+          #smsPhones: "13538061757,19520676758"
+          #ttsPhones: "13538061757,19520676758"
+          #wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          #wecomTemplate: "wecom1"
+          #只要捕捉到异常后，直接邮件通知相关对象通知一次
+          emails: "dave.zhao@zerofinance.com"
+          emailTemplate: "email1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+          
+  - name: 支付
+    rules:
+      - alert: 交易异常
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-PAYMENT",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[5m]) >=10)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #在5min内出现10笔同类型的超时，则直接电话+企业微信通知相关对象按照0min，3min时间间隔通知二次
+          ttsPhones: "13538061757,19520676758"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+  - name: 对账
+    rules:
+      - alert: 外部对账失败
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-RECONCILICATION",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+      - alert: 内部对账失败
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-RECONCILICATION",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+  - name: 结算
+    rules:
+      - alert: 渠道结算失败
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-SETTLEMENT",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+      - alert: 商户结算失败
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-SETTLEMENT",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+          
+      - alert: 服务商结算失败
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-SETTLEMENT",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+  - name: 审批
+    rules:
+      - alert: 审批失败
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-APPROVAL",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+  - name: 业务阻断
+    rules:
+      - alert: 业务阻断
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-BIZ-BLOCK",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接电话+企业微信通知相关对象
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+
+  - name: 会计
+    rules:
+      - alert: 会计异常
+        expr: sum by (env, biz_group, biz_key, biz_desc, biz_value) (count_over_time({biz_group="XPAY-ACCOUNTING",biz_key=~".+",biz_desc=~".+",biz_value=~".+"}[10s]) >=1)
+        for: 1s
+        labels:
+          severity: High
+        annotations:
+          silenceResolved: "true"
+          #只要捕捉到异常后，直接企业微信通知相关对象通知一次
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomTemplate: "wecom1"
+          summary: "{{ $labels.biz_desc }}"
+          description: "{{ $labels.biz_value }}"
+          count: "{{ $value }}"
+```
+
+config/WebCom-resolved.tmpl
+
+```yaml
+{{ define "wechat.default.message" }}
+{{- if gt (len .Alerts.Firing) 0 -}}
+{{- range $index, $alert := .Alerts -}}
+{{- if eq $index 0 -}}
+**********[{{ $alert.Status }}]告警通知**********
+模块名称: {{ $alert.Labels.alertname }}
+预警级别: {{ $alert.Labels.severity }}
+故障业务: {{ $alert.Labels.biz_key }}
+{{- end }}
+=====================
+预警名称: {{ $alert.Annotations.summary }}
+预警警详情: {{ $alert.Annotations.description }}
+错误次数: {{ $alert.Annotations.count  }}次
+故障时间: {{ $alert.StartsAt.Local.Format "2006-01-02 15:04:05" }}
+{{- end }}
+{{- end }}
+
+{{- if gt (len .Alerts.Resolved) 0 -}}
+{{- range $index, $alert := .Alerts -}}
+{{- if eq $index 0 -}}
+**********恢复通知**********
+模块名称: {{ $alert.Labels.alertname }}
+预警级别: {{ $alert.Labels.severity }}
+故障业务: {{ $alert.Labels.biz_key }}
+{{- end }}
+=====================
+预警名称: {{ $alert.Annotations.summary }}
+预警警详情: {{ $alert.Annotations.description }}
+错误次数: {{ $alert.Annotations.count  }}次
+故障时间: {{ $alert.StartsAt.Local.Format "2006-01-02 15:04:05" }}
+恢复时间: {{ $alert.EndsAt.Local.Format "2006-01-02 15:04:05" }}
+{{- end }}
+{{- end }}
+{{- end }}
 ```
 
 config/WebCom.tmpl
@@ -680,40 +1063,73 @@ config/WebCom.tmpl
 {{- if gt (len .Alerts.Firing) 0 -}}
 {{- range $index, $alert := .Alerts -}}
 {{- if eq $index 0 -}}
-**********告警通知**********
-告警类型: {{ $alert.Labels.alertname }}
-告警级别: {{ $alert.Labels.severity }}
+**********[{{ $alert.Status }}]告警通知**********
+模块名称: {{ $alert.Labels.alertname }}
+预警级别: {{ $alert.Labels.severity }}
+故障业务: {{ $alert.Labels.biz_key }}
 {{- end }}
 =====================
-告警主题: {{ $alert.Annotations.summary }}
-告警详情: {{ $alert.Annotations.description }}
-故障时间: {{ $alert.StartsAt.Local }}
-{{ if gt (len $alert.Labels.instance) 0 -}}故障实例: {{ $alert.Labels.instance }}{{- end -}}
-{{- end }}
-{{- end }}
-
-{{- if gt (len .Alerts.Resolved) 0 -}}
-{{- range $index, $alert := .Alerts -}}
-{{- if eq $index 0 -}}
-**********恢复通知**********
-告警类型: {{ $alert.Labels.alertname }}
-告警级别: {{ $alert.Labels.severity }}
-{{- end }}
-=====================
-告警主题: {{ $alert.Annotations.summary }}
-告警详情: {{ $alert.Annotations.description }}
-故障时间: {{ $alert.StartsAt.Local }}
-恢复时间: {{ $alert.EndsAt.Local }}
-{{ if gt (len $alert.Labels.instance) 0 -}}故障实例: {{ $alert.Labels.instance }}{{- end -}}
+预警名称: {{ $alert.Annotations.summary }}
+预警警详情: {{ $alert.Annotations.description }}
+错误次数: {{ $alert.Annotations.count  }}次
+故障时间: {{ $alert.StartsAt.Local.Format "2006-01-02 15:04:05" }}
 {{- end }}
 {{- end }}
 {{- end }}
 ```
 
+config/Email-resolved.tmpl
 
+```yaml
+{{ define "email.to.html" }}
+{{- if gt (len .Alerts.Firing) 0 -}}
+{{- range $index, $alert := .Alerts -}}
+========= ERROR ==========<br>
+模块名称: {{ .Labels.alertname }}<br>
+预警级别: {{ .Labels.severity }}<br>
+故障业务: {{ .Labels.biz_key }}<br>
+=====================<br/>
+预警名称: {{ .Annotations.summary }}<br>
+预警详情: {{ .Annotations.description }}<br>
+错误次数: {{ .Annotations.count }}次<br>
+故障时间: {{ .StartsAt.Format "2020-01-02 15:04:05"}} <br>
+========= END ==========<br>
+{{- end }}
+{{- end }}
+{{- if gt (len .Alerts.Resolved) 0 -}}
+{{- range $index, $alert := .Alerts -}}
+========= INFO ==========<br>
+模块名称: {{ .Labels.alertname }}<br>
+预警级别: {{ .Labels.severity }}<br>
+故障业务: {{ .Labels.biz_key }}<br>
+=====================<br/>
+预警名称: {{ .Annotations.summary }}<br>
+预警详情: {{ .Annotations.description }}<br>
+错误次数: {{ .Annotations.count }}次<br>
+故障时间: {{ .StartsAt.Format "2020-01-02 15:04:05"}} <br>
+恢复时间：{{ .EndsAt.Format "2006-01-02 15:04:05" }}<br>
+========= END ==========<br>
+{{- end }}
+{{- end }}
+{{- end }}
+```
 
+config/Email.tmpl
 
-Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
+```yaml
+{{ define "email.to.html" }}
+{{ range .Alerts }}
+模块名称: {{ .Labels.alertname }}<br>
+预警级别: {{ .Labels.severity }}<br>
+故障业务: {{ .Labels.biz_key }}<br>
+=====================<br/>
+预警名称: {{ .Annotations.summary }}<br>
+预警详情: {{ .Annotations.description }}<br>
+错误次数: {{ .Annotations.count }}次<br>
+故障时间: {{ .StartsAt.Format "2020-01-02 15:04:05"}} <br>
+{{ end }}
+{{ end }}
+```
 
 Installing:
 
@@ -769,7 +1185,8 @@ docker-compose up -d
 docker exec -it kafka-kafka9094-1 sh
 运行消费者,进行消息的监听
 kafka-console-consumer.sh --bootstrap-server 192.168.102.82:9092 --topic account --from-beginning
-#docker exec -it kafka-kafka9094-1 kafka-console-consumer.sh --bootstrap-server 192.168.101.82:9092 --topic dev --from-beginning
+#docker exec -it kafka_kafka9094_1 kafka-console-consumer.sh --bootstrap-server 192.168.101.82:9092 --topic dev --from-beginning
+#docker exec -it kafka_kafka9094_1 kafka-topics.sh --create --bootstrap-server 192.168.101.82:9092 --replication-factor 1 --partitions 3 --topic sandbox
 
 docker exec -it kafka-kafka9094-1 sh
 打开一个新的ssh窗口,同样进入kafka的容器中,执行下面这条命令生产消息
@@ -782,7 +1199,9 @@ chown -R 65534:65534 /data/alertmanager/
 docker run -d --name alertmanager --restart=always \
 -v /data/alertmanager:/etc/alertmanager \
 -p 9093:9093 prom/alertmanager:v0.24.0 \
---config.file=/etc/alertmanager/alertmanager-config.yaml
+--config.file=/etc/alertmanager/alertmanager-config.yaml \
+--web.external-url=http://192.168.101.82:9093 \
+--log.level=debug
 ```
 
 Uninstalling:
@@ -1308,10 +1727,13 @@ https://grafana.com/docs/loki/latest/best-practices/
 
 https://www.bilibili.com/read/cv17329220
 
-```shell
-wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+## Configuration backup
 
-```
+Loki Config: [loki.zip](/files/Loki-Log-System/Loki.zip)
+
+AlertManager Config: [AlertManager.zip](/files/Loki-Log-System/AlertManager.zip)
+
+Grafana Config: [grafana.tgz](/files/Loki-Log-System/grafana.tgz)
 
 ## Reference 
 
@@ -1330,3 +1752,16 @@ wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertm
 - https://grafana.com/docs/loki/latest/installation/helm/
 - https://blog.csdn.net/weixin_49366475/article/details/114384817
 - https://blog.luxifan.com/blog/post/lucifer/1.%E5%88%9D%E8%AF%86Loki-%E4%B8%80
+- https://blog.csdn.net/bluuusea/article/details/104619235
+- https://blog.51cto.com/u_14205795/4561323
+- https://www.cnblogs.com/punchlinux/p/17035742.html
+- https://kebingzao.com/2022/11/29/prometheus-4-alertmanager/
+- https://blog.csdn.net/wang7531838/article/details/107809870
+- https://blog.51cto.com/u_12965094/2690336
+- https://blog.csdn.net/qq_42883074/article/details/115544031
+- https://blog.csdn.net/bluuusea/article/details/104619235
+- http://www.mydlq.club/article/126/
+- https://www.orchome.com/10106
+- https://blog.51cto.com/u_14320361/2461666
+- https://chenzhonzhou.github.io/2020/07/17/alertmanager-de-gao-jing-mo-ban/
+- https://blog.csdn.net/weixin_44911287/article/details/124149964
