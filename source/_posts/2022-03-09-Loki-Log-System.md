@@ -740,8 +740,8 @@ https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/alert/alert
 ```yaml
 global:
   smtp_smarthost: 'smtp.exmail.qq.com:25'
-  smtp_from: 'xxx@zerofinance.com'
-  smtp_auth_username: 'xxx@zerofinance.com'
+  smtp_from: 'xxx@xxx.com'
+  smtp_auth_username: 'xxx@xxx.com'
   smtp_auth_password: 'xxx'
   smtp_require_tls: false
   #该参数定义了当Alertmanager持续多长时间未接收到告警后标记告警状态为resolved（已解决）。该参数的定义可能会影响到告警恢复通知的接收时间，读者可根据自己的实际场景进行定义，其默认值为5分钟
@@ -808,7 +808,7 @@ receivers:
 
   - name: 'emailreceivers'
     email_configs:
-    - to: 'xxx@zerofinance.com'
+    - to: 'xxx@xxx.com'
       html: '{{ template "email.to.html" . }}'
       headers: 
         #subject: ' {{ .CommonAnnotations.summary }} {{ if eq .Status "firing" }} DOWN {{ else if eq .Status "resolved" }} UP {{end}}'
@@ -864,14 +864,14 @@ groups:
           severity: High
         annotations:
           silenceResolved: "true"
-          #emails: "dave.zhao@zerofinance.com"
+          #emails: "xxx@xxx.com"
           #emailTemplate: "email1"
-          #smsPhones: "13538061757,19520676758"
-          #ttsPhones: "13538061757,19520676758"
-          #wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          #smsPhones: "11111111111,22222222222"
+          #ttsPhones: "11111111111,22222222222"
+          #wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           #wecomTemplate: "wecom1"
           #只要捕捉到异常后，直接邮件通知相关对象通知一次
-          emails: "dave.zhao@zerofinance.com"
+          emails: "xxx@xxx.com"
           emailTemplate: "email1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -887,8 +887,8 @@ groups:
         annotations:
           silenceResolved: "true"
           #在5min内出现10笔同类型的超时，则直接电话+企业微信通知相关对象按照0min，3min时间间隔通知二次
-          ttsPhones: "13538061757,19520676758"
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          ttsPhones: "11111111111,22222222222"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -904,7 +904,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -918,7 +918,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -934,7 +934,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -948,7 +948,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -962,7 +962,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -978,7 +978,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -994,7 +994,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接电话+企业微信通知相关对象
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
@@ -1010,7 +1010,7 @@ groups:
         annotations:
           silenceResolved: "true"
           #只要捕捉到异常后，直接企业微信通知相关对象通知一次
-          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d2c2230b-8ae0-4024-b699-b31329e15929"
+          wecomUrl: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=111122223333"
           wecomTemplate: "wecom1"
           summary: "{{ $labels.biz_desc }}"
           description: "{{ $labels.biz_value }}"
