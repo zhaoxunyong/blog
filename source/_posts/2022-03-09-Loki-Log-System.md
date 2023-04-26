@@ -1154,7 +1154,7 @@ docker run -d --name loki --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /data/loki/data:/loki/data \
 -v /works/conf/loki:/mnt/config \
--p 3100:3100 -p 7946:7946 -p 9096:9096 grafana/loki:2.7.0 \
+-p 3100:3100 -p 7946:7946 -p 9096:9096 grafana/loki:2.8.0 \
 -config.file=/mnt/config/loki-config.yaml
 
 #grafana
@@ -1948,8 +1948,8 @@ kubectl -n zero-loki get po,svc -owide
 
 >kubectl.exe -n zero-loki exec -it kafka-0 bash
 kafka-topics.sh --create --zookeeper "zookeeper-headless:2181" --replication-factor 2 --partitions 3 --topic uat
-kafka-console-producer.sh --broker-list "kafka-cluster-test.zerofinance.net:9092" --topic uat
-kafka-console-consumer.sh --bootstrap-server "kafka-cluster-test.zerofinance.net:9092" --topic uat --from-beginning
+kafka-console-producer.sh --broker-list "192.168.80.99:9192,192.168.80.99:9292,192.168.80.99:9392" --topic uat
+kafka-console-consumer.sh --bootstrap-server "192.168.80.99:9192,192.168.80.99:9292,192.168.80.99:9392" --topic uat --from-beginning
 kafka-topics.sh --list --zookeeper "zookeeper-headless:2181"
 
-kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list "kafka-cluster-test.zerofinance.net:9092" --topic uat
+kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list "192.168.80.99:9192,192.168.80.99:9292,192.168.80.99:9392" --topic uat
