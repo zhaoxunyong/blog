@@ -737,6 +737,81 @@ Kakfa k8s:
 
 It's complex, please refer to Kakfa Config: [kafka.zip](/files/Loki-Log-System/kafka.zip)
 
+Zookeeper k8s:
+
+Need to modify resource from: https://github.com/31z4/zookeeper-docker/tree/master/3.8.1
+
+![zookeeper01.png](/images/Loki-Log-System/zookeeper01.png)
+
+![zookeeper02.png](/images/Loki-Log-System/zookeeper02.png)
+
+docker-entrypoint.sh
+
+```bash
+#!/bin/bash
+
+set -e
+
+ZOO_MY_ID=$(($(hostname | sed s/.*-//) + 1))
+
+# Allow the container to be started with `--user`
+if [[ "$1" = 'zkServer.sh' && "$(id -u)" = '0' ]]; then
+    chown -R zookeeper "$ZOO_DATA_DIR" "$ZOO_DATA_LOG_DIR" "$ZOO_LOG_DIR"
+    exec gosu zookeeper "$0" "$@"
+fi
+
+mkdir -p $ZOO_DATA_DIR/$ZOO_MY_ID $ZOO_DATA_LOG_DIR/$ZOO_MY_ID
+
+# Generate the config only if it doesn't exist
+if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
+    CONFIG="$ZOO_CONF_DIR/zoo.cfg"
+    {
+        echo "dataDir=$ZOO_DATA_DIR/$ZOO_MY_ID"
+        echo "dataLogDir=$ZOO_DATA_LOG_DIR/$ZOO_MY_ID"
+
+        echo "tickTime=$ZOO_TICK_TIME"
+        echo "initLimit=$ZOO_INIT_LIMIT"
+        echo "syncLimit=$ZOO_SYNC_LIMIT"
+
+        echo "autopurge.snapRetainCount=$ZOO_AUTOPURGE_SNAPRETAINCOUNT"
+        echo "autopurge.purgeInterval=$ZOO_AUTOPURGE_PURGEINTERVAL"
+        echo "maxClientCnxns=$ZOO_MAX_CLIENT_CNXNS"
+        echo "standaloneEnabled=$ZOO_STANDALONE_ENABLED"
+        echo "admin.enableServer=$ZOO_ADMINSERVER_ENABLED"
+    } >> "$CONFIG"
+    if [[ -z $ZOO_SERVERS ]]; then
+      ZOO_SERVERS="server.1=localhost:2888:3888;2181"
+    fi
+
+    for server in $ZOO_SERVERS; do
+        echo "$server" >> "$CONFIG"
+    done
+
+    if [[ -n $ZOO_4LW_COMMANDS_WHITELIST ]]; then
+        echo "4lw.commands.whitelist=$ZOO_4LW_COMMANDS_WHITELIST" >> "$CONFIG"
+    fi
+
+    for cfg_extra_entry in $ZOO_CFG_EXTRA; do
+        echo "$cfg_extra_entry" >> "$CONFIG"
+    done
+fi
+
+# Write myid only if it doesn't exist
+if [[ ! -f "$ZOO_DATA_DIR/$ZOO_MY_ID/myid" ]]; then
+    echo "${ZOO_MY_ID:-1}" > "$ZOO_DATA_DIR/$ZOO_MY_ID/myid"
+fi
+
+exec "$@"
+```
+
+builds images:
+
+```bash
+docker build -t "registry.zerofinance.net/xpayappimage/zookeeper:3.8.1" .
+docker push registry.zerofinance.net/xpayappimage/zookeeper:3.8.1
+```
+
+
 > https://www.qikqiak.com/k8strain/controller/statefulset/
 > https://www.jianshu.com/p/f0b0fc3d192f
 > https://itopic.org/kafka-in-k8s.html
@@ -1178,14 +1253,14 @@ docker run -d --name promtail --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /works/conf/promtail:/mnt/config \
 -v /works/log:/works/log \
-grafana/promtail:2.7.0 \
+grafana/promtail:2.8.0 \
 -config.file=/mnt/config/promtail-config.yaml \
 -client.external-labels=hostname=${HOSTNAME}
 
 docker run -d --name promtail-monitor --restart=always \
 -v /etc/localtime:/etc/localtime:ro \
 -v /works/conf/promtail/biz:/mnt/config \
-grafana/promtail:2.7.0 \
+grafana/promtail:2.8.0 \
 -config.file=/mnt/config/promtail-config.yaml \
 -client.external-labels=hostname=${HOSTNAME}
 
@@ -1220,6 +1295,8 @@ docker run -d --name alertmanager --restart=always \
 --cluster.advertise-address=0.0.0.0:9093 \
 --log.level=debug
 ```
+
+reload alertmanager: curl -XPOST http://am-test.zerofinance.net/-/reload
 
 Cluster Installation:
 
@@ -1930,6 +2007,7 @@ Grafana Config: [grafana.tgz](/files/Loki-Log-System/grafana.tgz)
 - https://blog.51cto.com/u_14320361/2461666
 - https://chenzhonzhou.github.io/2020/07/17/alertmanager-de-gao-jing-mo-ban/
 - https://blog.csdn.net/weixin_44911287/article/details/124149964
+- https://blog.csdn.net/easylife206/article/details/127581630
 
 
 kubectl create ns zero-loki
@@ -1953,3 +2031,5 @@ kafka-console-consumer.sh --bootstrap-server "192.168.80.99:9192,192.168.80.99:9
 kafka-topics.sh --list --zookeeper "zookeeper-headless:2181"
 
 kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list "192.168.80.99:9192,192.168.80.99:9292,192.168.80.99:9392" --topic uat
+
+kubectl -n xpay-logs run -ti --rm centos-test --image=centos:7 --overrides='{"spec": { "nodeSelector": {"xpay-env": "logs"}}}'
