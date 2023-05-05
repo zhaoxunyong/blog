@@ -743,15 +743,6 @@ Kakfa without zookeeper:
 - https://stackoverflow.com/questions/73380791/kafka-kraft-replication-factor-of-3
 - https://github.com/IBM/kraft-mode-kafka-on-kubernetes
 
-> kubectl -n zero-logs run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- bash
-kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --topic test
-kafka-console-producer.sh --broker-list kafka-svc:9092 --topic test
-kafka-console-consumer.sh --bootstrap-server kafka-svc:9092 --topic test --from-beginning
-
-kafka-topics.sh --create --bootstrap-server 192.168.64.6:9092 --topic test
-kafka-console-producer.sh --broker-list 192.168.64.6:9092 --topic test
-kafka-console-consumer.sh --bootstrap-server 192.168.64.6:9092 --topic test --from-beginning
-
 Dockerfile:
 
 ```bash
@@ -762,8 +753,6 @@ ENV SCALA_VERSION=2.13
 ENV KAFKA_HOME=/opt/kafka
 ENV PATH=${PATH}:${KAFKA_HOME}/bin
 
-RUN groupadd -g 1001 dev && useradd -u 1001 -g 1001 -s /bin/bash dev
-
 LABEL name="kafka" version=${KAFKA_VERSION}
 
 RUN wget -O /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
@@ -772,13 +761,8 @@ RUN wget -O /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz https://downloads.a
  && ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} ${KAFKA_HOME} \
  && rm -rf /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
 
-COPY ./entrypoint.sh /opt/
-RUN ["chmod", "+x", "/opt/entrypoint.sh"]
-RUN chown -R dev.dev /opt
-
-USER dev:dev
-
-ENTRYPOINT ["/opt/entrypoint.sh"]
+COPY ./entrypoint.sh /
+RUN ["chmod", "+x", "/entrypoint.sh"]
 ```
 
 entrypoint.sh:
@@ -901,8 +885,8 @@ spec:
       labels:
         app: kafka
     spec:
-      securityContext:
-        fsGroup: 1001
+      #securityContext:
+      #  fsGroup: 1001
       nodeSelector:
         xpay-env: logs
       tolerations:
@@ -914,9 +898,9 @@ spec:
       - name: kafka
         image: "registry.zerofinance.net/xpayappimage/kafka:3.3.2"
         imagePullPolicy: "Always"
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1001
+        #securityContext:
+        #  runAsNonRoot: true
+        #  runAsUser: 1001
         env:
         - name: REPLICAS
           value: '3'
@@ -1027,6 +1011,19 @@ spec:
           - backend:
               serviceName: kafka-ui
               servicePort: 8080
+```
+
+Test:
+
+```bash
+> kubectl -n zero-logs run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- bash
+kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --topic test
+kafka-console-producer.sh --broker-list kafka-svc:9092 --topic test
+kafka-console-consumer.sh --bootstrap-server kafka-svc:9092 --topic test --from-beginning
+
+kafka-topics.sh --create --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test
+kafka-console-producer.sh --broker-list kafka-broker-test.zerofinance.net:9092 --topic test
+kafka-console-consumer.sh --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test --from-beginning
 ```
 
 
