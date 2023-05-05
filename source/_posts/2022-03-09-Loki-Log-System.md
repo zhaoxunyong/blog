@@ -299,10 +299,12 @@ Test:
 ```bash
 > kubectl -n zero-logs run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- bash
 kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --topic test
+kafka-topics.sh --bootstrap-server kafka-svc:9092 --list
 kafka-console-producer.sh --broker-list kafka-svc:9092 --topic test
 kafka-console-consumer.sh --bootstrap-server kafka-svc:9092 --topic test --from-beginning
 
 kafka-topics.sh --create --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test
+kafka-topics.sh --bootstrap-server kafka-broker-test.zerofinance.net:9092 --list
 kafka-console-producer.sh --broker-list kafka-broker-test.zerofinance.net:9092 --topic test
 kafka-console-consumer.sh --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test --from-beginning
 ```
