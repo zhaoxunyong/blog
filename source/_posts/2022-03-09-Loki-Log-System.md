@@ -10,6 +10,382 @@ This article recorded how to install and configure Log System based on Loki deve
 
 <!-- more -->
 
+
+
+## kafka
+
+### Kakfa k8s
+
+It's complex, please refer to Kakfa Config: [kafka.zip](/files/Loki-Log-System/kafka.zip)
+
+Kakfa without zookeeper:
+
+- https://learnk8s.io/kafka-ha-kubernetes#deploying-a-3-node-kafka-cluster-on-kubernetes
+- https://stackoverflow.com/questions/73380791/kafka-kraft-replication-factor-of-3
+- https://github.com/IBM/kraft-mode-kafka-on-kubernetes
+
+Dockerfile:
+
+```bash
+FROM openjdk:17-bullseye
+
+ENV KAFKA_VERSION=3.3.2
+ENV SCALA_VERSION=2.13
+ENV KAFKA_HOME=/opt/kafka
+ENV PATH=${PATH}:${KAFKA_HOME}/bin
+
+LABEL name="kafka" version=${KAFKA_VERSION}
+
+RUN wget -O /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+ && tar xfz /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C /opt \
+ && rm /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+ && ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} ${KAFKA_HOME} \
+ && rm -rf /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
+
+COPY ./entrypoint.sh /
+RUN ["chmod", "+x", "/entrypoint.sh"]
+```
+
+entrypoint.sh:
+
+```bash
+#!/bin/bash
+
+#NODE_ID=${HOSTNAME:6}
+NODE_ID=$(hostname | sed s/.*-//)
+LISTENERS="PLAINTEXT://:9092,CONTROLLER://:9093"
+#ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE.$NAMESPACE.svc.cluster.local:9092"
+ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE:9092"
+
+CONTROLLER_QUORUM_VOTERS=""
+for i in $( seq 0 $REPLICAS); do
+    if [[ $i != $REPLICAS ]]; then
+        CONTROLLER_QUORUM_VOTERS="$CONTROLLER_QUORUM_VOTERS$i@kafka-$i.$SERVICE:9093,"
+    else
+        CONTROLLER_QUORUM_VOTERS=${CONTROLLER_QUORUM_VOTERS::-1}
+    fi
+done
+
+mkdir -p $SHARE_DIR/$NODE_ID 
+
+if [[ ! -f "$SHARE_DIR/cluster_id" && "$NODE_ID" = "0" ]]; then
+    CLUSTER_ID=$(kafka-storage.sh random-uuid)
+    echo $CLUSTER_ID > $SHARE_DIR/cluster_id
+else
+    CLUSTER_ID=$(cat $SHARE_DIR/cluster_id)
+fi
+
+sed -e "s+^node.id=.*+node.id=$NODE_ID+" \
+-e "s+^controller.quorum.voters=.*+controller.quorum.voters=$CONTROLLER_QUORUM_VOTERS+" \
+-e "s+^listeners=.*+listeners=$LISTENERS+" \
+-e "s+^advertised.listeners=.*+advertised.listeners=$ADVERTISED_LISTENERS+" \
+-e "s+^log.dirs=.*+log.dirs=$SHARE_DIR/$NODE_ID+" \
+/opt/kafka/config/kraft/server.properties > server.properties.updated \
+&& mv server.properties.updated /opt/kafka/config/kraft/server.properties
+
+kafka-storage.sh format -t $CLUSTER_ID -c /opt/kafka/config/kraft/server.properties
+
+exec kafka-server-start.sh /opt/kafka/config/kraft/server.properties
+```
+
+docker building:
+
+```bash
+docker build -t "registry.zerofinance.net/xpayappimage/kafka:3.3.2" .
+#docker login registry.zerofinance.net
+docker push "registry.zerofinance.net/xpayappimage/kafka:3.3.2"
+```
+
+kafka-kraft.yml:
+
+```yml
+#部署 Service Headless，用于Kafka间相互通信
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-svc
+  labels:
+    app: kafka
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: '9092'
+      port: 9092
+      protocol: TCP
+      targetPort: 9092
+    - name: '9093'
+      port: 9093
+      protocol: TCP
+      targetPort: 9093
+  selector:
+    app: kafka
+
+---
+#部署 Service，用于外部访问 Kafka
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    #service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
+    #service.beta.kubernetes.io/alibaba-cloud-loadbalancer-vswitch-id: "vsw-j6c8okcv03ah1uvu31tbm"
+    service.beta.kubernetes.io/alibaba-cloud-loadbalancer-id: "lb-3nsgew8gt6lzmtzc0vn93"
+    service.beta.kubernetes.io/alibaba-cloud-loadbalancer-force-override-listeners: "true"
+  name: kafka-broker
+  labels:
+    app: kafka
+spec:
+  type: LoadBalancer
+  ports:
+  - name: '9092'
+    port: 9092
+    protocol: TCP
+    targetPort: 9092
+  selector:
+    app: kafka
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "kafka"
+  labels:
+    app: kafka
+spec:
+  selector:
+    matchLabels:
+      app: kafka
+  serviceName: kafka-svc
+  podManagementPolicy: "OrderedReady"
+  replicas: 3
+  updateStrategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      name: "kafka"
+      labels:
+        app: kafka
+    spec:
+      #securityContext:
+      #  fsGroup: 1001
+      nodeSelector:
+        xpay-env: logs
+      tolerations:
+      - key: "xpay-env"
+        operator: "Equal"
+        value: "logs"
+        effect: "NoSchedule"
+      containers:
+      - name: kafka
+        image: "registry.zerofinance.net/xpayappimage/kafka:3.3.2"
+        imagePullPolicy: "Always"
+        #securityContext:
+        #  runAsNonRoot: true
+        #  runAsUser: 1001
+        env:
+        - name: REPLICAS
+          value: '3'
+        - name: SERVICE
+          value: kafka-svc
+        - name: SHARE_DIR
+          value: /mnt/kafka
+        - name: CLUSTER_ID
+          value: LelM2dIFQkiUFvXCEcqRWA
+        - name: DEFAULT_REPLICATION_FACTOR
+          value: '3'
+        - name: DEFAULT_MIN_INSYNC_REPLICAS
+          value: '2'
+        ports:
+          - containerPort: 9092
+          - containerPort: 9093
+        livenessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 2
+        readinessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        volumeMounts:
+        - name: data
+          mountPath: /mnt/kafka
+      volumes:
+      - name: data
+        hostPath:
+          path: "/data/data/kafka-k8s"
+```
+
+kafka-ui.yml:
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+spec:
+  #type: NodePort
+  ports:
+  - name: kafka
+    port: 8080
+    targetPort: 8080
+    #nodePort: 30900
+  selector:
+    app: kafka-ui
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+      - name: kafka-ui
+        image: provectuslabs/kafka-ui:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: kafka-ui
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: DYNAMIC_CONFIG_ENABLED
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: kafka-ui
+        readinessProbe:
+          httpGet:
+            path: /actuator/info
+            port: kafka-ui
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kafka-ui
+spec:
+  tls: []
+  rules:
+    - host: kafka-ui-test.zerofinance.net
+      http:
+        paths:
+          - backend:
+              serviceName: kafka-ui
+              servicePort: 8080
+```
+
+Test:
+
+```bash
+> kubectl -n zero-logs run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- bash
+kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --topic test
+kafka-console-producer.sh --broker-list kafka-svc:9092 --topic test
+kafka-console-consumer.sh --bootstrap-server kafka-svc:9092 --topic test --from-beginning
+
+kafka-topics.sh --create --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test
+kafka-console-producer.sh --broker-list kafka-broker-test.zerofinance.net:9092 --topic test
+kafka-console-consumer.sh --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test --from-beginning
+```
+
+## Zookeeper
+
+> https://www.qikqiak.com/k8strain/controller/statefulset/
+> https://www.jianshu.com/p/f0b0fc3d192f
+> https://itopic.org/kafka-in-k8s.html
+> https://itopic.org/zookeeper-in-k8s.html
+
+Need to modify resource from: https://github.com/31z4/zookeeper-docker/tree/master/3.8.1
+
+![zookeeper01.png](/images/Loki-Log-System/zookeeper01.png)
+
+![zookeeper02.png](/images/Loki-Log-System/zookeeper02.png)
+
+docker-entrypoint.sh
+
+```bash
+#!/bin/bash
+
+set -e
+
+ZOO_MY_ID=$(($(hostname | sed s/.*-//) + 1))
+
+# Allow the container to be started with `--user`
+if [[ "$1" = 'zkServer.sh' && "$(id -u)" = '0' ]]; then
+    chown -R zookeeper "$ZOO_DATA_DIR" "$ZOO_DATA_LOG_DIR" "$ZOO_LOG_DIR"
+    exec gosu zookeeper "$0" "$@"
+fi
+
+mkdir -p $ZOO_DATA_DIR/$ZOO_MY_ID $ZOO_DATA_LOG_DIR/$ZOO_MY_ID
+
+# Generate the config only if it doesn't exist
+if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
+    CONFIG="$ZOO_CONF_DIR/zoo.cfg"
+    {
+        echo "dataDir=$ZOO_DATA_DIR/$ZOO_MY_ID"
+        echo "dataLogDir=$ZOO_DATA_LOG_DIR/$ZOO_MY_ID"
+
+        echo "tickTime=$ZOO_TICK_TIME"
+        echo "initLimit=$ZOO_INIT_LIMIT"
+        echo "syncLimit=$ZOO_SYNC_LIMIT"
+
+        echo "autopurge.snapRetainCount=$ZOO_AUTOPURGE_SNAPRETAINCOUNT"
+        echo "autopurge.purgeInterval=$ZOO_AUTOPURGE_PURGEINTERVAL"
+        echo "maxClientCnxns=$ZOO_MAX_CLIENT_CNXNS"
+        echo "standaloneEnabled=$ZOO_STANDALONE_ENABLED"
+        echo "admin.enableServer=$ZOO_ADMINSERVER_ENABLED"
+    } >> "$CONFIG"
+    if [[ -z $ZOO_SERVERS ]]; then
+      ZOO_SERVERS="server.1=localhost:2888:3888;2181"
+    fi
+
+    for server in $ZOO_SERVERS; do
+        echo "$server" >> "$CONFIG"
+    done
+
+    if [[ -n $ZOO_4LW_COMMANDS_WHITELIST ]]; then
+        echo "4lw.commands.whitelist=$ZOO_4LW_COMMANDS_WHITELIST" >> "$CONFIG"
+    fi
+
+    for cfg_extra_entry in $ZOO_CFG_EXTRA; do
+        echo "$cfg_extra_entry" >> "$CONFIG"
+    done
+fi
+
+# Write myid only if it doesn't exist
+if [[ ! -f "$ZOO_DATA_DIR/$ZOO_MY_ID/myid" ]]; then
+    echo "${ZOO_MY_ID:-1}" > "$ZOO_DATA_DIR/$ZOO_MY_ID/myid"
+fi
+
+exec "$@"
+```
+
+builds images:
+
+```bash
+docker build -t "registry.zerofinance.net/xpayappimage/zookeeper:3.8.1" .
+docker push registry.zerofinance.net/xpayappimage/zookeeper:3.8.1
+```
+
 ## Loki
 
 What's the Grafana Loki?
@@ -17,6 +393,8 @@ What's the Grafana Loki?
 Loki is a log aggregation system designed to store and query logs from all your applications and infrastructure.
 
 Documents located in: https://grafana.com/docs/loki/latest/
+
+Configurations of loki k8s: [loki-k8s.zip](/files/Loki-Log-System/loki-k8s.zip)
 
 ### Installation
 
@@ -732,380 +1110,6 @@ services:
     depends_on:
       - zookeeper
 ```
-
-Kakfa k8s:
-
-It's complex, please refer to Kakfa Config: [kafka.zip](/files/Loki-Log-System/kafka.zip)
-
-Kakfa without zookeeper:
-
-- https://learnk8s.io/kafka-ha-kubernetes#deploying-a-3-node-kafka-cluster-on-kubernetes
-- https://stackoverflow.com/questions/73380791/kafka-kraft-replication-factor-of-3
-- https://github.com/IBM/kraft-mode-kafka-on-kubernetes
-
-Dockerfile:
-
-```bash
-FROM openjdk:17-bullseye
-
-ENV KAFKA_VERSION=3.3.2
-ENV SCALA_VERSION=2.13
-ENV KAFKA_HOME=/opt/kafka
-ENV PATH=${PATH}:${KAFKA_HOME}/bin
-
-LABEL name="kafka" version=${KAFKA_VERSION}
-
-RUN wget -O /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
- && tar xfz /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C /opt \
- && rm /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
- && ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} ${KAFKA_HOME} \
- && rm -rf /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
-
-COPY ./entrypoint.sh /
-RUN ["chmod", "+x", "/entrypoint.sh"]
-```
-
-entrypoint.sh:
-
-```bash
-#!/bin/bash
-
-#NODE_ID=${HOSTNAME:6}
-NODE_ID=$(hostname | sed s/.*-//)
-LISTENERS="PLAINTEXT://:9092,CONTROLLER://:9093"
-#ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE.$NAMESPACE.svc.cluster.local:9092"
-ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE:9092"
-
-CONTROLLER_QUORUM_VOTERS=""
-for i in $( seq 0 $REPLICAS); do
-    if [[ $i != $REPLICAS ]]; then
-        CONTROLLER_QUORUM_VOTERS="$CONTROLLER_QUORUM_VOTERS$i@kafka-$i.$SERVICE:9093,"
-    else
-        CONTROLLER_QUORUM_VOTERS=${CONTROLLER_QUORUM_VOTERS::-1}
-    fi
-done
-
-mkdir -p $SHARE_DIR/$NODE_ID 
-
-if [[ ! -f "$SHARE_DIR/cluster_id" && "$NODE_ID" = "0" ]]; then
-    CLUSTER_ID=$(kafka-storage.sh random-uuid)
-    echo $CLUSTER_ID > $SHARE_DIR/cluster_id
-else
-    CLUSTER_ID=$(cat $SHARE_DIR/cluster_id)
-fi
-
-sed -e "s+^node.id=.*+node.id=$NODE_ID+" \
--e "s+^controller.quorum.voters=.*+controller.quorum.voters=$CONTROLLER_QUORUM_VOTERS+" \
--e "s+^listeners=.*+listeners=$LISTENERS+" \
--e "s+^advertised.listeners=.*+advertised.listeners=$ADVERTISED_LISTENERS+" \
--e "s+^log.dirs=.*+log.dirs=$SHARE_DIR/$NODE_ID+" \
-/opt/kafka/config/kraft/server.properties > server.properties.updated \
-&& mv server.properties.updated /opt/kafka/config/kraft/server.properties
-
-kafka-storage.sh format -t $CLUSTER_ID -c /opt/kafka/config/kraft/server.properties
-
-exec kafka-server-start.sh /opt/kafka/config/kraft/server.properties
-```
-
-docker building:
-
-```bash
-docker build -t "registry.zerofinance.net/xpayappimage/kafka:3.3.2" .
-#docker login registry.zerofinance.net
-docker push "registry.zerofinance.net/xpayappimage/kafka:3.3.2"
-```
-
-kafka-kraft.yml:
-
-```yml
-#部署 Service Headless，用于Kafka间相互通信
-apiVersion: v1
-kind: Service
-metadata:
-  name: kafka-svc
-  labels:
-    app: kafka
-spec:
-  type: ClusterIP
-  clusterIP: None
-  ports:
-    - name: '9092'
-      port: 9092
-      protocol: TCP
-      targetPort: 9092
-    - name: '9093'
-      port: 9093
-      protocol: TCP
-      targetPort: 9093
-  selector:
-    app: kafka
-
----
-#部署 Service，用于外部访问 Kafka
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    #service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
-    #service.beta.kubernetes.io/alibaba-cloud-loadbalancer-vswitch-id: "vsw-j6c8okcv03ah1uvu31tbm"
-    service.beta.kubernetes.io/alibaba-cloud-loadbalancer-id: "lb-3nsgew8gt6lzmtzc0vn93"
-    service.beta.kubernetes.io/alibaba-cloud-loadbalancer-force-override-listeners: "true"
-  name: kafka-broker
-  labels:
-    app: kafka
-spec:
-  type: LoadBalancer
-  ports:
-  - name: '9092'
-    port: 9092
-    protocol: TCP
-    targetPort: 9092
-  selector:
-    app: kafka
-
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: "kafka"
-  labels:
-    app: kafka
-spec:
-  selector:
-    matchLabels:
-      app: kafka
-  serviceName: kafka-svc
-  podManagementPolicy: "OrderedReady"
-  replicas: 3
-  updateStrategy:
-    type: "RollingUpdate"
-  template:
-    metadata:
-      name: "kafka"
-      labels:
-        app: kafka
-    spec:
-      #securityContext:
-      #  fsGroup: 1001
-      nodeSelector:
-        xpay-env: logs
-      tolerations:
-      - key: "xpay-env"
-        operator: "Equal"
-        value: "logs"
-        effect: "NoSchedule"
-      containers:
-      - name: kafka
-        image: "registry.zerofinance.net/xpayappimage/kafka:3.3.2"
-        imagePullPolicy: "Always"
-        #securityContext:
-        #  runAsNonRoot: true
-        #  runAsUser: 1001
-        env:
-        - name: REPLICAS
-          value: '3'
-        - name: SERVICE
-          value: kafka-svc
-        - name: SHARE_DIR
-          value: /mnt/kafka
-        - name: CLUSTER_ID
-          value: LelM2dIFQkiUFvXCEcqRWA
-        - name: DEFAULT_REPLICATION_FACTOR
-          value: '3'
-        - name: DEFAULT_MIN_INSYNC_REPLICAS
-          value: '2'
-        ports:
-          - containerPort: 9092
-          - containerPort: 9093
-        livenessProbe:
-          tcpSocket:
-            port: 9092
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 2
-        readinessProbe:
-          tcpSocket:
-            port: 9092
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 6
-        volumeMounts:
-        - name: data
-          mountPath: /mnt/kafka
-      volumes:
-      - name: data
-        hostPath:
-          path: "/data/data/kafka-k8s"
-```
-
-kafka-ui.yml:
-
-```yml
-apiVersion: v1
-kind: Service
-metadata:
-  name: kafka-ui
-  labels:
-    app: kafka-ui
-spec:
-  #type: NodePort
-  ports:
-  - name: kafka
-    port: 8080
-    targetPort: 8080
-    #nodePort: 30900
-  selector:
-    app: kafka-ui
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: kafka-ui
-  labels:
-    app: kafka-ui
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: kafka-ui
-  template:
-    metadata:
-      labels:
-        app: kafka-ui
-    spec:
-      containers:
-      - name: kafka-ui
-        image: provectuslabs/kafka-ui:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: kafka-ui
-          containerPort: 8080
-          protocol: TCP
-        env:
-        - name: DYNAMIC_CONFIG_ENABLED
-          value: "true"
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: kafka-ui
-        readinessProbe:
-          httpGet:
-            path: /actuator/info
-            port: kafka-ui
-
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: kafka-ui
-spec:
-  tls: []
-  rules:
-    - host: kafka-ui-test.zerofinance.net
-      http:
-        paths:
-          - backend:
-              serviceName: kafka-ui
-              servicePort: 8080
-```
-
-Test:
-
-```bash
-> kubectl -n zero-logs run kafka-client --rm -ti --image bitnami/kafka:3.1.0 -- bash
-kafka-topics.sh --create --bootstrap-server kafka-svc:9092 --topic test
-kafka-console-producer.sh --broker-list kafka-svc:9092 --topic test
-kafka-console-consumer.sh --bootstrap-server kafka-svc:9092 --topic test --from-beginning
-
-kafka-topics.sh --create --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test
-kafka-console-producer.sh --broker-list kafka-broker-test.zerofinance.net:9092 --topic test
-kafka-console-consumer.sh --bootstrap-server kafka-broker-test.zerofinance.net:9092 --topic test --from-beginning
-```
-
-
-Zookeeper k8s:
-
-Need to modify resource from: https://github.com/31z4/zookeeper-docker/tree/master/3.8.1
-
-![zookeeper01.png](/images/Loki-Log-System/zookeeper01.png)
-
-![zookeeper02.png](/images/Loki-Log-System/zookeeper02.png)
-
-docker-entrypoint.sh
-
-```bash
-#!/bin/bash
-
-set -e
-
-ZOO_MY_ID=$(($(hostname | sed s/.*-//) + 1))
-
-# Allow the container to be started with `--user`
-if [[ "$1" = 'zkServer.sh' && "$(id -u)" = '0' ]]; then
-    chown -R zookeeper "$ZOO_DATA_DIR" "$ZOO_DATA_LOG_DIR" "$ZOO_LOG_DIR"
-    exec gosu zookeeper "$0" "$@"
-fi
-
-mkdir -p $ZOO_DATA_DIR/$ZOO_MY_ID $ZOO_DATA_LOG_DIR/$ZOO_MY_ID
-
-# Generate the config only if it doesn't exist
-if [[ ! -f "$ZOO_CONF_DIR/zoo.cfg" ]]; then
-    CONFIG="$ZOO_CONF_DIR/zoo.cfg"
-    {
-        echo "dataDir=$ZOO_DATA_DIR/$ZOO_MY_ID"
-        echo "dataLogDir=$ZOO_DATA_LOG_DIR/$ZOO_MY_ID"
-
-        echo "tickTime=$ZOO_TICK_TIME"
-        echo "initLimit=$ZOO_INIT_LIMIT"
-        echo "syncLimit=$ZOO_SYNC_LIMIT"
-
-        echo "autopurge.snapRetainCount=$ZOO_AUTOPURGE_SNAPRETAINCOUNT"
-        echo "autopurge.purgeInterval=$ZOO_AUTOPURGE_PURGEINTERVAL"
-        echo "maxClientCnxns=$ZOO_MAX_CLIENT_CNXNS"
-        echo "standaloneEnabled=$ZOO_STANDALONE_ENABLED"
-        echo "admin.enableServer=$ZOO_ADMINSERVER_ENABLED"
-    } >> "$CONFIG"
-    if [[ -z $ZOO_SERVERS ]]; then
-      ZOO_SERVERS="server.1=localhost:2888:3888;2181"
-    fi
-
-    for server in $ZOO_SERVERS; do
-        echo "$server" >> "$CONFIG"
-    done
-
-    if [[ -n $ZOO_4LW_COMMANDS_WHITELIST ]]; then
-        echo "4lw.commands.whitelist=$ZOO_4LW_COMMANDS_WHITELIST" >> "$CONFIG"
-    fi
-
-    for cfg_extra_entry in $ZOO_CFG_EXTRA; do
-        echo "$cfg_extra_entry" >> "$CONFIG"
-    done
-fi
-
-# Write myid only if it doesn't exist
-if [[ ! -f "$ZOO_DATA_DIR/$ZOO_MY_ID/myid" ]]; then
-    echo "${ZOO_MY_ID:-1}" > "$ZOO_DATA_DIR/$ZOO_MY_ID/myid"
-fi
-
-exec "$@"
-```
-
-builds images:
-
-```bash
-docker build -t "registry.zerofinance.net/xpayappimage/zookeeper:3.8.1" .
-docker push registry.zerofinance.net/xpayappimage/zookeeper:3.8.1
-```
-
-
-> https://www.qikqiak.com/k8strain/controller/statefulset/
-> https://www.jianshu.com/p/f0b0fc3d192f
-> https://itopic.org/kafka-in-k8s.html
-> https://itopic.org/zookeeper-in-k8s.html
 
 alertmanager-config.yaml
 
