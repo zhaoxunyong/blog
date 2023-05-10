@@ -408,6 +408,255 @@ There are losts of way to install Loki, here show it by docker. the other ways p
 
 If you clients are distributed on individual machines, you can use docker:
 
+Installing:
+
+```bash
+#loki
+mkdir -p /data/loki/data/ /works/conf/loki/
+#Getting the loki id from the following command:
+#docker exec loki id
+#Like: uid=10001(loki) gid=10001(loki) groups=10001(loki)
+chown -R 10001.10001 /data/loki/data/ /works/conf/loki/
+#Creating the container:
+docker run -d --name loki --restart=always \
+-v /etc/localtime:/etc/localtime:ro \
+-v /data/loki/data:/loki/data \
+-v /works/conf/loki:/mnt/config \
+-p 3100:3100 -p 7946:7946 -p 9096:9096 grafana/loki:2.8.0 \
+-config.file=/mnt/config/loki-config.yaml
+
+#grafana
+# docker run -d --name grafana \
+# -v /etc/localtime:/etc/localtime:ro \
+# -e "GF_SMTP_ENABLED=true" \
+# -e "GF_SMTP_HOST=smtp.example.com" \
+# -e "GF_SMTP_USER=myuser" \
+# -e "GF_SMTP_PASSWORD=mysecret" \
+# -p 3000:3000 grafana/grafana:latest
+chown -R 10001.10001 /data/grafana/
+docker run -d --name grafana9 --restart=always \
+-v /etc/localtime:/etc/localtime:ro \
+-v /data/grafana/:/var/lib/grafana \
+-v /data/grafana/grafana.ini:/etc/grafana/grafana.ini \
+--user 10001:10001 \
+-p 3000:3000 grafana/grafana-oss:9.3.1
+
+#promtail
+docker run -d --name promtail --restart=always \
+-v /etc/localtime:/etc/localtime:ro \
+-v /works/conf/promtail:/mnt/config \
+-v /works/log:/works/log \
+grafana/promtail:2.8.0 \
+-config.file=/mnt/config/promtail-config.yaml \
+-client.external-labels=hostname=${HOSTNAME}
+
+docker run -d --name promtail-monitor --restart=always \
+-v /etc/localtime:/etc/localtime:ro \
+-v /works/conf/promtail/biz:/mnt/config \
+grafana/promtail:2.8.0 \
+-config.file=/mnt/config/promtail-config.yaml \
+-client.external-labels=hostname=${HOSTNAME}
+
+#fluent-bit
+docker run  --name fluent-bit --restart=always --network host -d \
+-v /data/fluent-bit/:/fluent-bit/etc \
+-v /works/log:/works/log \
+fluent/fluent-bit:2.0.8
+
+#kafka
+docker-compose up -d
+#Test
+docker exec -it kafka-kafka9094-1 sh
+运行消费者,进行消息的监听
+kafka-console-consumer.sh --bootstrap-server 192.168.102.82:9092 --topic account --from-beginning
+#docker exec -it kafka_kafka9094_1 kafka-console-consumer.sh --bootstrap-server 192.168.101.82:9092 --topic dev --from-beginning
+#docker exec -it kafka_kafka9094_1 kafka-topics.sh --create --bootstrap-server 192.168.101.82:9092 --replication-factor 1 --partitions 3 --topic sandbox
+
+docker exec -it kafka-kafka9094-1 sh
+打开一个新的ssh窗口,同样进入kafka的容器中,执行下面这条命令生产消息
+kafka-console-producer.sh --broker-list 192.168.102.82:9092 --topic account
+
+#alertmanager
+mkdir -p /data/alertmanager/
+chown -R 65534:65534 /data/alertmanager/
+
+docker run -d --name alertmanager --restart=always \
+-v /data/alertmanager:/etc/alertmanager \
+-p 9093:9093 prom/alertmanager:v0.24.0 \
+--config.file=/etc/alertmanager/alertmanager-config.yaml \
+--web.external-url=http://192.168.80.98:9093 \
+--cluster.advertise-address=0.0.0.0:9093 \
+--log.level=debug
+```
+
+reload alertmanager: curl -XPOST http://am-test.zerofinance.net/-/reload
+
+Cluster Installation:
+
+```bash
+#Loki(multiple machines):
+mkdir -p /data/loki/data/ /works/conf/loki/
+curl -O -L "https://github.com/grafana/loki/releases/download/v2.8.0/loki-linux-amd64.zip"
+# extract the binary
+unzip "loki-linux-amd64.zip"
+# make sure it is executable
+chmod a+x "loki-linux-amd64"
+./loki-linux-amd64 -config.file=loki-config.yaml
+
+loki-config.yaml:
+
+auth_enabled: false
+
+server:
+  log_level: info
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+  grpc_server_max_recv_msg_size: 1572864000
+  grpc_server_max_send_msg_size: 1572864000
+
+memberlist:
+  join_members: ["192.168.101.82","192.168.80.196"]
+  dead_node_reclaim_time: 30s
+  gossip_to_dead_nodes_time: 15s
+  left_ingesters_timeout: 30s
+  bind_addr: ['0.0.0.0']
+  bind_port: 7946
+  gossip_interval: 2s
+
+#https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
+#https://mpolinowski.github.io/docs/DevOps/Provisioning/2021-04-07--loki-prometheus-grafana/2021-04-07/
+ingester:
+  lifecycler:
+    join_after: 10s
+    observe_period: 5s
+    ring:
+      replication_factor: 2
+      kvstore:
+        store: memberlist
+    # Duration to sleep before exiting to ensure metrics are scraped
+    #final_sleep: 0s
+  wal:
+    enabled: true
+    dir: /loki/data/wal
+  # All chunks will be flushed when they hit this age, default is 1h
+  max_chunk_age: 1h
+  # Any chunk not receiving new logs in this time will be flushed
+  chunk_idle_period: 1h
+  # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
+  chunk_retain_period: 30s
+  chunk_encoding: snappy
+  # Loki will attempt to build chunks up to 1.5MB, flushing first if chunk_idle_period or max_chunk_age is reached first
+  chunk_target_size: 1572864
+
+schema_config:
+  configs:
+    - from: 2023-04-01
+      object_store: aws
+      schema: v11
+      store: boltdb-shipper
+      index:
+        period: 24h
+        prefix: index_
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/data/boltdb-shipper-active
+    cache_location: /loki/data/boltdb-shipper-cache
+    # Can be increased for faster performance over longer query periods, uses more disk space
+    cache_ttl: 24h
+    shared_store: s3
+  aws:
+    s3forcepathstyle: false
+    bucketnames: loki-files
+    endpoint: https://oss-cn-hongkong.aliyuncs.com
+    access_key_id: LTA11111111111
+    secret_access_key: unseba111111111111111111
+    insecure: true
+  index_queries_cache_config:
+    redis:
+      endpoint: r-111111111.redis.rds.aliyuncs.com:6379
+      password: 111111111
+      expiration: 1h
+    
+chunk_store_config:
+  chunk_cache_config:
+    redis:
+      endpoint: r-111111111.redis.rds.aliyuncs.com:6379
+      password: 111111111
+      expiration: 1h    
+  write_dedupe_cache_config:
+    redis:
+      endpoint: r-111111111.redis.rds.aliyuncs.com:6379
+      password: 111111111
+      expiration: 1h
+
+query_range:
+  results_cache:
+    cache:
+      redis:
+        endpoint: r-111111111.redis.rds.aliyuncs.com:6379
+        password: 111111111
+        expiration: 1h
+  cache_results: true
+
+compactor:
+  working_directory: /loki/data/boltdb-shipper-compactor
+  shared_store: s3
+
+limits_config:
+  ingestion_rate_mb: 2
+  ingestion_burst_size_mb: 4
+  max_streams_per_user: 0
+  max_global_streams_per_user: 0
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+
+table_manager:
+  retention_deletes_enabled: true
+  retention_period: 168h
+
+#https://grafana.com/docs/loki/latest/configuration/
+ruler:
+  storage:
+    type: s3
+    s3:
+      s3forcepathstyle: false
+      bucketnames: loki-files
+      endpoint: https://oss-cn-hongkong.aliyuncs.com
+      access_key_id: LTA11111111111
+      secret_access_key: unseba111111111111111111
+      insecure: true
+  #rule_path: /loki/data/rules-temp
+  alertmanager_url: http://192.168.101.82:9093
+  # How frequently to evaluate rules.
+  evaluation_interval: 5s
+  # How frequently to poll for rule changes.
+  poll_interval: 5s
+  ring:
+    kvstore:
+      store: memberlist
+  enable_api: true
+```
+
+Uninstalling:
+
+```bash
+#loki
+docker rm -vf loki
+/bin/rm -fr /data/loki/data/*
+mkdir -p /data/loki/data/
+#docker exec loki id
+#uid=10001(loki) gid=10001(loki) groups=10001(loki)
+chown -R 10001.10001 /data/loki/data/
+
+#promtail
+docker rm -vf promtail
+
+#grafana
+#docker rm -vf grafana
+```
+
 Configuration:
 
 loki-config.yaml:
@@ -1509,255 +1758,6 @@ config/Email.tmpl
 故障时间: {{ .StartsAt.Format "2020-01-02 15:04:05"}} <br>
 {{ end }}
 {{ end }}
-```
-
-Installing:
-
-```bash
-#loki
-mkdir -p /data/loki/data/ /works/conf/loki/
-#Getting the loki id from the following command:
-#docker exec loki id
-#Like: uid=10001(loki) gid=10001(loki) groups=10001(loki)
-chown -R 10001.10001 /data/loki/data/ /works/conf/loki/
-#Creating the container:
-docker run -d --name loki --restart=always \
--v /etc/localtime:/etc/localtime:ro \
--v /data/loki/data:/loki/data \
--v /works/conf/loki:/mnt/config \
--p 3100:3100 -p 7946:7946 -p 9096:9096 grafana/loki:2.8.0 \
--config.file=/mnt/config/loki-config.yaml
-
-#grafana
-# docker run -d --name grafana \
-# -v /etc/localtime:/etc/localtime:ro \
-# -e "GF_SMTP_ENABLED=true" \
-# -e "GF_SMTP_HOST=smtp.example.com" \
-# -e "GF_SMTP_USER=myuser" \
-# -e "GF_SMTP_PASSWORD=mysecret" \
-# -p 3000:3000 grafana/grafana:latest
-chown -R 10001.10001 /data/grafana/
-docker run -d --name grafana9 --restart=always \
--v /etc/localtime:/etc/localtime:ro \
--v /data/grafana/:/var/lib/grafana \
--v /data/grafana/grafana.ini:/etc/grafana/grafana.ini \
---user 10001:10001 \
--p 3000:3000 grafana/grafana-oss:9.3.1
-
-#promtail
-docker run -d --name promtail --restart=always \
--v /etc/localtime:/etc/localtime:ro \
--v /works/conf/promtail:/mnt/config \
--v /works/log:/works/log \
-grafana/promtail:2.8.0 \
--config.file=/mnt/config/promtail-config.yaml \
--client.external-labels=hostname=${HOSTNAME}
-
-docker run -d --name promtail-monitor --restart=always \
--v /etc/localtime:/etc/localtime:ro \
--v /works/conf/promtail/biz:/mnt/config \
-grafana/promtail:2.8.0 \
--config.file=/mnt/config/promtail-config.yaml \
--client.external-labels=hostname=${HOSTNAME}
-
-#fluent-bit
-docker run  --name fluent-bit --restart=always --network host -d \
--v /data/fluent-bit/:/fluent-bit/etc \
--v /works/log:/works/log \
-fluent/fluent-bit:2.0.8
-
-#kafka
-docker-compose up -d
-#Test
-docker exec -it kafka-kafka9094-1 sh
-运行消费者,进行消息的监听
-kafka-console-consumer.sh --bootstrap-server 192.168.102.82:9092 --topic account --from-beginning
-#docker exec -it kafka_kafka9094_1 kafka-console-consumer.sh --bootstrap-server 192.168.101.82:9092 --topic dev --from-beginning
-#docker exec -it kafka_kafka9094_1 kafka-topics.sh --create --bootstrap-server 192.168.101.82:9092 --replication-factor 1 --partitions 3 --topic sandbox
-
-docker exec -it kafka-kafka9094-1 sh
-打开一个新的ssh窗口,同样进入kafka的容器中,执行下面这条命令生产消息
-kafka-console-producer.sh --broker-list 192.168.102.82:9092 --topic account
-
-#alertmanager
-mkdir -p /data/alertmanager/
-chown -R 65534:65534 /data/alertmanager/
-
-docker run -d --name alertmanager --restart=always \
--v /data/alertmanager:/etc/alertmanager \
--p 9093:9093 prom/alertmanager:v0.24.0 \
---config.file=/etc/alertmanager/alertmanager-config.yaml \
---web.external-url=http://192.168.80.98:9093 \
---cluster.advertise-address=0.0.0.0:9093 \
---log.level=debug
-```
-
-reload alertmanager: curl -XPOST http://am-test.zerofinance.net/-/reload
-
-Cluster Installation:
-
-```bash
-#Loki(multiple machines):
-mkdir -p /data/loki/data/ /works/conf/loki/
-curl -O -L "https://github.com/grafana/loki/releases/download/v2.8.0/loki-linux-amd64.zip"
-# extract the binary
-unzip "loki-linux-amd64.zip"
-# make sure it is executable
-chmod a+x "loki-linux-amd64"
-./loki-linux-amd64 -config.file=loki-config.yaml
-
-loki-config.yaml:
-
-auth_enabled: false
-
-server:
-  log_level: info
-  http_listen_port: 3100
-  grpc_listen_port: 9096
-  grpc_server_max_recv_msg_size: 1572864000
-  grpc_server_max_send_msg_size: 1572864000
-
-memberlist:
-  join_members: ["192.168.101.82","192.168.80.196"]
-  dead_node_reclaim_time: 30s
-  gossip_to_dead_nodes_time: 15s
-  left_ingesters_timeout: 30s
-  bind_addr: ['0.0.0.0']
-  bind_port: 7946
-  gossip_interval: 2s
-
-#https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
-#https://mpolinowski.github.io/docs/DevOps/Provisioning/2021-04-07--loki-prometheus-grafana/2021-04-07/
-ingester:
-  lifecycler:
-    join_after: 10s
-    observe_period: 5s
-    ring:
-      replication_factor: 2
-      kvstore:
-        store: memberlist
-    # Duration to sleep before exiting to ensure metrics are scraped
-    #final_sleep: 0s
-  wal:
-    enabled: true
-    dir: /loki/data/wal
-  # All chunks will be flushed when they hit this age, default is 1h
-  max_chunk_age: 1h
-  # Any chunk not receiving new logs in this time will be flushed
-  chunk_idle_period: 1h
-  # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
-  chunk_retain_period: 30s
-  chunk_encoding: snappy
-  # Loki will attempt to build chunks up to 1.5MB, flushing first if chunk_idle_period or max_chunk_age is reached first
-  chunk_target_size: 1572864
-
-schema_config:
-  configs:
-    - from: 2023-04-01
-      object_store: aws
-      schema: v11
-      store: boltdb-shipper
-      index:
-        period: 24h
-        prefix: index_
-
-storage_config:
-  boltdb_shipper:
-    active_index_directory: /loki/data/boltdb-shipper-active
-    cache_location: /loki/data/boltdb-shipper-cache
-    # Can be increased for faster performance over longer query periods, uses more disk space
-    cache_ttl: 24h
-    shared_store: s3
-  aws:
-    s3forcepathstyle: false
-    bucketnames: loki-files
-    endpoint: https://oss-cn-hongkong.aliyuncs.com
-    access_key_id: LTA11111111111
-    secret_access_key: unseba111111111111111111
-    insecure: true
-  index_queries_cache_config:
-    redis:
-      endpoint: r-111111111.redis.rds.aliyuncs.com:6379
-      password: 111111111
-      expiration: 1h
-    
-chunk_store_config:
-  chunk_cache_config:
-    redis:
-      endpoint: r-111111111.redis.rds.aliyuncs.com:6379
-      password: 111111111
-      expiration: 1h    
-  write_dedupe_cache_config:
-    redis:
-      endpoint: r-111111111.redis.rds.aliyuncs.com:6379
-      password: 111111111
-      expiration: 1h
-
-query_range:
-  results_cache:
-    cache:
-      redis:
-        endpoint: r-111111111.redis.rds.aliyuncs.com:6379
-        password: 111111111
-        expiration: 1h
-  cache_results: true
-
-compactor:
-  working_directory: /loki/data/boltdb-shipper-compactor
-  shared_store: s3
-
-limits_config:
-  ingestion_rate_mb: 2
-  ingestion_burst_size_mb: 4
-  max_streams_per_user: 0
-  max_global_streams_per_user: 0
-  enforce_metric_name: false
-  reject_old_samples: true
-  reject_old_samples_max_age: 168h
-
-table_manager:
-  retention_deletes_enabled: true
-  retention_period: 168h
-
-#https://grafana.com/docs/loki/latest/configuration/
-ruler:
-  storage:
-    type: s3
-    s3:
-      s3forcepathstyle: false
-      bucketnames: loki-files
-      endpoint: https://oss-cn-hongkong.aliyuncs.com
-      access_key_id: LTA11111111111
-      secret_access_key: unseba111111111111111111
-      insecure: true
-  #rule_path: /loki/data/rules-temp
-  alertmanager_url: http://192.168.101.82:9093
-  # How frequently to evaluate rules.
-  evaluation_interval: 5s
-  # How frequently to poll for rule changes.
-  poll_interval: 5s
-  ring:
-    kvstore:
-      store: memberlist
-  enable_api: true
-```
-
-Uninstalling:
-
-```bash
-#loki
-docker rm -vf loki
-/bin/rm -fr /data/loki/data/*
-mkdir -p /data/loki/data/
-#docker exec loki id
-#uid=10001(loki) gid=10001(loki) groups=10001(loki)
-chown -R 10001.10001 /data/loki/data/
-
-#promtail
-docker rm -vf promtail
-
-#grafana
-#docker rm -vf grafana
 ```
 
 迁移grafana:
