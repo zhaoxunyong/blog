@@ -878,6 +878,40 @@ kubectl create -f ./
 
 ![traefik-dashboard](/images/kubernetes学习总结/traefik-dashboard.png)
 
+## 部署node taint污点
+
+作用：使得其他的pod不调度到这些机器上面
+
+```bash
+kubectl taint nodes nodename xpay-env=selfuat:NoSchedule
+
+kubectl taint nodes cn-hongkong.192.168.63.110 xpay-env=selfuat:NoSchedule
+kubectl taint nodes cn-hongkong.192.168.63.111 xpay-env=selfuat:NoSchedule
+kubectl taint nodes cn-hongkong.192.168.64.110 xpay-env=selfuat:NoSchedule
+
+kubectl taint nodes cn-hongkong.192.168.64.111 xpay-env=logs:NoSchedule
+kubectl taint nodes cn-hongkong.192.168.64.112 xpay-env=logs:NoSchedule
+kubectl taint nodes cn-hongkong.192.168.63.112 xpay-env=logs:NoSchedule
+
+##对应pod.yml写上tolaration
+spec: 
+  containers: 
+  restartPolicy: Always
+  nodeSelector:
+    xpay-env: selfuat
+  tolerations:
+  - key: "xpay-env"
+    operator: "Equal"
+    value: "selfuat"
+    effect: "NoSchedule"
+
+##查看污点
+kubectl describe nodes cn-hongkong.192.168.64.106
+
+##去除污点
+kubectl taint nodes cn-hongkong.192.168.64.106 xpay-env=selfuat:NoSchedule-
+```
+
 ## 最新命令汇总
 
 ```
