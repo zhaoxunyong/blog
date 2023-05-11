@@ -1322,7 +1322,8 @@ fluent-bit/parsers_multiline.conf(if need)
     # rules |   state name  | regex pattern                  | next state
     # ------|---------------|--------------------------------------------
     rule      "start_state"   "/^\d{4}\-\d{2}\-\d{2} \d{1,2}\:\d{2}\:\d{2}.*/"  "cont"
-    rule      "cont"          "/^([a-zA-Z]|\s)+.*/"                     "cont"
+    #rule      "cont"          "/^([a-zA-Z]|\s)+.*/"                             "cont"
+    rule      "cont"          "/^(?!\d{4}\-\d{2}\-\d{2}).*/"                    "cont"
 
 
 
