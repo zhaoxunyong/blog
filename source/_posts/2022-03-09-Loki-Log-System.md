@@ -56,7 +56,12 @@ entrypoint.sh:
 NODE_ID=$(hostname | sed s/.*-//)
 LISTENERS="PLAINTEXT://:9092,CONTROLLER://:9093"
 #ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE.$NAMESPACE.svc.cluster.local:9092"
-ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE:9092"
+#ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE:9092"
+if [[ "$K8S_EXPOSE_BROKERS" == "true" ]]; then
+  ADVERTISED_LISTENERS="PLAINTEXT://$HOST_IP:9092"
+else
+  ADVERTISED_LISTENERS="PLAINTEXT://kafka-$NODE_ID.$SERVICE:9092"
+fi
 
 CONTROLLER_QUORUM_VOTERS=""
 for i in $( seq 0 $REPLICAS); do
@@ -76,13 +81,33 @@ else
     CLUSTER_ID=$(cat $SHARE_DIR/cluster_id)
 fi
 
+# sed -e "s+^node.id=.*+node.id=$NODE_ID+" \
+# -e "s+^controller.quorum.voters=.*+controller.quorum.voters=$CONTROLLER_QUORUM_VOTERS+" \
+# -e "s+^listeners=.*+listeners=$LISTENERS+" \
+# -e "s+^advertised.listeners=.*+advertised.listeners=$ADVERTISED_LISTENERS+" \
+# -e "s+^log.dirs=.*+log.dirs=$SHARE_DIR/$NODE_ID+" \
+# /opt/kafka/config/kraft/server.properties > server.properties.updated \
+# && mv server.properties.updated /opt/kafka/config/kraft/server.properties
+
 sed -e "s+^node.id=.*+node.id=$NODE_ID+" \
 -e "s+^controller.quorum.voters=.*+controller.quorum.voters=$CONTROLLER_QUORUM_VOTERS+" \
 -e "s+^listeners=.*+listeners=$LISTENERS+" \
 -e "s+^advertised.listeners=.*+advertised.listeners=$ADVERTISED_LISTENERS+" \
 -e "s+^log.dirs=.*+log.dirs=$SHARE_DIR/$NODE_ID+" \
-/opt/kafka/config/kraft/server.properties > server.properties.updated \
-&& mv server.properties.updated /opt/kafka/config/kraft/server.properties
+/opt/kafka/config/kraft/server.properties > server.properties.updated
+
+cat <<EOF >> server.properties.updated
+default.replication.factor=${DEFAULT_REPLICATION_FACTOR:=3}
+min.insync.replicas=${DEFAULT_MIN_INSYNC_REPLICAS:=2}
+offsets.topic.replication.factor=${DEFAULT_REPLICATION_FACTOR:=3}
+transaction.state.log.replication.factor=${DEFAULT_REPLICATION_FACTOR:=3}
+transaction.state.log.min.isr=${DEFAULT_MIN_INSYNC_REPLICAS:=2}
+auto.create.topics.enable=${KAFKA_AUTO_CREATE_TOPICS_ENABLE:=true}
+EOF
+
+#sed -i "\$aauto.create.topics.enable=$KAFKA_AUTO_CREATE_TOPICS_ENABLE" server.properties.updated
+
+mv server.properties.updated /opt/kafka/config/kraft/server.properties
 
 kafka-storage.sh format -t $CLUSTER_ID -c /opt/kafka/config/kraft/server.properties
 
