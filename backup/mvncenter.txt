@@ -1,0 +1,201 @@
+https://blog.csdn.net/lovexiaotaozi/article/details/121989407
+
+https://gpg4win.org/download.html
+
+C:\Users\Dave.zhao>gpg --version
+gpg (GnuPG) 2.4.0
+libgcrypt 1.10.1
+Copyright (C) 2021 g10 Code GmbH
+License GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: C:\Users\Dave.zhao\AppData\Roaming\gnupg
+Supported algorithms:
+Pubkey: RSA, ELG, DSA, ECDH, ECDSA, EDDSA
+Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+        CAMELLIA128, CAMELLIA192, CAMELLIA256
+Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+Compression: Uncompressed, ZIP, ZLIB, BZIP2
+
+变更GPG HOME:
+Change gpg Home Directory:
+Create a directory of your choice, e. g. C:\Users\YourUser\gnupg.
+Copy the contents of C:\Users\YourUser\AppData\Roaming\gnupg into the new directory.
+Create a new environment variable named GNUPGHOME and give it the directory path as value.
+Restart the console and check if the change has been recognized with: gpg --version.
+
+生成：
+$ gpg --gen-key
+gpg (GnuPG) 2.2.29-unknown; Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+gpg: directory '/c/Users/Dave.zhao/.gnupg' created
+gpg: keybox '/c/Users/Dave.zhao/.gnupg/pubring.kbx' created
+Note: Use "gpg --full-generate-key" for a full featured key generation dialog.
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: Zero
+Email address: a@b.com
+You selected this USER-ID:
+    "Zero <a@b.com>"
+
+Change (N)ame, (E)mail, or (O)kay/(Q)uit? O
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+gpg: /c/Users/Dave.zhao/.gnupg/trustdb.gpg: trustdb created
+gpg: key 8CB2628AC14C9ED4 marked as ultimately trusted
+gpg: directory '/c/Users/Dave.zhao/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/c/Users/Dave.zhao/.gnupg/openpgp-revocs.d/1111111111111111111.rev'
+public and secret key created and signed.
+
+pub   rsa3072 2023-05-26 [SC] [expires: 2025-05-25]
+      1111111111111111111
+uid                      Zero <a@b.com>
+sub   rsa3072 2023-05-26 [E] [expires: 2025-05-25]
+
+
+查看公钥：
+$ gpg --list-keys
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: next trustdb check due at 2025-05-25
+/c/Users/Dave.zhao/.gnupg/pubring.kbx
+-------------------------------------
+pub   rsa3072 2023-05-26 [SC] [expires: 2025-05-25]
+      1111111111111111111
+uid           [ultimate] Zero <a@b.com>
+sub   rsa3072 2023-05-26 [E] [expires: 2025-05-25]
+
+
+发布公钥：
+gpg --keyserver hkp://keyserver.ubuntu.com:11371 --send-keys 1111111111111111111
+
+
+查询发布公钥是否成功
+gpg --keyserver hkp://keyserver.ubuntu.com:11371 --recv-keys 1111111111111111111
+ 
+成功的话会有如下结果
+$ gpg --keyserver hkp://keyserver.ubuntu.com:11371 --recv-keys 1111111111111111111
+gpg: key aaaaaaaaaaa: "Zero <a@b.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+
+https://s01.oss.sonatype.org/
+
+
+Settings.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <!-- 本地仓库地址：可修改为本机任意路径，依赖包将放置于该包中 -->
+    <localRepository>D:\\Developer\\.m2\\repository</localRepository>
+    <pluginGroups>
+    </pluginGroups>
+
+    <proxies>
+    </proxies>
+
+    <!-- 对应版本发布时用户名密码 -->
+    <servers>
+        <server>
+            <id>snapshots</id>
+            <username>snapshots</username>
+            <password>1111</password>
+        </server>
+        <server>
+            <id>releases</id>
+            <username>releases</username>
+            <password>2222</password>
+        </server>
+        <server>
+            <id>mavencenter-snapshots</id>
+            <username>dave.zhao</username>
+            <password>3333</password>
+        </server>
+        <server>
+            <id>mavencenter-release</id>
+            <username>dave.zhao</username>
+            <password>4444</password>
+        </server>
+    </servers>
+
+    <!-- 中央库镜像化 -->
+    <!-- http://maven.aliyun.com/nexus/content/repositories/central/ -->
+    <mirrors>
+        <mirror>
+            <id>nexus</id>
+            <name>internalNexusRepository</name>
+            <url>http://nexus.Zero.net/content/groups/public</url>
+            <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url> -->
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+
+    <!-- 激活全局的repositories -->
+    <profiles>
+        <profile>
+            <id>Zero-nexus</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>nexus</id>
+                    <url>http://nexus.Zero.net/content/groups/public</url>
+                    <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url> -->
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>nexus</id>
+                    <url>http://nexus.Zero.net/content/groups/public</url>
+                    <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url> -->
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+    <!-- <activeProfiles>
+        <activeProfile>profile</activeProfile>
+    </activeProfiles> -->
+
+        <!-- https://blog.csdn.net/lovexiaotaozi/article/details/121989407 -->
+        <profile>
+            <id>mavencenter-snapshots</id>
+            <properties>
+                <gpg.executable>C:/Program Files (x86)/GnuPG/bin/gpg.exe</gpg.executable>
+                <gpg.passphrase>4444</gpg.passphrase>
+                <gpg.homedir>C:/Users/Dave.zhao/.gnupg</gpg.homedir>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>mavencenter-release</id>
+            <properties>
+                <gpg.executable>C:/Program Files (x86)/GnuPG/bin/gpg.exe</gpg.executable>
+                <gpg.passphrase>4444</gpg.passphrase>
+                <gpg.homedir>C:/Users/Dave.zhao/.gnupg</gpg.homedir>
+            </properties>
+        </profile>
+    </profiles>
+</settings>
