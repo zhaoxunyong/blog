@@ -1,0 +1,327 @@
+CD:
+
+1. ArgoCD <---
+2. FluxCD
+3. JenkinsX
+4. aliyun
+
+
+
+Prometheus
+kustomize
+
+rancher
+k3s/AutoK3s
+
+#https://docs.k3s.io/quick-start
+#https://github.com/k3s-io/k3s/issues/1160
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik" sh
+sed -i 's;127.0.0.1;192.168.101.82;g' ~/.kube/config
+kubectl get all -A -o wide
+
+#https://blog.thenets.org/how-to-create-a-k3s-cluster-with-nginx-ingress-controller/
+#https://blog.csdn.net/weixin_45444133/article/details/116952250
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+
+
+# Create a test Namespace, if not exist
+kubectl create namespace test
+
+# Apply the example file
+#https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/
+kubectl -n test -f my-example.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx-app
+  namespace: test
+spec:
+  selector:
+    matchLabels:
+      name: test-nginx-backend
+  template:
+    metadata:
+      labels:
+        name: test-nginx-backend
+    spec:
+      containers:
+        - name: backend
+          image: docker.io/nginx:alpine
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-nginx-service
+  namespace: test
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    name: test-nginx-backend
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-nginx-ingress
+  namespace: test
+spec:
+  rules:
+  - host: test.w1.thenets.org
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: test-nginx-service
+              port: 
+                number: 80
+  ingressClassName: nginx
+
+
+#argocd
+#https://argo-cd.readthedocs.io/en/stable/getting_started/
+#https://mp.weixin.qq.com/s?__biz=MzU1MzY4NzQ1OA==&mid=2247512193&idx=1&sn=da41bb4072870e34bdf338c22bcbc8cc&chksm=fbedf04ccc9a795a08f4b0deb5a8518aa901dc1e8678277d232fff0d05ba1613a3f8d8636ab9&scene=178&cur_album_id=2470838961377427457#rd
+
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+#Service Type Load Balancer¶
+#Change the argocd-server service type to LoadBalancer:
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl -n argocd get svc
+
+#Change port to 8443 and 8080
+kubectl -n argocd edit svc argocd-serve
+  ports:
+  - name: http
+    nodePort: 31291
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    nodePort: 31592
+    port: 8443
+    protocol: TCP
+    targetPort: 8080
+
+
+https://192.168.101.82:8443/
+
+get password:
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+login name is admin
+
+git clone http://gitlab.zerofinance.net/dave.zhao/fleet_demo.git
+
+#argo-rollouts
+kubectl create namespace argo-rollouts
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+
+#demo
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/rollout.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/service.yaml
+
+#Watch
+kubectl argo rollouts get rollout rollouts-demo -w
+
+#Updating a Rollout
+kubectl argo rollouts set image rollouts-demo \
+  rollouts-demo=argoproj/rollouts-demo:yellow
+
+#Promoting a Rollout
+kubectl argo rollouts promote rollouts-demo
+
+#Updating a red Rollout
+kubectl argo rollouts set image rollouts-demo \
+  rollouts-demo=argoproj/rollouts-demo:red
+
+#Aborting a Rollout
+kubectl argo rollouts abort rollouts-demo
+
+#In order to make Rollout considered Healthy again and not Degraded, it is necessary to change the desired state back to the previous, stable versio
+kubectl argo rollouts set image rollouts-demo \
+  rollouts-demo=argoproj/rollouts-demo:yellow
+  
+
+#ingress:
+#https://argoproj.github.io/argo-rollouts/getting-started/nginx/
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/nginx/rollout.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/nginx/services.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/nginx/ingress.yaml
+
+#cat ingress.yaml has to be changed from >=1.19 cluster
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rollouts-demo-stable
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: rollouts-demo.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          # Reference to a Service name, also specified in the Rollout spec.strategy.canary.stableService field
+          service:
+            name: rollouts-demo-stable
+            port:
+
+
+#Perform an update
+kubectl argo rollouts set image rollouts-demo rollouts-demo=argoproj/rollouts-demo:yellow
+
+
+#dashboard
+kubectl argo rollouts dashboard
+http://192.168.101.82:3100/rollouts
+
+#bluegreen
+#https://github.com/argoproj/argo-rollouts/blob/master/examples/rollout-bluegreen.yaml
+
+#cat rollout-bluegreen.yaml
+# This example demonstrates a Rollout using the blue-green update strategy, which contains a manual
+# gate before promoting the new stack.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-bluegreen
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: rollout-bluegreen
+  template:
+    metadata:
+      labels:
+        app: rollout-bluegreen
+    spec:
+      containers:
+      - name: rollouts-demo
+        image: argoproj/rollouts-demo:blue
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+  strategy:
+    blueGreen: 
+      # activeService specifies the service to update with the new template hash at time of promotion.
+      # This field is mandatory for the blueGreen update strategy.
+      activeService: rollout-bluegreen-active
+      # previewService specifies the service to update with the new template hash before promotion.
+      # This allows the preview stack to be reachable without serving production traffic.
+      # This field is optional.
+      previewService: rollout-bluegreen-preview
+      # autoPromotionEnabled disables automated promotion of the new stack by pausing the rollout
+      # immediately before the promotion. If omitted, the default behavior is to promote the new
+      # stack as soon as the ReplicaSet are completely ready/available.
+      # Rollouts can be resumed using: `kubectl argo rollouts promote ROLLOUT`
+      autoPromotionEnabled: false
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rollout-bluegreen-active
+spec:
+  selector:
+    app: rollout-bluegreen
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rollout-bluegreen-preview
+spec:
+  selector:
+    app: rollout-bluegreen
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rollouts-bluegreen-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: rollouts-bluegreen.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          # Reference to a Service name, also specified in the Rollout spec.strategy.canary.stableService field
+          service:
+            name: rollout-bluegreen-active
+            port:
+              number: 80
+
+
+kubectl argo rollouts set image rollout-bluegreen \
+  rollouts-demo=argoproj/rollouts-demo:yellow
+
+  kubectl argo rollouts get rollout rollout-bluegreen -w
+
+
+
+#https://docs.gitlab.com/runner/install/docker.html
+#https://docs.gitlab.com/runner/register/index.html#docker
+
+#cat config.toml 
+concurrent = 1
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "my-runner"
+  url = "http://gitlab.zerofinance.net/"
+  token = "111111"
+  executor = "docker"
+  [runners.custom_build_dir]
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
+    [runners.cache.azure]
+  [runners.docker]
+    tls_verify = false
+    image = "docker:latest"
+    privileged = true
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock","/cache","/works/config/runner:/runner"]
+    shm_size = 0
+
+docker run -d --name gitlab-runner --restart always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /works/config/runner:/etc/gitlab-runner \
+  gitlab/gitlab-runner:latest
+
+#Register runner
+docker run --rm -it -v /works/config/runner:/etc/gitlab-runner gitlab/gitlab-runner register
+
+#https://blog.csdn.net/lenkty/article/details/124668164
+#https://blog.csdn.net/boling_cavalry/article/details/106991691
