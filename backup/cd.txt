@@ -1,21 +1,24 @@
 CD:
 
-1. ArgoCD <---
-2. FluxCD
-3. JenkinsX
+1. ArgoCD <--- ok
+2. FluxCD <--- Not Recommend
+3. JenkinsX <--- Not Recommend
 4. aliyun
-
+5. GitlabCI <--- ok
+6. tekton <--- based on k8s, more completed than others.
 
 
 Prometheus
-kustomize
+kustomize <--- ok
 
-rancher
-k3s/AutoK3s
-
+rancher <--- ok
+k3s/AutoK3s <--- ok
+---------------------------------------------------------------------------------
+K3s:(Recommend)
 #https://docs.k3s.io/quick-start
 #https://github.com/k3s-io/k3s/issues/1160
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik" sh
+cp -a /etc/rancher/k3s/k3s.yaml ~/.kube/config
 sed -i 's;127.0.0.1;192.168.101.82;g' ~/.kube/config
 kubectl get all -A -o wide
 
@@ -23,13 +26,35 @@ kubectl get all -A -o wide
 #https://blog.csdn.net/weixin_45444133/article/details/116952250
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
 
+#Unstalling k3s
+/usr/local/bin/k3s-uninstall.sh
+---------------------------------------------------------------------------------
+#AutoK3s:(Not Recommend)
+##https://docs.rancher.cn/docs/k3s/autok3s/_index/
+##https://jasonkayzk.github.io/2022/10/22/%E5%8D%95%E6%9C%BA%E9%83%A8%E7%BD%B2autok3s/
 
+#For docker:(Recommend)
+##docker run -itd --restart=unless-stopped --net host -v /var/run/docker.sock:/var/run/docker.sock cnrancher/autok3s:v0.6.0
+
+##Installing on hosted machine:(optional)
+#curl -sS https://rancher-mirror.rancher.cn/autok3s/install.sh  | INSTALL_AUTOK3S_MIRROR=cn sh
+##Starting
+#autok3s serve --bind-address 192.168.101.82 --bind-port 8080
+##Uninstalling:
+#/usr/local/bin/autok3s-uninstall.sh
+
+##Install instance:
+#Put "--disable traefik" param into "Master Extra Args"
+##execute once:
+#k get ns --insecure-skip-tls-verify
+#k get ns`
+---------------------------------------------------------------------------------
 # Create a test Namespace, if not exist
 kubectl create namespace test
 
 # Apply the example file
 #https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/
-kubectl -n test -f my-example.yaml
+kubectl -n test apply -f my-example.yaml
 
 apiVersion: apps/v1
 kind: Deployment
@@ -288,7 +313,7 @@ kubectl argo rollouts set image rollout-bluegreen \
 #https://docs.gitlab.com/runner/install/docker.html
 #https://docs.gitlab.com/runner/register/index.html#docker
 
-#cat config.toml 
+#cat /etc/gitlab-runner/config.toml
 concurrent = 1
 check_interval = 0
 
@@ -325,3 +350,35 @@ docker run --rm -it -v /works/config/runner:/etc/gitlab-runner gitlab/gitlab-run
 
 #https://blog.csdn.net/lenkty/article/details/124668164
 #https://blog.csdn.net/boling_cavalry/article/details/106991691
+#https://blog.csdn.net/sandaawa/article/details/112897733
+#https://github.com/lonly197/docs/blob/master/src/operation/GitLab%20CI%20%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90.md
+curl -X POST \
+     -F token=a27c33cb07b863f0ecfc80f3650b50 \
+     -F ref=1.0.x \
+     -F variables[project]=alertmanager-webhook \
+     http://gitlab.zerofinance.net/api/v4/projects/575/trigger/pipeline
+     
+
+Installing on Linux:
+#https://docs.gitlab.com/runner/install/linux-manually.html
+sudo curl -L --output /usr/local/bin/gitlab-runner "https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"
+sudo chmod +x /usr/local/bin/gitlab-runner
+sudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+sudo gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+sudo gitlab-runner start
+#Remember git password,login as gitlab-runner:
+git config --global credential.helper store
+#Mocking cloning a certain repo, input username and password to store credential.
+
+#https://docs.gitlab.com/runner/shells/index.html#shell-profile-loading
+To troubleshoot this error, check /home/gitlab-runner/.bash_logout. For example, if the .bash_logout file has a script section like the following, comment it out and restart the pipeline:
+
+if [ "$SHLVL" = 1 ]; then
+    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+fi
+
+#gitlab-runner register --name native-runner --url http://gitlab.zerofinance.net/ --registration-token 1111111111
+
+choice shell as a executor.
+
+sudo gitlab-runner register
