@@ -382,3 +382,284 @@ fi
 choice shell as a executor.
 
 sudo gitlab-runner register
+
+--------------------------------------------------------------------------------------------------
+#AMBARI Ubuntu(didn't work):
+##https://cwiki.apache.org/confluence/display/AMBARI/Ambari+Development
+#apt-get install build-essential
+#apt-get install rpm
+#
+#python2:
+#wget https://www.python.org/ftp/python/2.7.17/Python-2.7.17.tg
+#tar zxvf Python-2.7.17.tgz
+#cd Python-2.7.17/
+#./configure
+#make
+#make install
+#ln -s /usr/local/bin/python /usr/bin/python
+##python --version
+##Python 2.7.17
+
+##https://cwiki.apache.org/confluence/display/AMBARI/Installation+Guide+for+Ambari+2.7.7
+#wget https://www-eu.apache.org/dist/ambari/ambari-2.7.7/apache-ambari-2.7.7-src.tar.gz
+#tar xfvz apache-ambari-2.7.7-src.tar.gz
+#cd apache-ambari-2.7.7-src
+#mvn versions:set -DnewVersion=2.7.7.0.0
+# 
+#pushd ambari-metrics
+#mvn versions:set -DnewVersion=2.7.7.0.0
+#popd
+-------------------------------------------
+
+修改settings.xml： #https://gist.github.com/reedv/2d6805e67b93fa7c743c4ff6c8e345dc
+    <mirrors>
+        <mirror>
+            <id>nexus</id>
+            <name>internalNexusRepository</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url> 
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+        <mirror>
+                <id>nexus-hortonworks</id>
+                <mirrorOf>*,!central</mirrorOf>
+                <name>Nexus hortonworks</name>
+                <url>https://repo.hortonworks.com/content/groups/public/</url>
+        </mirror>
+    </mirrors>
+
+#修改：
+##https://stackoverflow.com/questions/61654584/ambari-admin-view-2-7-5-0-0-build-failure
+#ambari-admin/pom.xml：
+#<nodeVersion>v4.5.0</nodeVersion>改为：
+#<nodeVersion>v11.10.0</nodeVersion>
+#
+##https://www.cnblogs.com/shine-rainbow/p/16149430.html
+#
+#无法访问org.json.simple.JSONAware
+#<dependency>
+#      <groupId>com.googlecode.json-simple</groupId>
+#      <artifactId>json-simple</artifactId>
+#      <version>1.1</version>
+#</dependency>
+#
+##由于编译环境有关jar包不容易找到(storm-core-0.10.0.2.3.0.0-2557.jar、zookeeper-3.4.5.1.3.0.0-107.jar、zookeeper-3.4.6.2.3.0.0-2557.jar)。
+##贴出ambari编译的maven repository,将该repository替换成.m2/repostiroy目录即可。
+##scp -r repository.tar.gz root@192.168.101.82:/Developer/.m2/
+#cd /Developer/.m2/
+#tar zxvf repository.tar.gz
+#
+#wget https://repo.hortonworks.com/content/repositories/releases/org/apache/storm/storm-core/0.10.0.2.3.0.0-2557/storm-core-0.10.0.2.3.0.0-2557.jar -O /Developer/.m2/repository/org/apache/storm/storm-core/0.10.0.2.3.0.0-2557/storm-core-0.10.0.2.3.0.0-2557.jar
+#确保/Developer/.m2/repository/org/apache/storm/storm-core/0.10.0.2.3.0.0-2557/下面只有一个jar文件
+#确保/Developer/.m2/repository/org/apache/zookeeper/zookeeper/3.4.5.1.3.0.0-107/下面只有一个jar文件
+#
+#cd /data/ambari/apache-ambari-2.7.7-src/
+##mvn clean
+#mvn -B clean install jdeb:jdeb -DnewVersion=2.7.7.0.0 -DbuildNumber=388e072381e71c7755673b7743531c03a4d61be8 -DskipTests -Drat.skip -Dpython.ver="python >= 2.6"
+
+
+--------------------------------------------
+#cd /data/vagrant/boxes/docker/ubuntu22.04/
+#vagrant up
+#
+##login 192.168.101.83
+#cd /vagrant/
+#apt install python2 postgresql
+#dpkg -i ambari-server_2.7.7.0-0-dist.deb  #ingored the error output
+#export PYTHON=/usr/bin/python2
+#/etc/init.d/ambari-server setup
+#
+#JAVA_HOME=/vagrant/jdk1.8.0_371
+#
+#Database admin user (postgres): 
+#Database name (ambari): 
+#Postgres schema (ambari): 
+#Username (ambari): 
+#Enter Database Password (bigdata):
+#
+#/etc/init.d/ambari-server start
+#tail -f /var/log/ambari-server/ambari-server.log
+
+
+Latest:
+---------------------------------------------------------------------------
+Centos AMBARI: 4C/8G: 
+swap>=6G:
+dd if=/dev/zero of=/myswap.swp bs=1k count=4194304 #机器本身有2G发swap
+mkswap /myswap.swp
+swapon /myswap.swp
+free -m
+
+VM: 192.168.101.83/84/85
+Login on 192.168.101.83:
+#https://cwiki.apache.org/confluence/display/AMBARI/Installation+Guide+for+Ambari+2.8.0
+Centos:
+yum install -y git python-devel rpm-build gcc-c++
+
+wget https://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11-py2.7.egg#md5=fe1f997bc722265116870bc7919059ea
+sh setuptools-0.6c11-py2.7.egg
+
+#https://stackoverflow.com/questions/61654584/ambari-admin-view-2-7-5-0-0-build-failure
+#ambari-admin/pom.xml：(先修改，再编译)
+#  <configuration>
+#          <nodeVersion>v11.10.0</nodeVersion>
+#          <npmVersion>6.7.0</npmVersion>
+#          <workingDirectory>src/main/resources/ui/admin-web/</workingDirectory>
+#          <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
+#   </configuration>
+
+#wget https://mirrors.aliyun.com/nodejs-release/v12.22.1/node-v12.22.1-linux-x64.tar.gz
+#tar -zxvf node-v12.22.1-linux-x64.tar.gz -C /opt/
+#ln -s /opt/node-v12.22.1-linux-x64/ /opt/nodejs
+
+wget https://nodejs.org/dist/v16.13.2/node-v16.13.2-linux-x64.tar.gz
+tar zxvf node-v16.13.2-linux-x64.tar.gz -C /opt/
+ln -s /opt/node-v16.13.2-linux-x64/ /opt/nodejs
+
+cat /etc/profile.d/java.sh 
+#!/bin/bash
+
+export JAVA_HOME=/Developer/jdk1.8.0_371
+export M2_HOME=/Developer/apache-maven-3.6.3
+export _JAVA_OPTIONS="-Xms4g -Xmx4g -Djava.awt.headless=true"
+export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
+
+---------------
+(Custom JDK must be installed on echo machine)
+scp -r /Developer/jdk1.8.0_371 root@192.168.101.84:/Developer/
+scp -r /Developer/jdk1.8.0_371 root@192.168.101.85:/Developer/
+scp -r java.sh root@192.168.101.84:/etc/profile.d/
+scp -r java.sh root@192.168.101.85:/etc/profile.d/
+----------------
+
+Login on 192.168.101.83:
+#https://cloud.tencent.com/developer/article/1375511
+/usr/sbin/ambari-server: line 34: buildNumber: unbound variable
+vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
+
+ambari-server setup
+JAVA_HOME=/vagrant/jdk1.8.0_371
+
+Database admin user (postgres): 
+Database name (ambari): 
+Postgres schema (ambari): 
+Username (ambari): 
+Enter Database Password (bigdata):
+
+http://192.168.101.83:8080/
+admin、admin
+
+bigtop问题解决：
+wget https://www.zhangjc.com/images/20210817/pentaho-aggdesigner-algorithm-5.1.5-jhyde.jar
+mvn install:install-file -Dfile=./pentaho-aggdesigner-algorithm-5.1.5-jhyde.jar -DgroupId=org.pentaho -DartifactId=pentaho-aggdesigner-algorithm -Dversion=5.1.5-jhyde -Dpackaging=jar
+
+wget https://packages.confluent.io/maven/io/confluent/kafka-schema-registry-client/6.2.2/kafka-schema-registry-client-6.2.2.jar
+mvn install:install-file -Dfile=./kafka-schema-registry-client-6.2.2.jar -DgroupId=io.confluent -DartifactId=kafka-schema-registry-client -Dversion=6.2.2 -Dpackaging=jar
+
+mvn install:install-file -Dfile=./kafka-clients-2.8.1.jar -DgroupId=org.apache.kafka -DartifactId=kafka-clients -Dversion=2.8.1 -Dpackaging=jar
+
+cd dl/
+tar zxf flink-1.15.3.tar.gz
+rm -fr flink-1.15.3/flink-formats/flink-avro-confluent-registry/src/test/
+rm -fr flink-1.15.3/flink-end-to-end-tests/flink-end-to-end-tests-common-kafka/src/test
+rm -fr flink-1.15.3.tar.gz
+tar -zcf flink-1.15.3.tar.gz flink-1.15.3
+rm -fr flink-1.15.3
+rm -fr /Developer/bigtop-3.2.0/build/flink/
+
+
+tar zxf hadoop-3.3.4.tar.gz
+vim hadoop-3.3.4-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-applications/hadoop-yarn-applications-catalog/hadoop-yarn-applications-catalog-webapp/pom.xm
+<nodejs.version>v14.0.0</nodejs.version>
+rm -fr hadoop-3.3.4.tar.gz && tar -zcf hadoop-3.3.4.tar.gz hadoop-3.3.4-src && rm -fr hadoop-3.3.4-src
+rm -fr /Developer/bigtop-3.2.0/build/hadoop/
+
+#编译
+./gradlew bigtop-groovy-rpm bigtop-jsvc-rpm bigtop-select-rpm bigtop-utils-rpm flink-rpm hadoop-rpm hbase-rpm hive-rpm kafka-rpm solr-rpm spark-rpm tez-rpm zeppelin-rpm zookeeper-rpm -Dbuildwithdeps=true -PparentDir=/usr/bigtop -PpkgSuffix
+#./gradlew allclean会清理点build/下已经打包好的rpm文件，慎用。
+
+
+wget https://packages.confluent.io/maven/io/confluent/kafka-avro-serializer/6.2.2/kafka-avro-serializer-6.2.2.jar
+mvn install:install-file -Dfile=./kafka-avro-serializer-6.2.2.jar -DgroupId=io.confluent -DartifactId=kafka-avro-serializer -Dversion=6.2.2 -Dpackaging=jar
+
+ssh打通：
+#Working all
+groupadd hadoop
+useradd -m -g hadoop hadoop
+passwd hadoop
+chmod +w /etc/sudoers
+#vim /etc/sudoers
+#在 sudoers 文件中添加以下内容
+echo "hadoop ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
+#最后保存内容后退出,并取消 sudoers 文件的写权限
+chmod -w /etc/sudoers
+
+#Not necessary：免密码登录
+#Working on 192.168.101.83
+sudo su - hadoop
+ssh-keygen -t rsa
+#直接写入到~/.ssh/authorized_keys中：
+ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@192.168.101.83
+#cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+sudo chmod 700 ~/.ssh
+sudo chmod 600 ~/.ssh/authorized_keys
+并复制到所有机器
+scp ~/.ssh/authorized_keys hadoop@192.168.101.84:~/.ssh/
+scp ~/.ssh/authorized_keys hadoop@192.168.101.85:~/.ssh/
+想要所有的机器都互相打通的话：
+scp ~/.ssh/id_rsa* hadoop@192.168.101.84:~/.ssh/
+scp ~/.ssh/id_rsa* hadoop@192.168.101.85:~/.ssh/
+
+ntp：
+https://www.cnblogs.com/Sungeek/p/10197345.html
+sudo yum -y install ntp
+sudo timedatectl set-timezone Asia/Shanghai
+192.168.101.83：
+vim /etc/ntp.conf
+
+restrict 0.0.0.0 mask 0.0.0.0 nomodify notrap
+server 127.127.1.0
+fudge  127.127.1.0 stratum 10
+
+把配置文件下面四行注释掉：
+server 0.centos.pool.ntp.org iburst
+server 1.centos.pool.ntp.org iburst
+server 2.centos.pool.ntp.org iburst
+server 3.centos.pool.ntp.org iburst
+
+然后在下面添加这几行：
+server 0.cn.pool.ntp.org iburst
+server 1.cn.pool.ntp.org iburst
+server 2.cn.pool.ntp.org iburst
+server 3.cn.pool.ntp.org iburst
+
+systemctl start ntpd
+systemctl enable ntpd
+
+查询ntp是否同步
+ntpq -p
+
+NTP客户端配置：192.168.101.84/85
+
+[root@localhost ~]# vim /etc/ntp.conf
+#配置允许NTP Server时间服务器主动修改本机的时间
+restrict 192.168.101.83 nomodify notrap noquery
+#注释掉其他时间服务器
+#server 0.centos.pool.ntp.org iburst
+#server 1.centos.pool.ntp.org iburst
+#server 2.centos.pool.ntp.org iburst
+#server 3.centos.pool.ntp.org iburst
+#配置时间服务器为本地搭建的NTP Server服务器
+server 192.168.101.83
+
+systemctl start ntpd
+systemctl enable ntpd
+
+同步：
+ntpdate -u 192.168.101.83
+sudo ntpstat
+
+#所有机器
+echo "192.168.101.83 node1
+192.168.101.84 node2
+192.168.101.85 node3" >> /etc/hosts
+
