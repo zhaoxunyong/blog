@@ -563,6 +563,14 @@ ambari-server setup --jdbc-db=mysql --jdbc-driver=/Developer/mysql-connector-j-8
 192.168.101.83安装mysql
 #https://blog.csdn.net/weixin_43967842/article/details/124515431
 #https://docs.cloudera.com/HDPDocuments/Ambari-latest/administering-ambari/content/amb_using_ambari_with_mysql_or_mariadb.html
+wget https://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
+cat /etc/yum.repos.d/mysql-community.repo
+[mysql57-community]
+...
+gpgcheck=0
+...
+
+yum -y install mysql57-community-release-el7-10.noarch.rpm
 
 cat /etc/my.cnf
 max_connections=2000
@@ -571,7 +579,11 @@ character-set-server=utf8
 collation-server=utf8_general_ci
 lower_case_table_names=1
 
-systemctl restart mysql
+systemctl enable mysqld
+systemctl restart mysqld
+
+#临时密码：
+grep 'temporary password' /var/log/mysqld.log
 
 mysql -uroot -p
 set global validate_password_policy=0;
