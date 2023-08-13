@@ -513,12 +513,6 @@ scp -r java.sh root@192.168.101.84:/etc/profile.d/
 scp -r java.sh root@192.168.101.85:/etc/profile.d/
 ----------------
 
-Login on 192.168.101.83:
-#https://cloud.tencent.com/developer/article/1375511
-/usr/sbin/ambari-server: line 34: buildNumber: unbound variable
-#vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
-sed -i 's;${buildNumber};${VERSION};g' /usr/sbin/ambari-server
-
 bigtop问题解决：
 wget https://www.zhangjc.com/images/20210817/pentaho-aggdesigner-algorithm-5.1.5-jhyde.jar
 mvn install:install-file -Dfile=./pentaho-aggdesigner-algorithm-5.1.5-jhyde.jar -DgroupId=org.pentaho -DartifactId=pentaho-aggdesigner-algorithm -Dversion=5.1.5-jhyde -Dpackaging=jar
@@ -553,6 +547,15 @@ tez-rpm zeppelin-rpm zookeeper-rpm -Dbuildwithdeps=true -PparentDir=/usr/bigtop 
 
 wget https://packages.confluent.io/maven/io/confluent/kafka-avro-serializer/6.2.2/kafka-avro-serializer-6.2.2.jar
 mvn install:install-file -Dfile=./kafka-avro-serializer-6.2.2.jar -DgroupId=io.confluent -DartifactId=kafka-avro-serializer -Dversion=6.2.2 -Dpackaging=jar
+
+---------------------------------------------------------------
+#安装：
+Login on 192.168.101.83:
+#https://cloud.tencent.com/developer/article/1375511
+安装：sudo yum install ./ambari-server-2.8.0.0-0.x86_64.rpm
+/usr/sbin/ambari-server: line 34: buildNumber: unbound variable
+#vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
+sed -i 's;${buildNumber};${VERSION};g' /usr/sbin/ambari-server
 
 #mysql
 ambari-server setup --jdbc-db=mysql --jdbc-driver=/Developer/mysql-connector-j-8.0.31.jar
