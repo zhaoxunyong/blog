@@ -621,6 +621,7 @@ cp -a /Developer/mysql-connector-j-8.0.31.jar /usr/share/java/
 systemctl enable ambari-server
 systemctl start ambari-server
 
+cd /vagrant/bigdatarepo && python -m SimpleHTTPServer &
 http://192.168.101.83:8080/
 admin、admin
 
