@@ -551,12 +551,6 @@ mvn install:install-file -Dfile=./kafka-avro-serializer-6.2.2.jar -DgroupId=io.c
 ---------------------------------------------------------------
 #安装：
 Login on 192.168.101.83:
-#https://cloud.tencent.com/developer/article/1375511
-安装：sudo yum install ./ambari-server-2.8.0.0-0.x86_64.rpm
-/usr/sbin/ambari-server: line 34: buildNumber: unbound variable
-#vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
-sed -i 's;${buildNumber};${VERSION};g' /usr/sbin/ambari-server
-
 #mysql
 ambari-server setup --jdbc-db=mysql --jdbc-driver=/Developer/mysql-connector-j-8.0.31.jar
 
@@ -587,6 +581,10 @@ grep 'temporary password' /var/log/mysqld.log
 
 mysql -uroot -p
 set global validate_password_policy=0;
+exit
+
+mysql -uroot -p
+alter user 'root'@'localhost' identified by 'Aa123#@!';
 CREATE USER 'ambari'@'%' IDENTIFIED BY 'Aa123456';
 GRANT ALL PRIVILEGES ON *.* TO 'ambari'@'%';
 FLUSH PRIVILEGES;
@@ -607,7 +605,12 @@ exit
 
 安装：
 83:
-yum install ambari-server-2.8.0.0-0.x86_64.rpm
+#https://cloud.tencent.com/developer/article/1375511
+安装：sudo yum install ./ambari-server-2.8.0.0-0.x86_64.rpm
+/usr/sbin/ambari-server: line 34: buildNumber: unbound variable
+#vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
+sed -i 's;${buildNumber};${VERSION};g' /usr/sbin/ambari-server
+
 所有机器：83/84/85:
 scp /Developer/ambari-agent-2.8.0.0-0.x86_64.rpm root@192.168.101.84:/Developer/
 scp /Developer/ambari-agent-2.8.0.0-0.x86_64.rpm root@192.168.101.85:/Developer/
