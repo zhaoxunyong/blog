@@ -621,7 +621,14 @@ cp -a /Developer/mysql-connector-j-8.0.31.jar /usr/share/java/
 systemctl enable ambari-server
 systemctl start ambari-server
 
-cd /vagrant/bigdatarepo && python -m SimpleHTTPServer &
+bittop repo: 
+yum install createrepo
+cd /vagrant/bigdatarepo
+createrepo .
+python -m SimpleHTTPServer &
+http://192.168.101.83:8000/
+
+web portal:
 http://192.168.101.83:8080/
 admin、admin
 
@@ -633,15 +640,6 @@ yum install ambari-agent-2.8.0.0-0.x86_64.rpm
 sed -i 's;${buildNumber};${VERSION};g' /var/lib/ambari-agent/bin/ambari-agent
 systemctl enable ambari-agent.service
 systemctl restart ambari-agent.service 
-
-
-
-bittop repo: 
-yum install createrepo
-cd /vagrant/bigdatarepo
-createrepo .
-
-http://192.168.101.83:8000/
 
 node[1-3].zerofinance.net
 
