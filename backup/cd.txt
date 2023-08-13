@@ -420,9 +420,12 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@192.168.101.83
 #cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 sudo chmod 700 ~/.ssh
 sudo chmod 600 ~/.ssh/authorized_keys
-并复制到所有机器
+并复制到所有机器。每台机器先执行mkdir ~/.ssh
 scp ~/.ssh/authorized_keys hadoop@192.168.101.84:~/.ssh/
 scp ~/.ssh/authorized_keys hadoop@192.168.101.85:~/.ssh/
+复制完成后，每台机器执行：
+sudo chmod 700 ~/.ssh
+sudo chmod 600 ~/.ssh/authorized_keys
 想要所有的机器都互相打通的话：
 scp ~/.ssh/id_rsa* hadoop@192.168.101.84:~/.ssh/
 scp ~/.ssh/id_rsa* hadoop@192.168.101.85:~/.ssh/
