@@ -636,7 +636,12 @@ systemctl restart ambari-agent.service
 
 
 
-bittop repo: http://192.168.101.83:8000/
+bittop repo: 
+yum install createrepo
+cd /vagrant/bigdatarepo
+createrepo .
+
+http://192.168.101.83:8000/
 
 node[1-3].zerofinance.net
 
