@@ -516,7 +516,8 @@ scp -r java.sh root@192.168.101.85:/etc/profile.d/
 Login on 192.168.101.83:
 #https://cloud.tencent.com/developer/article/1375511
 /usr/sbin/ambari-server: line 34: buildNumber: unbound variable
-vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
+#vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
+sed -i 's;${buildNumber};${VERSION};g' /usr/sbin/ambari-server
 
 bigtop问题解决：
 wget https://www.zhangjc.com/images/20210817/pentaho-aggdesigner-algorithm-5.1.5-jhyde.jar
