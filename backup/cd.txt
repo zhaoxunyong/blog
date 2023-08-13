@@ -708,4 +708,5 @@ Sys DB and Information Schema not created yet
 cd /etc/hive/
 touch /etc/hive/sys.db.created
 进入ambari-server 端重启
+chown -R hadoop:hadoop /var/run/ambari-server
 sudo systemctl restart ambari-server
