@@ -552,8 +552,6 @@ mvn install:install-file -Dfile=./kafka-avro-serializer-6.2.2.jar -DgroupId=io.c
 #安装：
 Login on 192.168.101.83:
 #mysql
-ambari-server setup --jdbc-db=mysql --jdbc-driver=/Developer/mysql-connector-j-8.0.31.jar
-
 192.168.101.83安装mysql
 #https://blog.csdn.net/weixin_43967842/article/details/124515431
 #https://docs.cloudera.com/HDPDocuments/Ambari-latest/administering-ambari/content/amb_using_ambari_with_mysql_or_mariadb.html
@@ -610,6 +608,21 @@ exit
 /usr/sbin/ambari-server: line 34: buildNumber: unbound variable
 #vim /usr/sbin/ambari-server将${buildNumber}这行换成 HASH="${VERSION}"
 sed -i 's;${buildNumber};${VERSION};g' /usr/sbin/ambari-server
+sed -i 's;${buildNumber};${VERSION};g' /etc/rc.d/init.d/ambari-server
+ambari-server setup --jdbc-db=mysql --jdbc-driver=/Developer/mysql-connector-j-8.0.31.jar
+ambari-server setup
+Customize user account for ambari-server daemon: hadoop
+JAVA_HOME=/Developer/jdk1.8.0_371
+
+Using custom MySQL.
+
+rm -fr /usr/share/java && mkdir -p /usr/share/java
+cp -a /Developer/mysql-connector-j-8.0.31.jar /usr/share/java/
+systemctl enable ambari-server
+systemctl start ambari-server
+
+http://192.168.101.83:8080/
+admin、admin
 
 所有机器：83/84/85:
 scp /Developer/ambari-agent-2.8.0.0-0.x86_64.rpm root@192.168.101.84:/Developer/
@@ -620,17 +633,7 @@ sed -i 's;${buildNumber};${VERSION};g' /var/lib/ambari-agent/bin/ambari-agent
 systemctl enable ambari-agent.service
 systemctl restart ambari-agent.service 
 
-ambari-server setup
-JAVA_HOME=/Developer/jdk1.8.0_371
 
-Database admin user (postgres): 
-Database name (ambari): 
-Postgres schema (ambari): 
-Username (ambari): 
-Enter Database Password (bigdata):
-
-http://192.168.101.83:8080/
-admin、admin
 
 bittop repo: http://192.168.101.83:8000/
 
