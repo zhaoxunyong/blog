@@ -35,6 +35,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 #For docker:(Recommend)
 ##docker run -itd --restart=unless-stopped --net host -v /var/run/docker.sock:/var/run/docker.sock cnrancher/autok3s:v0.6.0
+docker run --privileged -d --restart=unless-stopped -p 80:80 -p 443:443 rancher/rancher:stable
 
 ##Installing on hosted machine:(optional)
 #curl -sS https://rancher-mirror.rancher.cn/autok3s/install.sh  | INSTALL_AUTOK3S_MIRROR=cn sh
@@ -112,14 +113,15 @@ spec:
   ingressClassName: nginx
 
 
-#argocd
+#argocd with kubernetes 1.18
 #https://argo-cd.readthedocs.io/en/stable/getting_started/
 #https://mp.weixin.qq.com/s?__biz=MzU1MzY4NzQ1OA==&mid=2247512193&idx=1&sn=da41bb4072870e34bdf338c22bcbc8cc&chksm=fbedf04ccc9a795a08f4b0deb5a8518aa901dc1e8678277d232fff0d05ba1613a3f8d8636ab9&scene=178&cur_album_id=2470838961377427457#rd
 
 kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+#kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.1.2/manifests/install.yaml
 
-#Service Type Load Balancer¶
+#Service Type Load Balancer
 #Change the argocd-server service type to LoadBalancer:
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 kubectl -n argocd get svc
@@ -139,7 +141,7 @@ kubectl -n argocd edit svc argocd-serve
     targetPort: 8080
 
 
-https://192.168.101.82:8443/
+https://192.168.64.6:8443/
 
 get password:
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
@@ -150,31 +152,38 @@ git clone http://gitlab.zerofinance.net/dave.zhao/fleet_demo.git
 
 #argo-rollouts
 kubectl create namespace argo-rollouts
-kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+#kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/download/v1.2.2/install.yaml
+
+wget https://github.com/argoproj/argo-rollouts/releases/download/v1.2.2/kubectl-argo-rollouts-linux-amd64
+wget https://github.com/argoproj/argo-rollouts/releases/download/v1.2.2/kubectl-argo-rollouts-windows-amd64
 
 #demo
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/rollout.yaml
-kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/service.yaml
+#kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/rollout.yaml
+#kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/service.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.2.2/docs/getting-started/basic/rollout.yaml
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.2.2/docs/getting-started/basic/service.yaml
 
 #Watch
-kubectl argo rollouts get rollout rollouts-demo -w
+#kubectl argo rollouts get rollout rollouts-demo -w
+kubectl argo rollouts -n testing get rollout rollouts-demo --watch
 
 #Updating a Rollout
-kubectl argo rollouts set image rollouts-demo \
+kubectl argo rollouts -n testing set image rollouts-demo \
   rollouts-demo=argoproj/rollouts-demo:yellow
 
 #Promoting a Rollout
-kubectl argo rollouts promote rollouts-demo
+kubectl argo rollouts -n testing promote rollouts-demo
 
 #Updating a red Rollout
-kubectl argo rollouts set image rollouts-demo \
+kubectl argo rollouts -n testing set image rollouts-demo \
   rollouts-demo=argoproj/rollouts-demo:red
 
 #Aborting a Rollout
-kubectl argo rollouts abort rollouts-demo
+kubectl argo rollouts -n testing abort rollouts-demo
 
 #In order to make Rollout considered Healthy again and not Degraded, it is necessary to change the desired state back to the previous, stable versio
-kubectl argo rollouts set image rollouts-demo \
+kubectl argo rollouts -n testing set image rollouts-demo \
   rollouts-demo=argoproj/rollouts-demo:yellow
   
 
@@ -210,7 +219,7 @@ kubectl argo rollouts set image rollouts-demo rollouts-demo=argoproj/rollouts-de
 
 
 #dashboard
-kubectl argo rollouts dashboard
+kubectl argo rollouts dashboard(启动这个命令的那台机器)
 http://192.168.101.82:3100/rollouts
 
 #bluegreen
@@ -308,8 +317,36 @@ kubectl argo rollouts set image rollout-bluegreen \
 
   kubectl argo rollouts get rollout rollout-bluegreen -w
 
+#arago-workflow:
+Controller and Server
+kubectl create namespace argo
+kubectl apply -n argo -f https://github.com/argoproj/argo-workflows/releases/download/v3.3.9/install.yaml
+
+kubectl -n argo edit svc argo-server
+change argo-server to LoadBalancer
+
+https://192.168.64.6:2746/
+
+#https://argoproj.github.io/argo-workflows/quick-start/
+kubectl patch deployment \
+  argo-server \
+  --namespace argo \
+  --type='json' \
+  -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": [
+  "server",
+  "--auth-mode=server"
+]}]'
+
+Get login password:
+k get secret  -n argo
+ARGO_TOKEN="Bearer $(kubectl get -n argo secret argo-server-token-vw8xf -o=jsonpath='{.data.token}' | base64 --decode)"
+echo $ARGO_TOKEN
+
+argo-windows-amd64.exe submit -n argo --watch https://raw.githubusercontent.com/argoproj/argo-workflows/v3.3.9/examples/hello-world.yaml
 
 
+-----------------------------------------------------------------------------------------------
+Gitlab-Runner:
 #https://docs.gitlab.com/runner/install/docker.html
 #https://docs.gitlab.com/runner/register/index.html#docker
 
@@ -483,6 +520,7 @@ sudo ntpstat
 echo "192.168.101.83 node1 node1.zerofinance.net
 192.168.101.84 node2 node2.zerofinance.net
 192.168.101.85 node3 node3.zerofinance.net" >> /etc/hosts
+如果是docker centos的话，每次docker重启hosts文件都会被还原
 
 VM: 192.168.101.83/84/85
 
@@ -708,5 +746,32 @@ Sys DB and Information Schema not created yet
 cd /etc/hive/
 touch /etc/hive/sys.db.created
 进入ambari-server 端重启
-chown -R hadoop:hadoop /var/run/ambari-server
 sudo systemctl restart ambari-server
+
+#Add new component, an error was caucse:
+ambari 500 status code received on POST method for API:
+#https://www.jianshu.com/p/3b54ba251c9e
+chown -R hadoop:hadoop /var/run/ambari-server
+
+#Cannot create /var/run/ambari-server/stack-recommendations:
+chown -R hadoop:hadoop /var/run/ambari-server
+
+#Could not open client transport with JDBC Uri: jdbc:hive2://node3.zerofinance.net:10016/default;
+#Unauthorized connection for super-user: hive from IP
+https://blog.csdn.net/a123147abc/article/details/121626578
+
+#https://blog.csdn.net/wx1528159409/article/details/87796329
+hadoop我自己的用户名：
+#<property>
+#    <name>hadoop.proxyuser.hadoop.hosts</name>
+#    <value>*</value>
+#</property>
+#<property>
+#    <name>hadoop.proxyuser.hadoop.groups</name>
+#    <value>*</value>
+#</property>
+进入web界面：
+HDFS--->Custom core-site: 
+search for proxyuser, changed field to *
+
+
