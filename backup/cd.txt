@@ -435,6 +435,34 @@ chmod +x /etc/rc.d/rc.local
 
 echo "swapon /myswap.swp" >> /etc/rc.local
 
+echo "route del default gw 172.17.0.1
+route add default gw 192.168.80.254" >> /etc/rc.local
+
+-------------
+route del default gw 172.17.0.1
+route add default gw 192.168.80.254
+chmod +x /etc/rc.local
+chmod +x /etc/rc.d/rc.local
+echo "route del default gw 172.17.0.1
+route add default gw 192.168.80.254" >> /etc/rc.local
+
+echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6" >> /etc/hosts
+
+echo "
+192.168.80.215 namenode01 namenode01.zerofinance.net
+192.168.80.216 namenode02 namenode02.zerofinance.net
+192.168.80.217 datanode01 datanode01.zerofinance.net
+192.168.80.218 datanode02 datanode02.zerofinance.net
+192.168.80.219 datanode03 datanode03.zerofinance.net
+
+192.168.80.225 namenode01-test namenode01-test.zerofinance.net
+192.168.80.226 namenode02-test namenode02-test.zerofinance.net
+192.168.80.227 datanode01-test datanode01-test.zerofinance.net
+192.168.80.228 datanode02-test datanode02-test.zerofinance.net
+192.168.80.229 datanode03-test datanode03-test.zerofinance.net" >> /etc/hosts
+-------------------
+
 
 ssh打通：
 #Working all
@@ -444,7 +472,7 @@ passwd hadoop
 chmod +w /etc/sudoers
 #vim /etc/sudoers
 #在 sudoers 文件中添加以下内容
-echo "hadoop ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
+echo "hadoop ALL=(ALL)NOPASSWD: ALL" >> /etc/sudoers
 #最后保存内容后退出,并取消 sudoers 文件的写权限
 chmod -w /etc/sudoers
 
@@ -775,3 +803,17 @@ HDFS--->Custom core-site:
 search for proxyuser, changed field to *
 
 
+
+namenode01.zerofinance.net:
+
+docker run -d \
+--cpus=4 --cpu-shares=4000 -m=30g --memory-reservation=30g \
+-h namenode01.zerofinance.net --name namenode01 \
+-v /data/bigdata/hadoop:/hadoop \
+-v /etc/hosts:/etc/hosts \
+--network=host --privileged=true \
+registry.zerofinance.net/library/centos:7 /usr/sbin/init
+
+ifconfig em1 192.168.80.225 netmask 255.255.255.0 up
+route add default gw 192.168.80.254
+route add default gw 172.17.0.1
