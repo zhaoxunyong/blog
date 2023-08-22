@@ -291,11 +291,9 @@ chown -R hadoop:hadoop /var/run/ambari-server
 #Cannot create /var/run/ambari-server/stack-recommendations:
 chown -R hadoop:hadoop /var/run/ambari-server
 
-#Could not open client transport with JDBC Uri: jdbc:hive2://node3.zerofinance.net:10016/default;
-#Unauthorized connection for super-user: hive from IP
 进入web界面：
-HDFS--->Custom core-site: 
-search for proxyuser, changed field to *
+HDFS--->CONFIGS: 
+search for hive, changed hadoop.proxyuser.hive.hosts to *
 
 
 -----------------------------------------------------------------
@@ -333,6 +331,7 @@ workers=${workers:-"datanode01-test.zerofinance.net:default,datanode02-test.zero
 alertServer=${alertServer:-"namenode01-test.zerofinance.net"}
 apiServers=${apiServers:-"namenode01-test.zerofinance.net"}
 deployUser=${deployUser:-"hadoop"}
+installPath=${installPath:-"/works/app/dolphinscheduler"}
 
 vim bin/env/dolphinscheduler_env.sh
 export JAVA_HOME=${JAVA_HOME:-/works/app/jdk/jdk1.8.0_371}
@@ -356,7 +355,7 @@ export DATAX_HOME=${DATAX_HOME:-/opt/soft/datax}
 export SEATUNNEL_HOME=${SEATUNNEL_HOME:-/opt/soft/seatunnel}
 export CHUNJUN_HOME=${CHUNJUN_HOME:-/opt/soft/chunjun}
 
-
+cd /vagrant/apache-dolphinscheduler-3.1.2-bin
 bash tools/bin/upgrade-schema.sh
 sh bin/install.sh
 
