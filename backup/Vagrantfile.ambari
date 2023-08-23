@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.hostname = "namenode01-test.zerofinance.net"
+  config.vm.network "public_network", ip: "192.168.80.225", netmask: "255.255.255.0", gateway: "192.168.80.254", bridge: "em1"
+  config.vm.provider "docker" do |d|
+    d.image = "registry.zerofinance.net/library/centos:7"
+    d.create_args = ["--hostname=namenode01-test.zerofinance.net", "--cpus=12", "--cpu-shares=12000", "-m=30g", "--memory-reservation=1g", "-v", "/etc/hosts:/etc/hosts", "-v", "/data:/data", "-v", "/sys/fs/cgroup:/sys/fs/cgroup"]
+    d.privileged = true
+    d.cmd = ["/usr/sbin/init"]
+  end
+
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    #yum -y install net-tools > /dev/null
+    route del default gw 172.17.0.1
+    route add default gw 192.168.80.254
+    chmod +x /etc/rc.local
+    chmod +x /etc/rc.d/rc.local
+    echo "route del default gw 172.17.0.1
+    route add default gw 192.168.80.254" >> /etc/rc.local
+  SHELL
+
+  #config.vm.provision "shell",
+  #  run: "always",
+  #  inline: "route del default gw 172.17.0.1"
+
+  #config.vm.provision "shell" do |s|
+  #  s.path = "script.sh"
+  #  #s.args = ["--bip=10.1.10.1/24"]
+  #end
+
+end
