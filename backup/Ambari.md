@@ -295,6 +295,9 @@ chown -R hadoop:hadoop /var/run/ambari-server
 HDFS--->CONFIGS: 
 search for hive, changed hadoop.proxyuser.hive.hosts to *
 
+#mkdir: Permission denied: user=root, access=WRITE, inode="/":hdfs:hdfs:drwxr-xr-x
+https://blog.csdn.net/gdkyxy2013/article/details/105254907
+
 
 -----------------------------------------------------------------
 sudo su - hadoop
