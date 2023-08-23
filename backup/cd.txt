@@ -443,7 +443,8 @@ route del default gw 172.17.0.1
 route add default gw 192.168.80.254
 chmod +x /etc/rc.local
 chmod +x /etc/rc.d/rc.local
-echo "route del default gw 172.17.0.1
+echo "ifconfig eth0 down
+route del default gw 172.17.0.1
 route add default gw 192.168.80.254" >> /etc/rc.local
 
 echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
