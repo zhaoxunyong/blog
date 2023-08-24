@@ -267,7 +267,7 @@ Admin Name : admin
 
 Cluster Name : dwh
 
-Total Hosts : 3 (3 new)
+Chose the hdfs account as "hadoop" not "hdfs"
 
 Repositories:
 
@@ -298,8 +298,20 @@ search for hive, changed hadoop.proxyuser.hive.hosts to *
 #mkdir: Permission denied: user=root, access=WRITE, inode="/":hdfs:hdfs:drwxr-xr-x
 https://blog.csdn.net/gdkyxy2013/article/details/105254907
 
+zeppelin不能运行flink的问题：
+在安装zeppelin的机器上执行：
+cd /usr/bigtop/current/flink-client/lib
+mv flink-dist-1.15.3.jar flink-dist_2.12-1.15.3.jar
+
+#zeppelin不支持flink 1.15.3, see: https://github.com/apache/zeppelin/blob/v0.10.1/flink/flink-shims/src/main/java/org/apache/zeppelin/flink/FlinkShims.java
+
+zeppelin开启job:
+Ambari--->Zeppelin--->Custom zeppelin-site:
+zeppelin.jobmanager.enable: true
+reboot zeppelin.
 
 -----------------------------------------------------------------
+安装：dolphinscheduler
 sudo su - hadoop
 docker env: need to shutdown eth0 or cannot register the actual ip to zokeeper: 
 ifconfig eth0 down
