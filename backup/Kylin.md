@@ -179,7 +179,7 @@ chmod +w /etc/sudoers
 
 vim /etc/sudoers
 #在 sudoers 文件中添加以下内容
-echo "hadoop ALL=(root)NOPASSWD: ALL" >> /etc/sudoers
+echo "hadoop ALL=(ALL)NOPASSWD: ALL" >> /etc/sudoers
 #最后保存内容后退出,并取消 sudoers 文件的写权限
 chmod -w /etc/sudoers
 

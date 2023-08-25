@@ -35,6 +35,33 @@ sudo chmod 600 ~/.ssh/authorized_keys
 scp ~/.ssh/id_rsa* hadoop@192.168.101.84:~/.ssh/
 scp ~/.ssh/id_rsa* hadoop@192.168.101.85:~/.ssh/
 
+
+#For centos on docker:
+route del default gw 172.17.0.1
+route add default gw 192.168.80.254
+chmod +x /etc/rc.local
+chmod +x /etc/rc.d/rc.local
+echo "ifconfig eth0 down
+route del default gw 172.17.0.1
+route add default gw 192.168.80.254" >> /etc/rc.local
+
+echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6" >> /etc/hosts
+
+echo "
+192.168.80.215 namenode01 namenode01.zerofinance.net
+192.168.80.216 namenode02 namenode02.zerofinance.net
+192.168.80.217 datanode01 datanode01.zerofinance.net
+192.168.80.218 datanode02 datanode02.zerofinance.net
+192.168.80.219 datanode03 datanode03.zerofinance.net
+
+192.168.80.225 namenode01-test namenode01-test.zerofinance.net
+192.168.80.226 namenode02-test namenode02-test.zerofinance.net
+192.168.80.227 datanode01-test datanode01-test.zerofinance.net
+192.168.80.228 datanode02-test datanode02-test.zerofinance.net
+192.168.80.229 datanode03-test datanode03-test.zerofinance.net" >> /etc/hosts
+
+
 ntp：
 https://www.cnblogs.com/Sungeek/p/10197345.html
 #on all:
@@ -139,9 +166,6 @@ grep 'temporary password' /var/log/mysqld.log
 
 mysql -uroot -p
 set global validate_password_policy=0;
-exit
-
-mysql -uroot -p
 alter user 'root'@'localhost' identified by 'Aa123#@!';
 CREATE USER 'ambari'@'%' IDENTIFIED BY 'Aa123456';
 GRANT ALL PRIVILEGES ON ambari.* TO 'ambari'@'%';
