@@ -1,7 +1,9 @@
 ---
-title: Hadoop.md
+title: hadoop Ecosystem
 date: 2023-08-25 08:32:11
-tags:Bigdata
+categories: ["Bigdata"]
+tags: ["Bigdata"]
+toc: true
 ---
 
 Manage tool: Ambari+Bigtop
@@ -1440,7 +1442,7 @@ select * from uniontype_1 where info['english'][2]>30;
 +-----------------+-------------------------+
 ```
 
-## seatunnel
+## Seatunnel
 
 ```bash
 cat /etc/profile.d/hadoop.sh    
@@ -1459,10 +1461,177 @@ export PATH=$HADOOP_HOME/bin:$SPARK_HOME/bin:$HIVE_HOME/bin:$FLINK_HOME/bin:$SEA
 
 [BigData-Notes/notes/Flink核心概念综述.md at master · heibaiying/BigData-Notes (github.com)](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Flink核心概念综述.md)
 
+### Deployment Modes
+
+See this Overview to understand: [deployment-modes](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/overview/#deployment-modes)
+
+#### Standalone
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/standalone/overview/
+
+##### Session Mode
+
 ```
- mvn archetype:generate\
- -DarchetypeGroupId=org.apache.flink\
- -DarchetypeArtifactId=flink-quickstart-java\
- -DarchetypeVersion=1.15.3
+# we assume to be in the root directory of the unzipped Flink distribution
+
+# (1) Start Cluster
+$ ./bin/start-cluster.sh
+
+# (2) You can now access the Flink Web Interface on http://localhost:8081
+
+# (3) Submit example job
+$ ./bin/flink run ./examples/streaming/TopSpeedWindowing.jar
+
+# (4) Stop the cluster again
+$ ./bin/stop-cluster.sh
 ```
+
+In step `(1)`, we’ve started 2 processes: A JVM for the JobManager, and a JVM for the TaskManager. The JobManager is serving the web interface accessible at [localhost:8081](http://localhost:8081/). In step `(3)`, we are starting a Flink Client (a short-lived JVM process) that submits an application to the JobManager.
+
+```
+#Troubleshooting: 8081 can be visited only for localhost
+cat /etc/hosts
+192.168.80.225   localhost
+```
+
+##### Application Mode
+
+```bash
+To start a Flink JobManager with an embedded application, we use the bin/standalone-job.sh script. We demonstrate this mode by locally starting the TopSpeedWindowing.jar example, running on a single TaskManager.
+
+The application jar file needs to be available in the classpath. The easiest approach to achieve that is putting the jar into the lib/ folder:
+
+$ cp ./examples/streaming/TopSpeedWindowing.jar lib/
+Then, we can launch the JobManager:
+
+$ ./bin/standalone-job.sh start --job-classname org.apache.flink.streaming.examples.windowing.TopSpeedWindowing
+The web interface is now available at localhost:8081. However, the application won’t be able to start, because there are no TaskManagers running yet:
+
+$ ./bin/taskmanager.sh start
+Note: You can start multiple TaskManagers, if your application needs more resources.
+
+Stopping the services is also supported via the scripts. Call them multiple times if you want to stop multiple instances, or use stop-all:
+
+$ ./bin/taskmanager.sh stop
+$ ./bin/standalone-job.sh stop
+```
+
+#### YARN
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/
+
+##### Session Mode
+
+[starting-a-flink-session-on-yarn](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/#starting-a-flink-session-on-yarn)
+
+```bash
+export HADOOP_CLASSPATH=`hadoop classpath`
+# we assume to be in the root directory of 
+# the unzipped Flink distribution
+
+# (0) export HADOOP_CLASSPATH
+export HADOOP_CLASSPATH=`hadoop classpath`
+
+# (1) Start YARN Session
+./bin/yarn-session.sh --detached
+
+# (2) You can now access the Flink Web Interface through the
+# URL printed in the last lines of the command output, or through
+# the YARN ResourceManager web UI.
+
+# (3) Submit example job
+./bin/flink run ./examples/streaming/TopSpeedWindowing.jar
+
+# (4) Stop YARN session (replace the application id based 
+# on the output of the yarn-session.sh command)
+echo "stop" | ./bin/yarn-session.sh -id application_XXXXX_XXX
+```
+
+Congratulations! You have successfully run a Flink application by deploying Flink on YARN.
+
+We describe deployment with the Session Mode in the [Getting Started](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/#getting-started) guide at the top of the page.
+
+The Session Mode has two operation modes:
+
+- **attached mode** (default): The `yarn-session.sh` client submits the Flink cluster to YARN, but the client keeps running, tracking the state of the cluster. If the cluster fails, the client will show the error. If the client gets terminated, it will signal the cluster to shut down as well.
+- **detached mode** (`-d` or `--detached`): The `yarn-session.sh` client submits the Flink cluster to YARN, then the client returns. Another invocation of the client, or YARN tools is needed to stop the Flink cluster.
+
+The session mode will create a hidden YARN properties file in `/tmp/.yarn-properties-<username>`, which will be picked up for cluster discovery by the command line interface when submitting a job.
+
+You can also **manually specify the target YARN cluster** in the command line interface when submitting a Flink job. Here’s an example:
+
+```bash
+./bin/flink run -t yarn-session \
+  -Dyarn.application.id=application_XXXX_YY \
+  ./examples/streaming/TopSpeedWindowing.jar
+```
+
+You can **re-attach to a YARN session** using the following command:
+
+```
+./bin/yarn-session.sh -id application_XXXX_YY
+```
+
+Besides passing [configuration](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/config/) via the `conf/flink-conf.yaml` file, you can also pass any configuration at submission time to the `./bin/yarn-session.sh` client using `-Dkey=value` arguments.
+
+The YARN session client also has a few “shortcut arguments” for commonly used settings. They can be listed with `./bin/yarn-session.sh -h`.
+
+##### Application Mode
+
+```bash
+Application Mode will launch a Flink cluster on YARN, where the main() method of the application jar gets executed on the JobManager in YARN. The cluster will shut down as soon as the application has finished. You can manually stop the cluster using yarn application -kill <ApplicationId> or by cancelling the Flink job.
+
+./bin/flink run-application -t yarn-application ./examples/streaming/TopSpeedWindowing.jar
+
+Once an Application Mode cluster is deployed, you can interact with it for operations like cancelling or taking a savepoint.
+
+# List running job on the cluster
+./bin/flink list -t yarn-application -Dyarn.application.id=application_XXXX_YY
+
+# Cancel running job
+./bin/flink cancel -t yarn-application -Dyarn.application.id=application_XXXX_YY <jobId>
+
+Note that cancelling your job on an Application Cluster will stop the cluster.
+
+To unlock the full potential of the application mode, consider using it with the yarn.provided.lib.dirs configuration option and pre-upload your application jar to a location accessible by all nodes in your cluster. In this case, the command could look like:
+
+./bin/flink run-application -t yarn-application \
+	-Dyarn.provided.lib.dirs="hdfs://myhdfs/my-remote-flink-dist-dir" \
+	hdfs://myhdfs/jars/my-application.jar
+	
+The above will allow the job submission to be extra lightweight as the needed Flink jars and the application jar are going to be picked up by the specified remote locations rather than be shipped to the cluster by the client.
+```
+
+### High-Availability
+
+Recommend working on Yarn
+
+[High-Availability on YARN](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/#high-availability-on-yarn)
+
+High-Availability on YARN is achieved through a combination of YARN and a [high availability service](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/overview/).
+
+Once a HA service is configured, it will persist JobManager metadata and perform leader elections.
+
+YARN is taking care of restarting failed JobManagers. The maximum number of JobManager restarts is defined through two configuration parameters. First Flink’s [yarn.application-attempts](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/config/#yarn-application-attempts) configuration will default 2. This value is limited by YARN’s [yarn.resourcemanager.am.max-attempts](https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-common/yarn-default.xml), which also defaults to 2.
+
+Note that Flink is managing the `high-availability.cluster-id` configuration parameter when deploying on YARN. Flink sets it per default to the YARN application id. **You should not overwrite this parameter when deploying an HA cluster on YARN**. The cluster ID is used to distinguish multiple HA clusters in the HA backend (for example Zookeeper). Overwriting this configuration parameter can lead to multiple YARN clusters affecting each other.
+
+[ZooKeeper HA Services](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/zookeeper_ha/)
+
+Configure high availability mode and ZooKeeper quorum in `conf/flink-conf.yaml`:
+
+```
+high-availability: zookeeper
+high-availability.zookeeper.quorum: datanode03-test.zerofinance.net:2181,datanode01-test.zerofinance.net:2181,datanode02-test.zerofinance.net:2181
+high-availability.zookeeper.path.root: /flink
+high-availability.storageDir: hdfs:///flink/recovery
+```
+
+### Histroy Server
+
+[History Server | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/advanced/historyserver/)
+
+Flink has a history server that can be used to query the statistics of completed jobs after the corresponding Flink cluster has been shut down.
+
+By default, this server binds to `localhost` and listens at port `8082`.
 
