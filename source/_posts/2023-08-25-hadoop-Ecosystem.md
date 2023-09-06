@@ -1602,6 +1602,213 @@ To unlock the full potential of the application mode, consider using it with the
 The above will allow the job submission to be extra lightweight as the needed Flink jars and the application jar are going to be picked up by the specified remote locations rather than be shipped to the cluster by the client.
 ```
 
+#### Sql Client
+
+[Flink 使用之 SQL Client - 简书 (jianshu.com)](https://www.jianshu.com/p/266449b9a0f4)
+
+##### Standalone
+
+```
+start-cluster.sh
+
+sql-client.sh embedded
+```
+
+
+
+##### On yarn Session
+
+[SQL-Client On Yarn Session](https://blog.csdn.net/lsr40/article/details/113398830)
+
+[Configuring SQL Client for session mode | CDP Private Cloud (cloudera.com)](https://docs.cloudera.com/csa/1.2.0/sql-client/topics/csa-sql-client-session-config.html)
+
+```sql
+#Start a yarn session
+#提交yarn session和启动sql client需要使用同一个用户，否则会找不到yarn session对应的application id。
+sudo su - hadoop
+#yarn-session.sh -d
+yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+cat /works/demo.csv 
+1,a,11
+2,b,22
+3,c,33
+4,d,44
+
+sudo -u hdfs hadoop fs -put /works/demo.csv /works/test/demo.csv
+
+sql-client.sh embedded -s yarn-session
+
+# 在专门的界面展示，使用分页table格式。可按照界面下方说明，使用快捷键前后翻页和退出到SQL命令行
+SET sql-client.execution.result-mode = table;
+
+# changelog格式展示，可展示数据增(I)删(D)改(U)
+SET sql-client.execution.result-mode = changelog;
+
+# 接近传统数据库的展示方式，不使用专门界面
+SET sql-client.execution.result-mode = tableau;
+
+Flink SQL> CREATE TABLE MyTable(
+  a INT,
+  b STRING,
+  c STRING
+) WITH (
+  'connector' = 'filesystem',
+  'path' = 'hdfs:///works/test/demo.csv',
+  'format' = 'csv'
+);
+
+Flink SQL> select * from MyTable;
+
+#Kill an existing yarn-session
+yarn application -list
+echo "stop" | yarn-session.sh -id <application_id>
+
+#kafka Connector:
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/1.15.3/flink-sql-connector-kafka-1.15.3.jar
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-connector-jdbc/1.15.3/flink-connector-jdbc-1.15.3.jar
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.226:/usr/bigtop/current/flink-client/lib/
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.227:/usr/bigtop/current/flink-client/lib/
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.228:/usr/bigtop/current/flink-client/lib/
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.229:/usr/bigtop/current/flink-client/lib/
+
+Hive Connector:
+wget https://repo1.maven.org/maven2/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_2.12/1.15.3/flink-connector-hive_2.12-1.15.3.jar
+wget https://repo1.maven.org/maven2/org/apache/hive/hive-exec/2.3.4/hive-exec-2.3.4.jar
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.226:/usr/bigtop/current/flink-client/lib/
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.227:/usr/bigtop/current/flink-client/lib/
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.228:/usr/bigtop/current/flink-client/lib/
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.229:/usr/bigtop/current/flink-client/lib/
+
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.226:/usr/bigtop/current/flink-client/conf/
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.227:/usr/bigtop/current/flink-client/conf/
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.228:/usr/bigtop/current/flink-client/conf/
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.229:/usr/bigtop/current/flink-client/conf/
+
+
+#java.lang.ClassNotFoundException: org.apache.flink.connector.jdbc.table.JdbcRowDataInputFormat
+#Has to reboot flink-cluster
+stop-cluster.sh
+start-cluster.sh
+```
+
+##### Connectors
+
+```sql
+#https://www.jianshu.com/p/266449b9a0f4
+#Create table in mysql
+create database demo_db character set utf8mb4;
+use demo_db;
+create table fludesc (
+    id varchar(32),
+    use_rname varchar(32),
+    age int,
+    gender varchar(32),
+    goods_no varchar(32),
+    goods_price Float,
+    store_id int,
+    shopping_type varchar(32),
+    tel varchar(32),
+    email varchar(32),
+    shopping_date date
+);
+
+#Create in flinksql
+Flink SQL> create table kafka_source (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) with (
+    'connector' = 'kafka',
+    'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
+    'topic' = 'fludesc',
+    'properties.group.id' = 'testGroup',
+    'scan.startup.mode' = 'earliest-offset',
+    'format' = 'csv',
+    'csv.ignore-parse-errors' = 'true'
+);
+
+Flink SQL> CREATE TABLE mysql_sink (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) WITH (
+   'connector' = 'jdbc',
+   'url' = 'jdbc:mysql://192.168.80.225:3306/demo_db',
+   'table-name' = 'fludesc',
+   'username' = 'root',
+   'password' = 'Aa123#@!'
+);
+
+Flink SQL> insert into mysql_sink select * from kafka_source;
+
+#Mock data from kafka:
+kafka-console-producer.sh --broker-list datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --topic fludesc
+>511653962048,Zomfq,53,woman,532120,534.61,313020,cart,15926130785,UyxghCpKMD@huawei.com,2019-08-03
+>751653962048,Qvtil,27,man,532120,655.7,313023,cart,13257423096,cJfbNhRYow@163.com,2019-08-05
+>121653962048,Spdwh,35,woman,480071,97.35,313018,cart,18825789463,LkVYmpcWXC@qq.com,2019-08-05
+>871653962048,Fdhpc,18,man,650012,439.40,313012,cart,15059872140,sfzuPWvNEe@qq.com,2019-08-06
+>841653962048,Iqoyh,51,woman,152121,705.6,313012,buy,13646513897,jISbcYdxZO@126.com,2019-08-04
+>761653962048,Xgzhy,29,woman,480071,329.60,313013,cart,15069315824,NtTDRlAdeZ@qq.com,2019-08-04
+
+#kafka-console-consumer.sh --topic fludesc --bootstrap-server datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --from-beginning
+```
+
+##### Hive Catalog
+
+```sql
+#https://nightlies.apache.org/flink/flink-docs-release-1.15/zh/docs/connectors/table/hive/hive_catalog/
+CREATE CATALOG myhive WITH (
+  'type' = 'hive',
+  'hive-conf-dir' = '/usr/bigtop/current/hive-client/conf'
+);
+show catalogs;
+use catalog myhive;
+show databases;
+
+create table mykafka (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) with (
+    'connector' = 'kafka',
+    'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
+    'topic' = 'fludesc',
+    'scan.startup.mode' = 'earliest-offset',
+    'format' = 'csv',
+    'csv.ignore-parse-errors' = 'true'
+);
+
+DESCRIBE mykafka;
+
+select * from mykafka;
+```
+
 ### High-Availability
 
 Recommend working on Yarn
@@ -1624,7 +1831,7 @@ Configure high availability mode and ZooKeeper quorum in `conf/flink-conf.yaml`:
 high-availability: zookeeper
 high-availability.zookeeper.quorum: datanode03-test.zerofinance.net:2181,datanode01-test.zerofinance.net:2181,datanode02-test.zerofinance.net:2181
 high-availability.zookeeper.path.root: /flink
-high-availability.storageDir: hdfs:///flink/recovery
+high-availability.storageDir: hdfs:///flink/ha/
 ```
 
 ### Histroy Server
