@@ -699,13 +699,13 @@ ntpq -p
 #NTP Client Config on：192.168.80.{226,227,228,229}
 vim /etc/ntp.conf
 
-restrict 192.168.101.83 nomodify notrap noquery
+restrict 192.168.80.225 nomodify notrap noquery
 
 #server 0.centos.pool.ntp.org iburst
 #server 1.centos.pool.ntp.org iburst
 #server 2.centos.pool.ntp.org iburst
 #server 3.centos.pool.ntp.org iburst
-server 192.168.101.83
+server 192.168.80.225
 
 #start
 systemctl start ntpd
@@ -894,11 +894,11 @@ nohup python -m SimpleHTTPServer &
 http://192.168.80.225:8000/
 ```
 
-###### Install Hadoop
+###### Install Hadoop Ecosystem
 
 ```bash
 web portal:
-http://192.168.101.83:8080/
+http://192.168.80.225:8080/
 admin/admin
 
 #input machine informations:
@@ -1461,6 +1461,12 @@ export PATH=$HADOOP_HOME/bin:$SPARK_HOME/bin:$HIVE_HOME/bin:$FLINK_HOME/bin:$SEA
 
 [BigData-Notes/notes/Flink核心概念综述.md at master · heibaiying/BigData-Notes (github.com)](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Flink核心概念综述.md)
 
+### Flink SQL
+
+[史上最全干货！Flink SQL 成神之路（全文 18 万字、138 个案例、42 张图） | antigeneral's blog (yangyichao-mango.github.io)](https://yangyichao-mango.github.io/2021/11/15/wechat-blog/01_大数据/01_数据仓库/01_实时数仓/02_数据内容建设/03_one-engine/01_计算引擎/01_flink/01_flink-sql/20_史上最全干货！FlinkSQL成神之路（全文6万字、110个知识点、160张图）/)
+
+
+
 ### Deployment Modes
 
 See this Overview to understand: [deployment-modes](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/overview/#deployment-modes)
@@ -1695,8 +1701,59 @@ start-cluster.sh
 
 ##### Connectors
 
+Flink doesn't include  any connector depended libraries, you need to download them manually.
+
+```bash
+#kafka Connector:
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/1.15.3/flink-sql-connector-kafka-1.15.3.jar
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-connector-jdbc/1.15.3/flink-connector-jdbc-1.15.3.jar
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.226:/usr/bigtop/current/flink-client/lib/
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.227:/usr/bigtop/current/flink-client/lib/
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.228:/usr/bigtop/current/flink-client/lib/
+scp flink-sql-connector-kafka-1.15.3.jar flink-connector-jdbc-1.15.3.jar mysql-connector-j-8.0.31.jar root@192.168.80.229:/usr/bigtop/current/flink-client/lib/
+
+#Hive Connector:
+wget https://repo1.maven.org/maven2/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_2.12/1.15.3/flink-connector-hive_2.12-1.15.3.jar
+wget https://repo1.maven.org/maven2/org/apache/hive/hive-exec/2.3.4/hive-exec-2.3.4.jar
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.226:/usr/bigtop/current/flink-client/lib/
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.227:/usr/bigtop/current/flink-client/lib/
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.228:/usr/bigtop/current/flink-client/lib/
+scp antlr-runtime-3.5.2.jar flink-connector-hive_2.12-1.15.3.jar hive-exec-2.3.4.jar root@192.168.80.229:/usr/bigtop/current/flink-client/lib/
+
+#For hdfs Connector:
+wget https://repo1.maven.org/maven2/org/apache/flink/flink-table-planner_2.12/1.15.3/flink-table-planner_2.12-1.15.3.jar
+scp flink-table-planner_2.12-1.15.3.jar root@192.168.80.226:/usr/bigtop/current/flink-client/lib/
+scp flink-table-planner_2.12-1.15.3.jar root@192.168.80.227:/usr/bigtop/current/flink-client/lib/
+scp flink-table-planner_2.12-1.15.3.jar root@192.168.80.228:/usr/bigtop/current/flink-client/lib/
+scp flink-table-planner_2.12-1.15.3.jar root@192.168.80.229:/usr/bigtop/current/flink-client/lib/
+
+#delete flink-table-planner-loader-1.15.3.jar from each machines:
+rm flink-table-planner-loader-1.15.3.jar
+
+
+#Need to reboot flink cluster or flink on yarn.
+#Kill an existing yarn-session
+yarn application -list
+echo "stop" | yarn-session.sh -id <application_id>
+yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+
+#Copying them to all libs of machine:
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.226:/usr/bigtop/current/flink-client/conf/
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.227:/usr/bigtop/current/flink-client/conf/
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.228:/usr/bigtop/current/flink-client/conf/
+scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.229:/usr/bigtop/current/flink-client/conf/
+```
+
+###### kafka to mysql  Demo
+
+This demo illustrate how to sink data from Kafka to MySQL:
+
 ```sql
 #https://www.jianshu.com/p/266449b9a0f4
+
+mysql -uroot -p
 #Create table in mysql
 create database demo_db character set utf8mb4;
 use demo_db;
@@ -1713,6 +1770,12 @@ create table fludesc (
     email varchar(32),
     shopping_date date
 );
+
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh
+> SET sql-client.execution.result-mode = tableau;
 
 #Create in flinksql
 Flink SQL> create table kafka_source (
@@ -1770,6 +1833,116 @@ kafka-console-producer.sh --broker-list datanode01-test.zerofinance.net:9092,dat
 
 #kafka-console-consumer.sh --topic fludesc --bootstrap-server datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --from-beginning
 ```
+
+###### kafka to hdfs Demo
+
+```sql
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh
+> SET sql-client.execution.result-mode = tableau;
+
+#Create in flinksql
+Flink SQL> create table kafka_source (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) with (
+    'connector' = 'kafka',
+    'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
+    'topic' = 'fludesc',
+    'properties.group.id' = 'testGroup',
+    'scan.startup.mode' = 'earliest-offset',
+    'format' = 'csv',
+    'csv.ignore-parse-errors' = 'true'
+);
+
+CREATE TABLE hadoop_sink (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) PARTITIONED BY (id) WITH (
+  'connector' = 'filesystem',
+  'path' = 'hdfs:///works/test/hadoop_sink',
+  'format' = 'csv',
+  'partition.default-name' = '9999',
+  'sink.shuffle-by-partition.enable' = 'false'
+);
+
+insert into hadoop_sink select * from kafka_source;
+```
+
+###### Mysql to hdfs Demo
+
+```sql
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh
+> SET sql-client.execution.result-mode = tableau;
+
+#Create in flinksql
+Flink SQL> CREATE TABLE mysql_sink (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) WITH (
+   'connector' = 'jdbc',
+   'url' = 'jdbc:mysql://192.168.80.225:3306/demo_db',
+   'table-name' = 'fludesc',
+   'username' = 'root',
+   'password' = 'Aa123#@!'
+);
+
+CREATE TABLE hadoop_sink (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) PARTITIONED BY (id) WITH (
+  'connector' = 'filesystem',
+  'path' = 'hdfs:///works/test/hadoop_sink',
+  'format' = 'csv',
+  'partition.default-name' = '9999',
+  'sink.shuffle-by-partition.enable' = 'false'
+);
+
+insert into hadoop_sink select * from mysql_sink;
+```
+
+
 
 ##### Hive Catalog
 
