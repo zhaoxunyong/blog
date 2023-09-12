@@ -1899,7 +1899,7 @@ insert into hadoop_sink select * from kafka_source;
 > SET sql-client.execution.result-mode = tableau;
 
 #Create in flinksql
-Flink SQL> CREATE TABLE mysql_sink (
+Flink SQL> CREATE TABLE mysql_source (
     id STRING,
     use_rname STRING,
     age integer,
@@ -1939,7 +1939,7 @@ CREATE TABLE hadoop_sink (
   'sink.shuffle-by-partition.enable' = 'false'
 );
 
-insert into hadoop_sink select * from mysql_sink;
+insert into hadoop_sink select * from mysql_source;
 ```
 
 
