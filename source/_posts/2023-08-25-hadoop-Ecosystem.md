@@ -1942,6 +1942,108 @@ CREATE TABLE hadoop_sink (
 insert into hadoop_sink select * from mysql_source;
 ```
 
+##### User-defined Functions
+
+[User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
+
+User-defined functions (UDFs) are extension points to call frequently used logic or custom logic that cannot be expressed otherwise in queries.
+
+User-defined functions can be implemented in a JVM language (such as Java or Scala) or Python. An implementer can use arbitrary third party libraries within a UDF. This page will focus on JVM-based languages, please refer to the PyFlink documentation for details on writing [general](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/python_udfs/) and [vectorized](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/vectorized_python_udfs/) UDFs in Python.
+
+```
+#https://yangyichao-mango.github.io/2021/11/15/wechat-blog/01_%E5%A4%A7%E6%95%B0%E6%8D%AE/01_%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/01_%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93/02_%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9%E5%BB%BA%E8%AE%BE/03_one-engine/01_%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/01_flink/01_flink-sql/20_%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8%E5%B9%B2%E8%B4%A7%EF%BC%81FlinkSQL%E6%88%90%E7%A5%9E%E4%B9%8B%E8%B7%AF%EF%BC%88%E5%85%A8%E6%96%876%E4%B8%87%E5%AD%97%E3%80%81110%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E3%80%81160%E5%BC%A0%E5%9B%BE%EF%BC%89/
+#https://www.cnblogs.com/wxm2270/p/17275442.html
+#https://juejin.cn/post/7103196993232568328
+#https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/
+
+#第一步，自定义数据类型
+public class User {
+
+    // 1. 基础类型，Flink 可以通过反射类型信息自动把数据类型获取到
+    // 关于 SQL 类型和 Java 类型之间的映射见：https://nightlies.apache.org/flink/flink-docs-release-1.13/docs/dev/table/types/#data-type-extraction
+    public int age;
+    public String name;
+
+    // 2. 复杂类型，用户可以通过 @DataTypeHint("DECIMAL(10, 2)") 注解标注此字段的数据类型
+    public @DataTypeHint("DECIMAL(10, 2)") BigDecimal totalBalance;
+}
+
+#第二步，在 UDF 中使用此数据类型
+public class UserScalarFunction extends ScalarFunction {
+
+    // 1. 自定义数据类型作为输出参数
+    public User eval(long i) {
+        if (i > 0 && i <= 5) {
+            User u = new User();
+            u.age = (int) i;
+            u.name = "name1";
+            u.totalBalance = new BigDecimal(1.1d);
+            return u;
+        } else {
+            User u = new User();
+            u.age = (int) i;
+            u.name = "name2";
+            u.totalBalance = new BigDecimal(2.2d);
+            return u;
+        }
+    }
+    
+    // 2. 自定义数据类型作为输入参数
+    public String eval(User i) {
+        if (i.age > 0 && i.age <= 5) {
+            User u = new User();
+            u.age = 1;
+            u.name = "name1";
+            u.totalBalance = new BigDecimal(1.1d);
+            return u.name;
+        } else {
+            User u = new User();
+            u.age = 2;
+            u.name = "name2";
+            u.totalBalance = new BigDecimal(2.2d);
+            return u.name;
+        }
+    }
+}
+#Upload the packaged jar to /usr/bigtop/current/flink-client/lib/ of all machines and restart yarn-session instance.
+
+#第三步，在 Flink SQL 中使用
+-- 1. 创建 UDF
+CREATE FUNCTION user_scalar_func AS 'flink.examples.sql._12_data_type._02_user_defined.UserScalarFunction';
+
+-- 2. 创建数据源表
+CREATE TABLE source_table (
+    user_id BIGINT NOT NULL COMMENT '用户 id'
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '1',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '10'
+);
+
+-- 3. 创建数据汇表
+CREATE TABLE sink_table (
+    result_row_1 ROW<age INT, name STRING, totalBalance DECIMAL(10, 2)>,
+    result_row_2 STRING
+) WITH (
+  'connector' = 'print'
+);
+
+-- 4. SQL 查询语句
+INSERT INTO sink_table
+select
+    -- 4.a. 用户自定义类型作为输出
+    user_scalar_func(user_id) as result_row_1,
+    -- 4.b. 用户自定义类型作为输出及输入
+    user_scalar_func(user_scalar_func(user_id)) as result_row_2
+from source_table;
+
+-- 5. 查询结果
++I[+I[9, name2, 2.20], name2]
++I[+I[1, name1, 1.10], name1]
++I[+I[5, name1, 1.10], name1]
+```
+
 
 
 ##### Hive Catalog
