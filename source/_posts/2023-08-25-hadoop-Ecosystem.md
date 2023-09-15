@@ -2133,6 +2133,10 @@ admin/123456
 
 [基于 Flink SQL CDC的实时数据同步方案 (dreamwu.com)](http://www.dreamwu.com/post-1594.html)
 
+[docs/sql_demo/demo_6.md · 朱慧培/flink-streaming-platform-web - Gitee.com](https://gitee.com/zhuhuipei/flink-streaming-platform-web/blob/master/docs/sql_demo/demo_6.md)
+
+[Overview — CDC Connectors for Apache Flink® documentation (ververica.github.io)](https://ververica.github.io/flink-cdc-connectors/release-2.4/content/about.html)
+
 ```bash
 > sudo su - hadoop
 
