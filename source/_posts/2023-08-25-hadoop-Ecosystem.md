@@ -912,7 +912,7 @@ datanode03-test.zerofinance.net
 
 #Notice:
 Cluster Name : dwh
-Chose the hdfs account as "hadoop" not "hdfs"
+#Chose the hdfs account as "hadoop" not "hdfs"
 
 Repositories:
 http://192.168.80.225:8000/
@@ -1774,7 +1774,7 @@ create table fludesc (
 > sudo su - hadoop
 > yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
 
-> sql-client.sh
+> sql-client.sh embedded -s yarn-session
 > SET sql-client.execution.result-mode = tableau;
 
 #Create in flinksql
@@ -1840,7 +1840,7 @@ kafka-console-producer.sh --broker-list datanode01-test.zerofinance.net:9092,dat
 > sudo su - hadoop
 > yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
 
-> sql-client.sh
+> sql-client.sh embedded -s yarn-session
 > SET sql-client.execution.result-mode = tableau;
 
 #Create in flinksql
@@ -1895,7 +1895,7 @@ insert into hadoop_sink select * from kafka_source;
 > sudo su - hadoop
 > yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
 
-> sql-client.sh
+> sql-client.sh embedded -s yarn-session
 > SET sql-client.execution.result-mode = tableau;
 
 #Create in flinksql
@@ -1942,7 +1942,7 @@ CREATE TABLE hadoop_sink (
 insert into hadoop_sink select * from mysql_source;
 ```
 
-##### User-defined Functions
+### User-defined Functions
 
 [User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
 
@@ -2046,7 +2046,7 @@ from source_table;
 
 
 
-##### Hive Catalog
+### Hive Catalog
 
 ```sql
 #https://nightlies.apache.org/flink/flink-docs-release-1.15/zh/docs/connectors/table/hive/hive_catalog/
@@ -2083,6 +2083,175 @@ DESCRIBE mykafka;
 
 select * from mykafka;
 ```
+
+### Flink Streaming Platform Web
+
+[flink-streaming-platform-web](https://github.com/zhp8341/flink-streaming-platform-web)
+
+```bash
+#https://github.com/zhp8341/flink-streaming-platform-web/blob/master/docs/deploy.md
+#https://www.cnblogs.com/data-magnifier/p/16943527.html
+sudo su - hadoop
+
+mkdir /usr/bigtop/3.2.0/usr/lib/
+cd /usr/bigtop/3.2.0/usr/lib/
+wget https://github.com/zhp8341/flink-streaming-platform-web/releases/download/tagV20230610(flink1.16.2)/flink-streaming-platform-web.tar.gz
+tar zxf flink-streaming-platform-web.tar.gz
+cd /usr/bigtop/current/
+ln -s /usr/bigtop/3.2.0/usr/lib/flink-streaming-platform-web flink-streaming-platform-web
+
+cd /usr/bigtop/current/flink-streaming-platform-web
+wget https://github.com/zhp8341/flink-streaming-platform-web/blob/master/docs/sql/flink_web.sql
+
+mysql -uroot -h127.0.0.1 -p
+> source /usr/bigtop/current/flink-streaming-platform-web/flink_web.sql;
+> exit;
+
+vim conf/application.properties
+####jdbc信息
+server.port=9084
+spring.datasource.url=jdbc:mysql://192.168.80.225:3306/flink_web?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+spring.datasource.username=root
+spring.datasource.password=xxxxxx
+
+cd bin
+./deploy.sh start
+
+#http://192.168.80.226:9084/
+admin/123456
+```
+
+#### Settings
+
+![image-20230914181613864](../images/2023-08-25-hadoop-Ecosystem/image-20230914181613864.png)
+
+#### Job
+
+![image-20230914181838644](../images/2023-08-25-hadoop-Ecosystem/image-20230914181838644.png)
+
+### Flink SQL CDC
+
+[基于 Flink SQL CDC的实时数据同步方案 (dreamwu.com)](http://www.dreamwu.com/post-1594.html)
+
+```bash
+> sudo su - hadoop
+
+> mysql -uroot -h127.0.0.1 -p
+-- MySQL
+CREATE DATABASE mydb;
+USE mydb;
+CREATE TABLE products (
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(512)
+);
+ALTER TABLE products AUTO_INCREMENT = 101;
+
+INSERT INTO products
+VALUES (default,"scooter","Small 2-wheel scooter"),
+       (default,"car battery","12V car battery"),
+       (default,"12-pack drill bits","12-pack of drill bits with sizes ranging from #40 to #3"),
+       (default,"hammer","12oz carpenter's hammer"),
+       (default,"hammer","14oz carpenter's hammer"),
+       (default,"hammer","16oz carpenter's hammer"),
+       (default,"rocks","box of assorted rocks"),
+       (default,"jacket","water resistent black wind breaker"),
+       (default,"spare tire","24 inch spare tire");
+
+CREATE TABLE orders (
+  order_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_date DATETIME NOT NULL,
+  customer_name VARCHAR(255) NOT NULL,
+  price DECIMAL(10, 5) NOT NULL,
+  product_id INTEGER NOT NULL,
+  order_status BOOLEAN NOT NULL -- Whether order has been placed
+) AUTO_INCREMENT = 10001;
+
+INSERT INTO orders
+VALUES (default, '2020-07-30 10:08:22', 'Jark', 50.50, 102, false),
+       (default, '2020-07-30 10:11:09', 'Sally', 15.00, 105, false),
+       (default, '2020-07-30 12:00:30', 'Edward', 25.25, 106, false);
+       
+       
+
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+Flink SQL> SET sql-client.execution.result-mode = tableau;
+
+-- checkpoint every 3000 milliseconds                       
+Flink SQL> SET 'execution.checkpointing.interval' = '3s';  
+
+#Create in flinksql
+-- Flink SQL
+#Mysql source
+Flink SQL> CREATE TABLE products (
+    id INT,
+    name STRING,
+    description STRING,
+    PRIMARY KEY (id) NOT ENFORCED
+  ) WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = '192.168.80.225',
+    'port' = '3306',
+    'username' = 'root',
+    'password' = 'Aa123#@!',
+    'database-name' = 'mydb',
+    'table-name' = 'products'
+  );
+
+Flink SQL> CREATE TABLE orders (
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ ) WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = '192.168.80.225',
+   'port' = '3306',
+   'username' = 'root',
+   'password' = 'Aa123#@!',
+   'database-name' = 'mydb',
+   'table-name' = 'orders'
+ );
+
+#Kafka sink
+CREATE TABLE enriched_orders(
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   PRIMARY KEY (order_id) NOT ENFORCED
+) WITH (
+ 'connector' = 'upsert-kafka',
+ 'topic' = 'fludesc',
+ 'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
+ 'key.format' = 'csv',
+ 'value.format' = 'csv'
+);
+
+#Sink
+INSERT INTO enriched_orders
+ SELECT o.*, p.name, p.description
+ FROM orders AS o
+ LEFT JOIN products AS p ON o.product_id = p.id;
+
+#Monitoring the changed data streams
+kafka-console-consumer.sh --topic fludesc --bootstrap-server datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --from-beginning
+```
+
+The connector named kafka doesn't support flink-sql-cdc, using 'upset-kafka' instead.  
+
+The error as blow:
+
+![image-20230915163923171](../images/2023-08-25-hadoop-Ecosystem/image-20230915163923171.png)
 
 ### High-Availability
 
