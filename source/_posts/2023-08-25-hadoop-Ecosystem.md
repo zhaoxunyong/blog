@@ -956,6 +956,11 @@ Ambari--->Zeppelin--->Custom zeppelin-site:
 zeppelin.jobmanager.enable: true
 #reboot zeppelin.
 
+#Get version error by command: flink -v
+#Version: <unknown>, Commit ID: DeadD0d0
+#Downloading flink-1.15.3-bin-scala_2.12.tgz from official web site, extract flink-dist-1.15.3.jar from lib, then:
+cp -a flink-dist-1.15.3.jar /usr/bigtop/current/flink-client/lib/flink-dist_2.12-1.15.3.jar
+
 #Troubleshooting ambari metric
 #https://cwiki.apache.org/confluence/display/AMBARI/Cleaning+up+Ambari+Metrics+System+Data
 #https://www.jianshu.com/p/3fa7a23818a1
