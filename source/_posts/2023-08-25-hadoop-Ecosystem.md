@@ -2111,11 +2111,11 @@ admin/123456
 
 #### Settings
 
-![image-20230914181613864](../images/2023-08-25-hadoop-Ecosystem/image-20230914181613864.png)
+![image-20230914181613864](/images/2023-08-25-hadoop-Ecosystem/image-20230914181613864.png)
 
 #### Job
 
-![image-20230914181838644](../images/2023-08-25-hadoop-Ecosystem/image-20230914181838644.png)
+![image-20230914181838644](/images/2023-08-25-hadoop-Ecosystem/image-20230914181838644.png)
 
 ### Flink SQL CDC
 
@@ -2243,7 +2243,7 @@ The connector named kafka doesn't support flink-sql-cdc, using 'upset-kafka' ins
 
 The error as blow:
 
-![image-20230915163923171](../images/2023-08-25-hadoop-Ecosystem/image-20230915163923171.png)
+![image-20230915163923171](/images/2023-08-25-hadoop-Ecosystem/image-20230915163923171.png)
 
 ### Window Aggregation
 
