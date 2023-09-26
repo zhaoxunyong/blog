@@ -1056,7 +1056,7 @@ Web Portal:
 http://namenode01-test.zerofinance.net:12345/dolphinscheduler/ui
 ```
 
-## Summary
+Summary
 
 ```
 Components:                  
@@ -1447,21 +1447,6 @@ select * from uniontype_1 where info['english'][2]>30;
 +-----------------+-------------------------+
 ```
 
-## Seatunnel
-
-```bash
-cat /etc/profile.d/hadoop.sh    
-export HADOOP_HOME=/usr/bigtop/current/hadoop-client
-export HADOOP_CONF_DIR=/usr/bigtop/current/hadoop-client/etc/hadoop/
-export SPARK_HOME=/usr/bigtop/current/spark-client
-export PYTHON_HOME=/usr
-export HIVE_HOME=/usr/bigtop/current/hive-client
-export FLINK_HOME=/usr/bigtop/current/flink-client
-export SEATUNNEL_HOME=/works/app/apache-seatunnel-2.3.3
-export ZOOKEEPER_HOME=/usr/bigtop/current/zookeeper-client
-export PATH=$HADOOP_HOME/bin:$SPARK_HOME/bin:$HIVE_HOME/bin:$FLINK_HOME/bin:$SEATUNNEL_HOME/bin:$ZOOKEEPER_HOME/bin:$PATH
-```
-
 ## Flink
 
 [BigData-Notes/notes/Flink核心概念综述.md at master · heibaiying/BigData-Notes (github.com)](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Flink核心概念综述.md)
@@ -1624,8 +1609,6 @@ start-cluster.sh
 
 sql-client.sh embedded
 ```
-
-
 
 ##### On yarn Session
 
@@ -1955,7 +1938,7 @@ User-defined functions (UDFs) are extension points to call frequently used logic
 
 User-defined functions can be implemented in a JVM language (such as Java or Scala) or Python. An implementer can use arbitrary third party libraries within a UDF. This page will focus on JVM-based languages, please refer to the PyFlink documentation for details on writing [general](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/python_udfs/) and [vectorized](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/vectorized_python_udfs/) UDFs in Python.
 
-```
+```java
 #https://yangyichao-mango.github.io/2021/11/15/wechat-blog/01_%E5%A4%A7%E6%95%B0%E6%8D%AE/01_%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/01_%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93/02_%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9%E5%BB%BA%E8%AE%BE/03_one-engine/01_%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/01_flink/01_flink-sql/20_%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8%E5%B9%B2%E8%B4%A7%EF%BC%81FlinkSQL%E6%88%90%E7%A5%9E%E4%B9%8B%E8%B7%AF%EF%BC%88%E5%85%A8%E6%96%876%E4%B8%87%E5%AD%97%E3%80%81110%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E3%80%81160%E5%BC%A0%E5%9B%BE%EF%BC%89/
 #https://www.cnblogs.com/wxm2270/p/17275442.html
 #https://juejin.cn/post/7103196993232568328
@@ -2262,6 +2245,363 @@ The error as blow:
 
 ![image-20230915163923171](../images/2023-08-25-hadoop-Ecosystem/image-20230915163923171.png)
 
+### Window Aggregation
+
+#### TUMBLE
+
+##### Windowing TVF
+
+[Windowing TVF | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/sql/queries/window-tvf/)
+
+```sql
+TUMBLE(TABLE data, DESCRIPTOR(timecol), size [, offset ])
+```
+
+- `data`: is a table parameter that can be any relation with a time attribute column.
+- `timecol`: is a column descriptor indicating which time attributes column of data should be mapped to tumbling windows.
+- `size`: is a duration specifying the width of the tumbling windows.
+- `offset`: is an optional parameter to specify the offset which window start would be shifted by.
+
+```sql
+#简单且常见的分维度分钟级别同时在线用户数、总销售额
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+> SET sql-client.execution.result-mode = tableau;
+
+-- 数据源表
+CREATE TABLE source_table (
+    -- 维度数据
+    dim STRING,
+    -- 用户 id
+    user_id BIGINT,
+    -- 用户
+    price BIGINT,
+    -- 事件时间戳
+    row_time AS cast(CURRENT_TIMESTAMP as timestamp(3)),
+    -- watermark 设置
+    WATERMARK FOR row_time AS row_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '10',
+  'fields.dim.length' = '1',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '100000',
+  'fields.price.min' = '1',
+  'fields.price.max' = '100000'
+);
+
+-- 数据汇表
+CREATE TABLE sink_table (
+    dim STRING,
+    pv BIGINT,
+    sum_price BIGINT,
+    max_price BIGINT,
+    min_price BIGINT,
+    uv BIGINT,
+    window_start bigint
+) WITH (
+  'connector' = 'print'
+);
+
+-- 数据处理逻辑
+insert into sink_table
+SELECT 
+    dim,
+    UNIX_TIMESTAMP(CAST(window_start AS STRING)) * 1000 as window_start,
+    count(*) as pv,
+    sum(price) as sum_price,
+    max(price) as max_price,
+    min(price) as min_price,
+    count(distinct user_id) as uv
+FROM TABLE(TUMBLE(
+        TABLE source_table
+        , DESCRIPTOR(row_time)
+        , INTERVAL '60' SECOND))
+GROUP BY window_start, 
+      window_end,
+      dim;
+```
+
+##### Group Window Aggregation
+
+**Deprecated**: Group Window Aggregation, supported both batch and streaming.
+
+```sql
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+> SET sql-client.execution.result-mode = tableau;
+
+
+-- 数据源表
+CREATE TABLE source_table (
+    -- 维度数据
+    dim STRING,
+    -- 用户 id
+    user_id BIGINT,
+    -- 用户
+    price BIGINT,
+    -- 事件时间戳
+    row_time AS cast(CURRENT_TIMESTAMP as timestamp(3)),
+    -- watermark 设置
+    WATERMARK FOR row_time AS row_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '10',
+  'fields.dim.length' = '1',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '100000',
+  'fields.price.min' = '1',
+  'fields.price.max' = '100000'
+);
+
+-- 数据汇表
+CREATE TABLE sink_table (
+    dim STRING,
+    pv BIGINT,
+    sum_price BIGINT,
+    max_price BIGINT,
+    min_price BIGINT,
+    uv BIGINT,
+    window_start bigint
+) WITH (
+  'connector' = 'print'
+);
+
+-- 数据处理逻辑
+insert into sink_table
+select 
+    dim,
+    count(*) as pv,
+    sum(price) as sum_price,
+    max(price) as max_price,
+    min(price) as min_price,
+    -- 计算 uv 数
+    count(distinct user_id) as uv,
+    UNIX_TIMESTAMP(CAST(tumble_start(row_time, interval '1' minute) AS STRING)) * 1000  as window_start
+from source_table
+group by
+    dim,
+    tumble(row_time, interval '1' minute);
+```
+
+#### HOP
+
+##### Windowing TVF
+
+[Windowing TVF | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/sql/queries/window-tvf/#hop)
+
+```sql
+HOP(TABLE data, DESCRIPTOR(timecol), slide, size [, offset ])
+```
+
+- `data`: is a table parameter that can be any relation with an time attribute column.
+- `timecol`: is a column descriptor indicating which time attributes column of data should be mapped to hopping windows.
+- `slide`: is a duration specifying the duration between the start of sequential hopping windows
+- `size`: is a duration specifying the width of the hopping windows.
+- `offset`: is an optional parameter to specify the offset which window start would be shifted by.
+
+```sql
+#简单且常见的分维度分钟级别同时在线用户数，1 分钟输出一次，计算最近 5 分钟的数据
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+> SET sql-client.execution.result-mode = tableau;
+
+
+-- 数据源表
+CREATE TABLE source_table (
+    -- 维度数据
+    dim STRING,
+    -- 用户 id
+    user_id BIGINT,
+    -- 用户
+    price BIGINT,
+    -- 事件时间戳
+    row_time AS cast(CURRENT_TIMESTAMP as timestamp(3)),
+    -- watermark 设置
+    WATERMARK FOR row_time AS row_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '10',
+  'fields.dim.length' = '1',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '100000',
+  'fields.price.min' = '1',
+  'fields.price.max' = '100000'
+);
+
+-- 数据汇表
+CREATE TABLE sink_table (
+    dim STRING,
+    uv BIGINT,
+    window_start bigint
+) WITH (
+  'connector' = 'print'
+);
+
+-- 数据处理逻辑
+insert into sink_table
+SELECT dim,
+    UNIX_TIMESTAMP(CAST(hop_start(row_time, interval '1' minute, interval '5' minute) AS STRING)) * 1000 as window_start, 
+    count(distinct user_id) as uv
+FROM source_table
+GROUP BY dim
+    , hop(row_time, interval '1' minute, interval '5' minute);
+```
+
+##### Group Window Aggregation
+
+Deprecated.
+
+#### Session
+
+##### Windowing TVF
+
+TVF doesn't support Session mode, using group window aggregation instread.
+
+##### Group Window Aggregation
+
+| Group Window Function         | Description                                                  |
+| :---------------------------- | :----------------------------------------------------------- |
+| SESSION(time_attr, interval)` | Defines a session time window. Session time windows do not have a fixed duration but their bounds are defined by a time `interval` of inactivity, i.e., a session window is closed if no event appears for a defined gap period. For example a session window with a 30 minute gap starts when a row is observed after 30 minutes inactivity (otherwise the row would be added to an existing window) and is closed if no row is added within 30 minutes. Session windows can work on event-time (stream + batch) or processing-time (stream). |
+
+```sql
+#Session 时间窗口和滚动、滑动窗口不一样，其没有固定的持续时间，如果在定义的间隔期（Session Gap）内没有新的数据出现，则 Session 就会窗口关闭
+#计算每个用户在活跃期间（一个 Session）总共购买的商品数量，如果用户 5 分钟没有活动则视为 Session 断开
+#Group Window Aggregation 
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+> SET sql-client.execution.result-mode = tableau;
+
+
+-- 数据源表，用户购买行为记录表
+CREATE TABLE source_table (
+    -- 维度数据
+    dim STRING,
+    -- 用户 id
+    user_id BIGINT,
+    -- 用户
+    price BIGINT,
+    -- 事件时间戳
+    row_time AS cast(CURRENT_TIMESTAMP as timestamp(3)),
+    -- watermark 设置
+    WATERMARK FOR row_time AS row_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '10',
+  'fields.dim.length' = '1',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '100000',
+  'fields.price.min' = '1',
+  'fields.price.max' = '100000'
+);
+
+-- 数据汇表
+CREATE TABLE sink_table (
+    dim STRING,
+    pv BIGINT, -- 购买商品数量
+    window_start bigint
+) WITH (
+  'connector' = 'print'
+);
+
+-- 数据处理逻辑
+insert into sink_table
+SELECT 
+    dim,
+    UNIX_TIMESTAMP(CAST(session_start(row_time, interval '5' minute) AS STRING)) * 1000 as window_start, 
+    count(1) as pv
+FROM source_table
+GROUP BY dim
+      , session(row_time, interval '5' minute);
+      
+#上述 SQL 任务是在整个 Session 窗口结束之后才会把数据输出。Session 窗口即支持 处理时间 也支持 事件时间。但是处理时间只支持在 Streaming 任务中运行，Batch 任务不支持。
+```
+
+#### CUMULATE
+
+##### Windowing TVF
+
+```sql
+CUMULATE(TABLE data, DESCRIPTOR(timecol), step, size)
+```
+
+- `data`: is a table parameter that can be any relation with an time attribute column.
+- `timecol`: is a column descriptor indicating which time attributes column of data should be mapped to cumulating windows.
+- `step`: is a duration specifying the increased window size between the end of sequential cumulating windows.
+- `size`: is a duration specifying the max width of the cumulating windows. `size` must be an integral multiple of `step`.
+- `offset`: is an optional parameter to specify the offset which window start would be shifted by.
+
+```sql
+#每天的截止当前分钟的累计 money（sum(money)），去重 id 数（count(distinct id)）。每天代表渐进式窗口大小为 1 天，分钟代表渐进式窗口移动步长为分钟级别
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+> SET sql-client.execution.result-mode = tableau;
+
+
+-- 数据源表
+CREATE TABLE source_table (
+    -- 用户 id
+    id BIGINT,
+    -- 用户
+    money BIGINT,
+    -- 事件时间戳
+    row_time AS cast(CURRENT_TIMESTAMP as timestamp(3)),
+    -- watermark 设置
+    WATERMARK FOR row_time AS row_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '10',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '100000',
+  'fields.price.min' = '1',
+  'fields.price.max' = '100000'
+);
+
+-- 数据汇表
+CREATE TABLE sink_table (
+    window_end bigint,
+    window_start bigint,
+    sum_money BIGINT,
+    count_distinct_id bigint
+) WITH (
+  'connector' = 'print'
+);
+
+-- 数据处理逻辑
+insert into sink_table
+SELECT 
+    UNIX_TIMESTAMP(CAST(window_end AS STRING)) * 1000 as window_end, 
+    window_start, 
+    sum(money) as sum_money,
+    count(distinct id) as count_distinct_id
+FROM TABLE(CUMULATE(
+       TABLE source_table
+       , DESCRIPTOR(row_time)
+       , INTERVAL '60' SECOND
+       , INTERVAL '1' DAY))
+GROUP BY
+    window_start, 
+    window_end;
+    
+#You will get wrong with: 
+[ERROR] Could not execute SQL statement. Reason:
+org.apache.flink.table.api.ValidationException: Unsupported options found for 'datagen'.
+```
+
+##### Group Window Aggregation
+
+Deprecated.
+
 ### High-Availability
 
 Recommend working on Yarn
@@ -2294,4 +2634,19 @@ high-availability.storageDir: hdfs:///flink/ha/
 Flink has a history server that can be used to query the statistics of completed jobs after the corresponding Flink cluster has been shut down.
 
 By default, this server binds to `localhost` and listens at port `8082`.
+
+## Seatunnel
+
+```bash
+cat /etc/profile.d/hadoop.sh    
+export HADOOP_HOME=/usr/bigtop/current/hadoop-client
+export HADOOP_CONF_DIR=/usr/bigtop/current/hadoop-client/etc/hadoop/
+export SPARK_HOME=/usr/bigtop/current/spark-client
+export PYTHON_HOME=/usr
+export HIVE_HOME=/usr/bigtop/current/hive-client
+export FLINK_HOME=/usr/bigtop/current/flink-client
+export SEATUNNEL_HOME=/works/app/apache-seatunnel-2.3.3
+export ZOOKEEPER_HOME=/usr/bigtop/current/zookeeper-client
+export PATH=$HADOOP_HOME/bin:$SPARK_HOME/bin:$HIVE_HOME/bin:$FLINK_HOME/bin:$SEATUNNEL_HOME/bin:$ZOOKEEPER_HOME/bin:$PATH
+```
 
