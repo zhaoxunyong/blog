@@ -1078,6 +1078,26 @@ Kafka UI:
   https://kafka-ui-test.zerofinance.net/     admin/admin
 ```
 
+***Notice: dolphinscheduler 3.1.2 seems having a bug by working with Flink-Stream, the error as follows. I have no idea to resolve it:***
+
+```
+[ERROR] 2023-09-22 09:47:30.455 +0000 - Task execute failed, due to meet an exception
+java.lang.RuntimeException: The jar for the task is required.
+	at org.apache.dolphinscheduler.plugin.task.api.AbstractYarnTask.getResourceNameOfMainJar(AbstractYarnTask.java:133)
+	at org.apache.dolphinscheduler.plugin.task.flink.FlinkStreamTask.setMainJarName(FlinkStreamTask.java:86)
+	at org.apache.dolphinscheduler.plugin.task.flink.FlinkStreamTask.init(FlinkStreamTask.java:61)
+	at org.apache.dolphinscheduler.server.worker.runner.WorkerTaskExecuteRunnable.beforeExecute(WorkerTaskExecuteRunnable.java:231)
+	at org.apache.dolphinscheduler.server.worker.runner.WorkerTaskExecuteRunnable.run(WorkerTaskExecuteRunnable.java:170)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at com.google.common.util.concurrent.TrustedListenableFutureTask$TrustedFutureInterruptibleTask.runInterruptibly(TrustedListenableFutureTask.java:131)
+	at com.google.common.util.concurrent.InterruptibleTask.run(InterruptibleTask.java:74)
+	at com.google.common.util.concurrent.TrustedListenableFutureTask.run(TrustedListenableFutureTask.java:82)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+[ERROR] 2023-09-22 09:47:30.456 +0000 - can not get appId, taskInstanceId:573
+```
+
 
 
 ## Hadoop
@@ -2466,9 +2486,9 @@ TVF doesn't support Session mode, using group window aggregation instread.
 
 ##### Group Window Aggregation
 
-| Group Window Function         | Description                                                  |
-| :---------------------------- | :----------------------------------------------------------- |
-| SESSION(time_attr, interval)` | Defines a session time window. Session time windows do not have a fixed duration but their bounds are defined by a time `interval` of inactivity, i.e., a session window is closed if no event appears for a defined gap period. For example a session window with a 30 minute gap starts when a row is observed after 30 minutes inactivity (otherwise the row would be added to an existing window) and is closed if no row is added within 30 minutes. Session windows can work on event-time (stream + batch) or processing-time (stream). |
+| Group Window Function        | Description                                                  |
+| :--------------------------- | :----------------------------------------------------------- |
+| SESSION(time_attr, interval) | Defines a session time window. Session time windows do not have a fixed duration but their bounds are defined by a time `interval` of inactivity, i.e., a session window is closed if no event appears for a defined gap period. For example a session window with a 30 minute gap starts when a row is observed after 30 minutes inactivity (otherwise the row would be added to an existing window) and is closed if no row is added within 30 minutes. Session windows can work on event-time (stream + batch) or processing-time (stream). |
 
 ```sql
 #Session 时间窗口和滚动、滑动窗口不一样，其没有固定的持续时间，如果在定义的间隔期（Session Gap）内没有新的数据出现，则 Session 就会窗口关闭
