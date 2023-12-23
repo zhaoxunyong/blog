@@ -2056,6 +2056,13 @@ INSERT INTO enriched_orders
  LEFT JOIN products AS p ON o.product_id = p.id;
 ```
 
+ONE TO MANY
+
+UDF:
+
+#https://www.decodable.co/blog/array-aggregation-with-flink-sql-data-streaming
+#https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAggr.java
+
 ArrayAggr:
 
 ```java
@@ -2135,11 +2142,6 @@ public class ArrayAggr <T> extends AggregateFunction<T[], ArrayAccumulator<T>> {
     }
 }
 ```
-
-ONE TO MANY
-
-#https://www.decodable.co/blog/array-aggregation-with-flink-sql-data-streaming
-#https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAggr.java
 
 ```sql
 CREATE FUNCTION ARRAY_AGGR AS 'com.zerofinance.function.ArrayAggr';
