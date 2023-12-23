@@ -1950,6 +1950,253 @@ CREATE TABLE hadoop_sink (
 insert into hadoop_sink select * from mysql_source;
 ```
 
+###### Mysql to ES Demo
+
+ONE TO ONE:
+
+User-defined Function:
+
+ArrayAccumulator:
+
+```java
+package com.zerofinance.function;
+
+import java.util.Objects;
+
+import org.apache.flink.table.api.dataview.ListView;
+
+/**
+ * https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAccumulator.java
+ *
+ * @param <T>
+ */
+public class ArrayAccumulator<T> {
+
+    public ListView<T> values = new ListView<T>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ArrayAccumulator<?> other = (ArrayAccumulator<?>) obj;
+        return Objects.equals(values, other.values);
+    }
+}
+```
+
+```sql
+> sudo su - hadoop
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+> SET sql-client.execution.result-mode = tableau;
+
+#Create in flinksql
+CREATE TABLE products (
+    id INT,
+    name STRING,
+    description STRING,
+    PRIMARY KEY (id) NOT ENFORCED
+  ) WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = '192.168.63.102',
+    'port' = '3306',
+    'username' = 'demo_db',
+    'password' = 'Aa123456',
+    'database-name' = 'demo_db',
+    'table-name' = 'products'
+  );
+  
+CREATE TABLE orders (
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ ) WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = '192.168.63.102',
+   'port' = '3306',
+   'username' = 'demo_db',
+   'password' = 'Aa123456',
+   'database-name' = 'demo_db',
+   'table-name' = 'orders'
+ );
+
+CREATE TABLE enriched_orders (
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ ) WITH (
+     'connector' = 'elasticsearch-7',
+     'hosts' = 'http://192.168.63.102:9200',
+     'index' = 'enriched_orders_1'
+ );
+
+INSERT INTO enriched_orders
+ SELECT o.*, p.name, p.description
+ FROM orders AS o
+ LEFT JOIN products AS p ON o.product_id = p.id;
+```
+
+ArrayAggr:
+
+```java
+package com.zerofinance.function;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.flink.table.api.DataTypes;
+import org.apache.flink.table.api.dataview.ListView;
+import org.apache.flink.table.catalog.DataTypeFactory;
+import org.apache.flink.table.functions.AggregateFunction;
+import org.apache.flink.table.types.DataType;
+import org.apache.flink.table.types.inference.InputTypeStrategies;
+import org.apache.flink.table.types.inference.TypeInference;
+
+/**
+ * https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAggr.java
+ *
+ * @param <T>
+ */
+public class ArrayAggr <T> extends AggregateFunction<T[], ArrayAccumulator<T>> {
+
+    private static final long serialVersionUID = 6560271654419701770L;
+    private DataType elementType;
+
+    @Override
+    public ArrayAccumulator<T> createAccumulator() {
+        return new ArrayAccumulator<T>();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T[] getValue(ArrayAccumulator<T> acc) {
+        if (acc.values.getList().isEmpty()) {
+            return null;
+        }
+        else {
+            List<T> values = new ArrayList<T>(acc.values.getList());
+            return values.toArray((T[]) Array.newInstance(elementType.getConversionClass(), values.size()));
+        }
+    }
+
+    public void accumulate(ArrayAccumulator<T> acc, T o) throws Exception {
+        if (o != null) {
+            acc.values.add(o);
+        }
+    }
+
+    public void retract(ArrayAccumulator<T> acc, T o) throws Exception {
+        if (o != null) {
+            acc.values.remove(o);
+        }
+    }
+
+    public void resetAccumulator(ArrayAccumulator<T> acc) {
+        acc.values.clear();
+    }
+
+    @Override
+    public TypeInference getTypeInference(DataTypeFactory typeFactory) {
+        return TypeInference.newBuilder()
+                .inputTypeStrategy(InputTypeStrategies.sequence(InputTypeStrategies.ANY))
+                .accumulatorTypeStrategy(ctx -> {
+                    return Optional.of(
+                            DataTypes.STRUCTURED(
+                                    ArrayAccumulator.class,
+                                    DataTypes.FIELD("values",ListView.newListViewDataType(ctx.getArgumentDataTypes().get(0)))//,
+                            ));
+                })
+                .outputTypeStrategy(ctx -> {
+                    this.elementType = ctx.getArgumentDataTypes().get(0);
+                    return Optional.of(DataTypes.ARRAY(elementType));
+                }).build();
+    }
+}
+```
+
+ONE TO MANY
+
+#https://www.decodable.co/blog/array-aggregation-with-flink-sql-data-streaming
+#https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAggr.java
+
+```sql
+CREATE FUNCTION ARRAY_AGGR AS 'com.zerofinance.function.ArrayAggr';
+
+CREATE TABLE products (
+    id INT,
+    name STRING,
+    description STRING,
+    PRIMARY KEY (id) NOT ENFORCED
+  ) WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = '192.168.63.102',
+    'port' = '3306',
+    'username' = 'demo_db',
+    'password' = 'Aa123456',
+    'database-name' = 'demo_db',
+    'table-name' = 'products'
+  );
+  
+CREATE TABLE orders (
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ ) WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = '192.168.63.102',
+   'port' = '3306',
+   'username' = 'demo_db',
+   'password' = 'Aa123456',
+   'database-name' = 'demo_db',
+   'table-name' = 'orders'
+ );
+ 
+CREATE TABLE enriched_orders (
+   product_id INT,
+   product_name STRING,
+   product_description STRING,
+   lines ARRAY<ROW<order_id INT,order_date TIMESTAMP(0),customer_name STRING,price DECIMAL(10, 5),order_status BOOLEAN>>,
+   PRIMARY KEY (product_id) NOT ENFORCED
+ ) WITH (
+     'connector' = 'elasticsearch-7',
+     'hosts' = 'http://192.168.63.102:9200',
+     'index' = 'enriched_orders_0'
+ );
+ 
+INSERT INTO enriched_orders
+  SELECT p.id AS product_id, p.name AS product_name, p.description AS product_description,
+ (select ARRAY_AGGR(ROW(order_id,order_date,customer_name,price,order_status)) 
+   from orders o 
+   where o.product_id=p.id) as lines
+ FROM products AS p;
+```
+
 ### User-defined Functions
 
 [User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
