@@ -2197,6 +2197,29 @@ INSERT INTO enriched_orders
  FROM products AS p;
 ```
 
+Another way is put sub data to a single string filed:
+
+```sql
+CREATE TABLE enriched_orders (
+   product_id INT,
+   product_name STRING,
+   product_description STRING,
+   lines STRING,
+   PRIMARY KEY (product_id) NOT ENFORCED
+ ) WITH (
+     'connector' = 'elasticsearch-7',
+     'hosts' = 'http://192.168.63.102:9200',
+     'index' = 'enriched_orders_0'
+ );
+ 
+INSERT INTO enriched_orders
+ SELECT p.id AS product_id, p.name AS product_name, p.description AS product_description,
+ (select JSON_ARRAYAGG(
+  JSON_OBJECT('order_id' VALUE o.order_id,'order_date' VALUE o.order_date,'customer_name' VALUE o.customer_name,'price' VALUE o.price,'order_status' VALUE o.order_status)) 
+   from orders o where o.product_id=p.id) as lines
+ FROM products AS p;
+```
+
 ### User-defined Functions
 
 [User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
