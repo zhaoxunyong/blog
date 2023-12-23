@@ -1954,45 +1954,6 @@ insert into hadoop_sink select * from mysql_source;
 
 ONE TO ONE:
 
-User-defined Function:
-
-ArrayAccumulator:
-
-```java
-package com.zerofinance.function;
-
-import java.util.Objects;
-
-import org.apache.flink.table.api.dataview.ListView;
-
-/**
- * https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAccumulator.java
- *
- * @param <T>
- */
-public class ArrayAccumulator<T> {
-
-    public ListView<T> values = new ListView<T>();
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(values);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ArrayAccumulator<?> other = (ArrayAccumulator<?>) obj;
-        return Objects.equals(values, other.values);
-    }
-}
-```
-
 ```sql
 > sudo su - hadoop
 > yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
@@ -2062,6 +2023,43 @@ UDF:
 
 #https://www.decodable.co/blog/array-aggregation-with-flink-sql-data-streaming
 #https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAggr.java
+
+ArrayAccumulator:
+
+```java
+package com.zerofinance.function;
+
+import java.util.Objects;
+
+import org.apache.flink.table.api.dataview.ListView;
+
+/**
+ * https://github.com/decodableco/examples/blob/main/flink-learn/3-array-agg/src/main/java/co/decodable/demos/arrayagg/ArrayAccumulator.java
+ *
+ * @param <T>
+ */
+public class ArrayAccumulator<T> {
+
+    public ListView<T> values = new ListView<T>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ArrayAccumulator<?> other = (ArrayAccumulator<?>) obj;
+        return Objects.equals(values, other.values);
+    }
+}
+```
 
 ArrayAggr:
 
