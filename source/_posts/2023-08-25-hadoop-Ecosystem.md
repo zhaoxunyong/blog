@@ -1467,6 +1467,29 @@ select * from uniontype_1 where info['english'][2]>30;
 +-----------------+-------------------------+
 ```
 
+## ES
+
+```bash
+docker pull elasticsearch:7.6.2
+docker pull kibana:7.6.2
+
+mkdir -p /works/data/esdata-dev
+chmod -R 777 /works/data/esdata-dev
+
+#https://www.cnblogs.com/baoshu/p/16128127.html
+docker network create es-network
+
+docker run -d --name elastic-dev  --restart always --log-driver json-file --log-opt max-size=200m --log-opt max-file=3 --net es-network -p 9200:9200 -p 9300:9300 -v /works/data/esdata-dev:/usr/share/elasticsearch/data -e "discovery.type=single-node" --ulimit nofile=65535:65535 registry.zerofinance.net/library/elasticsearch:7.6.2
+
+curl http://192.168.63.102:9200/_cat
+
+docker run -d --name kibana-dev --net es-network -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://192.168.63.102:9200"  registry.zerofinance.net/library/kibana:7.6.2
+
+http://192.168.63.102:5601/app/kibana#/dev_tools/console
+```
+
+
+
 ## Flink
 
 [BigData-Notes/notes/Flink核心概念综述.md at master · heibaiying/BigData-Notes (github.com)](https://github.com/heibaiying/BigData-Notes/blob/master/notes/Flink核心概念综述.md)
@@ -1618,6 +1641,184 @@ To unlock the full potential of the application mode, consider using it with the
 The above will allow the job submission to be extra lightweight as the needed Flink jars and the application jar are going to be picked up by the specified remote locations rather than be shipped to the cluster by the client.
 ```
 
+#### Native_kubernetes
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/filesystems/oss/
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/native_kubernetes/
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/overview/
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/kubernetes_ha/
+
+https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/config/#kubernetes
+
+##### K8s On Session
+
+Creating service account:
+
+```
+#https://blog.csdn.net/yy8623977/article/details/124989262
+
+#创建namespace、service账号和给账号授权
+kubectl create ns flink-test
+kubectl create serviceaccount flink-test -n flink-test
+kubectl create clusterrolebinding flink-role-bind --clusterrole=edit --serviceaccount=flink-test:flink-test
+
+#Resolved: configmaps is forbidden: User "system:serviceaccount:flink-test:default"
+#https://blog.csdn.net/wangmiaoyan/article/details/103254006
+kubectl create clusterrolebinding flink-test:flink-test --clusterrole=cluster-admin --user=system:serviceaccount:flink-test:default
+```
+
+Building required jars into docker image(Or mount a folder from NAS):
+
+./flink-1.15.3/lib as blows:
+
+![image-20231229172142379](/images/2023-08-25-hadoop-Ecosystem/image-20231229172142379.png)
+
+Dockerfile:
+
+```
+FROM apache/flink:1.15.3-scala_2.12
+
+RUN mkdir -p $FLINK_HOME/usrlib
+
+# Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
+#RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# Copying libs
+COPY ./flink-1.15.3/lib/* $FLINK_HOME/lib/
+```
+
+Build and push to registry:
+
+```
+docker build -t registry.zerofinance.net/library/flink:1.15.3 .
+docker push registry.zerofinance.net/library/flink:1.15.3
+```
+
+Starting flink job manager:
+
+```bash
+bin/kubernetes-session.sh \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.jobmanager.service-account=flink-test \
+ -Dkubernetes.rest-service.exposed.type=NodePort \
+ -Dkubernetes.cluster-id=flink-cluster \
+ -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
+ -Dfs.oss.accessKeyId=xxx \
+ -Dfs.oss.accessKeySecret=yyy \
+ -Dkubernetes.container.image=registry.zerofinance.net/library/flink:1.15.3 \
+ -Dkubernetes.container.image.pull-policy=Always \
+ -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
+ -Dhigh-availability.storageDir=oss://flink-ha-test/recovery \
+ -Dkubernetes.container.image.pull-secrets=registry-private-secret \
+ #-Dcontainerized.master.env.ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.15.3.jar \
+ #-Dcontainerized.taskmanager.env.ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.15.3.jar \
+ -Dkubernetes.jobmanager.replicas=2 \
+ -Dkubernetes.jobmanager.cpu=0.2 \
+ -Djobmanager.memory.process.size=1024m \
+ -Dresourcemanager.taskmanager-timeout=3600000 \
+ -Dkubernetes.taskmanager.node-selector=flink-env:test \
+ -Dkubernetes.taskmanager.cpu=0.2 \
+ -Dtaskmanager.memory.process.size=1024m \
+ -Dtaskmanager.numberOfTaskSlots=3
+```
+
+Enable cluster-rest ingress:
+
+flink-cluster-rest-ingress.yml:
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: flink-cluster-rest-ingress
+  namespace: flink-test
+spec:
+  tls: []
+  rules:
+    - host: flink-rest-test.zerofinance.net
+      http:
+        paths:
+          - backend:
+              serviceName: flink-cluster-rest
+              servicePort: 8081
+```
+
+Submits a new job:
+
+```bash
+bin/flink run -m flink-rest-test.zerofinance.net examples/batch/WordCount.jar
+```
+
+Or:
+
+```
+bin/flink run \
+ -e kubernetes-session \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.rest-service.exposed.type=NodePort \
+ -Dkubernetes.cluster-id=flink-cluster \
+ examples/batch/WordCount.jar 
+```
+
+Destroy a existing cluster:
+
+```
+kubectl -n flink-test delete deploy flink-cluster
+```
+
+##### K8s On Application
+
+```bash
+#Starting:
+bin/flink run-application \
+ --target kubernetes-application \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.jobmanager.service-account=flink \
+ -Dkubernetes.rest-service.exposed.type=NodePort \
+ -Dkubernetes.cluster-id=flink-application-cluster \
+ -Dkubernetes.container.image=registry.zerofinance.net/library/flink:1.15.3 \
+ -Dkubernetes.container.image.pull-policy=Always \
+ -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
+ -Dfs.oss.accessKeyId=xxx \
+ -Dfs.oss.accessKeySecret=yyy \
+ -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
+ -Dhigh-availability.storageDir=oss://flink-ha-test/native-recovery \
+ -Dkubernetes.container.image.pull-secrets=registry-private-secret \
+ -Dkubernetes.jobmanager.replicas=1 \
+ -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
+ -Dkubernetes.jobmanager.cpu=0.2 \
+ -Djobmanager.memory.process.size=1024m \
+ -Dresourcemanager.taskmanager-timeout=3600000 \
+ -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
+ -Dkubernetes.taskmanager.node-selector=flink-env:test \
+ -Dkubernetes.taskmanager.cpu=0.2 \
+ -Dtaskmanager.memory.process.size=1024m \
+ -Dtaskmanager.numberOfTaskSlots=1 \
+ local:///opt/flink/examples/streaming/TopSpeedWindowing.jar \
+ --output /opt/flink/log/topSpeedWindowing-output
+ 
+#list running jobs:
+bin/flink list \
+ --target kubernetes-application \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.jobmanager.service-account=flink \
+ -Dkubernetes.cluster-id=flink-application-cluster
+
+#Delete job:
+bin/flink cancel \
+ --target kubernetes-application \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.jobmanager.service-account=flink \
+ -Dkubernetes.cluster-id=flink-application-cluster \
+ 5d7a3c36c7d40ceeb8b83fd8a563ded5
+```
+
+
+
 #### Sql Client
 
 [Flink 使用之 SQL Client - 简书 (jianshu.com)](https://www.jianshu.com/p/266449b9a0f4)
@@ -1628,6 +1829,10 @@ The above will allow the job submission to be extra lightweight as the needed Fl
 start-cluster.sh
 
 sql-client.sh embedded
+
+#https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/sqlclient/
+#Submit sql via sql-client.sh
+./flink-1.15.3/bin/sql-client.sh -f ./test.sql
 ```
 
 ##### On yarn Session
@@ -1638,7 +1843,7 @@ sql-client.sh embedded
 
 ```sql
 #Start a yarn session
-#提交yarn session和启动sql client需要使用同一个用户，否则会找不到yarn session对应的application id。
+#提交yarn session和启动sql client需要使用同一个系统用户，否则会找不到yarn session对应的application id。
 sudo su - hadoop
 #yarn-session.sh -d
 yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
@@ -1754,7 +1959,895 @@ scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.228:/u
 scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.229:/usr/bigtop/current/flink-client/conf/
 ```
 
-###### kafka to mysql  Demo
+### Dinky
+
+http://www.dlink.top/docs/0.7/get_started/docker_deploy
+
+http://www.dlink.top/docs/0.7/deploy_guide/build
+
+Prerequisite: [dinky.sql](/files/2023-08-25-hadoop-Ecosystem/dinky.sql) 
+
+```
+mysql -uroot -p
+CREATE USER 'dinky'@'%' IDENTIFIED BY 'Aa123456';
+GRANT ALL PRIVILEGES ON dinky.* TO 'dinky'@'%';
+
+#docker cp dinky:/opt/dinky/sql/dinky.sql ./
+
+mysql -udinky -h127.0.0.1 -p
+create database dinky;
+use dinky;
+source /works/app/flink/dinky.sql;
+```
+
+DinkyDockerfile:
+
+In order to copy required jars into docker image:
+
+```
+# 用来构建dinky环境
+FROM dinkydocker/dinky-standalone-server:0.7.5-flink15
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN echo 'Asia/Shanghai' >/etc/timezone
+
+COPY flink-conf.yaml /opt/dinky/conf/
+COPY lib/* /opt/dinky/plugins/flink1.15/
+EXPOSE  8888 8081
+```
+
+Build and push to registry:
+
+```
+docker build -t registry.zerofinance.net/library/flink-dinky:0.7.5-flink15 . -f DinkyDockerfile
+docker push registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+```
+
+flink-dinky-template.yml:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: flink-dinky
+  name: flink-dinky
+  namespace: flink-test
+spec:
+  selector:
+    matchLabels:
+      app: flink-dinky
+  template:
+    metadata:
+      labels:
+        app: flink-dinky
+    spec:
+      imagePullSecrets:
+      - name: registry-private-secret
+      containers:
+      #dinky镜像，如果需要更新请前往【https://hub.docker.com/r/dinkydocker/dinky-standalone-server/tags】选择合适镜像版本
+      #如果需要添加拓展jar包，可通过dinky注册中心【jar包管理】处添加，或者通过Dockerfile将其打包进docker镜像，再上传至私有仓库再替换此处的镜像
+      - image: registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+        imagePullPolicy: Always
+        name: flink-dinky
+        env:
+        - name: MYSQL_ADDR
+          value: 192.168.63.102:3306
+        - name: MYSQL_DATABASE
+          value: dinky
+        - name: MYSQL_USERNAME
+          value: dinky
+        - name: MYSQL_PASSWORD
+          value: Aa123456
+        #将下方configMap配置映射到容器内部，修改配置需要重启pod生效
+        volumeMounts: 
+        #- name: dockersock
+        #  mountPath: /var/run/docker.sock
+        - name: admin-config
+          mountPath: /opt/dinky/config/application.yml          
+          subPath: application.yml
+      volumes:
+      #- name: dockersock
+      #  hostPath:
+      #    path: /var/run/docker.sock
+      - name: admin-config
+        configMap:
+          name: flink-dinky-config
+          
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flink-dinky-config
+  namespace: flink-test
+data:
+  application.yml: |-
+    spring:
+      datasource:
+        url: jdbc:mysql://${MYSQL_ADDR:127.0.0.1:3306}/${MYSQL_DATABASE:dlink}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+        username: ${MYSQL_USERNAME:dlink}
+        password: ${MYSQL_PASSWORD:dlink}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      application:
+        name: dlink
+      mvc:
+        pathmatch:
+          matching-strategy: ant_path_matcher
+        format:
+          date: yyyy-MM-dd HH:mm:ss
+        #json格式化全局配置
+      jackson:
+        time-zone: GMT+8
+        date-format: yyyy-MM-dd HH:mm:ss
+
+      main:
+        allow-circular-references: true
+
+      #  默认使用内存缓存元数据信息，
+      #  dlink支持redis缓存，如有需要请把simple改为redis，并打开下面的redis连接配置
+      #  子配置项可以按需要打开或自定义配置
+      cache:
+        type: simple
+      ##    如果type配置为redis，则该项可按需配置
+      #    redis:
+      ##      是否缓存空值，保存默认即可
+      #      cache-null-values: false
+      ##      缓存过期时间，24小时
+      #      time-to-live: 86400
+
+
+      #  flyway:
+      #    enabled: false
+      #    clean-disabled: true
+      ##    baseline-on-migrate: true
+      #    table: dlink_schema_history
+      # Redis配置
+      #sa-token如需依赖redis，请打开redis配置和pom.xml、dlink-admin/pom.xml中依赖
+      # redis:
+      #   host: localhost
+      #   port: 6379
+      #   password:
+      #   database: 10
+      #   jedis:
+      #     pool:
+      #       # 连接池最大连接数（使用负值表示没有限制）
+      #       max-active: 50
+      #       # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      #       max-wait: 3000
+      #       # 连接池中的最大空闲连接数
+      #       max-idle: 20
+      #       # 连接池中的最小空闲连接数
+      #       min-idle: 5
+      #   # 连接超时时间（毫秒）
+      #   timeout: 5000
+      servlet:
+        multipart:
+          max-file-size: 524288000
+          max-request-size: 524288000
+          enabled: true
+    server:
+      port: 8888
+
+    mybatis-plus:
+      mapper-locations: classpath:/mapper/*Mapper.xml
+      #实体扫描，多个package用逗号或者分号分隔
+      typeAliasesPackage: com.dlink.model
+      global-config:
+        db-config:
+          id-type: auto
+      configuration:
+        ##### mybatis-plus打印完整sql(只适用于开发环境)
+        #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+    # Sa-Token 配置
+    sa-token:
+      # token名称 (同时也是cookie名称)
+      token-name: satoken
+      # token有效期，单位s 默认10小时, -1代表永不过期
+      timeout: 36000
+      # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+      activity-timeout: -1
+      # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+      is-concurrent: false
+      # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+      is-share: true
+      # token风格
+      token-style: uuid
+      # 是否输出操作日志
+      is-log: false
+
+    knife4j:
+      enable: true
+
+    dinky:
+      dolphinscheduler:
+        enabled: false
+        # dolphinscheduler 地址
+        url: http://127.0.0.1:5173/dolphinscheduler
+        # dolphinscheduler 生成的token
+        token: ad54eb8f57fadea95f52763517978b26
+        # dolphinscheduler 中指定的项目名不区分大小写
+        project-name: Dinky
+        # Dolphinscheduler DinkyTask Address
+        address: http://127.0.0.1:8888
+
+      # python udf 需要用到的 python 执行环境
+      python:
+        path: python
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flink-dinky
+  namespace: flink-test
+spec:
+  ports:
+  - name: web-flink-dinky
+    port: 8888
+    targetPort: 8888
+    protocol: TCP
+    #nodePort: 32323
+  selector:
+    app: flink-dinky
+  #type:  NodePort 
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: flink-dinky
+  namespace: flink-test
+spec:
+  tls: []
+  rules:
+    - host: flink-dinky-test.zerofinance.net
+      http:
+        paths:
+          - backend:
+              serviceName: flink-dinky
+              servicePort: 8888
+```
+
+#### On Session
+
+![image-20231229175048960](/images/2023-08-25-hadoop-Ecosystem/image-20231229175048960.png)
+
+![image-20231229175125535](/images/2023-08-25-hadoop-Ecosystem/image-20231229175125535.png)
+
+```
+
+```
+
+
+
+#### On Application
+
+![image-20231229175449539](/images/2023-08-25-hadoop-Ecosystem/image-20231229175449539.png)
+
+![image-20231229175218514](/images/2023-08-25-hadoop-Ecosystem/image-20231229175218514.png)
+
+![image-20231229175250376](/images/2023-08-25-hadoop-Ecosystem/image-20231229175250376.png)
+
+![image-20231229175329524](/images/2023-08-25-hadoop-Ecosystem/image-20231229175329524.png)
+
+![image-20231229175406226](/images/2023-08-25-hadoop-Ecosystem/image-20231229175406226.png)
+
+![image-20231229180209269](/images/2023-08-25-hadoop-Ecosystem/image-20231229180209269.png)
+
+Have to build owned image:
+
+DinkyFlinkDockerfile:
+
+```
+docker version must be 23 or above:
+# 用来构建dinky环境
+ARG FLINK_VERSION=1.15.3
+FROM registry.zerofinance.net/library/flink:${FLINK_VERSION}
+
+# Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
+#RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+ARG FLINK_VERSION
+ENV PYTHON_HOME /opt/miniconda3
+
+USER root
+RUN wget "https://s3.jcloud.sjtu.edu.cn/899a892efef34b1b944a19981040f55b-oss01/anaconda/miniconda/Miniconda3-py38_4.9.2-Linux-x86_64.sh" -O "miniconda.sh" && chmod +x miniconda.sh
+RUN ./miniconda.sh -b -p $PYTHON_HOME && chown -R flink $PYTHON_HOME && ls $PYTHON_HOME
+
+USER flink
+
+ENV PATH $PYTHON_HOME/bin:$PATH
+RUN pip install "apache-flink==${FLINK_VERSION}" -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+
+RUN cp /opt/flink/opt/flink-python_* /opt/flink/lib/
+
+COPY ./dlink-app-1.15-0.7.5-jar-with-dependencies.jar $FLINK_HOME/lib/
+```
+
+Build and push to registry:
+
+```bash
+docker build -t registry.zerofinance.net/library/dinky-flink-application:1.15.3 . -f DinkyFlinkDockerfile
+docker push registry.zerofinance.net/library/dinky-flink-application:1.15.3
+```
+
+
+
+```bash
+mysql -uroot -p
+CREATE USER 'dinky'@'%' IDENTIFIED BY 'Aa123456';
+GRANT ALL PRIVILEGES ON dinky.* TO 'dinky'@'%';
+
+docker cp dinky:/opt/dinky/sql/dinky.sql ./
+
+mysql -udinky -h127.0.0.1 -p
+create database dinky;
+use dinky;
+source /works/app/flink/dinky.sql;
+
+docker run -d --restart=always -p 8888:8888 -p 8082:8081 \
+ -e MYSQL_ADDR=192.168.63.102:3306 \
+ -e MYSQL_DATABASE=dinky \
+ -e MYSQL_USERNAME=dinky \
+ -e MYSQL_PASSWORD=Aa123456 \
+ --name dinky \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ #dinkydocker/dinky-standalone-server:0.7.5-flink15
+ registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+
+http://192.168.63.102:8888/
+```
+
+#### DataSource
+
+![image-20231229175659553](/images/2023-08-25-hadoop-Ecosystem/image-20231229175659553.png)
+
+![image-20231229175620829](/images/2023-08-25-hadoop-Ecosystem/image-20231229175620829.png)
+
+![image-20231229175739306](/images/2023-08-25-hadoop-Ecosystem/image-20231229175739306.png)
+
+### User-defined Functions
+
+[User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
+
+User-defined functions (UDFs) are extension points to call frequently used logic or custom logic that cannot be expressed otherwise in queries.
+
+User-defined functions can be implemented in a JVM language (such as Java or Scala) or Python. An implementer can use arbitrary third party libraries within a UDF. This page will focus on JVM-based languages, please refer to the PyFlink documentation for details on writing [general](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/python_udfs/) and [vectorized](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/vectorized_python_udfs/) UDFs in Python.
+
+```java
+#https://yangyichao-mango.github.io/2021/11/15/wechat-blog/01_%E5%A4%A7%E6%95%B0%E6%8D%AE/01_%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/01_%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93/02_%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9%E5%BB%BA%E8%AE%BE/03_one-engine/01_%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/01_flink/01_flink-sql/20_%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8%E5%B9%B2%E8%B4%A7%EF%BC%81FlinkSQL%E6%88%90%E7%A5%9E%E4%B9%8B%E8%B7%AF%EF%BC%88%E5%85%A8%E6%96%876%E4%B8%87%E5%AD%97%E3%80%81110%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E3%80%81160%E5%BC%A0%E5%9B%BE%EF%BC%89/
+#https://www.cnblogs.com/wxm2270/p/17275442.html
+#https://juejin.cn/post/7103196993232568328
+#https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/
+
+#第一步，自定义数据类型
+public class User {
+
+    // 1. 基础类型，Flink 可以通过反射类型信息自动把数据类型获取到
+    // 关于 SQL 类型和 Java 类型之间的映射见：https://nightlies.apache.org/flink/flink-docs-release-1.13/docs/dev/table/types/#data-type-extraction
+    public int age;
+    public String name;
+
+    // 2. 复杂类型，用户可以通过 @DataTypeHint("DECIMAL(10, 2)") 注解标注此字段的数据类型
+    public @DataTypeHint("DECIMAL(10, 2)") BigDecimal totalBalance;
+}
+
+#第二步，在 UDF 中使用此数据类型
+public class UserScalarFunction extends ScalarFunction {
+
+    // 1. 自定义数据类型作为输出参数
+    public User eval(long i) {
+        if (i > 0 && i <= 5) {
+            User u = new User();
+            u.age = (int) i;
+            u.name = "name1";
+            u.totalBalance = new BigDecimal(1.1d);
+            return u;
+        } else {
+            User u = new User();
+            u.age = (int) i;
+            u.name = "name2";
+            u.totalBalance = new BigDecimal(2.2d);
+            return u;
+        }
+    }
+    
+    // 2. 自定义数据类型作为输入参数
+    public String eval(User i) {
+        if (i.age > 0 && i.age <= 5) {
+            User u = new User();
+            u.age = 1;
+            u.name = "name1";
+            u.totalBalance = new BigDecimal(1.1d);
+            return u.name;
+        } else {
+            User u = new User();
+            u.age = 2;
+            u.name = "name2";
+            u.totalBalance = new BigDecimal(2.2d);
+            return u.name;
+        }
+    }
+}
+#Upload the packaged jar to /usr/bigtop/current/flink-client/lib/ of all machines and restart yarn-session instance.
+
+#第三步，在 Flink SQL 中使用
+-- 1. 创建 UDF
+CREATE FUNCTION user_scalar_func AS 'flink.examples.sql._12_data_type._02_user_defined.UserScalarFunction';
+
+-- 2. 创建数据源表
+CREATE TABLE source_table (
+    user_id BIGINT NOT NULL COMMENT '用户 id'
+) WITH (
+  'connector' = 'datagen',
+  'rows-per-second' = '1',
+  'fields.user_id.min' = '1',
+  'fields.user_id.max' = '10'
+);
+
+-- 3. 创建数据汇表
+CREATE TABLE sink_table (
+    result_row_1 ROW<age INT, name STRING, totalBalance DECIMAL(10, 2)>,
+    result_row_2 STRING
+) WITH (
+  'connector' = 'print'
+);
+
+-- 4. SQL 查询语句
+INSERT INTO sink_table
+select
+    -- 4.a. 用户自定义类型作为输出
+    user_scalar_func(user_id) as result_row_1,
+    -- 4.b. 用户自定义类型作为输出及输入
+    user_scalar_func(user_scalar_func(user_id)) as result_row_2
+from source_table;
+
+-- 5. 查询结果
++I[+I[9, name2, 2.20], name2]
++I[+I[1, name1, 1.10], name1]
++I[+I[5, name1, 1.10], name1]
+```
+
+
+
+### Hive Catalog
+
+```sql
+#https://nightlies.apache.org/flink/flink-docs-release-1.15/zh/docs/connectors/table/hive/hive_catalog/
+CREATE CATALOG myhive WITH (
+  'type' = 'hive',
+  'hive-conf-dir' = '/usr/bigtop/current/hive-client/conf'
+);
+show catalogs;
+use catalog myhive;
+show databases;
+
+create table mykafka (
+    id STRING,
+    use_rname STRING,
+    age integer,
+    gender STRING,
+    goods_no STRING,
+    goods_price Float,
+    store_id integer,
+    shopping_type STRING,
+    tel STRING,
+    email STRING,
+    shopping_date Date
+) with (
+    'connector' = 'kafka',
+    'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
+    'topic' = 'fludesc',
+    'scan.startup.mode' = 'earliest-offset',
+    'format' = 'csv',
+    'csv.ignore-parse-errors' = 'true'
+);
+
+DESCRIBE mykafka;
+
+select * from mykafka;
+```
+
+### Flink Streaming Platform Web
+
+[flink-streaming-platform-web](https://github.com/zhp8341/flink-streaming-platform-web)
+
+Prerequisite:
+
+```
+#https://github.com/zhp8341/flink-streaming-platform-web/blob/master/docs/deploy.md
+#https://www.cnblogs.com/data-magnifier/p/16943527.html
+sudo su - hadoop
+
+mkdir /usr/bigtop/3.2.0/usr/lib/
+cd /usr/bigtop/3.2.0/usr/lib/
+wget https://github.com/zhp8341/flink-streaming-platform-web/releases/download/tagV20230610(flink1.16.2)/flink-streaming-platform-web.tar.gz
+tar zxf flink-streaming-platform-web.tar.gz
+cd /usr/bigtop/current/
+ln -s /usr/bigtop/3.2.0/usr/lib/flink-streaming-platform-web flink-streaming-platform-web
+
+cd /usr/bigtop/current/flink-streaming-platform-web
+wget https://github.com/zhp8341/flink-streaming-platform-web/blob/master/docs/sql/flink_web.sql
+
+mysql -uroot -h127.0.0.1 -p
+> source /usr/bigtop/current/flink-streaming-platform-web/flink_web.sql;
+> exit;
+```
+
+config/application.properties:
+
+```
+####jdbc信息
+server.port=9084
+spring.datasource.url=jdbc:mysql://192.168.63.102:3306/flink_web?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+spring.datasource.username=flink_web
+spring.datasource.password=Aa123456
+```
+
+Build docker image:
+
+```
+FROM  centos:7
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN echo 'Asia/Shanghai' >/etc/timezone
+
+RUN yum -y install kde-l10n-Chinese && yum -y reinstall glibc-common 
+RUN localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 
+ENV LC_ALL zh_CN.utf8
+RUN export LANG=zh_CN.UTF-8
+
+RUN  yum install java-1.8.0-openjdk* -y
+
+RUN  mkdir  /data/
+RUN  mkdir  /data/projects
+RUN  mkdir  /data/projects/flink-1.15.3
+WORKDIR /data/projects/
+
+ADD  flink-streaming-platform-web.tar.gz  /data/projects/
+#ADD flink-1.15.3-bin-scala_2.12.tgz /data/projects/
+COPY flink-1.15.3 /data/projects/flink-1.15.3
+
+ENTRYPOINT ["sh", "-c", "java -jar flink-streaming-platform-web/lib/flink-streaming-web-1.5.0.RELEASE.jar --spring.profiles.active=prod --spring.config.additional-location=flink-streaming-platform-web/conf/application.properties"]
+
+EXPOSE  9084 5007 8081
+```
+
+build and push to registry:
+
+```
+docker build -t registry.zerofinance.net/library/flink-streaming-platform-web:1.16.2 . -f Dockerfile.web
+docker push registry.zerofinance.net/library/flink-streaming-platform-web:1.16.2
+```
+
+Starting a new instance:
+
+```bash
+docker run -d --name flink-streaming-platform-web --restart=always \
+-p 9084:9084 \
+-v /works/app/flink/flink-streaming-platform-web/conf:/data/projects/flink-streaming-platform-web/conf \
+registry.zerofinance.net/library/flink-streaming-platform-web:1.16.2
+
+http://192.168.64.102:32061
+
+#/data/projects/flink-1.15.3/bin/flink run -d -m 192.168.63.102:8081 -c com.flink.streaming.core.JobApplication /data/projects/flink-streaming-platform-web/lib/flink-streaming-core-1.5.0.RELEASE.jar -sql /data/projects/flink-streaming-platform-web/sql/job_sql_6.sql -type 0
+```
+
+On K8s:
+
+flink-streaming-platform-web.yml:
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-properties
+data:
+  application.properties: |
+    server.port=9084
+    spring.datasource.url=jdbc:mysql://192.168.63.102:3306/flink_fspw?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    spring.datasource.username=flink_fspw
+    spring.datasource.password=Aa123456
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flink-streaming-platform-web
+  namespace: flink-test
+  labels:
+    app: flink-streaming-platform-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flink-streaming-platform-web
+  template:
+    metadata:
+      labels:
+        app: flink-streaming-platform-web
+    spec:
+      imagePullSecrets:
+      - name: registry-private-secret
+      containers:
+      - name: flink-streaming-platform-web
+        image: registry.zerofinance.net/library/flink-streaming-platform-web:1.16.2
+        imagePullPolicy: Always
+        ports:
+        - name: fspw-9084
+          containerPort: 9084
+          protocol: TCP
+        - name: fspw-5007
+          containerPort: 5007
+          protocol: TCP
+        - name: fspw-8081
+          containerPort: 8081
+          protocol: TCP
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /static/ui/index.html
+            port: 9084
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          #successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /static/ui/index.html
+            port: 9084
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          #successThreshold: 1
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: application-properties-volume
+          mountPath: /data/projects/flink-streaming-platform-web/conf/
+      volumes:
+      - name: application-properties-volume
+        configMap:
+          name: application-properties
+          items:
+          - key: application.properties
+            path: application.properties
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flink-streaming-platform-web
+  namespace: flink-test
+  labels:
+    app: flink-streaming-platform-web
+spec:
+  #type: NodePort
+  ports:
+  - name: kafka
+    port: 9084
+    targetPort: 9084
+    #nodePort: 30900
+  selector:
+    app: flink-streaming-platform-web
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: flink-streaming-platform-web
+  namespace: flink-test
+spec:
+  tls: []
+  rules:
+    - host: fspw-test.zerofinance.net
+      http:
+        paths:
+          - backend:
+              serviceName: flink-streaming-platform-web
+              servicePort: 9084
+```
+
+Or:
+
+```bash
+vim conf/application.properties
+####jdbc信息
+server.port=9084
+spring.datasource.url=jdbc:mysql://192.168.80.225:3306/flink_web?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+spring.datasource.username=root
+spring.datasource.password=xxxxxx
+
+cd bin
+./deploy.sh start
+
+#http://192.168.80.226:9084/
+admin/123456
+```
+
+#### Settings
+
+![image-20230914181613864](/images/2023-08-25-hadoop-Ecosystem/image-20230914181613864.png)
+
+#### Job
+
+![image-20230914181838644](/images/2023-08-25-hadoop-Ecosystem/image-20230914181838644.png)
+
+### Flink SQL CDC
+
+[基于 Flink SQL CDC的实时数据同步方案 (dreamwu.com)](http://www.dreamwu.com/post-1594.html)
+
+[docs/sql_demo/demo_6.md · 朱慧培/flink-streaming-platform-web - Gitee.com](https://gitee.com/zhuhuipei/flink-streaming-platform-web/blob/master/docs/sql_demo/demo_6.md)
+
+[Overview — CDC Connectors for Apache Flink® documentation (ververica.github.io)](https://ververica.github.io/flink-cdc-connectors/release-2.4/content/about.html)
+
+Enable mysql bin-log function:
+
+```
+#temporary password：
+grep 'temporary password' /var/log/mysqld.log
+
+mysql -uroot -p
+set global validate_password_policy=0;
+alter user 'root'@'localhost' identified by 'Aa123456';
+CREATE USER 'flink_web'@'%' IDENTIFIED BY 'Aa123456';
+GRANT ALL PRIVILEGES ON flink_web.* TO 'flink_web'@'%';
+
+CREATE USER 'demo_db'@'%' IDENTIFIED BY 'Aa123456';
+GRANT ALL PRIVILEGES ON demo_db.* TO 'demo_db'@'%';
+GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO demo_db@'%';
+FLUSH PRIVILEGES;
+
+mysql-cdc:
+#https://support.huaweicloud.com/trouble-rds/rds_12_0040.html
+Access denied; you need (at least one of) the SUPER, REPLICATION CLIENT privilege(s) for this operation
+GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO demo_db@'%';
+FLUSH PRIVILEGES;
+
+#https://blog.csdn.net/wochunyang/article/details/132210928?spm=1001.2014.3001.5501
+Cannot read the binlog filename and position via 'SHOW MASTER STATUS'. Make sure your server is correctly configured
+
+vim /etc/my.cnf
+server_id = 1
+binlog_format = ROW
+log-bin = mysql_log_bin
+
+systemctl restart mysqld 
+```
+
+
+
+```bash
+> sudo su - hadoop
+
+> mysql -uroot -h127.0.0.1 -p
+-- MySQL
+CREATE DATABASE mydb;
+USE mydb;
+CREATE TABLE products (
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(512)
+);
+ALTER TABLE products AUTO_INCREMENT = 101;
+
+INSERT INTO products
+VALUES (default,"scooter","Small 2-wheel scooter"),
+       (default,"car battery","12V car battery"),
+       (default,"12-pack drill bits","12-pack of drill bits with sizes ranging from #40 to #3"),
+       (default,"hammer","12oz carpenter's hammer"),
+       (default,"hammer","14oz carpenter's hammer"),
+       (default,"hammer","16oz carpenter's hammer"),
+       (default,"rocks","box of assorted rocks"),
+       (default,"jacket","water resistent black wind breaker"),
+       (default,"spare tire","24 inch spare tire");
+
+CREATE TABLE orders (
+  order_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_date DATETIME NOT NULL,
+  customer_name VARCHAR(255) NOT NULL,
+  price DECIMAL(10, 5) NOT NULL,
+  product_id INTEGER NOT NULL,
+  order_status BOOLEAN NOT NULL -- Whether order has been placed
+) AUTO_INCREMENT = 10001;
+
+INSERT INTO orders
+VALUES (default, '2020-07-30 10:08:22', 'Jark', 50.50, 102, false),
+       (default, '2020-07-30 10:11:09', 'Sally', 15.00, 105, false),
+       (default, '2020-07-30 12:00:30', 'Edward', 25.25, 106, false);
+       
+       
+
+> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
+
+> sql-client.sh embedded -s yarn-session
+Flink SQL> SET sql-client.execution.result-mode = tableau;
+
+-- checkpoint every 3000 milliseconds                       
+Flink SQL> SET 'execution.checkpointing.interval' = '3s';  
+
+#Create in flinksql
+-- Flink SQL
+#Mysql source
+Flink SQL> CREATE TABLE products (
+    id INT,
+    name STRING,
+    description STRING,
+    PRIMARY KEY (id) NOT ENFORCED
+  ) WITH (
+    'connector' = 'mysql-cdc',
+    'hostname' = '192.168.80.225',
+    'port' = '3306',
+    'username' = 'root',
+    'password' = 'Aa123#@!',
+    'database-name' = 'mydb',
+    'table-name' = 'products'
+  );
+
+Flink SQL> CREATE TABLE orders (
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   PRIMARY KEY (order_id) NOT ENFORCED
+ ) WITH (
+   'connector' = 'mysql-cdc',
+   'hostname' = '192.168.80.225',
+   'port' = '3306',
+   'username' = 'root',
+   'password' = 'Aa123#@!',
+   'database-name' = 'mydb',
+   'table-name' = 'orders'
+ );
+
+#Kafka sink
+CREATE TABLE enriched_orders(
+   order_id INT,
+   order_date TIMESTAMP(0),
+   customer_name STRING,
+   price DECIMAL(10, 5),
+   product_id INT,
+   order_status BOOLEAN,
+   product_name STRING,
+   product_description STRING,
+   PRIMARY KEY (order_id) NOT ENFORCED
+) WITH (
+ 'connector' = 'upsert-kafka',
+ 'topic' = 'fludesc',
+ 'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
+ 'key.format' = 'csv',
+ 'value.format' = 'csv'
+);
+
+#Sink
+INSERT INTO enriched_orders
+ SELECT o.*, p.name, p.description
+ FROM orders AS o
+ LEFT JOIN products AS p ON o.product_id = p.id;
+
+#Monitoring the changed data streams
+kafka-console-consumer.sh --topic fludesc --bootstrap-server datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --from-beginning
+```
+
+The connector named kafka doesn't support flink-sql-cdc, using 'upset-kafka' instead.  
+
+The error as blow:
+
+![image-20230915163923171](/images/2023-08-25-hadoop-Ecosystem/image-20230915163923171.png)
+
+#### Demo
+
+##### kafka to mysql  Demo
 
 This demo illustrate how to sink data from Kafka to MySQL:
 
@@ -1842,7 +2935,7 @@ kafka-console-producer.sh --broker-list datanode01-test.zerofinance.net:9092,dat
 #kafka-console-consumer.sh --topic fludesc --bootstrap-server datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --from-beginning
 ```
 
-###### kafka to hdfs Demo
+##### kafka to hdfs Demo
 
 ```sql
 > sudo su - hadoop
@@ -1897,7 +2990,7 @@ CREATE TABLE hadoop_sink (
 insert into hadoop_sink select * from kafka_source;
 ```
 
-###### Mysql to hdfs Demo
+##### Mysql to hdfs Demo
 
 ```sql
 > sudo su - hadoop
@@ -1950,7 +3043,7 @@ CREATE TABLE hadoop_sink (
 insert into hadoop_sink select * from mysql_source;
 ```
 
-###### Mysql to ES Demo
+##### Mysql to ES Demo
 
 ONE TO ONE:
 
@@ -2219,321 +3312,6 @@ INSERT INTO enriched_orders
    from orders o where o.product_id=p.id) as lines
  FROM products AS p;
 ```
-
-### User-defined Functions
-
-[User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
-
-User-defined functions (UDFs) are extension points to call frequently used logic or custom logic that cannot be expressed otherwise in queries.
-
-User-defined functions can be implemented in a JVM language (such as Java or Scala) or Python. An implementer can use arbitrary third party libraries within a UDF. This page will focus on JVM-based languages, please refer to the PyFlink documentation for details on writing [general](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/python_udfs/) and [vectorized](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/vectorized_python_udfs/) UDFs in Python.
-
-```java
-#https://yangyichao-mango.github.io/2021/11/15/wechat-blog/01_%E5%A4%A7%E6%95%B0%E6%8D%AE/01_%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/01_%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93/02_%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9%E5%BB%BA%E8%AE%BE/03_one-engine/01_%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/01_flink/01_flink-sql/20_%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8%E5%B9%B2%E8%B4%A7%EF%BC%81FlinkSQL%E6%88%90%E7%A5%9E%E4%B9%8B%E8%B7%AF%EF%BC%88%E5%85%A8%E6%96%876%E4%B8%87%E5%AD%97%E3%80%81110%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E3%80%81160%E5%BC%A0%E5%9B%BE%EF%BC%89/
-#https://www.cnblogs.com/wxm2270/p/17275442.html
-#https://juejin.cn/post/7103196993232568328
-#https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/
-
-#第一步，自定义数据类型
-public class User {
-
-    // 1. 基础类型，Flink 可以通过反射类型信息自动把数据类型获取到
-    // 关于 SQL 类型和 Java 类型之间的映射见：https://nightlies.apache.org/flink/flink-docs-release-1.13/docs/dev/table/types/#data-type-extraction
-    public int age;
-    public String name;
-
-    // 2. 复杂类型，用户可以通过 @DataTypeHint("DECIMAL(10, 2)") 注解标注此字段的数据类型
-    public @DataTypeHint("DECIMAL(10, 2)") BigDecimal totalBalance;
-}
-
-#第二步，在 UDF 中使用此数据类型
-public class UserScalarFunction extends ScalarFunction {
-
-    // 1. 自定义数据类型作为输出参数
-    public User eval(long i) {
-        if (i > 0 && i <= 5) {
-            User u = new User();
-            u.age = (int) i;
-            u.name = "name1";
-            u.totalBalance = new BigDecimal(1.1d);
-            return u;
-        } else {
-            User u = new User();
-            u.age = (int) i;
-            u.name = "name2";
-            u.totalBalance = new BigDecimal(2.2d);
-            return u;
-        }
-    }
-    
-    // 2. 自定义数据类型作为输入参数
-    public String eval(User i) {
-        if (i.age > 0 && i.age <= 5) {
-            User u = new User();
-            u.age = 1;
-            u.name = "name1";
-            u.totalBalance = new BigDecimal(1.1d);
-            return u.name;
-        } else {
-            User u = new User();
-            u.age = 2;
-            u.name = "name2";
-            u.totalBalance = new BigDecimal(2.2d);
-            return u.name;
-        }
-    }
-}
-#Upload the packaged jar to /usr/bigtop/current/flink-client/lib/ of all machines and restart yarn-session instance.
-
-#第三步，在 Flink SQL 中使用
--- 1. 创建 UDF
-CREATE FUNCTION user_scalar_func AS 'flink.examples.sql._12_data_type._02_user_defined.UserScalarFunction';
-
--- 2. 创建数据源表
-CREATE TABLE source_table (
-    user_id BIGINT NOT NULL COMMENT '用户 id'
-) WITH (
-  'connector' = 'datagen',
-  'rows-per-second' = '1',
-  'fields.user_id.min' = '1',
-  'fields.user_id.max' = '10'
-);
-
--- 3. 创建数据汇表
-CREATE TABLE sink_table (
-    result_row_1 ROW<age INT, name STRING, totalBalance DECIMAL(10, 2)>,
-    result_row_2 STRING
-) WITH (
-  'connector' = 'print'
-);
-
--- 4. SQL 查询语句
-INSERT INTO sink_table
-select
-    -- 4.a. 用户自定义类型作为输出
-    user_scalar_func(user_id) as result_row_1,
-    -- 4.b. 用户自定义类型作为输出及输入
-    user_scalar_func(user_scalar_func(user_id)) as result_row_2
-from source_table;
-
--- 5. 查询结果
-+I[+I[9, name2, 2.20], name2]
-+I[+I[1, name1, 1.10], name1]
-+I[+I[5, name1, 1.10], name1]
-```
-
-
-
-### Hive Catalog
-
-```sql
-#https://nightlies.apache.org/flink/flink-docs-release-1.15/zh/docs/connectors/table/hive/hive_catalog/
-CREATE CATALOG myhive WITH (
-  'type' = 'hive',
-  'hive-conf-dir' = '/usr/bigtop/current/hive-client/conf'
-);
-show catalogs;
-use catalog myhive;
-show databases;
-
-create table mykafka (
-    id STRING,
-    use_rname STRING,
-    age integer,
-    gender STRING,
-    goods_no STRING,
-    goods_price Float,
-    store_id integer,
-    shopping_type STRING,
-    tel STRING,
-    email STRING,
-    shopping_date Date
-) with (
-    'connector' = 'kafka',
-    'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
-    'topic' = 'fludesc',
-    'scan.startup.mode' = 'earliest-offset',
-    'format' = 'csv',
-    'csv.ignore-parse-errors' = 'true'
-);
-
-DESCRIBE mykafka;
-
-select * from mykafka;
-```
-
-### Flink Streaming Platform Web
-
-[flink-streaming-platform-web](https://github.com/zhp8341/flink-streaming-platform-web)
-
-```bash
-#https://github.com/zhp8341/flink-streaming-platform-web/blob/master/docs/deploy.md
-#https://www.cnblogs.com/data-magnifier/p/16943527.html
-sudo su - hadoop
-
-mkdir /usr/bigtop/3.2.0/usr/lib/
-cd /usr/bigtop/3.2.0/usr/lib/
-wget https://github.com/zhp8341/flink-streaming-platform-web/releases/download/tagV20230610(flink1.16.2)/flink-streaming-platform-web.tar.gz
-tar zxf flink-streaming-platform-web.tar.gz
-cd /usr/bigtop/current/
-ln -s /usr/bigtop/3.2.0/usr/lib/flink-streaming-platform-web flink-streaming-platform-web
-
-cd /usr/bigtop/current/flink-streaming-platform-web
-wget https://github.com/zhp8341/flink-streaming-platform-web/blob/master/docs/sql/flink_web.sql
-
-mysql -uroot -h127.0.0.1 -p
-> source /usr/bigtop/current/flink-streaming-platform-web/flink_web.sql;
-> exit;
-
-vim conf/application.properties
-####jdbc信息
-server.port=9084
-spring.datasource.url=jdbc:mysql://192.168.80.225:3306/flink_web?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
-spring.datasource.username=root
-spring.datasource.password=xxxxxx
-
-cd bin
-./deploy.sh start
-
-#http://192.168.80.226:9084/
-admin/123456
-```
-
-#### Settings
-
-![image-20230914181613864](/images/2023-08-25-hadoop-Ecosystem/image-20230914181613864.png)
-
-#### Job
-
-![image-20230914181838644](/images/2023-08-25-hadoop-Ecosystem/image-20230914181838644.png)
-
-### Flink SQL CDC
-
-[基于 Flink SQL CDC的实时数据同步方案 (dreamwu.com)](http://www.dreamwu.com/post-1594.html)
-
-[docs/sql_demo/demo_6.md · 朱慧培/flink-streaming-platform-web - Gitee.com](https://gitee.com/zhuhuipei/flink-streaming-platform-web/blob/master/docs/sql_demo/demo_6.md)
-
-[Overview — CDC Connectors for Apache Flink® documentation (ververica.github.io)](https://ververica.github.io/flink-cdc-connectors/release-2.4/content/about.html)
-
-```bash
-> sudo su - hadoop
-
-> mysql -uroot -h127.0.0.1 -p
--- MySQL
-CREATE DATABASE mydb;
-USE mydb;
-CREATE TABLE products (
-  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  description VARCHAR(512)
-);
-ALTER TABLE products AUTO_INCREMENT = 101;
-
-INSERT INTO products
-VALUES (default,"scooter","Small 2-wheel scooter"),
-       (default,"car battery","12V car battery"),
-       (default,"12-pack drill bits","12-pack of drill bits with sizes ranging from #40 to #3"),
-       (default,"hammer","12oz carpenter's hammer"),
-       (default,"hammer","14oz carpenter's hammer"),
-       (default,"hammer","16oz carpenter's hammer"),
-       (default,"rocks","box of assorted rocks"),
-       (default,"jacket","water resistent black wind breaker"),
-       (default,"spare tire","24 inch spare tire");
-
-CREATE TABLE orders (
-  order_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  order_date DATETIME NOT NULL,
-  customer_name VARCHAR(255) NOT NULL,
-  price DECIMAL(10, 5) NOT NULL,
-  product_id INTEGER NOT NULL,
-  order_status BOOLEAN NOT NULL -- Whether order has been placed
-) AUTO_INCREMENT = 10001;
-
-INSERT INTO orders
-VALUES (default, '2020-07-30 10:08:22', 'Jark', 50.50, 102, false),
-       (default, '2020-07-30 10:11:09', 'Sally', 15.00, 105, false),
-       (default, '2020-07-30 12:00:30', 'Edward', 25.25, 106, false);
-       
-       
-
-> yarn-session.sh -jm 2048MB -tm 2048MB -nm flink-sql-test -d
-
-> sql-client.sh embedded -s yarn-session
-Flink SQL> SET sql-client.execution.result-mode = tableau;
-
--- checkpoint every 3000 milliseconds                       
-Flink SQL> SET 'execution.checkpointing.interval' = '3s';  
-
-#Create in flinksql
--- Flink SQL
-#Mysql source
-Flink SQL> CREATE TABLE products (
-    id INT,
-    name STRING,
-    description STRING,
-    PRIMARY KEY (id) NOT ENFORCED
-  ) WITH (
-    'connector' = 'mysql-cdc',
-    'hostname' = '192.168.80.225',
-    'port' = '3306',
-    'username' = 'root',
-    'password' = 'Aa123#@!',
-    'database-name' = 'mydb',
-    'table-name' = 'products'
-  );
-
-Flink SQL> CREATE TABLE orders (
-   order_id INT,
-   order_date TIMESTAMP(0),
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   PRIMARY KEY (order_id) NOT ENFORCED
- ) WITH (
-   'connector' = 'mysql-cdc',
-   'hostname' = '192.168.80.225',
-   'port' = '3306',
-   'username' = 'root',
-   'password' = 'Aa123#@!',
-   'database-name' = 'mydb',
-   'table-name' = 'orders'
- );
-
-#Kafka sink
-CREATE TABLE enriched_orders(
-   order_id INT,
-   order_date TIMESTAMP(0),
-   customer_name STRING,
-   price DECIMAL(10, 5),
-   product_id INT,
-   order_status BOOLEAN,
-   product_name STRING,
-   product_description STRING,
-   PRIMARY KEY (order_id) NOT ENFORCED
-) WITH (
- 'connector' = 'upsert-kafka',
- 'topic' = 'fludesc',
- 'properties.bootstrap.servers' = 'datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092',
- 'key.format' = 'csv',
- 'value.format' = 'csv'
-);
-
-#Sink
-INSERT INTO enriched_orders
- SELECT o.*, p.name, p.description
- FROM orders AS o
- LEFT JOIN products AS p ON o.product_id = p.id;
-
-#Monitoring the changed data streams
-kafka-console-consumer.sh --topic fludesc --bootstrap-server datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092,datanode01-test.zerofinance.net:9092 --from-beginning
-```
-
-The connector named kafka doesn't support flink-sql-cdc, using 'upset-kafka' instead.  
-
-The error as blow:
-
-![image-20230915163923171](/images/2023-08-25-hadoop-Ecosystem/image-20230915163923171.png)
 
 ### Window Aggregation
 
