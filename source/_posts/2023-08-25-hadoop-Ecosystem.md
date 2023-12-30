@@ -1683,10 +1683,12 @@ FROM apache/flink:1.15.3-scala_2.12
 
 RUN mkdir -p $FLINK_HOME/usrlib
 
+USER root
 # Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
 #RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
+USER flink
 # Copying libs
 COPY ./flink-1.15.3/lib/* $FLINK_HOME/lib/
 ```
