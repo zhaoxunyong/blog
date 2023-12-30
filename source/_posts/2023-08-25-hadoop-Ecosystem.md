@@ -1993,6 +1993,7 @@ FROM dinkydocker/dinky-standalone-server:0.7.5-flink15
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
 
+#Must copy relevant log configs to /opt/dinky/conf/ folder:
 COPY conf/* /opt/dinky/conf/
 COPY lib/* /opt/dinky/plugins/flink1.15/
 EXPOSE  8888 8081
