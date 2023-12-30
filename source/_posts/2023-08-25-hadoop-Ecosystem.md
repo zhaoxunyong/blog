@@ -1993,7 +1993,7 @@ FROM dinkydocker/dinky-standalone-server:0.7.5-flink15
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
 
-COPY flink-conf.yaml /opt/dinky/conf/
+COPY conf/* /opt/dinky/conf/
 COPY lib/* /opt/dinky/plugins/flink1.15/
 EXPOSE  8888 8081
 ```
@@ -2249,6 +2249,7 @@ docker version must be 23 or above:
 ARG FLINK_VERSION=1.15.3
 FROM registry.zerofinance.net/library/flink:${FLINK_VERSION}
 
+USER root
 # Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
 #RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -2256,7 +2257,6 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 ARG FLINK_VERSION
 ENV PYTHON_HOME /opt/miniconda3
 
-USER root
 RUN wget "https://s3.jcloud.sjtu.edu.cn/899a892efef34b1b944a19981040f55b-oss01/anaconda/miniconda/Miniconda3-py38_4.9.2-Linux-x86_64.sh" -O "miniconda.sh" && chmod +x miniconda.sh
 RUN ./miniconda.sh -b -p $PYTHON_HOME && chown -R flink $PYTHON_HOME && ls $PYTHON_HOME
 
