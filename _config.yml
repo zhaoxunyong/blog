@@ -71,8 +71,8 @@ pagination_dir: page
 ## Plugins: http://hexo.io/plugins/
 ## Themes: http://hexo.io/themes/
 #theme: BlueLake
-theme: Anisina
-# theme: next
+# theme: Anisina
+theme: next
 
 #since: 2014
 # Deployment
