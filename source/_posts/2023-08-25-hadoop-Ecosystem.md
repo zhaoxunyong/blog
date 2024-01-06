@@ -1961,6 +1961,64 @@ scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.228:/u
 scp /usr/bigtop/current/flink-client/conf/flink-conf.yaml root@192.168.80.229:/usr/bigtop/current/flink-client/conf/
 ```
 
+##### Restore job
+
+```bash
+#https://mp.weixin.qq.com/s/srUyvNr7KX1PSOaG1d8qdQ?poc_token=HGNqmWWjWqONGGyPVzyzKzDhIsyauXyJ8kOW8Bfl
+#https://mp.weixin.qq.com/s/o8mL0UkH4j_h5mjyayn0XQ
+
+vim flink/conf/flink-conf.yaml
+state.savepoints.dir: file:///works/app/flink/flink-1.15.3/flink-savepoints
+#Restart cluster
+
+#Starting from the latest savepoints when restart the job:
+curl -X
+POST http://jobmanager-host:port/jobs/jobId/savepoints
+curl -X PATCH  http://jobmanager-host:port/jobs/jobId
+
+Dinky:
+经验证Dinky平台支持Savepoint机制。任务重启后仅消费最新的数据。
+前置条件：修改Flink家目录下 flink/conf/flink-conf.yaml 文件，指定savepoint目录位置
+操作步骤：
+        任务配置
+                开启右边 SavePoint 策略，选择 “最近一次”
+                
+        SavePoint 停止 FlinkSQL 作业
+                点击 Dinky 的运维中心菜单，在任务列表里点击上面运行的这个任务进入任务详情页面，在页面右上角点击三个点的省略号按钮，弹出框中点击 “SavePoint停止”
+
+        重启作业
+                在 Dinky 的运维中心，任务列表，任务详情页面，重启任务
+```
+
+##### Optimize
+
+```conf
+SET parallelism.default=1;
+SET execution.runtime-mode = streaming;
+SET table.local-time-zone =Asia/Shanghai;
+ -- 10分钟
+SET execution.checkpointing.interval = 10m;
+ -- 失败容忍度
+SET execution.checkpointing.tolerable-failed-checkpoints = 50;
+ -- 超时时间
+SET execution.checkpointing.timeout =10000;
+ -- 一次语义
+SET execution.checkpointing.mode = EXACTLY_ONCE;
+ -- 固定频次
+SET restart-strategy= fixed-delay;
+ -- 尝试5次
+SET restart-strategy.fixed-delay.attempts = 5;
+ -- 重启延时50s
+SET restart-strategy.fixed-delay.delay = 50s;
+
+-- 调优参数
+SET table.exec.mini-batch.enabled = true
+SET table.exec.mini-batch.allow-latency = 2s
+SET table.exec.mini-batch.size = 5000
+SET table.optimizer.distinct-agg.split.enabled = true
+```
+
+
 ### Dinky
 
 http://www.dlink.top/docs/0.7/get_started/docker_deploy
