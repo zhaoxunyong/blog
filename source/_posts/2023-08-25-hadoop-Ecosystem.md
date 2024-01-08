@@ -3766,6 +3766,17 @@ Flink has a history server that can be used to query the statistics of completed
 
 By default, this server binds to `localhost` and listens at port `8082`.
 
+### Troubleshooting
+
+#https://www.jianshu.com/p/877868b6f829
+
+NoResourceAvailableException: Could not acquire the minimum required resources
+
+```conf
+taskmanager.memory.process.size: 6048m
+jobmanager.memory.process.size: 6048m
+```
+
 ## Seatunnel
 
 ```bash
