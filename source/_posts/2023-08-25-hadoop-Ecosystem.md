@@ -1715,6 +1715,7 @@ bin/kubernetes-session.sh \
  -Dkubernetes.container.image.pull-policy=Always \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/recovery \
+ -Dstate.savepoints.dir=oss://flink-ha-test/flink-savepoints \
  -Dkubernetes.container.image.pull-secrets=registry-private-secret \
  #-Dcontainerized.master.env.ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.15.3.jar \
  #-Dcontainerized.taskmanager.env.ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.15.3.jar \
@@ -1789,6 +1790,7 @@ bin/flink run-application \
  -Dfs.oss.accessKeySecret=yyy \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/native-recovery \
+ -Dstate.savepoints.dir=oss://flink-ha-test/flink-savepoints \
  -Dkubernetes.container.image.pull-secrets=registry-private-secret \
  -Dkubernetes.jobmanager.replicas=1 \
  -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
