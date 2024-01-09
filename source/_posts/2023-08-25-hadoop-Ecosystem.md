@@ -1721,7 +1721,7 @@ bin/kubernetes-session.sh \
  -Dkubernetes.container.image.pull-secrets=zzz \
  -Dkubernetes.jobmanager.replicas=2 \
  -Dkubernetes.jobmanager.cpu=0.2 \
- -Djobmanager.memory.process.size=1024m \
+ -Djobmanager.memory.process.size=4096m \
  -Dresourcemanager.taskmanager-timeout=3600000 \
  -Dkubernetes.taskmanager.node-selector=flink-env:test \
  -Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule \
