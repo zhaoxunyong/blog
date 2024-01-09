@@ -1715,13 +1715,14 @@ bin/kubernetes-session.sh \
  -Dkubernetes.container.image.pull-policy=Always \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/recovery \
- -Dstate.backend=filesystem \
+ -Dstate.backend=rocksdb \
+ -Dstate.backend.incremental=true \
  -Dstate.checkpoints.dir=oss://flink-ha-test/flink-checkpoints \
  -Dstate.savepoints.dir=oss://flink-ha-test/flink-savepoints \
  -Dkubernetes.container.image.pull-secrets=zzz \
  -Dkubernetes.jobmanager.replicas=2 \
  -Dkubernetes.jobmanager.cpu=0.2 \
- -Djobmanager.memory.process.size=4096m \
+ -Djobmanager.memory.process.size=1024m \
  -Dresourcemanager.taskmanager-timeout=3600000 \
  -Dkubernetes.taskmanager.node-selector=flink-env:test \
  -Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule \
@@ -1791,14 +1792,15 @@ bin/flink run-application \
  -Dfs.oss.accessKeySecret=yyy \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/native-recovery \
- -Dstate.backend=filesystem \
+ -Dstate.backend=rocksdb \
+ -Dstate.backend.incremental=true \
  -Dstate.checkpoints.dir=oss://flink-ha-test/flink-application-checkpoints \
  -Dstate.savepoints.dir=oss://flink-ha-test/flink-application-savepoints \
  -Dkubernetes.container.image.pull-secrets=zzz \
  -Dkubernetes.jobmanager.replicas=1 \
  -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
  -Dkubernetes.jobmanager.cpu=0.2 \
- -Djobmanager.memory.process.size=4096m \
+ -Djobmanager.memory.process.size=1024m \
  -Dresourcemanager.taskmanager-timeout=3600000 \
  -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
  -Dkubernetes.taskmanager.node-selector=flink-env:test \
