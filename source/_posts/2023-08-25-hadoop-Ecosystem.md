@@ -1706,8 +1706,8 @@ Starting flink job manager:
 bin/kubernetes-session.sh \
  -Dkubernetes.namespace=flink-test \
  -Dkubernetes.jobmanager.service-account=flink-test \
- -Dkubernetes.rest-service.exposed.type=NodePort \
  -Dkubernetes.cluster-id=flink-cluster \
+ -Dakka.ask.timeout=100s \
  -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
  -Dfs.oss.accessKeyId=xxx \
  -Dfs.oss.accessKeySecret=yyy \
@@ -1715,18 +1715,19 @@ bin/kubernetes-session.sh \
  -Dkubernetes.container.image.pull-policy=Always \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/recovery \
+ -Dstate.backend=filesystem \
+ -Dstate.checkpoints.dir=oss://flink-ha-test/flink-checkpoints \
  -Dstate.savepoints.dir=oss://flink-ha-test/flink-savepoints \
- -Dkubernetes.container.image.pull-secrets=registry-private-secret \
- #-Dcontainerized.master.env.ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.15.3.jar \
- #-Dcontainerized.taskmanager.env.ENABLE_BUILT_IN_PLUGINS=flink-oss-fs-hadoop-1.15.3.jar \
+ -Dkubernetes.container.image.pull-secrets=zzz \
  -Dkubernetes.jobmanager.replicas=2 \
  -Dkubernetes.jobmanager.cpu=0.2 \
  -Djobmanager.memory.process.size=1024m \
  -Dresourcemanager.taskmanager-timeout=3600000 \
  -Dkubernetes.taskmanager.node-selector=flink-env:test \
+ -Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule \
  -Dkubernetes.taskmanager.cpu=0.2 \
- -Dtaskmanager.memory.process.size=1024m \
- -Dtaskmanager.numberOfTaskSlots=3
+ -Dtaskmanager.memory.process.size=4096m \
+ -Dtaskmanager.numberOfTaskSlots=4
 ```
 
 Enable cluster-rest ingress:
@@ -1790,18 +1791,20 @@ bin/flink run-application \
  -Dfs.oss.accessKeySecret=yyy \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/native-recovery \
- -Dstate.savepoints.dir=oss://flink-ha-test/flink-savepoints \
- -Dkubernetes.container.image.pull-secrets=registry-private-secret \
+ -Dstate.backend=filesystem \
+ -Dstate.checkpoints.dir=oss://flink-ha-test/flink-application-checkpoints \
+ -Dstate.savepoints.dir=oss://flink-ha-test/flink-application-savepoints \
+ -Dkubernetes.container.image.pull-secrets=zzz \
  -Dkubernetes.jobmanager.replicas=1 \
  -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
  -Dkubernetes.jobmanager.cpu=0.2 \
- -Djobmanager.memory.process.size=1024m \
+ -Djobmanager.memory.process.size=4096m \
  -Dresourcemanager.taskmanager-timeout=3600000 \
  -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
  -Dkubernetes.taskmanager.node-selector=flink-env:test \
  -Dkubernetes.taskmanager.cpu=0.2 \
- -Dtaskmanager.memory.process.size=1024m \
- -Dtaskmanager.numberOfTaskSlots=1 \
+ -Dtaskmanager.memory.process.size=4096m \
+ -Dtaskmanager.numberOfTaskSlots=4 \
  local:///opt/flink/examples/streaming/TopSpeedWindowing.jar \
  --output /opt/flink/log/topSpeedWindowing-output
  
