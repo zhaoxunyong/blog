@@ -3738,6 +3738,19 @@ org.apache.flink.table.api.ValidationException: Unsupported options found for 'd
 
 Deprecated.
 
+### Troubleshooting
+
+#https://www.cnblogs.com/yeyuzhuanjia/p/17942445
+
+Web UI cannot be visited by external:
+
+vim conf/flink-conf.yaml:
+
+```bash
+rest.address: 0.0.0.0
+rest.bind-address: 0.0.0.0
+```
+
 ### High-Availability
 
 Recommend working on Yarn
