@@ -2045,6 +2045,12 @@ mysql -udinky -h127.0.0.1 -p
 create database dinky;
 use dinky;
 source /works/app/flink/dinky.sql;
+
+docker run -d --restart=always -p 8888:8888 -p 8083:8081 \
+ -e MYSQL_ADDR=192.168.101.82:3306  -e MYSQL_DATABASE=dinky \
+  -e MYSQL_USERNAME=dinky  -e MYSQL_PASSWORD=Aa123456 \
+   --name dinky  -v /var/run/docker.sock:/var/run/docker.sock \
+    registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
 ```
 
 DinkyDockerfile:
