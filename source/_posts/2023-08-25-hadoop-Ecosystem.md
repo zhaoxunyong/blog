@@ -1502,11 +1502,11 @@ http://192.168.63.102:5601/app/kibana#/dev_tools/console
 
 ### Deployment Modes
 
-See this Overview to understand: [deployment-modes](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/overview/#deployment-modes)
+See this Overview to understand: [deployment-modes](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/overview/#deployment-modes)
 
 #### Standalone
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/standalone/overview/
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/standalone/overview/
 
 ##### Session Mode
 
@@ -1557,11 +1557,11 @@ $ ./bin/standalone-job.sh stop
 
 #### YARN
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/yarn/
 
 ##### Session Mode
 
-[starting-a-flink-session-on-yarn](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/#starting-a-flink-session-on-yarn)
+[starting-a-flink-session-on-yarn](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/yarn/#starting-a-flink-session-on-yarn)
 
 ```bash
 export HADOOP_CLASSPATH=`hadoop classpath`
@@ -1588,7 +1588,7 @@ echo "stop" | ./bin/yarn-session.sh -id application_XXXXX_XXX
 
 Congratulations! You have successfully run a Flink application by deploying Flink on YARN.
 
-We describe deployment with the Session Mode in the [Getting Started](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/#getting-started) guide at the top of the page.
+We describe deployment with the Session Mode in the [Getting Started](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/yarn/#getting-started) guide at the top of the page.
 
 The Session Mode has two operation modes:
 
@@ -1611,7 +1611,7 @@ You can **re-attach to a YARN session** using the following command:
 ./bin/yarn-session.sh -id application_XXXX_YY
 ```
 
-Besides passing [configuration](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/config/) via the `conf/flink-conf.yaml` file, you can also pass any configuration at submission time to the `./bin/yarn-session.sh` client using `-Dkey=value` arguments.
+Besides passing [configuration](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/config/) via the `conf/flink-conf.yaml` file, you can also pass any configuration at submission time to the `./bin/yarn-session.sh` client using `-Dkey=value` arguments.
 
 The YARN session client also has a few “shortcut arguments” for commonly used settings. They can be listed with `./bin/yarn-session.sh -h`.
 
@@ -1643,15 +1643,15 @@ The above will allow the job submission to be extra lightweight as the needed Fl
 
 #### Native_kubernetes
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/filesystems/oss/
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/filesystems/oss/
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/native_kubernetes/
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/native_kubernetes/
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/overview/
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/ha/overview/
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/kubernetes_ha/
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/ha/kubernetes_ha/
 
-https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/config/#kubernetes
+https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/config/#kubernetes
 
 ##### K8s On Session
 
@@ -1679,9 +1679,20 @@ Building required jars into docker image(Or mount a folder from NAS):
 Dockerfile:
 
 ```
-FROM apache/flink:1.15.3-scala_2.12
+#FROM apache/flink:1.15.3-scala_2.12
+#
+#RUN mkdir -p $FLINK_HOME/usrlib
+#
+#USER root
+## Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
+##RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
+#RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+#
+#USER flink
+## Copying libs
+#COPY ./flink-1.15.3/lib/* $FLINK_HOME/lib/
 
-RUN mkdir -p $FLINK_HOME/usrlib
+FROM apache/flink:1.17.2-scala_2.12
 
 USER root
 # Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
@@ -1689,15 +1700,31 @@ USER root
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 USER flink
+RUN mkdir -p $FLINK_HOME/usrlib
+
 # Copying libs
-COPY ./flink-1.15.3/lib/* $FLINK_HOME/lib/
+COPY ./lib-1.17/* $FLINK_HOME/lib/
+```
+
+ll ./lib-1.17/
+
+```bash
+-rw-r--r--  1 root  root    266420 Jun 15  2023 flink-connector-jdbc-3.1.1-1.17.jar
+-rw-r--r--  1 root  root  25743957 Nov 10 16:32 flink-oss-fs-hadoop-1.17.2.jar
+-rw-r--r--  1 root  root  28440546 Apr 13  2023 flink-sql-connector-elasticsearch7-3.0.1-1.17.jar
+-rw-r--r--  1 root  root   5566107 Oct 26 04:26 flink-sql-connector-kafka-3.0.1-1.17.jar
+-rw-r--r--  1 root  root  23600947 Jul 21 16:31 flink-sql-connector-mysql-cdc-2.4.1.jar
+-rw-r--r--  1 root  root   2515447 Jan 18 15:01 mysql-connector-j-8.0.31.jar
 ```
 
 Build and push to registry:
 
 ```
-docker build -t registry.zerofinance.net/library/flink:1.15.3 .
-docker push registry.zerofinance.net/library/flink:1.15.3
+#docker build -t registry.zerofinance.net/library/flink:1.15.3 .
+#docker push registry.zerofinance.net/library/flink:1.15.3
+
+docker build -t registry.zerofinance.net/library/flink:1.17.2 .
+docker push registry.zerofinance.net/library/flink:1.17.2
 ```
 
 Starting flink job manager:
@@ -1711,7 +1738,7 @@ bin/kubernetes-session.sh \
  -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
  -Dfs.oss.accessKeyId=xxx \
  -Dfs.oss.accessKeySecret=yyy \
- -Dkubernetes.container.image=registry.zerofinance.net/library/flink:1.15.3 \
+ -Dkubernetes.container.image=registry.zerofinance.net/library/flink:1.17.2 \
  -Dkubernetes.container.image.pull-policy=Always \
  -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
  -Dhigh-availability.storageDir=oss://flink-ha-test/recovery \
@@ -1785,7 +1812,7 @@ bin/flink run-application \
  -Dkubernetes.jobmanager.service-account=flink \
  -Dkubernetes.rest-service.exposed.type=NodePort \
  -Dkubernetes.cluster-id=flink-application-cluster \
- -Dkubernetes.container.image=registry.zerofinance.net/library/flink:1.15.3 \
+ -Dkubernetes.container.image=registry.zerofinance.net/library/flink:1.17.2 \
  -Dkubernetes.container.image.pull-policy=Always \
  -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
  -Dfs.oss.accessKeyId=xxx \
@@ -1839,9 +1866,9 @@ start-cluster.sh
 
 sql-client.sh embedded
 
-#https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/sqlclient/
+#https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/table/sqlclient/
 #Submit sql via sql-client.sh
-./flink-1.15.3/bin/sql-client.sh -f ./test.sql
+./flink-1.17.2/bin/sql-client.sh -f ./test.sql
 ```
 
 ##### On yarn Session
@@ -2058,23 +2085,38 @@ DinkyDockerfile:
 In order to copy required jars into docker image:
 
 ```
-# 用来构建dinky环境
-FROM dinkydocker/dinky-standalone-server:0.7.5-flink15
+## 用来构建dinky环境
+#FROM dinkydocker/dinky-standalone-server:0.7.5-flink15
+#
+#RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+#RUN echo 'Asia/Shanghai' >/etc/timezone
+#
+##Must copy relevant log configs to /opt/dinky/conf/ folder:
+#COPY conf/* /opt/dinky/conf/
+#COPY lib/* /opt/dinky/plugins/flink1.15/
+#EXPOSE  8888 8081
+
+FROM dinkydocker/dinky-standalone-server:0.7.5-flink16
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo 'Asia/Shanghai' >/etc/timezone
+RUN echo 'Asia/Shanghai' > /etc/timezone
 
-#Must copy relevant log configs to /opt/dinky/conf/ folder:
-COPY conf/* /opt/dinky/conf/
-COPY lib/* /opt/dinky/plugins/flink1.15/
+ENV FLINK_BIG_VERSION=1.17
+
+#COPY conf/* /opt/dinky/conf/ 
+#flink-1.17.2-lib为flink lib下的所有jar，包括自定义jar
+COPY flink-1.17.2-lib/* /opt/dinky/plugins/flink1.17/
 EXPOSE  8888 8081
 ```
 
 Build and push to registry:
 
 ```
-docker build -t registry.zerofinance.net/library/flink-dinky:0.7.5-flink15 . -f DinkyDockerfile
-docker push registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+#docker build -t registry.zerofinance.net/library/flink-dinky:0.7.5-flink15 . -f DinkyDockerfile
+#docker push registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+
+docker build -t registry.zerofinance.net/library/flink-dinky:0.7.5-flink17 . -f DinkyDockerfile
+docker push registry.zerofinance.net/library/flink-dinky:0.7.5-flink17
 ```
 
 flink-dinky-template.yml:
@@ -2318,7 +2360,7 @@ DinkyFlinkDockerfile:
 ```
 docker version must be 23 or above:
 # 用来构建dinky环境
-ARG FLINK_VERSION=1.15.3
+ARG FLINK_VERSION=1.17.2
 FROM registry.zerofinance.net/library/flink:${FLINK_VERSION}
 
 USER root
@@ -2337,16 +2379,22 @@ USER flink
 ENV PATH $PYTHON_HOME/bin:$PATH
 RUN pip install "apache-flink==${FLINK_VERSION}" -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
 
-RUN cp /opt/flink/opt/flink-python_* /opt/flink/lib/
+#For 1.15.x
+#RUN cp /opt/flink/opt/flink-python_* /opt/flink/lib/
+#For 1.16.x or above
+RUN cp /opt/flink/opt/flink-python-* /opt/flink/lib/
 
-COPY ./dlink-app-1.15-0.7.5-jar-with-dependencies.jar $FLINK_HOME/lib/
+COPY ./dlink-app-1.17-0.7.5-jar-with-dependencies.jar $FLINK_HOME/lib/
 ```
 
 Build and push to registry:
 
 ```bash
-docker build -t registry.zerofinance.net/library/dinky-flink-application:1.15.3 . -f DinkyFlinkDockerfile
-docker push registry.zerofinance.net/library/dinky-flink-application:1.15.3
+#docker build -t registry.zerofinance.net/library/dinky-flink-application:1.15.3 . -f DinkyFlinkDockerfile
+#docker push registry.zerofinance.net/library/dinky-flink-application:1.15.3
+
+docker build -t registry.zerofinance.net/library/dinky-flink-application:1.17.2 . -f DinkyFlinkDockerfile
+docker push registry.zerofinance.net/library/dinky-flink-application:1.17.2
 ```
 
 
@@ -2386,17 +2434,17 @@ http://192.168.63.102:8888/
 
 ### User-defined Functions
 
-[User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/)
+[User-defined Functions | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/table/functions/udfs/)
 
 User-defined functions (UDFs) are extension points to call frequently used logic or custom logic that cannot be expressed otherwise in queries.
 
-User-defined functions can be implemented in a JVM language (such as Java or Scala) or Python. An implementer can use arbitrary third party libraries within a UDF. This page will focus on JVM-based languages, please refer to the PyFlink documentation for details on writing [general](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/python_udfs/) and [vectorized](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/python/table/udfs/vectorized_python_udfs/) UDFs in Python.
+User-defined functions can be implemented in a JVM language (such as Java or Scala) or Python. An implementer can use arbitrary third party libraries within a UDF. This page will focus on JVM-based languages, please refer to the PyFlink documentation for details on writing [general](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/python/table/udfs/python_udfs/) and [vectorized](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/python/table/udfs/vectorized_python_udfs/) UDFs in Python.
 
 ```java
 #https://yangyichao-mango.github.io/2021/11/15/wechat-blog/01_%E5%A4%A7%E6%95%B0%E6%8D%AE/01_%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/01_%E5%AE%9E%E6%97%B6%E6%95%B0%E4%BB%93/02_%E6%95%B0%E6%8D%AE%E5%86%85%E5%AE%B9%E5%BB%BA%E8%AE%BE/03_one-engine/01_%E8%AE%A1%E7%AE%97%E5%BC%95%E6%93%8E/01_flink/01_flink-sql/20_%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8%E5%B9%B2%E8%B4%A7%EF%BC%81FlinkSQL%E6%88%90%E7%A5%9E%E4%B9%8B%E8%B7%AF%EF%BC%88%E5%85%A8%E6%96%876%E4%B8%87%E5%AD%97%E3%80%81110%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%E3%80%81160%E5%BC%A0%E5%9B%BE%EF%BC%89/
 #https://www.cnblogs.com/wxm2270/p/17275442.html
 #https://juejin.cn/post/7103196993232568328
-#https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/functions/udfs/
+#https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/table/functions/udfs/
 
 #第一步，自定义数据类型
 public class User {
@@ -2491,7 +2539,7 @@ from source_table;
 ### Hive Catalog
 
 ```sql
-#https://nightlies.apache.org/flink/flink-docs-release-1.15/zh/docs/connectors/table/hive/hive_catalog/
+#https://nightlies.apache.org/flink/flink-docs-release-1.17/zh/docs/connectors/table/hive/hive_catalog/
 CREATE CATALOG myhive WITH (
   'type' = 'hive',
   'hive-conf-dir' = '/usr/bigtop/current/hive-client/conf'
@@ -3393,7 +3441,7 @@ INSERT INTO enriched_orders
 
 ##### Windowing TVF
 
-[Windowing TVF | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/sql/queries/window-tvf/)
+[Windowing TVF | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/table/sql/queries/window-tvf/)
 
 ```sql
 TUMBLE(TABLE data, DESCRIPTOR(timecol), size [, offset ])
@@ -3534,7 +3582,7 @@ group by
 
 ##### Windowing TVF
 
-[Windowing TVF | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/table/sql/queries/window-tvf/#hop)
+[Windowing TVF | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/dev/table/sql/queries/window-tvf/#hop)
 
 ```sql
 HOP(TABLE data, DESCRIPTOR(timecol), slide, size [, offset ])
@@ -3761,17 +3809,17 @@ rest.bind-address: 0.0.0.0
 
 Recommend working on Yarn
 
-[High-Availability on YARN](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/resource-providers/yarn/#high-availability-on-yarn)
+[High-Availability on YARN](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/resource-providers/yarn/#high-availability-on-yarn)
 
-High-Availability on YARN is achieved through a combination of YARN and a [high availability service](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/overview/).
+High-Availability on YARN is achieved through a combination of YARN and a [high availability service](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/ha/overview/).
 
 Once a HA service is configured, it will persist JobManager metadata and perform leader elections.
 
-YARN is taking care of restarting failed JobManagers. The maximum number of JobManager restarts is defined through two configuration parameters. First Flink’s [yarn.application-attempts](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/config/#yarn-application-attempts) configuration will default 2. This value is limited by YARN’s [yarn.resourcemanager.am.max-attempts](https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-common/yarn-default.xml), which also defaults to 2.
+YARN is taking care of restarting failed JobManagers. The maximum number of JobManager restarts is defined through two configuration parameters. First Flink’s [yarn.application-attempts](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/config/#yarn-application-attempts) configuration will default 2. This value is limited by YARN’s [yarn.resourcemanager.am.max-attempts](https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-common/yarn-default.xml), which also defaults to 2.
 
 Note that Flink is managing the `high-availability.cluster-id` configuration parameter when deploying on YARN. Flink sets it per default to the YARN application id. **You should not overwrite this parameter when deploying an HA cluster on YARN**. The cluster ID is used to distinguish multiple HA clusters in the HA backend (for example Zookeeper). Overwriting this configuration parameter can lead to multiple YARN clusters affecting each other.
 
-[ZooKeeper HA Services](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/ha/zookeeper_ha/)
+[ZooKeeper HA Services](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/ha/zookeeper_ha/)
 
 Configure high availability mode and ZooKeeper quorum in `conf/flink-conf.yaml`:
 
@@ -3784,7 +3832,7 @@ high-availability.storageDir: hdfs:///flink/ha/
 
 ### Histroy Server
 
-[History Server | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/deployment/advanced/historyserver/)
+[History Server | Apache Flink](https://nightlies.apache.org/flink/flink-docs-release-1.17/docs/deployment/advanced/historyserver/)
 
 Flink has a history server that can be used to query the statistics of completed jobs after the corresponding Flink cluster has been shut down.
 
