@@ -1756,6 +1756,8 @@ bin/kubernetes-session.sh \
  -Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule \
  -Dkubernetes.taskmanager.cpu=0.2 \
  -Dtaskmanager.memory.process.size=4096m \
+ -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
+ -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
  -Dtaskmanager.numberOfTaskSlots=4
 
 #For 1.17.x
@@ -1785,6 +1787,8 @@ bin/kubernetes-session.sh \
  -Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule \
  -Dkubernetes.taskmanager.cpu.amount=0.2 \
  -Dtaskmanager.memory.process.size=1024m \
+ -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
+ -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
  -Dtaskmanager.numberOfTaskSlots=2
 ```
 
@@ -2155,7 +2159,7 @@ In order to copy required jars into docker image:
 #RUN echo 'Asia/Shanghai' >/etc/timezone
 #
 ##Must copy relevant log configs to /opt/dinky/conf/ folder:
-#COPY conf/* /opt/dinky/conf/
+COPY conf/* /opt/dinky/conf/
 #COPY lib/* /opt/dinky/plugins/flink1.15/
 #EXPOSE  8888 8081
 
@@ -2167,7 +2171,7 @@ RUN echo 'Asia/Shanghai' > /etc/timezone
 ENV FLINK_BIG_VERSION=1.17
 
 #不复制的话dinky applicaition下显示不了日志
-#COPY conf/* /opt/dinky/conf/
+COPY conf/* /opt/dinky/conf/
 #flink-1.17.2-lib为flink-1.17.2/lib下的所有jar，包括自定义jar
 COPY flink-1.17.2-lib/* /opt/dinky/plugins/flink1.17/
 EXPOSE  8888 8081
