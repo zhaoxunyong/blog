@@ -2104,7 +2104,7 @@ RUN echo 'Asia/Shanghai' > /etc/timezone
 ENV FLINK_BIG_VERSION=1.17
 
 #COPY conf/* /opt/dinky/conf/ 
-#flink-1.17.2-lib为flink lib下的所有jar，包括自定义jar
+#flink-1.17.2-lib为flink-1.17.2/lib下的所有jar，包括自定义jar
 COPY flink-1.17.2-lib/* /opt/dinky/plugins/flink1.17/
 EXPOSE  8888 8081
 ```
