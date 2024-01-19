@@ -1730,6 +1730,7 @@ docker push registry.zerofinance.net/library/flink:1.17.2
 Starting flink job manager:
 
 ```bash
+#For 1.15.x 1.16.x
 bin/kubernetes-session.sh \
  -Dkubernetes.namespace=flink-test \
  -Dkubernetes.jobmanager.service-account=flink-test \
@@ -1756,6 +1757,35 @@ bin/kubernetes-session.sh \
  -Dkubernetes.taskmanager.cpu=0.2 \
  -Dtaskmanager.memory.process.size=4096m \
  -Dtaskmanager.numberOfTaskSlots=4
+
+#For 1.17.x
+bin/kubernetes-session.sh \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.jobmanager.service-account=flink-test \
+ -Dkubernetes.cluster-id=flink-test \
+-Dkubernetes.rest-service.exposed.type=NodePort \
+ -Dakka.ask.timeout=100s \
+ -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
+ -Dfs.oss.accessKeyId=xxx \
+ -Dfs.oss.accessKeySecret=yyy \
+ -Dkubernetes.container.image.ref=registry.zerofinance.net/library/flink:1.17.2 \
+ -Dkubernetes.container.image.pull-policy=Always \
+ -Dhigh-availability.type=kubernetes \
+ -Dhigh-availability.storageDir=oss://flink-cluster-test/recovery \
+ -Dstate.backend=rocksdb \
+ -Dstate.backend.incremental=true \
+ -Dstate.checkpoints.dir=oss://flink-cluster-test/flink-checkpoints \
+ -Dstate.savepoints.dir=oss://flink-cluster-test/flink-savepoints \
+ -Dkubernetes.container.image.pull-secrets=zzz \
+ -Dkubernetes.jobmanager.replicas=2 \
+ -Dkubernetes.jobmanager.cpu.amount=0.2 \
+ -Djobmanager.memory.process.size=1024m \
+ -Dresourcemanager.taskmanager-timeout=3600000 \
+ -Dkubernetes.taskmanager.node-selector=flink-env:test \
+ -Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule \
+ -Dkubernetes.taskmanager.cpu.amount=0.2 \
+ -Dtaskmanager.memory.process.size=1024m \
+ -Dtaskmanager.numberOfTaskSlots=2
 ```
 
 Enable cluster-rest ingress:
@@ -1806,6 +1836,7 @@ kubectl -n flink-test delete deploy flink-cluster
 
 ```bash
 #Starting:
+#For 1.15.x 1.16.x
 bin/flink run-application \
  --target kubernetes-application \
  -Dkubernetes.namespace=flink-test \
@@ -1832,6 +1863,38 @@ bin/flink run-application \
  -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
  -Dkubernetes.taskmanager.node-selector=flink-env:test \
  -Dkubernetes.taskmanager.cpu=0.2 \
+ -Dtaskmanager.memory.process.size=4096m \
+ -Dtaskmanager.numberOfTaskSlots=4 \
+ local:///opt/flink/examples/streaming/TopSpeedWindowing.jar \
+ --output /opt/flink/log/topSpeedWindowing-output
+
+#For 1.17.x
+bin/flink run-application \
+ --target kubernetes-application \
+ -Dkubernetes.namespace=flink-test \
+ -Dkubernetes.jobmanager.service-account=flink \
+ -Dkubernetes.rest-service.exposed.type=NodePort \
+ -Dkubernetes.cluster-id=flink-application-cluster \
+ -Dkubernetes.container.image.ref=registry.zerofinance.net/library/flink:1.17.2 \
+ -Dkubernetes.container.image.pull-policy=Always \
+ -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com \
+ -Dfs.oss.accessKeyId=xxx \
+ -Dfs.oss.accessKeySecret=yyy \
+ -Dhigh-availability.type=kubernetes \
+ -Dhigh-availability.storageDir=oss://flink-ha-test/native-recovery \
+ -Dstate.backend=rocksdb \
+ -Dstate.backend.incremental=true \
+ -Dstate.checkpoints.dir=oss://flink-ha-test/flink-application-checkpoints \
+ -Dstate.savepoints.dir=oss://flink-ha-test/flink-application-savepoints \
+ -Dkubernetes.container.image.pull-secrets=zzz \
+ -Dkubernetes.jobmanager.replicas=1 \
+ -Denv.java.opts.jobmanager=-Duser.timezone=GMT+08 \
+ -Dkubernetes.jobmanager.cpu.amount=0.2 \
+ -Djobmanager.memory.process.size=1024m \
+ -Dresourcemanager.taskmanager-timeout=3600000 \
+ -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08 \
+ -Dkubernetes.taskmanager.node-selector=flink-env:test \
+ -Dkubernetes.taskmanager.cpu.amount=0.2 \
  -Dtaskmanager.memory.process.size=4096m \
  -Dtaskmanager.numberOfTaskSlots=4 \
  local:///opt/flink/examples/streaming/TopSpeedWindowing.jar \
@@ -2103,7 +2166,8 @@ RUN echo 'Asia/Shanghai' > /etc/timezone
 
 ENV FLINK_BIG_VERSION=1.17
 
-#COPY conf/* /opt/dinky/conf/ 
+#不复制的话dinky applicaition下显示不了日志
+#COPY conf/* /opt/dinky/conf/
 #flink-1.17.2-lib为flink-1.17.2/lib下的所有jar，包括自定义jar
 COPY flink-1.17.2-lib/* /opt/dinky/plugins/flink1.17/
 EXPOSE  8888 8081
