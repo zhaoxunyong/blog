@@ -2119,8 +2119,226 @@ SET table.exec.mini-batch.size = 5000
 SET table.optimizer.distinct-agg.split.enabled = true
 ```
 
+### StreamPark
+
+Recommend.
+
+[Apache StreamPark (incubating) | Apache StreamPark (incubating)](https://streampark.apache.org/)
+
+#### Installation
+
+```
+#https://streampark.apache.org/docs/user-guide/deployment
+tar zxvf apache-streampark_2.12-2.1.2-incubating-bin.tar.gz 
+mv apache-streampark_2.12-2.1.2-incubating-bin apache-streampark_2.12
+cd apache-streampark_2.12/
+cd apache-streampark_2.12/script/schema/
+
+mysql -uroot -h127.0.0.1 -p
+CREATE USER 'streampark'@'%' IDENTIFIED BY 'Aa123456';
+GRANT ALL PRIVILEGES ON streampark.* TO 'streampark'@'%';
+exit;
+
+mysql -uroot -h127.0.0.1 -p < mysql-schema.sql 
+
+cd apache-streampark_2.12/script/data/
+mysql -uroot -h127.0.0.1 -p < mysql-data.sql 
+
+cd apache-streampark_2.12/conf/
+
+vim application.yml 
+spring:
+  profiles.active: mysql
+  
+vim application-mysql.yml
+spring:
+  datasource:
+    username: root
+    password: xxxx
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/streampark?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
+mysql -uroot -h127.0.0.1 -p 
+
+streampark:
+  # HADOOP_USER_NAME If it is on yarn mode ( yarn-prejob | yarn-application | yarn-session), you need to configure hadoop-user-name
+  hadoop-user-name: hdfs
+  # Local workspace, used to store project source code, build directory, etc.
+  workspace:
+    local: /data/streampark_workspace
+
+#Starting
+cp -a /works/app/flink/lib-1.17/mysql-connector-j-8.0.31.jar /works/app/flink/apache-streampark_2.12/lib/
+
+
+cd apache-streampark_2.12/bin
+bash startup.sh
+
+```
+
+Noticed: In order to launch kubernetes flink environment, you must have config file of kubectl(~/.kube/config) installed.
+
+#### Configuration
+
+##### System Setting
+
+![image-20240126135203700](/images/2023-08-25-hadoop-Ecosystem/image-20240126135203700.png)
+
+![image-20240126135223713](/images/2023-08-25-hadoop-Ecosystem/image-20240126135223713.png)
+
+![image-20240126135244714](/images/2023-08-25-hadoop-Ecosystem/image-20240126135244714.png)
+
+##### Flink Cluster
+
+![image-20240126135334426](/images/2023-08-25-hadoop-Ecosystem/image-20240126135334426.png)
+
+![image-20240126135423779](/images/2023-08-25-hadoop-Ecosystem/image-20240126135423779.png)
+
+##### Flink Home
+
+![image-20240126135020759](/images/2023-08-25-hadoop-Ecosystem/image-20240126135020759.png)
+
+#### Application
+
+##### application sql Job
+
+(Recommend)
+
+![image-20240126135601938](/images/2023-08-25-hadoop-Ecosystem/image-20240126135601938.png)
+
+![image-20240126135618321](/images/2023-08-25-hadoop-Ecosystem/image-20240126135618321.png)
+
+![image-20240126135722313](/images/2023-08-25-hadoop-Ecosystem/image-20240126135722313.png)
+
+##### session sql job
+
+You have to start the session instance from "Settings--->Flink Cluster"
+
+![image-20240126140249679](/images/2023-08-25-hadoop-Ecosystem/image-20240126140249679.png)
+
+![image-20240126140316800](/images/2023-08-25-hadoop-Ecosystem/image-20240126140316800.png)
+
+##### application jar job
+
+Create Project first:
+
+![image-20240126140615094](/images/2023-08-25-hadoop-Ecosystem/image-20240126140615094.png)
+
+Create a new jar job:
+
+![image-20240126140704271](/images/2023-08-25-hadoop-Ecosystem/image-20240126140704271.png)
+
+![image-20240126140727419](/images/2023-08-25-hadoop-Ecosystem/image-20240126140727419.png)
+
+![image-20240126140814011](/images/2023-08-25-hadoop-Ecosystem/image-20240126140814011.png)
+
+#### Pod template
+
+##### JM Pod Template
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jobmanager-pod-template
+spec:
+  nodeSelector:
+    flink-env: test
+  tolerations:
+  - key: "flink-env"
+    operator: "Equal"
+    value: "test"
+    effect: "NoSchedule"
+  containers:
+  # Do not change the main container name
+  - name: flink-main-container
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets:
+    - name: zzz
+    resources:
+      limits:
+        memory: "500Mi"
+        cpu: "500m"
+      requests:
+        cpu: 500m
+        memory: 500Mi
+```
+
+##### TM Pod Template
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: taskmanager-pod-template
+spec:
+  nodeSelector:
+    flink-env: test
+  tolerations:
+  - key: "flink-env"
+    operator: "Equal"
+    value: "test"
+    effect: "NoSchedule"
+  containers:
+  # Do not change the main container name
+  - name: flink-main-container
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets:
+    - name: zzz
+    resources:
+      limits:
+        memory: "1024Mi"
+        cpu: "1000m"
+      requests:
+        cpu: 500m
+        memory: 500Mi
+```
+
+##### Dynamic Properties
+
+You can simplify "Dynamic Properties":
+
+```
+-Dakka.ask.timeout=100s
+-Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com
+-Dfs.oss.accessKeyId=xxx
+-Dfs.oss.accessKeySecret=yyy
+-Dhigh-availability.type=kubernetes
+-Dhigh-availability.storageDir=oss://flink-cluster-dev/recovery-application
+-Dstate.backend=rocksdb
+-Dstate.backend.incremental=true
+-Dstate.checkpoints.dir=oss://flink-cluster-dev/flink-application-checkpoints
+-Dstate.savepoints.dir=oss://flink-cluster-dev/flink-application-savepoints
+-Dkubernetes.jobmanager.replicas=1
+-Dkubernetes.jobmanager.cpu.amount=0.2
+-Dresourcemanager.taskmanager-timeout=3600000
+-Dkubernetes.taskmanager.cpu.amount=1
+-Denv.java.opts.jobmanager=-Duser.timezone=GMT+08
+-Denv.java.opts.taskmanager=-Duser.timezone=GMT+08
+```
+
+#### UDF
+
+Create a project first:
+
+![image-20240126142114186](/images/2023-08-25-hadoop-Ecosystem/image-20240126142114186.png)
+
+
+
+![image-20240126142047951](/images/2023-08-25-hadoop-Ecosystem/image-20240126142047951.png)
+
+
+
+Adding dependency pom in a job:
+
+![image-20240126142210706](/images/2023-08-25-hadoop-Ecosystem/image-20240126142210706.png)
+
+
+
+![image-20240126142018520](/images/2023-08-25-hadoop-Ecosystem/image-20240126142018520.png)
 
 ### Dinky
+
+A alternative Flink stream platform, like StreamPark. But I recommend using StreamPark strongly.
 
 http://www.dlink.top/docs/0.7/get_started/docker_deploy
 
