@@ -2183,6 +2183,8 @@ Noticed: In order to launch kubernetes flink environment, you must have config f
 
 ![image-20240126135203700](/images/2023-08-25-hadoop-Ecosystem/image-20240126135203700.png)
 
+First, you need creating a registry project named "flink" from menu: "Project Quotas".
+
 ![image-20240126135223713](/images/2023-08-25-hadoop-Ecosystem/image-20240126135223713.png)
 
 ![image-20240126135244714](/images/2023-08-25-hadoop-Ecosystem/image-20240126135244714.png)
