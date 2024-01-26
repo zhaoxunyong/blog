@@ -2127,7 +2127,9 @@ Recommend.
 
 #### Installation
 
-```
+##### Standalone
+
+```bash
 #https://streampark.apache.org/docs/user-guide/deployment
 tar zxvf apache-streampark_2.12-2.1.2-incubating-bin.tar.gz 
 mv apache-streampark_2.12-2.1.2-incubating-bin apache-streampark_2.12
@@ -2177,6 +2179,82 @@ bash startup.sh
 
 Noticed: In order to launch kubernetes flink environment, you must have config file of kubectl(~/.kube/config) installed.
 
+##### Docker
+
+![image-20240126170051565](/images/2023-08-25-hadoop-Ecosystem/image-20240126170051565.png)
+
+Dockerfile
+
+```dockerfile
+FROM alpine:3.16 as deps-stage
+
+RUN mkdir -p ~/.kube /Developer/apache-maven-3.5.4/conf/ /works/app/flink/
+
+COPY apache-streampark_*-*-bin.tar.gz /
+WORKDIR /
+RUN tar zxvf apache-streampark_*-*-bin.tar.gz \
+&& mv apache-streampark_*-*-bin streampark
+COPY mysql-connector-j-8.0.31.jar /streampark/lib/
+
+FROM docker:dind
+WORKDIR /streampark
+COPY --from=deps-stage /streampark /streampark
+RUN mkdir -p /opt/streampark_workspace
+
+ENV NODE_VERSION=16.1.0
+ENV NPM_VERSION=7.11.2
+
+RUN apk add openjdk8 \
+    && apk add maven \
+    && apk add wget \
+    && apk add vim \
+    && apk add bash \
+    && apk add curl
+
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+ENV MAVEN_HOME=/usr/share/java/maven-3
+ENV PATH $JAVA_HOME/bin:$PATH
+ENV PATH $MAVEN_HOME/bin:$PATH
+
+RUN wget "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
+    && tar zxvf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
+    && rm "node-v$NODE_VERSION-linux-x64.tar.gz" \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    && curl -LO https://dl.k8s.io/release/v1.23.0/bin/linux/amd64/kubectl \
+    && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+EXPOSE 10000
+```
+
+Building
+
+```bash
+DOCKER_BUILDKIT=0 docker build -t "registry.zerofinance.net/flink/streampark:2.1.2" .
+```
+
+Creating docker
+
+```bash
+docker run -d --name "streampark" \
+--privileged=true \
+-v /works/app/flink/streampark/config:/root/.kube/config:ro \
+-v /works/app/flink/streampark/settings.xml:/Developer/apache-maven-3.5.4/conf/settings.xml:ro \
+-v /works/app/flink/streampark/flink-1.17.2:/works/app/flink/flink-1.17.2 \
+-v /works/app/flink/streampark/application.yml:/streampark/conf/application.yml \
+-v /works/app/flink/streampark/application-mysql.yml:/streampark/conf/application-mysql.yml \
+-p 10000:10000 \
+registry.zerofinance.net/flink/streampark:2.1.2 
+```
+
+Start streampark instance
+
+```bash
+docker exec -it streampark bash
+/streampark/bin/startup.sh 
+```
+
+
+
 #### Configuration
 
 ##### System Setting
@@ -2211,6 +2289,8 @@ First, you need creating a registry project named "flink" from menu: "Project Qu
 
 ![image-20240126135722313](/images/2023-08-25-hadoop-Ecosystem/image-20240126135722313.png)
 
+![image-20240126170432588](/images/2023-08-25-hadoop-Ecosystem/image-20240126170432588.png)
+
 ##### session sql job
 
 You have to start the session instance from "Settings--->Flink Cluster"
@@ -2237,7 +2317,7 @@ Create a new jar job:
 
 ##### JM Pod Template
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2267,7 +2347,7 @@ spec:
 
 ##### TM Pod Template
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2299,7 +2379,7 @@ spec:
 
 You can simplify "Dynamic Properties":
 
-```
+```yaml
 -Dakka.ask.timeout=100s
 -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com
 -Dfs.oss.accessKeyId=xxx
@@ -2318,23 +2398,24 @@ You can simplify "Dynamic Properties":
 -Denv.java.opts.taskmanager=-Duser.timezone=GMT+08
 ```
 
+##### Clean all Jobs
+
+```bash
+k -n flink-dev delete deploy myql2es-deploy-demo
+k -n flink-dev delete cm myql2es-deploy-demo-cluster-config-map
+```
+
 #### UDF
 
 Create a project first:
 
 ![image-20240126142114186](/images/2023-08-25-hadoop-Ecosystem/image-20240126142114186.png)
 
-
-
 ![image-20240126142047951](/images/2023-08-25-hadoop-Ecosystem/image-20240126142047951.png)
-
-
 
 Adding dependency pom in a job:
 
 ![image-20240126142210706](/images/2023-08-25-hadoop-Ecosystem/image-20240126142210706.png)
-
-
 
 ![image-20240126142018520](/images/2023-08-25-hadoop-Ecosystem/image-20240126142018520.png)
 
