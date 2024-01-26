@@ -2185,6 +2185,8 @@ Noticed: In order to launch kubernetes flink environment, you must have config f
 
 Dockerfile
 
+[raw.githubusercontent.com/apache/incubator-streampark/v2.1.2/deploy/docker/Dockerfile](https://raw.githubusercontent.com/apache/incubator-streampark/v2.1.2/deploy/docker/Dockerfile)
+
 ```dockerfile
 FROM alpine:3.16 as deps-stage
 
