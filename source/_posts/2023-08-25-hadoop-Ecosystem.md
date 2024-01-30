@@ -1679,25 +1679,17 @@ Building required jars into docker image(Or mount a folder from NAS):
 Dockerfile:
 
 ```
-#FROM apache/flink:1.15.3-scala_2.12
-#
-#RUN mkdir -p $FLINK_HOME/usrlib
-#
-#USER root
-## Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
-##RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
-#RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-#
-#USER flink
-## Copying libs
-#COPY ./flink-1.15.3/lib/* $FLINK_HOME/lib/
-
 FROM apache/flink:1.17.2-scala_2.12
 
 USER root
 # Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
 #RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+#解决不能写日志到dev下的问题
+RUN groupmod -g 1001 flink
+RUN usermod -u 1001 flink
+RUN chown -R 1001:1001 $FLINK_HOME/
 
 USER flink
 RUN mkdir -p $FLINK_HOME/usrlib
@@ -2317,37 +2309,9 @@ Create a new jar job:
 
 #### Pod template
 
-##### JM Pod Template
+##### Pod Template
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: jobmanager-pod-template
-spec:
-  nodeSelector:
-    flink-env: test
-  tolerations:
-  - key: "flink-env"
-    operator: "Equal"
-    value: "test"
-    effect: "NoSchedule"
-  containers:
-  # Do not change the main container name
-  - name: flink-main-container
-    imagePullPolicy: IfNotPresent
-    imagePullSecrets:
-    - name: zzz
-    resources:
-      limits:
-        memory: "500Mi"
-        cpu: "500m"
-      requests:
-        cpu: 500m
-        memory: 500Mi
-```
-
-##### TM Pod Template
+In order to collect logs to Loki:
 
 ```yaml
 apiVersion: v1
@@ -2355,26 +2319,16 @@ kind: Pod
 metadata:
   name: taskmanager-pod-template
 spec:
-  nodeSelector:
-    flink-env: test
-  tolerations:
-  - key: "flink-env"
-    operator: "Equal"
-    value: "test"
-    effect: "NoSchedule"
   containers:
-  # Do not change the main container name
-  - name: flink-main-container
-    imagePullPolicy: IfNotPresent
-    imagePullSecrets:
-    - name: zzz
-    resources:
-      limits:
-        memory: "1024Mi"
-        cpu: "1000m"
-      requests:
-        cpu: 500m
-        memory: 500Mi
+    # Do not change the main container name
+    - name: flink-main-container
+      volumeMounts:
+        - name: flink-logs
+          mountPath: /opt/flink/log
+  volumes:
+    - name: flink-logs
+      hostPath:
+        path: /works/log/hkloan/dev/la-loan-account
 ```
 
 ##### Dynamic Properties
@@ -2386,18 +2340,22 @@ You can simplify "Dynamic Properties":
 -Dfs.oss.endpoint=https://oss-cn-hongkong.aliyuncs.com
 -Dfs.oss.accessKeyId=xxx
 -Dfs.oss.accessKeySecret=yyy
+-Dkubernetes.container.image.pull-policy=IfNotPresent
 -Dhigh-availability.type=kubernetes
--Dhigh-availability.storageDir=oss://flink-cluster-dev/recovery-application
+-Dhigh-availability.storageDir=oss://flink-cluster-uat/recovery-application
 -Dstate.backend=rocksdb
 -Dstate.backend.incremental=true
--Dstate.checkpoints.dir=oss://flink-cluster-dev/flink-application-checkpoints
--Dstate.savepoints.dir=oss://flink-cluster-dev/flink-application-savepoints
+-Dstate.checkpoints.dir=oss://flink-cluster-uat/flink-application-checkpoints
+-Dstate.savepoints.dir=oss://flink-cluster-uat/flink-application-savepoints
+-Dkubernetes.container.image.pull-secrets=zzz
 -Dkubernetes.jobmanager.replicas=1
--Dkubernetes.jobmanager.cpu.amount=0.2
+-Dkubernetes.jobmanager.cpu.amount=0.5
 -Dresourcemanager.taskmanager-timeout=3600000
+-Dkubernetes.taskmanager.node-selector=flink-env:test
+-Dkubernetes.taskmanager.tolerations=flink-env:test,operator:Exists,effect:NoSchedule
 -Dkubernetes.taskmanager.cpu.amount=1
--Denv.java.opts.jobmanager=-Duser.timezone=GMT+08
--Denv.java.opts.taskmanager=-Duser.timezone=GMT+08
+-Denv.java.opts.jobmanager="-Duser.timezone=GMT+08"
+-Denv.java.opts.taskmanager="-Duser.timezone=GMT+08"
 ```
 
 ##### Clean all Jobs
