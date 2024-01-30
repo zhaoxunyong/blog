@@ -2182,18 +2182,16 @@ Dockerfile
 ```dockerfile
 FROM alpine:3.16 as deps-stage
 
-RUN mkdir -p ~/.kube /Developer/apache-maven-3.5.4/conf/ /works/app/flink/
+RUN mkdir -p ~/.kube ~/.m2 /works/app/flink/ /data/streampark_workspace
 
-COPY apache-streampark_*-*-bin.tar.gz /
+COPY apache-streampark_2.12.tar.gz /
 WORKDIR /
-RUN tar zxvf apache-streampark_*-*-bin.tar.gz \
-&& mv apache-streampark_*-*-bin streampark
-COPY mysql-connector-j-8.0.31.jar /streampark/lib/
+RUN tar xf apache-streampark_2.12.tar.gz && mv apache-streampark_2.12 streampark 
+RUN rm -rf /apache-streampark_2.12.tar.gz
 
 FROM docker:dind
 WORKDIR /streampark
 COPY --from=deps-stage /streampark /streampark
-RUN mkdir -p /opt/streampark_workspace
 
 ENV NODE_VERSION=16.1.0
 ENV NPM_VERSION=7.11.2
@@ -2245,6 +2243,108 @@ Start streampark instance
 ```bash
 docker exec -it streampark bash
 /streampark/bin/startup.sh 
+```
+
+##### K8s
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: streampark
+  name: streampark
+  namespace: flink-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streampark
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: streampark
+    spec:
+      containers:
+      - image: registry.zerofinance.net/flink/streampark:2.1.2
+        name: streampark
+        imagePullPolicy: Always
+        command: ["/bin/sh", "-c", "wget -P lib https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.0.31/mysql-connector-j-8.0.31.jar && bash bin/streampark.sh start_docker "]
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 10000
+          name: streampark
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1024Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        volumeMounts:
+        - name: flink
+          mountPath: /works/app/flink/flink-1.17.2
+        - name: maven-setting
+          mountPath: /root/.m2/settings.xml
+        - name: k8s-config
+          mountPath: /root/.kube/config
+        - name: application
+          mountPath: /streampark/conf/application.yml
+        - name: application-mysql
+          mountPath: /streampark/conf/application-mysql.yml
+        - name: workspace
+          mountPath: /data/streampark_workspace
+        - name: docker
+          mountPath: /var/run/docker.sock
+      restartPolicy: Always
+      volumes:
+      - name: flink
+        hostPath:
+          path: /data/data/streampark_flink/flink-1.17.2
+      - name: maven-setting
+        hostPath:
+          path: /data/data/streampark_flink/settings.xml
+      - name: k8s-config
+        hostPath:
+          path: /data/data/streampark_flink/kube/config
+      - name: application
+        hostPath:
+          path: /data/data/streampark_flink/application.yml
+      - name: application-mysql
+        hostPath:
+          path: /data/data/streampark_flink/application-mysql.yml
+      - name: workspace
+        hostPath:
+          path: /data/data/streampark_flink/workspace
+      - name: docker
+        hostPath:
+          path: /var/run/docker.sock
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: streampark
+  namespace: flink-test
+  labels:
+    app: streampark
+spec:
+  externalTrafficPolicy: Local
+  type: NodePort
+  ports:
+  - name: streampark
+    port: 10000
+    protocol: TCP
+    targetPort: 10000
+  selector:
+    app: streampark
+  sessionAffinity: None
 ```
 
 
