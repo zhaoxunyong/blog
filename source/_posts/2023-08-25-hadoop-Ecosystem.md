@@ -2818,6 +2818,8 @@ spec:
 
 #### On Application
 
+"提交FlinkSQL的jar文件路径"为打包到镜像registry.zerofinance.net/library/dinky-flink-application:1.17.2中的路径，而不是dinky中的路径。
+
 ![image-20231229175449539](/images/2023-08-25-hadoop-Ecosystem/image-20231229175449539.png)
 
 ![image-20231229175218514](/images/2023-08-25-hadoop-Ecosystem/image-20231229175218514.png)
