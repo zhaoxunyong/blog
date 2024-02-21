@@ -1670,11 +1670,7 @@ kubectl create clusterrolebinding flink-role-bind --clusterrole=edit --serviceac
 kubectl create clusterrolebinding flink-test:flink-test --clusterrole=cluster-admin --user=system:serviceaccount:flink-test:default
 ```
 
-Building required jars into docker image(Or mount a folder from NAS):
-
-./flink-1.15.3/lib as blows:
-
-![image-20231229172142379](/images/2023-08-25-hadoop-Ecosystem/image-20231229172142379.png)
+Building required jars into docker image(Or mount a folder from NAS).
 
 Dockerfile:
 
@@ -1705,16 +1701,13 @@ ll ./lib-1.17/
 -rw-r--r--  1 root  root  25743957 Nov 10 16:32 flink-oss-fs-hadoop-1.17.2.jar
 -rw-r--r--  1 root  root  28440546 Apr 13  2023 flink-sql-connector-elasticsearch7-3.0.1-1.17.jar
 -rw-r--r--  1 root  root   5566107 Oct 26 04:26 flink-sql-connector-kafka-3.0.1-1.17.jar
--rw-r--r--  1 root  root  23600947 Jul 21 16:31 flink-sql-connector-mysql-cdc-2.4.1.jar
+-rw-r--r--  1 root  root  23715175 Jan 19 12:07 flink-sql-connector-mysql-cdc-3.0.1.jar
 -rw-r--r--  1 root  root   2515447 Jan 18 15:01 mysql-connector-j-8.0.31.jar
 ```
 
 Build and push to registry:
 
 ```
-#docker build -t registry.zerofinance.net/library/flink:1.15.3 .
-#docker push registry.zerofinance.net/library/flink:1.15.3
-
 docker build -t registry.zerofinance.net/library/flink:1.17.2 .
 docker push registry.zerofinance.net/library/flink:1.17.2
 ```
@@ -2508,7 +2501,61 @@ docker run -d --restart=always -p 8888:8888 -p 8083:8081 \
     registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
 ```
 
-DinkyDockerfile:
+#### Linux Install
+
+Only for 1.0.0 version:
+
+```bash
+#http://www.dinky.org.cn/docs/next/deploy_guide/normal_deploy
+wget https://github.com/DataLinkDC/dinky/releases/download/v1.0.0-rc4/dinky-release-1.17-1.0.0-rc4.tar.gz
+tar zxvf dinky-release-1.17-1.0.0-rc4.tar.gz 
+cd dinky-release-1.17-1.0.0-rc4/
+
+#Download sql file to local:
+cd sql
+sz dinky-mysql.sql 
+
+#Edit application files
+cd /works/app/dinky/dinky-release-1.17-1.0.0-rc4/
+cd config/
+vim application.yml 
+vim application-mysql.yml 
+
+#copy jdbc driver:
+cp -a /works/app/flink/lib-1.17/mysql-connector-j-8.0.31.jar /works/app/dinky/dinky-release-1.17-1.0.0-rc4/lib/
+#Copy Flink dependency lib jars:
+cp -a /works/app/flink/flink-1.17.2/lib/flink-*.jar /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/
+#Copy Extra dependency lib jars:
+cp -a /works/app/flink/lib-1.17/* /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/
+rm /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/flink-table-planner-loader-1.17.2.jar
+cp -a /works/app/flink/flink-1.17.2/opt/flink-table-planner_2.12-1.17.2.jar /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/
+#Mysql jdbc driver:
+cp -a /works/app/dinky/flink-1.17.2-lib/mysql-connector-j-8.0.31.jar /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/
+#Hadoop dependency lib jars:
+cd /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/
+wget https://repository.cloudera.com/artifactory/cloudera-repos/org/apache/flink/flink-shaded-hadoop-3-uber/3.1.1.7.2.9.0-173-9.0/flink-shaded-hadoop-3-uber-3.1.1.7.2.9.0-173-9.0.jar
+
+#整库同步jar:
+cp -a /works/app/dinky/dinky-release-1.17-1.0.0-rc4/lib/dinky-client-base-1.0.0-rc4.jar /works/app/flink/flink-1.17.2/lib/
+cp -a /works/app/dinky/dinky-release-1.17-1.0.0-rc4/lib/dinky-common-1.0.0-rc4.jar /works/app/flink/flink-1.17.2/lib/
+cp -a /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/dinky/dinky-client-1.17-1.0.0-rc4.jar /works/app/flink/flink-1.17.2/lib/
+#Need flink-cdc-common jar:
+wget https://repo1.maven.org/maven2/com/ververica/flink-cdc-common/3.0.1/flink-cdc-common-3.0.1.jar -P /works/app/flink/flink-1.17.2/lib/
+wget https://repo1.maven.org/maven2/com/ververica/flink-cdc-common/3.0.1/flink-cdc-common-3.0.1.jar -P /works/app/dinky/dinky-release-1.17-1.0.0-rc4/extends/flink1.17/
+
+#https://blog.csdn.net/lisi1129/article/details/101453563
+#在conf/flink-conf.yaml 添加如下内容并重启 flink.
+classloader.resolve-order: parent-first
+
+#Start
+sh auto.sh start 1.17
+#Stop
+sh auto.sh stop
+```
+
+#### Docker
+
+Only for 0.7.5 version:
 
 In order to copy required jars into docker image:
 
@@ -2533,7 +2580,8 @@ ENV FLINK_BIG_VERSION=1.17
 
 #不复制的话dinky applicaition下显示不了日志
 COPY conf/* /opt/dinky/conf/
-#flink-1.17.2-lib为flink-1.17.2/lib下的所有jar，包括自定义jar
+#flink-1.17.2-lib为flink-1.17.2/lib下的所有flink-*.jar，包括自定义jar
+#Need to copy first: cp -a /works/app/flink/flink-1.17.2/lib/flink-* ./flink-1.17.2-lib/
 COPY flink-1.17.2-lib/* /opt/dinky/plugins/flink1.17/
 EXPOSE  8888 8081
 ```
