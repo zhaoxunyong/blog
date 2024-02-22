@@ -2487,23 +2487,15 @@ mysql -uroot -p
 CREATE USER 'dinky'@'%' IDENTIFIED BY 'Aa123456';
 GRANT ALL PRIVILEGES ON dinky.* TO 'dinky'@'%';
 
-#docker cp dinky:/opt/dinky/sql/dinky.sql ./
-
 mysql -udinky -h127.0.0.1 -p
 create database dinky;
 use dinky;
-source /works/app/flink/dinky.sql;
-
-docker run -d --restart=always -p 8888:8888 -p 8083:8081 \
- -e MYSQL_ADDR=192.168.101.82:3306  -e MYSQL_DATABASE=dinky \
-  -e MYSQL_USERNAME=dinky  -e MYSQL_PASSWORD=Aa123456 \
-   --name dinky  -v /var/run/docker.sock:/var/run/docker.sock \
-    registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+source /works/app/flink/dinky-mysql.sql;
 ```
 
 #### Linux Install
 
-Only for 1.0.0 version:
+For 1.0.0 version:
 
 ```bash
 #http://www.dinky.org.cn/docs/next/deploy_guide/normal_deploy
@@ -2555,45 +2547,97 @@ sh auto.sh stop
 
 #### Docker
 
-Only for 0.7.5 version:
+For 1.0.0 version:
 
-In order to copy required jars into docker image:
+```bash
+FROM openjdk:8u342-oracle as build-stage
 
+ARG DINKY_VERSION
+ENV DINKY_VERSION=${DINKY_VERSION}
+
+ARG FLINK_BIG_VERSION
+ENV FLINK_BIG_VERSION ${FLINK_BIG_VERSION}
+
+ADD ./build/dinky-release-${DINKY_VERSION}.tar.gz  /opt/
+
+USER root
+RUN mv /opt/dinky-release-${DINKY_VERSION} /opt/dinky/
+RUN mkdir /opt/dinky/conf
+
+COPY ./flink${FLINK_BIG_VERSION}-lib/*.jar /opt/dinky/extends/flink${FLINK_BIG_VERSION}/
+##不复制的话dinky applicaition下显示不了日志
+COPY ./flink${FLINK_BIG_VERSION}-conf/* /opt/dinky/conf/
+
+ADD ./build/flink-python-1.17.2.jar /opt/dinky/lib/
+COPY ./flink${FLINK_BIG_VERSION}-lib/mysql-connector-j-8.0.31.jar /opt/dinky/lib/
+
+RUN mkdir -p /opt/dinky/run && mkdir -p /opt/dinky/logs &&  touch /opt/dinky/logs/dinky.log
+RUN chmod -R 777 /opt/dinky/
+
+FROM openjdk:8u342-oracle as production-stage
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN export LANG=zh_CN.UTF-8
+
+COPY --from=build-stage /opt/dinky/ /opt/dinky/
+RUN microdnf install procps -y
+
+WORKDIR /opt/dinky/
+
+EXPOSE 8888
+
+CMD touch /opt/dinky/logs/dinky.log && ./auto.sh restart ${FLINK_BIG_VERSION} && tail -f /opt/dinky/logs/dinky.log
 ```
-## 用来构建dinky环境
-#FROM dinkydocker/dinky-standalone-server:0.7.5-flink15
-#
-#RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-#RUN echo 'Asia/Shanghai' >/etc/timezone
-#
-##Must copy relevant log configs to /opt/dinky/conf/ folder:
-COPY conf/* /opt/dinky/conf/
-#COPY lib/* /opt/dinky/plugins/flink1.15/
-#EXPOSE  8888 8081
 
-FROM dinkydocker/dinky-standalone-server:0.7.5-flink16
+All jars  in flink1.17-lib:
 
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo 'Asia/Shanghai' > /etc/timezone
+```bash
+ll build/
+总用量 208880
+-rw-rw-r-- 1 dev dev 180884317 1月  29 15:11 dinky-release-1.17-1.0.0-rc4.tar.gz
+-rw-r--r-- 1 dev dev  32998809 11月 13 12:47 flink-python-1.17.2.jar
 
-ENV FLINK_BIG_VERSION=1.17
 
-#不复制的话dinky applicaition下显示不了日志
-COPY conf/* /opt/dinky/conf/
-#flink-1.17.2-lib为flink-1.17.2/lib下的所有flink-*.jar，包括自定义jar
-#Need to copy first: cp -a /works/app/flink/flink-1.17.2/lib/flink-* ./flink-1.17.2-lib/
-COPY flink-1.17.2-lib/* /opt/dinky/plugins/flink1.17/
-EXPOSE  8888 8081
+ll flink1.17-lib/
+总用量 322180
+-rw-rw-r-- 1 dev dev    251405 1月  19 11:57 flink-cdc-common-3.0.1.jar
+-rw-r--r-- 1 dev dev    196491 11月 13 12:27 flink-cep-1.17.2.jar
+-rw-r--r-- 1 dev dev    542629 11月 13 12:33 flink-connector-files-1.17.2.jar
+-rw-r--r-- 1 dev dev    266420 6月  15 2023 flink-connector-jdbc-3.1.1-1.17.jar
+-rw-r--r-- 1 dev dev    102470 11月 13 12:40 flink-csv-1.17.2.jar
+-rw-r--r-- 1 dev dev 121809282 11月 13 12:57 flink-dist-1.17.2.jar
+-rw-r--r-- 1 dev dev    180246 11月 13 12:40 flink-json-1.17.2.jar
+-rw-r--r-- 1 dev dev  25743957 11月 10 16:32 flink-oss-fs-hadoop-1.17.2.jar
+-rw-r--r-- 1 dev dev  21043317 11月 13 12:54 flink-scala_2.12-1.17.2.jar
+-rw-rw-r-- 1 dev dev  59604787 8月  11 2023 flink-shaded-hadoop-3-uber-3.1.1.7.2.9.0-173-9.0.jar
+-rw-r--r-- 1 dev dev  28440546 4月  13 2023 flink-sql-connector-elasticsearch7-3.0.1-1.17.jar
+-rw-rw-r-- 1 dev dev   5566107 10月 26 04:26 flink-sql-connector-kafka-3.0.1-1.17.jar
+-rw-r--r-- 1 dev dev  23715175 2月  20 16:47 flink-sql-connector-mysql-cdc-3.0.1.jar
+-rw-r--r-- 1 dev dev  15407408 11月 13 12:55 flink-table-api-java-uber-1.17.2.jar
+-rw-r--r-- 1 dev dev  21333608 2月  22 16:19 flink-table-planner_2.12-1.17.2.jar
+-rw-r--r-- 1 dev dev   3146303 11月 13 12:27 flink-table-runtime-1.17.2.jar
+-rw-r--r-- 1 dev dev   2515447 2月  20 13:40 mysql-connector-j-8.0.31.jar
 ```
 
 Build and push to registry:
 
 ```
-#docker build -t registry.zerofinance.net/library/flink-dinky:0.7.5-flink15 . -f DinkyDockerfile
-#docker push registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
+docker build --build-arg FLINK_BIG_VERSION=1.17 --build-arg DINKY_VERSION=1.17-1.0.0-rc4 -t "registry.zerofinance.net/flink/dinky-flink:1.17-1.0.0-rc4" .
+docker push registry.zerofinance.net/flink/dinky-flink:1.17-1.0.0-rc4
 
-docker build -t registry.zerofinance.net/library/flink-dinky:0.7.5-flink17 . -f DinkyDockerfile
-docker push registry.zerofinance.net/library/flink-dinky:0.7.5-flink17
+
+#Run
+docker run \
+-d \
+--restart=always \
+-p 8888:8888 \
+-e FLINK_BIG_VERSION=1.17 \
+-e DB_ACTIVE=mysql \
+-e MYSQL_ADDR=rm-xxxxxx.mysql.rds.aliyuncs.com:3306 \
+-e MYSQL_DATABASE=dinky_test \
+-e MYSQL_USERNAME=dinky_test \
+-e MYSQL_PASSWORD=xxxxxx \
+--name dinky-server \
+registry.zerofinance.net/flink/dinky-flink:1.17-1.0.0-rc4
 ```
 
 flink-dinky-template.yml:
@@ -2604,7 +2648,7 @@ kind: Deployment
 metadata:
   labels:
     app: flink-dinky
-  name: flink-dinky
+  name: flink-dinky-test
   namespace: flink-test
 spec:
   selector:
@@ -2618,167 +2662,68 @@ spec:
       imagePullSecrets:
       - name: registry-private-secret
       containers:
-      #dinky镜像，如果需要更新请前往【https://hub.docker.com/r/dinkydocker/dinky-standalone-server/tags】选择合适镜像版本
-      #如果需要添加拓展jar包，可通过dinky注册中心【jar包管理】处添加，或者通过Dockerfile将其打包进docker镜像，再上传至私有仓库再替换此处的镜像
-      - image: registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
-        imagePullPolicy: Always
+      - image: registry.zerofinance.net/flink/dinky-flink:1.17-1.0.0-rc4
+        imagePullPolicy: IfNotPresent
         name: flink-dinky
         env:
+        - name: FLINK_BIG_VERSION
+          value: "1.17"
+        - name: DB_ACTIVE
+          value: mysql
         - name: MYSQL_ADDR
-          value: 192.168.63.102:3306
+          value: rm-xxx.mysql.rds.aliyuncs.com:3306
         - name: MYSQL_DATABASE
-          value: dinky
+          value: dinky_test
         - name: MYSQL_USERNAME
-          value: dinky
+          value: dinky_test
         - name: MYSQL_PASSWORD
-          value: Aa123456
-        #将下方configMap配置映射到容器内部，修改配置需要重启pod生效
-        volumeMounts: 
-        #- name: dockersock
-        #  mountPath: /var/run/docker.sock
-        - name: admin-config
-          mountPath: /opt/dinky/config/application.yml          
-          subPath: application.yml
+          value: xxx
+        ports:
+        - name: dinky-port
+          containerPort: 8888
+          protocol: TCP
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          #successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          #successThreshold: 1
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: kube-config
+          mountPath: /root/.kube
       volumes:
-      #- name: dockersock
-      #  hostPath:
-      #    path: /var/run/docker.sock
-      - name: admin-config
-        configMap:
-          name: flink-dinky-config
-          
----
+      - name: kube-config
+        hostPath:
+          path: /data/data/kube-config
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: flink-dinky-config
-  namespace: flink-test
-data:
-  application.yml: |-
-    spring:
-      datasource:
-        url: jdbc:mysql://${MYSQL_ADDR:127.0.0.1:3306}/${MYSQL_DATABASE:dlink}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-        username: ${MYSQL_USERNAME:dlink}
-        password: ${MYSQL_PASSWORD:dlink}
-        driver-class-name: com.mysql.cj.jdbc.Driver
-      application:
-        name: dlink
-      mvc:
-        pathmatch:
-          matching-strategy: ant_path_matcher
-        format:
-          date: yyyy-MM-dd HH:mm:ss
-        #json格式化全局配置
-      jackson:
-        time-zone: GMT+8
-        date-format: yyyy-MM-dd HH:mm:ss
-
-      main:
-        allow-circular-references: true
-
-      #  默认使用内存缓存元数据信息，
-      #  dlink支持redis缓存，如有需要请把simple改为redis，并打开下面的redis连接配置
-      #  子配置项可以按需要打开或自定义配置
-      cache:
-        type: simple
-      ##    如果type配置为redis，则该项可按需配置
-      #    redis:
-      ##      是否缓存空值，保存默认即可
-      #      cache-null-values: false
-      ##      缓存过期时间，24小时
-      #      time-to-live: 86400
-
-
-      #  flyway:
-      #    enabled: false
-      #    clean-disabled: true
-      ##    baseline-on-migrate: true
-      #    table: dlink_schema_history
-      # Redis配置
-      #sa-token如需依赖redis，请打开redis配置和pom.xml、dlink-admin/pom.xml中依赖
-      # redis:
-      #   host: localhost
-      #   port: 6379
-      #   password:
-      #   database: 10
-      #   jedis:
-      #     pool:
-      #       # 连接池最大连接数（使用负值表示没有限制）
-      #       max-active: 50
-      #       # 连接池最大阻塞等待时间（使用负值表示没有限制）
-      #       max-wait: 3000
-      #       # 连接池中的最大空闲连接数
-      #       max-idle: 20
-      #       # 连接池中的最小空闲连接数
-      #       min-idle: 5
-      #   # 连接超时时间（毫秒）
-      #   timeout: 5000
-      servlet:
-        multipart:
-          max-file-size: 524288000
-          max-request-size: 524288000
-          enabled: true
-    server:
-      port: 8888
-
-    mybatis-plus:
-      mapper-locations: classpath:/mapper/*Mapper.xml
-      #实体扫描，多个package用逗号或者分号分隔
-      typeAliasesPackage: com.dlink.model
-      global-config:
-        db-config:
-          id-type: auto
-      configuration:
-        ##### mybatis-plus打印完整sql(只适用于开发环境)
-        #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-        log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
-
-    # Sa-Token 配置
-    sa-token:
-      # token名称 (同时也是cookie名称)
-      token-name: satoken
-      # token有效期，单位s 默认10小时, -1代表永不过期
-      timeout: 36000
-      # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
-      activity-timeout: -1
-      # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
-      is-concurrent: false
-      # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
-      is-share: true
-      # token风格
-      token-style: uuid
-      # 是否输出操作日志
-      is-log: false
-
-    knife4j:
-      enable: true
-
-    dinky:
-      dolphinscheduler:
-        enabled: false
-        # dolphinscheduler 地址
-        url: http://127.0.0.1:5173/dolphinscheduler
-        # dolphinscheduler 生成的token
-        token: ad54eb8f57fadea95f52763517978b26
-        # dolphinscheduler 中指定的项目名不区分大小写
-        project-name: Dinky
-        # Dolphinscheduler DinkyTask Address
-        address: http://127.0.0.1:8888
-
-      # python udf 需要用到的 python 执行环境
-      python:
-        path: python
-        
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: flink-dinky
+  name: flink-dinky-test
   namespace: flink-test
 spec:
   ports:
-  - name: web-flink-dinky
+  - name: flink-dinky
     port: 8888
     targetPort: 8888
     protocol: TCP
@@ -2791,7 +2736,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: flink-dinky
+  name: flink-dinky-ingress
   namespace: flink-test
 spec:
   tls: []
@@ -2800,39 +2745,13 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: flink-dinky
+              serviceName: flink-dinky-test
               servicePort: 8888
 ```
 
-#### On Session
-
-![image-20231229175048960](/images/2023-08-25-hadoop-Ecosystem/image-20231229175048960.png)
-
-![image-20231229175125535](/images/2023-08-25-hadoop-Ecosystem/image-20231229175125535.png)
-
-```
-
-```
-
-
-
 #### On Application
 
-"提交FlinkSQL的jar文件路径"为打包到镜像registry.zerofinance.net/library/dinky-flink-application:1.17.2中的路径，而不是dinky中的路径。
-
-![image-20231229175449539](/images/2023-08-25-hadoop-Ecosystem/image-20231229175449539.png)
-
-![image-20231229175218514](/images/2023-08-25-hadoop-Ecosystem/image-20231229175218514.png)
-
-![image-20231229175250376](/images/2023-08-25-hadoop-Ecosystem/image-20231229175250376.png)
-
-![image-20231229175329524](/images/2023-08-25-hadoop-Ecosystem/image-20231229175329524.png)
-
-![image-20231229175406226](/images/2023-08-25-hadoop-Ecosystem/image-20231229175406226.png)
-
-![image-20231229180209269](/images/2023-08-25-hadoop-Ecosystem/image-20231229180209269.png)
-
-Have to build owned image:
+Must build your own image:
 
 DinkyFlinkDockerfile(1.0.0):
 
@@ -2866,74 +2785,35 @@ COPY ./dinky-lib/* /opt/flink/lib/
 RUN rm -fr /opt/flink/lib/flink-table-planner-loader-1.17.2.jar
 ```
 
-DinkyFlinkDockerfile(0.7.5):
+All jars in dinky-lib:
 
-```
-docker version must be 23 or above:
-# 用来构建dinky环境
-ARG FLINK_VERSION=1.17.2
-FROM registry.zerofinance.net/library/flink:${FLINK_VERSION}
-
-USER root
-# Pod的时区默认是UTC，时间会比我们的少八小时。修改时区为Asia/Shanghai
-#RUN rm -f /etc/localtime && ln -sv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-ARG FLINK_VERSION
-ENV PYTHON_HOME /opt/miniconda3
-
-RUN wget "https://s3.jcloud.sjtu.edu.cn/899a892efef34b1b944a19981040f55b-oss01/anaconda/miniconda/Miniconda3-py38_4.9.2-Linux-x86_64.sh" -O "miniconda.sh" && chmod +x miniconda.sh
-RUN ./miniconda.sh -b -p $PYTHON_HOME && chown -R flink $PYTHON_HOME && ls $PYTHON_HOME
-
-USER flink
-
-ENV PATH $PYTHON_HOME/bin:$PATH
-RUN pip install "apache-flink==${FLINK_VERSION}" -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
-
-#For 1.15.x
-#RUN cp /opt/flink/opt/flink-python_* /opt/flink/lib/
-#For 1.16.x or above
-RUN cp /opt/flink/opt/flink-python-* /opt/flink/lib/
-
-COPY ./dlink-app-1.17-0.7.5-jar-with-dependencies.jar $FLINK_HOME/lib/
+```bash
+ll dinky-lib/
+总用量 49444
+-rwxrwxr-x 1 dev dev 28586238 1月  29 14:43 dinky-app-1.17-1.0.0-rc4-jar-with-dependencies.jar
+-rwxrwxr-x 1 dev dev    94360 1月  29 14:42 dinky-client-1.17-1.0.0-rc4.jar
+-rwxrwxr-x 1 dev dev    78413 1月  29 14:44 dinky-client-base-1.0.0-rc4.jar
+-rwxrwxr-x 1 dev dev   269936 1月  29 14:44 dinky-common-1.0.0-rc4.jar
+-rw-rw-r-- 1 dev dev   251405 1月  19 11:57 flink-cdc-common-3.0.1.jar
+-rw-r--r-- 1 dev dev 21333608 2月  22 16:19 flink-table-planner_2.12-1.17.2.jar
 ```
 
 Build and push to registry:
 
 ```bash
-#docker build -t registry.zerofinance.net/library/dinky-flink-application:1.15.3 . -f DinkyFlinkDockerfile
-#docker push registry.zerofinance.net/library/dinky-flink-application:1.15.3
-
-docker build -t registry.zerofinance.net/library/dinky-flink-application:1.17.2 . -f DinkyFlinkDockerfile
-docker push registry.zerofinance.net/library/dinky-flink-application:1.17.2
+docker build -t registry.zerofinance.net/flink/dinky-flink-application:1.17.2-1.0.0-rc4 . -f DinkyFlinkDockerfile
+docker push registry.zerofinance.net/flink/dinky-flink-application:1.17.2-1.0.0-rc4
 ```
 
+"提交FlinkSQL的jar文件路径"为打包到镜像registry.zerofinance.net/flink/dinky-flink-application:1.17.2-1.0.0-rc4中的路径，而不是dinky中的路径。
 
+![image-20240222165123099](/images/2023-08-25-hadoop-Ecosystem/image-20240222165123099.png)
 
-```bash
-mysql -uroot -p
-CREATE USER 'dinky'@'%' IDENTIFIED BY 'Aa123456';
-GRANT ALL PRIVILEGES ON dinky.* TO 'dinky'@'%';
+![image-20240222165153627](/images/2023-08-25-hadoop-Ecosystem/image-20240222165153627.png)
 
-docker cp dinky:/opt/dinky/sql/dinky.sql ./
+![image-20240222165214472](/images/2023-08-25-hadoop-Ecosystem/image-20240222165214472.png)
 
-mysql -udinky -h127.0.0.1 -p
-create database dinky;
-use dinky;
-source /works/app/flink/dinky.sql;
-
-docker run -d --restart=always -p 8888:8888 -p 8082:8081 \
- -e MYSQL_ADDR=192.168.63.102:3306 \
- -e MYSQL_DATABASE=dinky \
- -e MYSQL_USERNAME=dinky \
- -e MYSQL_PASSWORD=Aa123456 \
- --name dinky \
- -v /var/run/docker.sock:/var/run/docker.sock \
- #dinkydocker/dinky-standalone-server:0.7.5-flink15
- registry.zerofinance.net/library/flink-dinky:0.7.5-flink15
-
-http://192.168.63.102:8888/
-```
+![image-20240222165256791](/images/2023-08-25-hadoop-Ecosystem/image-20240222165256791.png)
 
 #### DataSource
 
