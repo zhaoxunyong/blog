@@ -2834,7 +2834,39 @@ spec:
 
 Have to build owned image:
 
-DinkyFlinkDockerfile:
+DinkyFlinkDockerfile(1.0.0):
+
+```bash
+# 用来构建dinky环境
+ARG FLINK_VERSION=1.17.2
+ARG FLINK_BIG_VERSION=1.17
+
+#FROM flink:${FLINK_VERSION}
+FROM registry.zerofinance.net/library/flink:${FLINK_VERSION}
+
+ARG FLINK_VERSION
+ARG FLINK_BIG_VERSION
+ENV PYTHON_HOME /opt/miniconda3
+
+USER root
+RUN wget "https://s3.jcloud.sjtu.edu.cn/899a892efef34b1b944a19981040f55b-oss01/anaconda/miniconda/Miniconda3-py38_4.9.2-Linux-x86_64.sh" -O "miniconda.sh" && chmod +x miniconda.sh
+RUN ./miniconda.sh -b -p $PYTHON_HOME && chown -R flink $PYTHON_HOME && ls $PYTHON_HOME
+
+USER flink
+
+ENV PATH $PYTHON_HOME/bin:$PATH
+RUN pip install "apache-flink==${FLINK_VERSION}" -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+
+#RUN cp /opt/flink/opt/flink-python_* /opt/flink/lib/
+RUN cp /opt/flink/opt/flink-python-* /opt/flink/lib/
+
+#RUN wget -O dinky-app-${FLINK_BIG_VERSION}.jar - ${DINKY_HTTP}/downloadAppJar/${FLINK_BIG_VERSION} | mv dinky-app-${FLINK_BIG_VERSION}.jar
+COPY ./dinky-lib/* /opt/flink/lib/
+#Replace flink-table-planner-loader as flink-table-planner(Already included in dinky-lib folder, so need to delete)
+RUN rm -fr /opt/flink/lib/flink-table-planner-loader-1.17.2.jar
+```
+
+DinkyFlinkDockerfile(0.7.5):
 
 ```
 docker version must be 23 or above:
