@@ -77,6 +77,15 @@ FROM nginx:alpine
 RUN echo 'Hello Nerdctl From Containerd' > /usr/share/nginx/html/index.html
 ```
 
+Relocated /var/lib/containerd:
+
+```bash
+systemctl stop containerd
+mv /var/lib/containerd /data/containerd-lib
+ln -s /data/containerd-lib /var/lib/containerd
+systemctl start containerd
+```
+
 ## Usage
 
 ```bash
