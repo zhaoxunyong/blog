@@ -13,30 +13,6 @@ An industry-standard container runtime with an emphasis on simplicity, robustnes
 ## Installation
 
 nerdctl is a Docker-compatible CLI for containerd. The release full version has been included dependencies such as containerd, runc, and CNI.
-
-```bash
-#https://github.com/containerd/nerdctl/releases
-wget https://github.com/containerd/nerdctl/releases/download/v0.19.0/nerdctl-full-0.19.0-linux-amd64.tar.gz
-#Extract the archive to a path like /usr/local/bin or ~/bin
-tar Cxzvvf /usr/local nerdctl-full-0.19.0-linux-amd64.tar.gz
-systemctl enable --now containerd
-systemctl enable --now buildkit
-#Test
-sudo nerdctl run -d --name nginx -p 80:80 nginx:alpine
-#Uninstall
-systemctl disable containerd
-systemctl disable buildkit
-systemctl stop containerd
-systemctl stop buildkit
-tar -tf nerdctl-full-0.19.0-linux-amd64.tar.gz |grep "^bin/.+*"|sed 's;^;rm /usr/local/;'|sh +x
-rm -fr /usr/local/share/doc/nerdctl*
-rm -fr /usr/local/libexec/cni
-rm -fr /var/lib/buildkit
-rm -fr /var/lib/docker/buildkit
-rm /usr/local/lib/systemd/system/containerd.service 
-rm /usr/local/lib/systemd/system/buildkit.service
-```
-
 Maybe nerdctl is not the latest version, you can install the latest version step by step by the following instructions:
 
 https://github.com/containerd/containerd/blob/main/docs/getting-started.md
@@ -50,20 +26,48 @@ Step 3: Installing CNI plugins
 #The containerd.io packages in DEB and RPM formats are distributed by Docker (not by the containerd project). See the Docker documentation for how to set up apt-get or dnf to install containerd.io packages:
 #The containerd.io package contains runc too, but does not contain CNI plugins.
 apt install containerd.io
+
 #Installing CNI plugins
-wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+wget https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
 #Extract it under /opt/cni/bin
 mkdir -p /opt/cni/bin
-tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz
+tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.4.0.tgz
+
+#https://github.com/containerd/containerd/blob/main/containerd.service
+wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -P /usr/local/lib/systemd/system/
+sed -i 's;/usr/local/bin/containerd;/usr/bin/containerd;g' /usr/local/lib/systemd/system/containerd.service
 systemctl enable --now containerd
-#Nerdctl mini version
-wget https://github.com/containerd/nerdctl/releases/download/v0.19.0/nerdctl-0.19.0-linux-amd64.tar.gz
-tar Cxzvvf /usr/local/bin nerdctl-0.19.0-linux-amd64.tar.gz
+
+#Nerdctl
+wget https://github.com/containerd/nerdctl/releases/download/v1.7.4/nerdctl-1.7.4-linux-amd64.tar.gz
+#Extract the archive to a path like /usr/local/bin or ~/bin
+tar Cxzvvf /usr/local/bin nerdctl-1.7.4-linux-amd64.tar.gz
+
 #Buildkit
-wget https://github.com/moby/buildkit/releases/download/v0.10.3/buildkit-v0.10.3.linux-amd64.tar.gz
-tar Cxzvvf /usr/local/ buildkit-v0.10.3.linux-amd64.tar.gz
-cp -a buildkit.service /usr/local/lib/systemd/system/buildkit.service
+wget https://github.com/moby/buildkit/releases/download/v0.13.0/buildkit-v0.13.0.linux-amd64.tar.gz
+tar Cxzvvf /usr/local/ buildkit-v0.13.0.linux-amd64.tar.gz
+
+#https://github.com/moby/buildkit/tree/master/examples/systemd/system
+wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.service -P /usr/local/lib/systemd/system/
+wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.socket -P /usr/local/lib/systemd/system/ 
+#cp -a buildkit.service /usr/local/lib/systemd/system/buildkit.service
 systemctl enable --now buildkit
+
+
+#Uninstall
+systemctl stop containerd
+systemctl stop buildkit
+tar -tf nerdctl-1.7.4-linux-amd64.tar.gz | sed 's;^;rm /usr/local/bin/;' | sh +x
+tar -tf buildkit-v0.13.0.linux-amd64.tar.gz | grep "^bin/.+*" | sed 's;^;rm /usr/local/;' | sh +x
+rm -fr /opt/cni/bin/
+rm /usr/local/lib/systemd/system/buildkit.socket
+rm /usr/local/lib/systemd/system/buildkit.service
+
+apt remove containerd.io
+rm /usr/local/lib/systemd/system/containerd.service
+
+#Test
+sudo nerdctl run --rm --name nginx -p 80:80 nginx:alpine
 ```
 
 cat Dockerfile:
@@ -73,104 +77,14 @@ FROM nginx:alpine
 RUN echo 'Hello Nerdctl From Containerd' > /usr/share/nginx/html/index.html
 ```
 
-cat buildkit.service
-
-```bash
-# Copyright The containerd Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-[Unit]
-
-
-After=network.target local-fs.target
-
-[Service]
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/buildkitd
-
-Type=notify
-Delegate=yes
-KillMode=process
-Restart=always
-RestartSec=5
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNPROC=infinity
-LimitCORE=infinity
-LimitNOFILE=infinity
-# Comment TasksMax if your systemd version does not supports it.
-# Only systemd 226 and above support this version.
-TasksMax=infinity
-OOMScoreAdjust=-999
-
-[Install]
-WantedBy=multi-user.target
-
-# This file was converted from containerd.service, with `sed -E 's@bin/containerd@bin/buildkitd@g; s@(Description|Documentation)=.*@@'`
-```
-
-cat containerd.service
-
-```bash
-# Copyright The containerd Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-[Unit]
-Description=containerd container runtime
-Documentation=https://containerd.io
-After=network.target local-fs.target
-
-[Service]
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/containerd
-
-Type=notify
-Delegate=yes
-KillMode=process
-Restart=always
-RestartSec=5
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNPROC=infinity
-LimitCORE=infinity
-LimitNOFILE=infinity
-# Comment TasksMax if your systemd version does not supports it.
-# Only systemd 226 and above support this version.
-TasksMax=infinity
-OOMScoreAdjust=-999
-
-[Install]
-WantedBy=multi-user.target
-```
-
 ## Usage
 
 ```bash
-#test
-#nerdctl build  -t nginx:nerctl -f Dockerfile .
-nerdctl run -d --name nginx -p 80:80 nginx:alpine
+#Build:
+nerdctl build  -t nginx:nerctl -f Dockerfile .
+#Run:
+nerdctl run -d --name nginx -p 80:80 nginx:nerctl
+#Test:
 curl localhost
 ```
 
