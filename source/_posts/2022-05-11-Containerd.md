@@ -25,7 +25,8 @@ Step 3: Installing CNI plugins
 #Option 2: From apt-get or dnf
 #The containerd.io packages in DEB and RPM formats are distributed by Docker (not by the containerd project). See the Docker documentation for how to set up apt-get or dnf to install containerd.io packages:
 #The containerd.io package contains runc too, but does not contain CNI plugins.
-apt install containerd.io
+#apt install containerd.io
+apt install containerd
 
 #Installing CNI plugins
 wget https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
