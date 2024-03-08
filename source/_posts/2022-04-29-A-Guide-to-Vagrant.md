@@ -71,21 +71,23 @@ Dockerfile:
 ```bash
 #Version: 1.0.0
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-ENV WORK_SHELL /data/shell
+RUN mkdir -p /container/shell 
+
+ENV WORK_SHELL /container/shell
 WORKDIR $WORK_SHELL
 
 #ADD ./sources.list /etc/apt/sources.list
 #RUN apt update && apt install -y init
 
-ADD changepwd.sh $WORK_SHELL/
-ADD docker-entrypoint.sh $WORK_SHELL/
+ADD docker-entrypoint.sh script.sh $WORK_SHELL/
 
-ADD ./script.sh $WORK_SHELL/
+RUN chmod +x $WORK_SHELL/*.sh
+
 RUN $WORK_SHELL/script.sh
 
-ENTRYPOINT ["/data/shell/docker-entrypoint.sh"]
+ENTRYPOINT ["/container/shell/docker-entrypoint.sh"]
 #CMD ["bash", "-c" ,"$WORK_SHELL/init.sh"]
 ```
 
@@ -93,24 +95,8 @@ docker-entrypoint.sh:
 ```bash
 #!/bin/bash
 
-/data/shell/changepwd.sh && rm -fr /data/shell/changpwd.sh
-
 # run the command given as arguments from CMD
 exec "$@"
-```
-
-changepwd.sh:
-```bash
-#!/usr/bin/expect
-set timeout -1
-set PWD "newpwd"
-spawn passwd 
-expect "New password:" 
-send "$PWD\r"
-expect "Retype new password:"
-send "$PWD\r"
-interact
-#expect eof
 ```
 
 script.sh: Finding the details from belows.
@@ -118,7 +104,7 @@ script.sh: Finding the details from belows.
 Building docker image:
 
 ```bash
-docker build -t dave/ubuntu:20.04 .
+docker build -t dave/ubuntu:22.04 .
 ```
 
 Vagrangfile:
@@ -133,29 +119,21 @@ Vagrangfile:
 # you're doing.
 Vagrant.configure("2") do |config|
 
-  config.vm.define "node1"  do |node1|
-    node1.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
-    node1.vm.provider "docker" do |d|
-      d.image = "dave/fabric:2.4.3"
-      #d.build_dir = "."
-      d.create_args = ["--hostname=node1", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
-      d.privileged = true
-      d.cmd = ["/sbin/init"]
-      #Ports to expose from the container to the host. These should be in the format of host:container
-      #d.ports = ["8080:80"]
-    end
+  config.vm.network :public_network, ip: "192.168.109.50", netmask: "255.255.255.0", bridge: "eno1", docker_network__gateway: "192.168.109.254"
+
+  config.vm.provider "docker" do |d|
+    d.image = "registry.zerofinance.net/library/ubuntu:22.04"
+    #d.build_dir = "."
+    #d.create_args = ["--hostname=config", "-v", "/data/fisco:/data/fisco", "-v", "/data/vagrant/docker/fisco/shell:/data/shell"]
+    d.create_args = ["--cpus=40", "--memory=64g", "--hostname=ubuntu-analysis", "-v", "/data/containerd:/var/lib/containerd", "-v", "/works/app/container_apps:/works/app", "-v", "/data/container_datas:/data"]
+    d.privileged = true
+    d.cmd = ["/sbin/init"]
   end
 
-  config.vm.define "node2"  do |node2|
-    node2.vm.network :public_network, ip: "192.168.101.84", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
-    node2.vm.provider "docker" do |d|
-      d.image = "dave/fisco:3.0.0"
-      #d.build_dir = "."
-      d.create_args = ["--hostname=node2", "-v", "/data/fisco:/data/fisco"]
-      d.privileged = true
-      d.cmd = ["/sbin/init"]
-    end
-  end
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    sudo route del default gw 172.17.0.1
+    sudo route add default gw 192.168.109.254
+  SHELL
 
 end
 ```
@@ -175,7 +153,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "node1"  do |node1|
     node1.vm.network :public_network, ip: "192.168.101.83", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
     node1.vm.provider "docker" do |d|
-      d.image = "dave/docker:20.04"
+      d.image = "dave/docker:22.04"
       #d.build_dir = "."
       d.create_args = ["--hostname=node1", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
       d.privileged = true
@@ -186,7 +164,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "node2"  do |node2|
     node2.vm.network :public_network, ip: "192.168.101.84", netmask: "255.255.255.0", bridge: "enp2s0", docker_network__gateway: "192.168.101.254"
     node2.vm.provider "docker" do |d|
-      d.image = "dave/docker:20.04"
+      d.image = "dave/docker:22.04"
       #d.build_dir = "."
       d.create_args = ["--hostname=node2", "-v", "/data/var-lib-docker:/var/lib/docker", "-v","/data/fabric:/data/fabric"]
       d.privileged = true
@@ -245,7 +223,7 @@ docker exec -it dockerid /bin/bash
 
 How to get the box images?
 
-Search from https://app.vagrantup.com/boxes/search to get a certain box, like "ubuntu 20.04", going to the details you can get the following command:
+Search from https://app.vagrantup.com/boxes/search to get a certain box, like "ubuntu 22.04", going to the details you can get the following command:
 
 ```bash
 vagrant init generic/ubuntu2004
@@ -258,7 +236,7 @@ Just running the command above, you will see the box url. Since the internet con
 #Centos
 https://vagrantcloud.com/centos/boxes/7/versions/2004.01/providers/virtualbox.box
 #Ubuntu
-https://vagrantcloud.com/bento/boxes/ubuntu-20.04/versions/202112.19.0/providers/virtualbox.box
+https://vagrantcloud.com/bento/boxes/ubuntu-22.04/versions/202112.19.0/providers/virtualbox.box
 #Win10
 http://vagrantcloud.com/gusztavvargadr/boxes/windows-10/versions/2102.0.2204/providers/virtualbox.box
 ```
@@ -268,7 +246,7 @@ http://vagrantcloud.com/gusztavvargadr/boxes/windows-10/versions/2102.0.2204/pro
 Adding box:
 
 ```
-sudo vagrant box add ubuntu20.04 box/ubuntu-20.04.box
+sudo vagrant box add ubuntu22.04 box/ubuntu-22.04.box
 sudo vagrant plugin install vagrant-disksize
 ```
 
@@ -284,7 +262,7 @@ Vagrantfile:
 # you're doing.
 Vagrant.configure("2") do |config|
 
-  #config.vm.box = "ubuntu20.04"
+  #config.vm.box = "ubuntu22.04"
   #config.vm.hostname = "mydocker"
   #config.vm.network "private_network", ip: "192.168.10.9"
 #
@@ -302,7 +280,7 @@ Vagrant.configure("2") do |config|
   #config.vm.provision "shell", path: "script.sh"
 
   config.vm.define :node1 do |node1|
-    node1.vm.box = "ubuntu20.04"
+    node1.vm.box = "ubuntu22.04"
     node1.vm.hostname = "node1"
     node1.vm.network "public_network", ip: "192.168.101.83", netmask: "255.255.255.0", gateway: "192.168.101.254", bridge: "enp2s0"
     #excel01_prod.vm.network "public_network", bridge: "enp0s31f6", auto_config: false
@@ -330,7 +308,7 @@ Vagrant.configure("2") do |config|
 
 
   config.vm.define :node2 do |node2|
-    node2.vm.box = "ubuntu20.04"
+    node2.vm.box = "ubuntu22.04"
     node2.vm.hostname = "node2"
     node2.vm.network "public_network", ip: "192.168.101.84", netmask: "255.255.255.0", gateway: "192.168.101.254", bridge: "enp2s0"
     #node1.vm.synced_folder "/home/dev/vagrant", "/data/vagrant"
@@ -367,21 +345,21 @@ echo "scripting......"
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
 # cat >> /etc/apt/sources.list.d/aliyun.list << EOF
 tee /etc/apt/sources.list << EOF
-#For ubuntu 20.04
-deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ jammy main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ jammy-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ jammy-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ jammy-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted universe multiverse
 EOF
 
-apt update
-apt install net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
+apt-get update
+apt-get install make g++ init inetutils-ping sudo jq net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
+#apt-get install init inetutils-ping sudo jq net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
 
 #LANG="en_US.UTF-8"
 #sed -i 's;LANG=.*;LANG="zh_CN.UTF-8";' /etc/locale.conf
@@ -396,18 +374,29 @@ systemctl stop firewalld
 timedatectl set-timezone Asia/Shanghai
 
 #logined limit
-cat /etc/security/limits.conf|grep 100000|egrep "^\*" > /dev/null
+cat /etc/security/limits.conf|grep "^root" > /dev/null
 if [[ $? != 0 ]]; then
-cat >> /etc/security/limits.conf  << EOF
-*                -       nofile          100000
-*                -       nproc           100000
+		cat >> /etc/security/limits.conf  << EOF
+root            -    nofile             100000
+root            -    nproc              100000
+*               -    nofile             100000
+*               -    nproc              100000
 EOF
 fi
 
 #systemd service limit
-cat /etc/systemd/system.conf|egrep '^DefaultLimitCORE' > /dev/null
+cat /etc/systemd/system.conf|egrep '^DefaultLimitNOFILE' > /dev/null
 if [[ $? != 0 ]]; then
-cat >> /etc/systemd/system.conf << EOF
+		cat >> /etc/systemd/system.conf << EOF
+DefaultLimitCORE=infinity
+DefaultLimitNOFILE=100000
+DefaultLimitNPROC=100000
+EOF
+fi
+#user service limit
+cat /etc/systemd/user.conf|egrep '^DefaultLimitNOFILE' > /dev/null
+if [[ $? != 0 ]]; then
+		cat >> /etc/systemd/system.conf << EOF
 DefaultLimitCORE=infinity
 DefaultLimitNOFILE=100000
 DefaultLimitNPROC=100000
@@ -434,9 +423,6 @@ fi
 
 su - root -c "ulimit -a"
 
-echo "140.82.112.4 github.com
-185.199.110.133 raw.githubusercontent.com" >> /etc/hosts
-
 #tee /etc/resolv.conf << EOF
 #search myk8s.com
 #nameserver 114.114.114.114
@@ -444,25 +430,8 @@ echo "140.82.112.4 github.com
 #EOF
 
 sed -i 's;#PermitRootLogin.*;PermitRootLogin yes;g' /etc/ssh/sshd_config
-systemctl enable ssh
-systemctl restart ssh
-
-su - root -c "/vagrant/changpwd.sh"
-```
-
-changpwd.sh
-
-```bash
-#!/usr/bin/expect
-set timeout -1
-set PWD "password"
-spawn passwd 
-expect "New password:" 
-send "$PWD\r"
-expect "Retype new password:"
-send "$PWD\r"
-interact
-#expect eof
+#systemctl enable ssh
+#systemctl restart ssh
 ```
 
 Starting:
