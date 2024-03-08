@@ -20,8 +20,8 @@ https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 ```bash
 #Option 1: From the official binaries
 Step 1: Installing containerd
-Step 2: Installing runc
-Step 3: Installing CNI plugins
+#Step 2: Installing runc
+Step 2: Installing CNI plugins
 #Option 2: From apt-get or dnf
 #The containerd.io packages in DEB and RPM formats are distributed by Docker (not by the containerd project). See the Docker documentation for how to set up apt-get or dnf to install containerd.io packages:
 #The containerd.io package contains runc too, but does not contain CNI plugins.
@@ -54,10 +54,12 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.4.0.tgz
 #sed -i 's;/usr/local/bin/containerd;/usr/bin/containerd;g' /usr/local/lib/systemd/system/containerd.service
 systemctl enable --now containerd
 
-#Nerdctl
+#Nerdctl(Optional)
 wget https://github.com/containerd/nerdctl/releases/download/v1.7.4/nerdctl-1.7.4-linux-amd64.tar.gz
 #Extract the archive to a path like /usr/local/bin or ~/bin
 tar Cxzvvf /usr/local/bin nerdctl-1.7.4-linux-amd64.tar.gz
+
+ln -s /usr/local/bin/nerdctl /usr/local/bin/docker
 
 #Buildkit
 wget https://github.com/moby/buildkit/releases/download/v0.13.0/buildkit-v0.13.0.linux-amd64.tar.gz
