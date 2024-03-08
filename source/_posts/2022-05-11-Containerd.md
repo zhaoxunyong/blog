@@ -25,8 +25,23 @@ Step 3: Installing CNI plugins
 #Option 2: From apt-get or dnf
 #The containerd.io packages in DEB and RPM formats are distributed by Docker (not by the containerd project). See the Docker documentation for how to set up apt-get or dnf to install containerd.io packages:
 #The containerd.io package contains runc too, but does not contain CNI plugins.
-#apt install containerd.io
-apt install containerd
+
+#https://docs.docker.com/engine/install/ubuntu/
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+apt install containerd.io
 
 #Installing CNI plugins
 wget https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
@@ -35,8 +50,8 @@ mkdir -p /opt/cni/bin
 tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.4.0.tgz
 
 #https://github.com/containerd/containerd/blob/main/containerd.service
-wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -P /usr/local/lib/systemd/system/
-sed -i 's;/usr/local/bin/containerd;/usr/bin/containerd;g' /usr/local/lib/systemd/system/containerd.service
+#wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -P /usr/local/lib/systemd/system/
+#sed -i 's;/usr/local/bin/containerd;/usr/bin/containerd;g' /usr/local/lib/systemd/system/containerd.service
 systemctl enable --now containerd
 
 #Nerdctl
@@ -50,7 +65,7 @@ tar Cxzvvf /usr/local/ buildkit-v0.13.0.linux-amd64.tar.gz
 
 #https://github.com/moby/buildkit/tree/master/examples/systemd/system
 wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.service -P /usr/local/lib/systemd/system/
-wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.socket -P /usr/local/lib/systemd/system/ 
+wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.socket -P /usr/local/lib/systemd/system/
 #cp -a buildkit.service /usr/local/lib/systemd/system/buildkit.service
 systemctl enable --now buildkit
 
