@@ -817,6 +817,57 @@ vagrant halt && vagrant up
 
 Note: this will not work with vagrant reload
 
+## Nvidia Docker
+
+```bash
+https://github.com/NVIDIA/nvidia-docker/issues/1034
+https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+#nvidia-container-toolkit
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update
+
+sudo apt-get install -y nvidia-container-toolkit
+
+docker run --rm --name dave-nvidia --gpus all nvidia/cuda:12.3.2-devel-ubuntu22.04 nvidia-smi
+
+```
+
+vim Vagrantfile:
+
+```yml
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+
+  config.vm.network :public_network, ip: "192.168.109.50", netmask: "255.255.255.0", bridge: "eno1", docker_network__gateway: "192.168.109.254"
+
+  config.vm.provider "docker" do |d|
+    #d.image = "registry.zerofinance.net/library/ubuntu:22.04"
+    d.image = "registry.zerofinance.net/library/cuda:12.3.2-devel-ubuntu22.04"
+    #d.build_dir = "."
+    #d.create_args = ["--hostname=config", "-v", "/data/fisco:/data/fisco", "-v", "/data/vagrant/docker/fisco/shell:/data/shell"]
+    d.create_args = ["--cpus=40", "--memory=64g", "--hostname=ubuntu-analysis", "--gpus=all","-v", "/data/containerd:/var/lib/containerd", "-v", "/works/app/container_apps:/works/app", "-v", "/data/container_datas:/data"]
+    d.privileged = true
+    d.cmd = ["/sbin/init"]
+  end
+
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    sudo route del default gw 172.17.0.1
+    sudo route add default gw 192.168.109.254
+  SHELL
+
+end
+```
+
 ## Refrence
 
 - https://www.ityoudao.cn/posts/vagrant-network/
