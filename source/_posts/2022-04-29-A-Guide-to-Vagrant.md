@@ -358,8 +358,8 @@ deb-src http://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted univer
 EOF
 
 apt-get update
-apt-get install make g++ init inetutils-ping sudo jq net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
-#apt-get install init inetutils-ping sudo jq net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
+#apt-get install make g++ init inetutils-ping sudo jq net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
+apt-get install init inetutils-ping sudo iptables psmisc jq net-tools wget htop vim screen curl lsof lrzsz zip unzip expect openssh-server -y
 
 #LANG="en_US.UTF-8"
 #sed -i 's;LANG=.*;LANG="zh_CN.UTF-8";' /etc/locale.conf

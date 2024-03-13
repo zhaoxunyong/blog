@@ -54,6 +54,21 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.4.0.tgz
 #sed -i 's;/usr/local/bin/containerd;/usr/bin/containerd;g' /usr/local/lib/systemd/system/containerd.service
 systemctl enable --now containerd
 
+#Optional: Proxy
+sudo mkdir -p /etc/systemd/system/containerd.service.d
+sudo touch /etc/systemd/system/containerd.service.d/http-proxy.conf
+sudo tee /etc/systemd/system/containerd.service.d/http-proxy.conf <<-'EOF'
+[Service]
+Environment="HTTP_PROXY=http://127.0.0.1:1082"
+Environment="HTTPS_PROXY=http://127.0.0.1:1082"
+Environment="NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,172.0.0.0/8,192.168.0.0/16,*.zerofinance.net,*.aliyun.com,*.163.com,*.docker-cn.com,kubernetes.docker.internal"
+EOF
+# Restart service:
+sudo systemctl daemon-reload
+sudo systemctl restart containerd
+sudo systemctl show --property=Environment containerd
+
+
 #Nerdctl(Optional)
 wget https://github.com/containerd/nerdctl/releases/download/v1.7.4/nerdctl-1.7.4-linux-amd64.tar.gz
 #Extract the archive to a path like /usr/local/bin or ~/bin
@@ -86,6 +101,7 @@ rm /usr/local/lib/systemd/system/containerd.service
 
 #Test
 sudo nerdctl run --rm --name nginx -p 80:80 nginx:alpine
+
 ```
 
 cat Dockerfile:
