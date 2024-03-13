@@ -53,7 +53,8 @@ sudo apt-get install dconf-tools
 ```bash
 cat /proc/sys/fs/inotify/max_user_watches
 #sudo vim /etc/sysctl.conf
-fs.inotify.max_user_watches=524288
+fs.inotify.max_user_instances=1280
+fs.inotify.max_user_watches=655360
 vm.overcommit_memory=1
 sudo sysctl -p
 ```
