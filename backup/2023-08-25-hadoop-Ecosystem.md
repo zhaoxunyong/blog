@@ -1470,8 +1470,8 @@ select * from uniontype_1 where info['english'][2]>30;
 ## ES
 
 ```bash
-docker pull elasticsearch:7.6.2
-docker pull kibana:7.6.2
+docker pull registry.zerofinance.net/library/elasticsearch:7.6.2
+docker pull registry.zerofinance.net/library/kibana:7.6.2
 
 mkdir -p /works/data/esdata-dev
 chmod -R 777 /works/data/esdata-dev
