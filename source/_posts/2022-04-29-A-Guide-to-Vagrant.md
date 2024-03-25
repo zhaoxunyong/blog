@@ -138,6 +138,22 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+Or just using docker by itself:
+```bash
+docker network create \
+    --driver='bridge' \
+    --subnet=192.168.101.0/24 \
+    --gateway=192.168.101.254 \
+    my-net
+
+
+docker run -d \
+    --name=my-other-nginx \
+    --network=my-net \
+    --ip=192.168.101.84 \
+    nginx:latest
+```
+
 Or multiple nodes with Vagrantfile:
 
 ```bash
