@@ -139,19 +139,42 @@ end
 ```
 
 Or just using docker by itself:
+
 ```bash
+#https://www.cnblogs.com/bakari/p/10893589.html
+
+#https://blog.oddbit.com/post/2018-03-12-using-docker-macvlan-networks/
+#Solved: Container can communicate with host machine:
 docker network create \
-    --driver='bridge' \
+    -d 'macvlan' \
+    -o parent=enp2s0 \
     --subnet=192.168.101.0/24 \
     --gateway=192.168.101.254 \
-    my-net
+    --aux-address 'host=192.168.101.86' \
+    my-network
 
+#/etc/rc.local
+ip link add mynet-shim link enp2s0 type macvlan mode bridge
+#192.168.101.86: a ip of host
+ip addr add 192.168.101.86/32 dev mynet-shim
+ip link set mynet-shim up
+#192.168.101.85: a ip of container
+ip route add 192.168.101.85/32 dev mynet-shim
 
 docker run -d \
-    --name=my-other-nginx \
-    --network=my-net \
-    --ip=192.168.101.84 \
-    nginx:latest
+    --name=dave-ubuntu \
+    --network=my-network \
+    --ip=192.168.101.85 \
+    --privileged=true \
+    registry.zerofinance.net/library/ubuntu:22.04 \
+    /sbin/init
+
+
+# docker run -d \
+#     --name=my-other-nginx \
+#     --network=my-network \
+#     --ip=192.168.101.84 \
+#     nginx:latest
 ```
 
 Or multiple nodes with Vagrantfile:
