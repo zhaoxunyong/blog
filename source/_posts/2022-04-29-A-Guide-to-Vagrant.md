@@ -160,12 +160,61 @@ ip addr add 192.168.101.81/32 dev mynet-shim
 ip link set mynet-shim up
 #192.168.101.85: a container ip
 ip route add 192.168.101.85/32 dev mynet-shim
+ip route add 192.168.101.86/32 dev mynet-shim
+ip route add 192.168.101.87/32 dev mynet-shim
+ip route add 192.168.101.88/32 dev mynet-shim
+
+mkdir -p /data/dave/rancher /data/peter/rancher /data/eino/rancher /data/xiaotie/rancher
 
 docker run -d \
-    --name=dave-ubuntu \
+    --name=dave-server --hostname=dave-server \
     --network=my-network \
     --ip=192.168.101.85 \
     --privileged=true \
+    -v /etc/localtime:/etc/localtime \
+    -v /etc/hosts:/etc/hosts \
+    -v /data/dave:/data \
+    -v /works/app:/works/app \
+    -v /data/dave/rancher:/var/lib/rancher \
+    registry.zerofinance.net/library/ubuntu:22.04 \
+    /sbin/init
+
+docker run -d \
+    --name=peter-server --hostname=peter-server \
+    --network=my-network \
+    --ip=192.168.101.86 \
+    --privileged=true \
+    -v /etc/localtime:/etc/localtime \
+    -v /etc/hosts:/etc/hosts \
+    -v /data/peter:/data \
+    -v /works/app:/works/app \
+    -v /data/peter/rancher:/var/lib/rancher \
+    registry.zerofinance.net/library/ubuntu:22.04 \
+    /sbin/init
+
+docker run -d \
+    --name=eino-server --hostname=eino-server \
+    --network=my-network \
+    --ip=192.168.101.87 \
+    --privileged=true \
+    -v /etc/localtime:/etc/localtime \
+    -v /etc/hosts:/etc/hosts \
+    -v /data/eino:/data \
+    -v /works/app:/works/app \
+    -v /data/eino/rancher:/var/lib/rancher \
+    registry.zerofinance.net/library/ubuntu:22.04 \
+    /sbin/init
+
+docker run -d \
+    --name=xiaotie-server --hostname=xiaotie-server \
+    --network=my-network \
+    --ip=192.168.101.88 \
+    --privileged=true \
+    -v /etc/localtime:/etc/localtime \
+    -v /etc/hosts:/etc/hosts \
+    -v /data/xiaotie:/data \
+    -v /works/app:/works/app \
+    -v /data/xiaotie/rancher:/var/lib/rancher \
     registry.zerofinance.net/library/ubuntu:22.04 \
     /sbin/init
 
