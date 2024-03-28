@@ -150,15 +150,15 @@ docker network create \
     -o parent=enp2s0 \
     --subnet=192.168.101.0/24 \
     --gateway=192.168.101.254 \
-    --aux-address 'host=192.168.101.86' \
+    --aux-address 'host=192.168.101.81' \
     my-network
 
 #/etc/rc.local
 ip link add mynet-shim link enp2s0 type macvlan mode bridge
-#192.168.101.86: a ip of host
-ip addr add 192.168.101.86/32 dev mynet-shim
+#192.168.101.81: a host ip
+ip addr add 192.168.101.81/32 dev mynet-shim
 ip link set mynet-shim up
-#192.168.101.85: a ip of container
+#192.168.101.85: a container ip
 ip route add 192.168.101.85/32 dev mynet-shim
 
 docker run -d \
