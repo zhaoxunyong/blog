@@ -131,6 +131,102 @@ nerdctl run -d --name nginx -p 80:80 nginx:nerctl
 curl localhost
 ```
 
+The native containderd command:
+
+```bash
+#https://cloudyuga.guru/blogs/containerd-and-ctr/
+#https://medium.com/@seifeddinerajhi/understanding-and-using-containerd-a-comprehensive-guide-7b34f6136058
+ctr --help
+
+#container can short as c
+#task can short as t
+ctr c ls
+ctr t ls
+
+#vie namespace
+ctr ns ls
+
+#pull
+ctr images pull docker.io/library/nginx:alpine
+
+#push
+#ctr image push localhost:5000/saif/test:latest
+
+#List out the images
+ctr images ls
+
+#For listing the images with names
+ctr images ls -q
+
+#mount images
+mkdir /tmp/nginx
+ctr images mount docker.io/library/nginx:alpine /tmp/golang
+ls -l /tmp/nginx/
+
+#unmount point
+ctr images unmount /tmp/nginx
+
+#extract the tarball to a temporary directory and explore its contents
+mkdir /tmp/nginx_image
+tar -xf /tmp/nginx.tar -C /tmp/nginx_image/
+ls -lah /tmp/nginx_image/
+
+#delete the images
+ctr images rm docker.io/library/nginx:alpine
+ctr image remove docker.io/library/nginx:alpine
+
+#tag
+ctr image tag docker.io/library/nginx:alpine localhost:5000/library/nginx:alpine
+
+#export images
+ctr images export /data/images/nginx.tar docker.io/library/nginx:alpine --platform linux/amd64
+
+#import images
+ctr images import /data/images/nginx.tar
+
+#create a container
+ctr container create docker.io/library/nginx:alpine nginx_ctr
+
+#List out the containers
+ctr containers ls
+
+#start
+ctr task start nginx_ctr
+
+#List the tasks
+ctr task ls
+
+#create and start
+ctr run -d docker.io/library/nginx:alpine nginx_web
+
+#To see the stdout and stderr of a running task
+#But be careful, the ctr task attach command will also reconnect the stdin stream and start forwarding signals from the controlling terminal to the task processes, so hitting Ctrl+C might kill the task.
+#Unfortunately, ctr doesn't support the Ctrl+P+Q shortcut to detach from a task - it's solely docker's feature. There is also no ctr task logs, so you can't see the stdout/stderr of a task without attaching to it. Neither can you easily see the logs of a stopped task. It's a lower-level tool, remember?
+ctr task attach nginx_web
+
+#interact with the container
+ctr task exec -t --exec-id bash_1 nginx_web sh
+
+#check the usage of the metrics by the task
+ctr task metrics nginx_web
+
+#stop all the tasks
+ctr task kill nginx_web
+
+#remove the container
+ctr container rm nginx_web
+
+#inspect
+ctr container info nginx_web
+
+#snapshot commit
+ctr snapshot commit dave_nginx_ctr nginx_ctr
+
+#snapshot list
+ctr snapshot ls
+
+```
+
 ## Reference 
 
 - https://github.com/containerd/containerd/blob/main/docs/getting-started.md
