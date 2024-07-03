@@ -1000,48 +1000,53 @@ chmod a+rx /jffs/scripts/services-start
 
 ## frp内网穿透
 
-- https://gofrp.org/docs/examples/ssh/
-- https://gofrp.org/docs/examples/vhost-http/
+- https://gofrp.org/zh-cn/docs/examples/ssh/
+- https://gofrp.org/zh-cn/docs/examples/vhost-http/
 
 ### frps
 
 ```bash
 #Server Side:
-#vim frps.ini:
-[common]
-bind_port = 54123
-vhost_http_port = 54456
-token = A String Token
+#cat frps.toml 
+bindPort = 6666
+vhostHTTPPort = 7777
+vhostHTTPSPort = 8888
+auth.token = "aaaaaa"
 
 #Start
-./frps -c frps.ini
+./frps -c frps.toml
 ```
 
 ### frpc
 
 ```bash
 #Client Side:
-#vim frpc.ini:
-[common]
-server_addr = 111.111.111.111
-server_port = 54123
-token = A String Token
+cat frpc.toml 
+serverAddr = "f.gcalls.cn"
+serverPort = 6666
+auth.token = "aaaaaa"
 
-[ssh]
-type = tcp
-local_ip = 192.168.3.1
-local_port = 22
-remote_port = 54231
+[[proxies]]
+name = "f-tcp"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 22
+remotePort = 6677
 
-[web]
-type = http
-local_port = 80
-custom_domains = ip ro domain
-http_user = 自定义用户名
-http_pwd = 自定义密码
+[[proxies]]
+name = "web1"
+type = "http"
+localPort = 80
+customDomains = ["fw.gcalls.cn"]
+
+[[proxies]]
+name = "web2"
+type = "https"
+localPort = 8443
+customDomains = ["fws.gcalls.cn"]
 
 #Start
-./frpc -c frpc.ini
+./frpc -c frpc.toml
 ```
 
 ## HarmonyOS Google
