@@ -18,14 +18,16 @@ Maybe nerdctl is not the latest version, you can install the latest version step
 https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 
 ```bash
-#Option 1: From the official binaries
-Step 1: Installing containerd
-#Step 2: Installing runc
-Step 2: Installing CNI plugins
+#https://github.com/containerd/containerd/blob/main/docs/getting-started.md
+
+##Option 1: From the official binaries
+#Step 1: Installing containerd
+##Step 2: Installing runc
+#Step 2: Installing CNI plugins
+
 #Option 2: From apt-get or dnf
 #The containerd.io packages in DEB and RPM formats are distributed by Docker (not by the containerd project). See the Docker documentation for how to set up apt-get or dnf to install containerd.io packages:
 #The containerd.io package contains runc too, but does not contain CNI plugins.
-
 #https://docs.docker.com/engine/install/ubuntu/
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -44,10 +46,10 @@ sudo apt-get update
 apt install containerd.io
 
 #Installing CNI plugins
-wget https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
+wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
 #Extract it under /opt/cni/bin
 mkdir -p /opt/cni/bin
-tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.4.0.tgz
+tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
 
 #https://github.com/containerd/containerd/blob/main/containerd.service
 #wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -P /usr/local/lib/systemd/system/
@@ -70,15 +72,15 @@ sudo systemctl show --property=Environment containerd
 
 
 #Nerdctl(Optional)
-wget https://github.com/containerd/nerdctl/releases/download/v1.7.4/nerdctl-1.7.4-linux-amd64.tar.gz
+wget https://github.com/containerd/nerdctl/releases/download/v1.7.6/nerdctl-1.7.6-linux-amd64.tar.gz
 #Extract the archive to a path like /usr/local/bin or ~/bin
-tar Cxzvvf /usr/local/bin nerdctl-1.7.4-linux-amd64.tar.gz
+tar Cxzvvf /usr/local/bin nerdctl-1.7.6-linux-amd64.tar.gz
 
-ln -s /usr/local/bin/nerdctl /usr/local/bin/docker
+#ln -s /usr/local/bin/nerdctl /usr/local/bin/docker
 
 #Buildkit
-wget https://github.com/moby/buildkit/releases/download/v0.13.0/buildkit-v0.13.0.linux-amd64.tar.gz
-tar Cxzvvf /usr/local/ buildkit-v0.13.0.linux-amd64.tar.gz
+wget https://github.com/moby/buildkit/releases/download/v0.15.2/buildkit-v0.15.2.linux-amd64.tar.gz
+tar Cxzvvf /usr/local/ buildkit-v0.15.2.linux-amd64.tar.gz
 
 #https://github.com/moby/buildkit/tree/master/examples/systemd/system
 wget https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.service -P /usr/local/lib/systemd/system/
