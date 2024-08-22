@@ -3417,6 +3417,7 @@ Flink SQL> CREATE TABLE products (
     PRIMARY KEY (id) NOT ENFORCED
   ) WITH (
     'connector' = 'mysql-cdc',
+    'server-time-zone' = 'Asia/Shanghai',
     'hostname' = '192.168.80.225',
     'port' = '3306',
     'username' = 'root',
@@ -3435,6 +3436,7 @@ Flink SQL> CREATE TABLE orders (
    PRIMARY KEY (order_id) NOT ENFORCED
  ) WITH (
    'connector' = 'mysql-cdc',
+   'server-time-zone' = 'Asia/Shanghai',
    'hostname' = '192.168.80.225',
    'port' = '3306',
    'username' = 'root',
@@ -3695,6 +3697,7 @@ CREATE TABLE products (
     PRIMARY KEY (id) NOT ENFORCED
   ) WITH (
     'connector' = 'mysql-cdc',
+    'server-time-zone' = 'Asia/Shanghai',
     'hostname' = '192.168.63.102',
     'port' = '3306',
     'username' = 'demo_db',
@@ -3713,6 +3716,7 @@ CREATE TABLE orders (
    PRIMARY KEY (order_id) NOT ENFORCED
  ) WITH (
    'connector' = 'mysql-cdc',
+   'server-time-zone' = 'Asia/Shanghai',
    'hostname' = '192.168.63.102',
    'port' = '3306',
    'username' = 'demo_db',
@@ -3877,6 +3881,7 @@ CREATE TABLE products (
     PRIMARY KEY (id) NOT ENFORCED
   ) WITH (
     'connector' = 'mysql-cdc',
+    'server-time-zone' = 'Asia/Shanghai',
     'hostname' = '192.168.63.102',
     'port' = '3306',
     'username' = 'demo_db',
@@ -3895,6 +3900,7 @@ CREATE TABLE orders (
    PRIMARY KEY (order_id) NOT ENFORCED
  ) WITH (
    'connector' = 'mysql-cdc',
+   'server-time-zone' = 'Asia/Shanghai',
    'hostname' = '192.168.63.102',
    'port' = '3306',
    'username' = 'demo_db',

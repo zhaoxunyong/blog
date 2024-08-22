@@ -3236,7 +3236,52 @@ log-bin = mysql_log_bin
 systemctl restart mysqld 
 ```
 
+MySQL ON Docker
 
+```
+ES:
+docker run -d --name elastic-dev  --restart always \
+--log-driver json-file --log-opt max-size=200m --log-opt max-file=3 \
+--net es-network -p 9200:9200 -p 9300:9300 \
+-v /data/esdata-dev:/usr/share/elasticsearch/data \
+-e "discovery.type=single-node" --ulimit nofile=65535:65535 registry.zerofinance.net/library/elasticsearch:7.6.2
+
+MySQL:
+cat /works/app/mysql/my.cnf
+[mysqld]
+bind-address=0.0.0.0
+port=3306
+#socket=/Developer/mysql-5.7.37/data/mysql.sock
+#pid-file=/Developer/mysql-5.7.37/logs/mysql.pid
+#basedir=/Developer/mysql-5.7.37
+#datadir=/Developer/mysql-5.7.37/data
+
+default-time_zone='+8:00'
+max_connections=2000
+
+character-set-server=utf8
+collation-server=utf8_general_ci
+lower_case_table_names=1
+
+server_id = 1
+binlog_format = ROW
+log-bin = mysql_log_bin
+
+
+docker run -d -p 3306:3306 --restart=always --name mysql \
+-e TZ=Asia/Shanghai \
+-e MYSQL_ROOT_PASSWORD=Aa123456 \
+-e MYSQL_DATABASE=demo_db \
+-e MYSQL_USER=demo_db \
+-e MYSQL_PASSWORD=Aa123456 \
+-v /works/app/mysql/my.cnf:/etc/my.cnf \
+mysql:5.7.32
+
+#https://support.huaweicloud.com/trouble-rds/rds_12_0040.html
+Access denied; you need (at least one of) the SUPER, REPLICATION CLIENT privilege(s) for this operation
+GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO demo_db@'%';
+FLUSH PRIVILEGES;
+```
 
 ```bash
 > sudo su - hadoop
@@ -3297,6 +3342,7 @@ Flink SQL> CREATE TABLE products (
     PRIMARY KEY (id) NOT ENFORCED
   ) WITH (
     'connector' = 'mysql-cdc',
+    'server-time-zone' = 'Asia/Shanghai',
     'hostname' = '192.168.80.225',
     'port' = '3306',
     'username' = 'root',
@@ -3315,6 +3361,7 @@ Flink SQL> CREATE TABLE orders (
    PRIMARY KEY (order_id) NOT ENFORCED
  ) WITH (
    'connector' = 'mysql-cdc',
+   'server-time-zone' = 'Asia/Shanghai',
    'hostname' = '192.168.80.225',
    'port' = '3306',
    'username' = 'root',
@@ -3575,6 +3622,7 @@ CREATE TABLE products (
     PRIMARY KEY (id) NOT ENFORCED
   ) WITH (
     'connector' = 'mysql-cdc',
+    'server-time-zone' = 'Asia/Shanghai',
     'hostname' = '192.168.63.102',
     'port' = '3306',
     'username' = 'demo_db',
@@ -3593,6 +3641,7 @@ CREATE TABLE orders (
    PRIMARY KEY (order_id) NOT ENFORCED
  ) WITH (
    'connector' = 'mysql-cdc',
+   'server-time-zone' = 'Asia/Shanghai',
    'hostname' = '192.168.63.102',
    'port' = '3306',
    'username' = 'demo_db',
@@ -3757,6 +3806,7 @@ CREATE TABLE products (
     PRIMARY KEY (id) NOT ENFORCED
   ) WITH (
     'connector' = 'mysql-cdc',
+    'server-time-zone' = 'Asia/Shanghai',
     'hostname' = '192.168.63.102',
     'port' = '3306',
     'username' = 'demo_db',
@@ -3775,6 +3825,7 @@ CREATE TABLE orders (
    PRIMARY KEY (order_id) NOT ENFORCED
  ) WITH (
    'connector' = 'mysql-cdc',
+   'server-time-zone' = 'Asia/Shanghai',
    'hostname' = '192.168.63.102',
    'port' = '3306',
    'username' = 'demo_db',
