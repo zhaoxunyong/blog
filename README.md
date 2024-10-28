@@ -32,7 +32,7 @@ npm install hexo-server -g
 npm install hexo-deployer-git -g
 npm install yarn -g
 npm install http-server -g
-yarn global add serve
+#yarn global add serve
 
 yarn config set registry https://registry.npmmirror.com --global
 yarn config set disturl https://npmmirror.com/dist --global
