@@ -333,7 +333,19 @@ sudo cp /usr/lib/x86_64-linux-gnu/libQt5Svg.so.5 /opt/sogoupinyin/files/bin/../l
 sudo cp /usr/lib/x86_64-linux-gnu/libQt5XcbQpa.so.5 /opt/sogoupinyin/files/bin/../lib/qt5/lib/libQt5XcbQpa.so.5
 ```
 
-重启电脑
+#重启电脑
+
+### 百度输入法
+
+```bash
+#https://srf.baidu.com/site/guanwang_linux/index.html
+sudo apt install ./fcitx-baidupinyin.deb
+
+#解决中文输入乱码的问题
+#https://blog.csdn.net/qq_37435462/article/details/139027276
+sudo apt install fcitx-libpinyin
+#不出意外的话你就可以看到跳出了百度输入法的配置菜单
+```
 
 ### fcitx5中文拼音输入法
 
@@ -358,13 +370,12 @@ flameshot gui -> ctrl+alt+Q
 
 ```bash
 #https://github.com/nvm-sh/nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 . ~/.bashrc
 #显示有远端的版本
 nvm ls-remote
 #安装对应的版本
 nvm install v12.22.6
-nvm install 22
 ```
 
 安装常用工具：
@@ -387,12 +398,8 @@ yarn config set disturl https://npmmirror.com/dist --global
 ```bash
 sudo mkdir -p /Developer/java /Developer/workspace
 sudo chown -R dave.dave /Developer
-```
-
-
 sudo vim /etc/profile.d/java.sh
-```
-export JAVA_HOME=/Developer/java/jdk-11.0.9
+export JAVA_HOME=/Developer/java/jdk1.8.0_202
 #export JAVA_HOME=$(/usr/libexec/java_home)
 export M2_HOME=/Developer/apache-maven-3.5.4
 export GRADLE_USER_HOME=/Developer/.gradle
@@ -458,6 +465,70 @@ cd WhiteSur-icon-theme/
 ./install.sh -b
 ```
 
+## Wine
+
+企业微信需要用wine7安装才会有消息提醒，推荐使用：
+
+```bash
+#https://www.cnblogs.com/hyaline-doc/p/18011541
+
+sudo dpkg --add-architecture i386 
+sudo mkdir -pm755 /etc/apt/keyrings
+sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+
+# 注意 对应你的ubuntu版本
+# ubuntu 22.04 jammy
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+
+sudo apt update
+sudo apt install --install-recommends winehq-stable
+wine --version
+
+
+#企业微信
+wine WeCom_3.1.16.3008.exe
+#微信
+wine WeChatSetup_V3.4.0.38.exe
+#卸载
+wine uninstaller
+#配置
+wine winecfg
+
+#输入框不能正常显示（不显示）输入的文字
+#https://blog.csdn.net/hongxiao2016/article/details/115156831
+sudo apt install winetricks
+# 安装微信需要的依赖，时间可能较长，我开了魔法的，还是下了挺久，wine在第一次使用是会问你是否安装 wine mono ,这是linux 上的.net，安装就好，但是可能比较慢，也可以后期手动装(后面补充)，好像不装wine mono也可以正常打开微信
+winetricks riched20 riched30 richtx32 msftedit ie8
+
+#英文模式下微信乱码解决：
+#https://blog.csdn.net/ysy950803/article/details/80326832
+#cp -a /Developer/Software/Themes/Fonts/* ~/.deepinwine/Deepin-WeChat/drive_c/windows/Fonts/
+cp -a /Developer/linux/software/Themes/Fonts/*.TTC ~/.wine/drive_c/windows/Fonts/
+#cp -a MSYH/* ~/.wine/drive_c/windows/Fonts/
+
+#vim msyh_font.reg
+#REGEDIT4
+# 
+#[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontLink\SystemLink]
+#"Lucida Sans Unicode"="msyh.ttc"
+#"Microsoft Sans Serif"="msyh.ttc"
+#"MS Sans Serif"="msyh.ttc"
+#"Tahoma"="msyh.ttc"
+#"Tahoma Bold"="msyhbd.ttc"
+#"msyh"="msyh.ttc"
+#"Arial"="msyh.ttc"
+#"Arial Black"="msyh.ttc"
+#
+##deepin-wine6-stable regedit msyh_font.reg
+#wine regedit msyh_font.reg
+#
+##vim /home/dave/.deepinwine/Deepin-WeChat/system.reg
+##vim ~/.wine/system.reg
+##查找关键词FontSubstitutes，把它下面挨着的“MS Shell Dlg”与“MS Shell Dlg2”的内容改为“msyh”
+#sed -i 's;"MS Shell Dlg"="Tahoma";"MS Shell Dlg"="msyh";g' ~/.wine/system.reg
+#sed -i 's;"MS Shell Dlg 2"="Tahoma";"MS Shell Dlg 2"="msyh";g' ~/.wine/system.reg
+```
+
 ## VPN
 
 ```
@@ -472,6 +543,97 @@ https://github.com/Eugeny/tabby
 
 ```bash
 sudo apt install ./tabby-1.0.229-linux-x64.deb
+```
+
+## SecureCRT
+
+新版本os已经不能安装了，推荐使用Tabby。
+
+```bash
+#libssl1.0.0
+sudo dpkg -i libssl1.0.0_1.0.2g-1ubuntu4.20_amd64.deb
+
+#libpython2.7
+#sudo apt-get install libpython2.7
+wget http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tar.bz2
+tar -xvjf Python-2.7.5.tar.bz2
+cd Python-2.7.5
+./configure --prefix=/usr/local/python2.7 --with-threads --enable-shared
+make
+make install altinstall
+
+ln -s /usr/local/python2.7/lib/libpython2.7.so /usr/lib
+ln -s /usr/local/python2.7/lib/libpython2.7.so.1.0 /usr/lib
+ln -s /usr/local/python2.7/bin/python2.7 /usr/local/bin
+/sbin/ldconfig -v
+
+#libpng12
+#sudo add-apt-repository ppa:linuxuprising/libpng12
+#sudo apt update
+#sudo apt install libpng12-0
+sudo apt install build-essential zlib1g-dev
+#cd
+#mkdir src
+wget https://ppa.launchpadcontent.net/linuxuprising/libpng12/ubuntu/pool/main/libp/libpng/libpng_1.2.54.orig.tar.xz
+tar Jxfv libpng_1.2.54.orig.tar.xz
+cd libpng-1.2.54
+./configure
+make
+sudo make install
+sudo ln -s /usr/local/lib/libpng12.so.0.54.0 /usr/lib/libpng12.so
+sudo ln -s /usr/local/lib/libpng12.so.0.54.0 /usr/lib/libpng12.so.0
+
+#Install
+sudo dpkg -i scrt-sfx-8.3.4-1699.ubuntu16-64.x86_64.deb
+```
+
+## Navicat Premium 15
+
+```bash
+sudo apt install libfuse2
+
+#libcrypto
+wget https://www.openssl.org/source/openssl-1.1.0k.tar.gz
+tar xvf openssl-1.1.0k.tar.gz
+cd openssl-1.1.0l
+./config
+make -j`nproc`
+sudo make install
+sudo ln -s /usr/local/lib/libcrypto.so.1.1 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1
+sudo ln -s /usr/local/lib/libssl.so.1.1 /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+
+#Crack
+./navicat-keygen --text ./RegPrivateKey.pem
+
+sudo cp -a libgio-2.0.so.0 /Developer/Navicat15/
+
+#/lib/x86_64-linux-gnu/libgio-2.0.so.0: undefined symbol: g_module_open_full的解决：
+#vim navicat15.sh
+#!/bin/bash
+
+export LD_LIBRARY_PATH=/Developer/Navicat15:$LD_LIBRARY_PATH;
+/Developer/Navicat15/navicat15-premium-cs-patched.AppImage
+
+#Start
+/Developer/Navicat15/navicat15.sh
+
+#https://www.zssnp.top/2021/11/11/netease/
+#sudo mv /lib/x86_64-linux-gnu/libgio-2.0.so.0 /lib/x86_64-linux-gnu/libgio-2.0.so.0.bak
+##download libgio-2.0.so.0 from: https://wwx.lanzoui.com/iNxJNwdnkle
+#sudo cp -a libgio-2.0.so.0 /lib/x86_64-linux-gnu/
+##发现处理后settings打不开,恢复：
+#sudo ln -sf /lib/x86_64-linux-gnu/libgio-2.0.so.0.7200.1 /lib/x86_64-linux-gnu/libgio-2.0.so.0
+##libselinux.so.1: no version information available (required by /lib/x86_64-linux-gnu/libgio-2.0.so.0)
+#可以忽略，不影响使用
+
+```
+
+## Cider
+
+```bash
+#https://cider.sh/
+wget https://github.com/ciderapp/cider-releases/releases/download/v1.5.0/cider_1.5.0_amd64.deb
+sudo dpkg -i cider_1.5.0_amd64.deb
 ```
 
 ## 字体
@@ -892,16 +1054,46 @@ mysql:5.7.32 \
 ## Docker
 
 ```
-sudo apt  install docker.io
+systemctl disable iptables
+systemctl stop iptables
+systemctl disable firewalld
+systemctl stop firewalld
+
+#Uninstalling old versions:
+sudo apt-get remove docker docker-engine docker.io containerd runc
+
+#Installation from docker offical:
+#https://docs.docker.com/engine/install/ubuntu/
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+sudo apt-get update
+sudo apt install docker-ce docker-ce-cli containerd.io
+
+#Or Installation From Aliyun
+#https://www.cnblogs.com/763977251-sg/p/11837130.html
+#Docker installation
+#https://aka.ms/vscode-remote/samples/docker-from-docker
+apt-get -y install apt-transport-https ca-certificates software-properties-common
+# step 2: 安装GPG证书
+curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | apt-key add -
+# Step 3: 写入软件源信息
+add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
+# Step 4: 更新并安装 Docker-CE
+apt-get -y update
+#apt install python3 -y
+#apt-get -y install docker-ce
+#sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 #History Version:
-apt-cache madison docker.io
+apt-cache madison docker-ce
 
 #Uninstall
-#sudo apt-get purge docker.io
-dpkg -l |grep -i docker.io
-sudo dpkg -P docker.io
-
+#sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 #Images, containers, volumes, or customized configuration files on your host are not automatically removed. To #delete all images, containers, and volumes:
 sudo rm -rf /var/lib/docker
 sudo rm -rf /var/lib/containerd
@@ -983,9 +1175,38 @@ docker rmi node:latest
 time docker pull node:latest
 ```
 
+History docker installation:
+```bash
+docker version is: 20.10.7:
+#https://blog.csdn.net/u011519550/article/details/102688892
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+
+apt-cache madison docker-ce
+apt install docker-ce-cli=5:20.10.7~3-0~ubuntu-xenial docker-ce=5:20.10.7~3-0~ubuntu-xenial
+
+Ubuntu: Failed to get D-Bus connection: No such file or directory:
+cat /etc/rc.local
+sudo mkdir /sys/fs/cgroup/systemd
+mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
+#reboot and docker start your container.
+```
+
 Creating centos instance with restrict cpu and memory:
 ```bash
 docker run -d --privileged=true --cpus=4 --cpu-shares=4000 -m 2048m --memory-reservation=256m --name mycento registry.zerofinance.net/library/centos:7 /usr/sbin/init
+```
+
+## Edge
+
+Edge里面不能输入中文的解决方案:
+
+https://tieba.baidu.com/p/9627352601
+
+```
+sudo apt install fcitx5-frontend-gtk4
 ```
 
 ## simple-http-server
