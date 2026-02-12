@@ -20,10 +20,9 @@ GNOME is a modern desktop, the layout is different from other options but easy a
 
 Recommend: Add/Remove Software & Preferences->Use mirrors from: Change to China, and Refresh Mirrors.
 
-Update:
+Upgrade:
 ```
-sudo pacman -Syy
-sudo pacman -Syyu
+sudo pacman -Syu
 ```
 
 ## 安装基础包
@@ -31,7 +30,7 @@ sudo pacman -Syyu
 ```bash
 #pacman
 #https://zhuanlan.zhihu.com/p/383694450
-sudo pacman -S pacman-contrib vim
+sudo pacman -S pacman-contrib vim xorg-mkfontscale
 
 #yay
 #https://wiki.archlinuxcn.org/wiki/Yay
@@ -57,29 +56,6 @@ yay -S debtap
 debtap package
 sudo pacman -U package.xtz
 
-命令 	        描述
-yay 	        升级系统，相当于yay -Syu
-yay             <搜索词> 	显示包安装选择菜单
-yay -Bi         <目录> 	安装依赖并构建本地PKGBUILD
-yay -G          <AUR Package> 	从ABS或AUR下载PKGBUILD (yay v12.0+)
-yay -Gp         <AUR Package> 	打印ABS或AUR的PKGBUILD到stdout
-yay -Ps         打印系统统计信息
-yay -Yc         清理不需要的依赖
-yay -S   包名 	安装软件包
-yay -Syu        升级所有包（含 AUR）
-yay -Sc         清理缓存文件
-yay -Yc         删除无用依赖
-yay -Rns 包名 	删除软件包和依赖及配置
-yay -Rs  包名 	删除软件包和依赖
-yay -R   包名 	删除软件包 
-
-yay -Syu --devel 	        执行系统升级，但同时检查开发包的更新
-yay -Syu --timeupdate 	    执行系统升级并使用PKGBUILD修改时间（不是版本号）来确定更新
-yay -Wu     <AUR Package> 	取消对包的投票 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
-yay -Wv <AUR Package> 	    投票支持包 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
-yay -Y --combinedupgrade --save 	使组合升级成为默认模式
-yay -Y --gendb 	            生成用于开发更新的开发包数据库
-
 #安装输入法
 #https://zhuanlan.zhihu.com/p/468426138
 sudo pacman -Rs $(pacman -Qsq fcitx)
@@ -99,8 +75,8 @@ yay -S fcitx5-sogou
 #https://obsp.de/zh/posts/2025-02-18-arch_linuxgnome%E5%AE%89%E8%A3%85fcitx_5%E8%BE%93%E5%85%A5%E6%B3%95-%E4%B8%AD%E5%B7%9E%E9%9F%B5rime-%E9%9B%BE%E5%87%87%E6%8B%BC%E9%9F%B3/
 yay -S fcitx5 fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt fcitx5-config-qt
 yay -S rime-ice-git
-mkdir -p ./.local/share/fcitx5/rime/
-vim ./.local/share/fcitx5/rime/default.custom.yaml
+mkdir -p ~/.local/share/fcitx5/rime/
+vim ~/.local/share/fcitx5/rime/default.custom.yaml
 patch:
   # 仅使用「雾凇拼音」的默认配置，配置此行即可
   __include: rime_ice_suggestion:/
@@ -117,13 +93,11 @@ patch:
 https://rrroger.github.io/notebook/linux/Ubuntu%E5%AE%89%E8%A3%85%E5%BE%AE%E8%BD%AF%E5%AD%97%E4%BD%93.html
 https://www.cnblogs.com/liutongqing/p/7923297.html
 
-sudo mkdir -p /usr/share/fonts/truetype/windows-font/
-git clone https://github.com/fernvenue/microsoft-yahei.git
-sudo cp ./microsoft-yahei/* /usr/share/fonts/truetype/windows-font/
+sudo git clone https://github.com/fernvenue/microsoft-yahei.git /usr/share/fonts/truetype/windows-font
 sudo chmod -R 777  /usr/share/fonts/truetype/windows-font
 cd /usr/share/fonts/truetype/windows-font
+sudo rm -fr /usr/share/fonts/truetype/windows-font/.git
 sudo mkfontscale
-sudo pacman -S pacman-contrib
 sudo mkfontdir
 sudo fc-cache -fv
 #查看已经安装的中文字体
@@ -146,6 +120,7 @@ yay -S google-chrome
 yay -S lx-music
 yay -S musicfree
 yay -S wechat-bin
+yay -S xunlei-bin 
 
 #ulauncher
 #https://ulauncher.io/
@@ -156,6 +131,8 @@ cd /tmp && git clone https://aur.archlinux.org/ulauncher.git && cd ulauncher && 
 Betterbird
 Ulauncher
 Safe Eyes
+Snipate
+Feishu
 
 #快捷键
 Snipaste  Snipaste snip -> F1
@@ -197,4 +174,33 @@ git config --global core.safecrlf warn
 git config --global core.filemode false
 git config --global core.whitespace cr-at-eol
 git config --global credential.helper store
+```
+
+## Yay命令
+
+```bash
+
+
+命令 	        描述
+yay 	        升级系统，相当于yay -Syu
+yay             <搜索词> 	显示包安装选择菜单
+yay -Bi         <目录> 	安装依赖并构建本地PKGBUILD
+yay -G          <AUR Package> 	从ABS或AUR下载PKGBUILD (yay v12.0+)
+yay -Gp         <AUR Package> 	打印ABS或AUR的PKGBUILD到stdout
+yay -Ps         打印系统统计信息
+yay -Yc         清理不需要的依赖
+yay -S   包名 	安装软件包
+yay -Syu        升级所有包（含 AUR）
+yay -Sc         清理缓存文件
+yay -Yc         删除无用依赖
+yay -Rns 包名 	删除软件包和依赖及配置
+yay -Rs  包名 	删除软件包和依赖
+yay -R   包名 	删除软件包 
+
+yay -Syu --devel 	        执行系统升级，但同时检查开发包的更新
+yay -Syu --timeupdate 	    执行系统升级并使用PKGBUILD修改时间（不是版本号）来确定更新
+yay -Wu     <AUR Package> 	取消对包的投票 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
+yay -Wv <AUR Package> 	    投票支持包 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
+yay -Y --combinedupgrade --save 	使组合升级成为默认模式
+yay -Y --gendb 	            生成用于开发更新的开发包数据库
 ```
