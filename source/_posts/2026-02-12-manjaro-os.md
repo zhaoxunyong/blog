@@ -141,8 +141,11 @@ yay -S safeeyes
 yay -S snipaste
 #rsync -avP dave@192.168.3.37:~/.config/tabby ~/.config/ 
 yay -S tabby-bin
-yay -S feishu
+yay -S feishu-bin
 yay -S google-chrome
+yay -S lx-music
+yay -S musicfree
+yay -S wechat-bin
 
 #ulauncher
 #https://ulauncher.io/
@@ -186,5 +189,12 @@ function proxy_on() {
 
 . ~/.zshrc
 
-#
+#git
+git config --global user.name "dave.zhao"
+git config --global user.email dave.zhao@zerofinance.com
+git config --global core.autocrlf false
+git config --global core.safecrlf warn
+git config --global core.filemode false
+git config --global core.whitespace cr-at-eol
+git config --global credential.helper store
 ```
