@@ -56,6 +56,11 @@ yay -S debtap
 debtap package
 sudo pacman -U package.xtz
 
+#homebrew
+#https://brew.sh/
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+
 #安装输入法
 #https://zhuanlan.zhihu.com/p/468426138
 sudo pacman -Rs $(pacman -Qsq fcitx)
@@ -203,4 +208,44 @@ yay -Wu     <AUR Package> 	取消对包的投票 (需要设置AUR_USERNAME和AUR
 yay -Wv <AUR Package> 	    投票支持包 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
 yay -Y --combinedupgrade --save 	使组合升级成为默认模式
 yay -Y --gendb 	            生成用于开发更新的开发包数据库
+```
+
+## howdy
+
+```bash
+#https://www.cnblogs.com/gardenialyx/p/19104354
+#https://www.cnblogs.com/dingnosakura/p/18223572
+yay -S howdy-git
+
+#list camera
+v4l2-ctl --list-devices
+
+#修改 Howdy 配置文件
+sudo vim /etc/howdy/config.ini
+certainty = 4.5
+device_path = /dev/video0
+
+
+#如果你的摄像头有红外功能，还可以在最后一行加上这一句来让你的人脸识别在黑暗的环境下给你自动补光：
+use_ir = true
+
+#录入面部信息
+#sudo howdy add -U dave
+sudo howdy add
+
+#删除人脸
+#sudo howdy -U dave clear
+sudo howdy clear
+
+sudo vim /etc/pam.d/system-auth
+#%PAM-1.0
+
+auth sufficient pam_unix.so try_first_pass likeauth nullok
+auth sufficient /usr/lib/security/pam_howdy.so
+
+#测试人脸识别
+sudo howdy test
+#测试 sudo
+sudo -i
+
 ```
