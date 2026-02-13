@@ -249,3 +249,50 @@ sudo howdy test
 sudo -i
 
 ```
+
+## 扩展
+
+```bash
+#go to https://extensions.gnome.org/ and search:
+Desktop Widgets(Desktop Clock)
+Disable 3 Finger Gestures Redux
+Input Method Panel
+```
+
+### toupad
+
+三指拖放：https://github.com/ferstar/gestures.git
+
+```bash
+#https://blog.ferstar.org/posts/linux-touchpad-gestures-drag/
+#https://github.com/ferstar/blog/issues/73
+wget https://github.com/ferstar/gestures/releases/download/v0.8.2/gestures-linux-x86_64.tar.gz
+tar zxvf gestures-linux-x86_64.tar.gz
+sudo cp -a gestures-linux-x86_64/gestures /usr/local/bin/
+
+sudo pacman -S libinput xdotool
+yay -S ydotool
+
+#Start ydotool Service
+systemctl --user enable --now ydotool
+
+# 1. Generate config file (first time only)
+gestures generate-config
+
+✓ Configuration file created at: /home/dave/.config/gestures.kdl
+
+Edit the file to customize your gestures:
+  vim /home/dave/.config/gestures.kdl
+
+After editing, reload the config:
+  gestures reload
+
+View full documentation:
+  https://github.com/ferstar/gestures/blob/dev/config.md
+
+# 2. Install service file
+gestures install-service
+
+# 3. Enable and start the service
+systemctl --user enable --now gestures.service
+```
