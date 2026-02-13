@@ -128,6 +128,16 @@ yay -S wechat-bin
 yay -S xunlei-bin
 sudo pacman -Syu ffmpeg vlc mpv celluloid
 
+#Securecrt
+#https://www.cnblogs.com/amsilence/p/19151338
+#https://github.com/amsilence/Linux-tools
+yay --editmenu --editor=nano -S scrt
+#把里面的source地址改为：https://eli.xir.no/VanDyke/scrt-9.6.4-3695.ubuntu24-64.x86_64.deb
+git clone https://github.com/amsilence/Linux-tools.git
+cd Linux-tools
+sudo ./securecrt_linux_crack.pl /usr/bin/SecureCRT
+#打开后，就已经是crack的了
+
 #ulauncher
 #https://ulauncher.io/
 cd /tmp && git clone https://aur.archlinux.org/ulauncher.git && cd ulauncher && makepkg -is
