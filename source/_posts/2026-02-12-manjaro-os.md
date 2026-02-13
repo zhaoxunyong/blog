@@ -125,7 +125,8 @@ yay -S google-chrome
 yay -S lx-music
 yay -S musicfree
 yay -S wechat-bin
-yay -S xunlei-bin 
+yay -S xunlei-bin
+sudo pacman -Syu ffmpeg vlc mpv celluloid
 
 #ulauncher
 #https://ulauncher.io/
