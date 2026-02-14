@@ -33,7 +33,6 @@ sudo pacman -Syu
 sudo pacman -S pacman-contrib vim xorg-mkfontscale
 
 #yay
-#https://wiki.archlinuxcn.org/wiki/Yay
 sudo pacman -S yay
 #将 Yay 升级到新版本
 yay -Sua
@@ -74,24 +73,7 @@ sudo pacman -S fcitx5-chinese-addons
 https://extensions.gnome.org/extension/261/kimpanel/
 
 #安装sogou
-yay -S fcitx5-sogou
-
-#雾凇拼音
-#https://obsp.de/zh/posts/2025-02-18-arch_linuxgnome%E5%AE%89%E8%A3%85fcitx_5%E8%BE%93%E5%85%A5%E6%B3%95-%E4%B8%AD%E5%B7%9E%E9%9F%B5rime-%E9%9B%BE%E5%87%87%E6%8B%BC%E9%9F%B3/
-yay -S fcitx5 fcitx5-rime fcitx5-configtool fcitx5-gtk fcitx5-qt fcitx5-config-qt
-yay -S rime-ice-git
-mkdir -p ~/.local/share/fcitx5/rime/
-vim ~/.local/share/fcitx5/rime/default.custom.yaml
-patch:
-  # 仅使用「雾凇拼音」的默认配置，配置此行即可
-  __include: rime_ice_suggestion:/
-  # 以下根据自己所需自行定义，仅做参考。
-  # 针对对应处方的定制条目，请使用 <recipe>.custom.yaml 中配置，例如 rime_ice.custom.yaml
-  __patch:
-    key_binder/bindings/+:
-      # 开启逗号句号翻页
-      - { when: paging, accept: comma, send: Page_Up }
-      - { when: has_menu, accept: period, send: Page_Down }
+#yay -S fcitx5-sogou
 #reboot
 
 # Windows字体
@@ -184,31 +166,27 @@ git config --global credential.helper store
 
 ## Yay命令
 
+https://wiki.archlinuxcn.org/wiki/Yay
+
+https://ehewen.com/blog/yay/
+
 ```bash
-
-
-命令 	        描述
-yay 	        升级系统，相当于yay -Syu
-yay             <搜索词> 	显示包安装选择菜单
-yay -Bi         <目录> 	安装依赖并构建本地PKGBUILD
-yay -G          <AUR Package> 	从ABS或AUR下载PKGBUILD (yay v12.0+)
-yay -Gp         <AUR Package> 	打印ABS或AUR的PKGBUILD到stdout
-yay -Ps         打印系统统计信息
-yay -Yc         清理不需要的依赖
-yay -S   包名 	安装软件包
-yay -Syu        升级所有包（含 AUR）
-yay -Sc         清理缓存文件
-yay -Yc         删除无用依赖
-yay -Rns 包名 	删除软件包和依赖及配置
-yay -Rs  包名 	删除软件包和依赖
-yay -R   包名 	删除软件包 
-
-yay -Syu --devel 	        执行系统升级，但同时检查开发包的更新
-yay -Syu --timeupdate 	    执行系统升级并使用PKGBUILD修改时间（不是版本号）来确定更新
-yay -Wu     <AUR Package> 	取消对包的投票 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
-yay -Wv <AUR Package> 	    投票支持包 (需要设置AUR_USERNAME和AUR_PASSWORD环境变量) (yay v11.3+)
-yay -Y --combinedupgrade --save 	使组合升级成为默认模式
-yay -Y --gendb 	            生成用于开发更新的开发包数据库
+功能	                  命令
+搜索包（官方 + AUR）	      yay 包名
+安装软件包	               yay -S 包名
+升级所有包（含 AUR）	      yay -Syu
+清理缓存文件	             yay -Sc
+删除无用依赖	             yay -Yc
+删除软件包及配置	          yay -Rns 包名
+仅安装 AUR 包	             yay -S 包名 --aur
+仅安装官方包	             yay -S 包名 --repo
+搜索安装包	               yay -Ss 包名
+查看包信息	               yay -Si 包名
+查看包的文件路径	           yay -Ql 包名
+查找某文件属于哪个包	       yay -Qo 路径
+查看包的详情	              yay -Qi 包名
+查看所有 AUR 安装包	        yay -Qm
+清理系统垃圾	              yay -Sc && yay -Yc
 ```
 
 ## howdy
@@ -298,6 +276,16 @@ gestures install-service
 systemctl --user enable --now gestures.service
 ```
 
+## ssh
+
+```bash
+sudo pacman -S openssh
+sudo sed -i 's;#PermitRootLogin.*;PermitRootLogin yes;g' /etc/ssh/sshd_config
+sudo systemctl enable sshd
+sudo systemctl start sshd
+
+```
+
 
 ## Securecrt
 
@@ -317,3 +305,14 @@ Issue Date: 10-19-2025
 License Key: ACVG1Z 96MXM2 UP86HH UDGR4C ABKBJK 2NW3BH ZC23H5 GEWB7W
 ```
 
+## Remote Desktop
+
+```bash
+#向日葵
+https://comate.baidu.com/zh/page/lbqpmkldtwh
+
+#rustdesk
+https://rustdesk.com/zh-cn/
+https://github.com/rustdesk/rustdesk
+
+```
