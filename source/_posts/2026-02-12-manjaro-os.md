@@ -112,6 +112,9 @@ yay -S lx-music
 yay -S musicfree
 yay -S wechat-bin
 yay -S xunlei-bin
+yay -S alacarte
+#录屏
+yay -S kooha
 sudo pacman -Syu ffmpeg vlc mpv celluloid
 #Typora
 #https://github.com/SSRVodka/typora-aur-1.9.3-1
