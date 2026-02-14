@@ -296,6 +296,7 @@ yay --editmenu --editor=nano -S scrt
 #把里面的source地址改为：https://eli.xir.no/VanDyke/scrt-9.6.4-3695.ubuntu24-64.x86_64.deb
 git clone https://github.com/amsilence/Linux-tools.git
 cd Linux-tools
+#rm -fr /tmp/.securecrt.tmp/
 ./securecrt_linux_crack.pl /usr/bin/SecureCRT
 #注册
 Name: ygeR
@@ -315,4 +316,24 @@ https://comate.baidu.com/zh/page/lbqpmkldtwh
 https://rustdesk.com/zh-cn/
 https://github.com/rustdesk/rustdesk
 
+```
+
+## NVM
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+. ~/.bashrc
+#显示有远端的版本
+#nvm ls-remote
+#安装对应的版本
+nvm install 12
+nvm install 22
+nvm alias default 22
+```
+
+## Python Venv
+
+```bash
+python -m venv /works/python_venv
+. /works/python_venv/bin/activate
 ```
