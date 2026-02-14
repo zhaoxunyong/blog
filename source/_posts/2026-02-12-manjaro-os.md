@@ -113,6 +113,11 @@ yay -S musicfree
 yay -S wechat-bin
 yay -S xunlei-bin
 sudo pacman -Syu ffmpeg vlc mpv celluloid
+#Typora
+#https://github.com/SSRVodka/typora-aur-1.9.3-1
+wget https://github.com/SSRVodka/typora-aur-1.9.3-1/releases/download/1.9.3/typora_1.9.3_amd64.deb
+debtap typora_1.9.3_amd64.deb
+sudo pacman -U typora-1.9.3-1-x86_64.pkg.tar.zst
 
 #ulauncher
 #https://ulauncher.io/
