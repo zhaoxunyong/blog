@@ -30,7 +30,7 @@ sudo pacman -Syu
 ```bash
 #pacman
 #https://zhuanlan.zhihu.com/p/383694450
-sudo pacman -S pacman-contrib vim xorg-mkfontscale
+sudo pacman -S pacman-contrib vim xorg-mkfontscale net-tools jq
 
 #yay
 sudo pacman -S yay
@@ -41,6 +41,9 @@ pacman -Syu
 yay -Syu 
 #清理不需要的依赖 
 yay -Yc 
+#降级软件包版本
+yay -S downgrade
+sudo downgrade 包名
 
 #paru
 #https://zhuanlan.zhihu.com/p/350920414
@@ -92,6 +95,7 @@ fc-list :lang=zh
 
 #常用软件
 yay -S microsoft-edge-stable-bin 
+#旧机器需要在/usr/share/applications/microsoft-edge.desktop中添加：Exec=/usr/bin/microsoft-edge-stable --disable-gpu %U
 #betterbird安装后，需要安装plugin: Minimize on Close
 yay -S betterbird
 yay -S wps-office-cn
