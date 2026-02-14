@@ -113,6 +113,8 @@ yay -S musicfree
 yay -S wechat-bin
 yay -S xunlei-bin
 yay -S alacarte
+#多屏壁纸
+yay -S hydrapaper
 #录屏
 yay -S kooha
 sudo pacman -Syu ffmpeg vlc mpv celluloid
@@ -138,7 +140,7 @@ Feishu
 Snipaste  Snipaste snip -> F1
 ulauncher ulauncher-toggle -> Alt+Space
 xdg-open  xdg-open . -> Super+E
-
+显示桌面：搜索Hide all normal windows，设置Super+D
 
 #kubectl:
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
