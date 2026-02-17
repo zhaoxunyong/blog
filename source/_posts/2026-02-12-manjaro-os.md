@@ -348,6 +348,13 @@ nvm alias default 22
 ## Python Venv
 
 ```bash
-python -m venv /works/python_venv
-. /works/python_venv/bin/activate
+#python -m venv /works/python_venv
+#. /works/python_venv/bin/activate
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+#Python3.12
+conda create --name py312 python=3.12
+conda activate py312
+
 ```
+
