@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/zsh
 
-#nvm use v12.22.6
+. ~/.zshrc
+
+nvm use 12
 hexo clean
 hexo g
 sed -i 's;<url>//;<url>/;g' public/search.xml
