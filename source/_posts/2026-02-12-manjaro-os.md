@@ -358,3 +358,60 @@ conda activate py312
 
 ```
 
+## waydroid
+
+https://geek-blogs.com/blog/best-android-emulator-for-linux/
+
+```bash
+pip install dbus-python gbinder PyGObject
+yay -S waydroid
+sudo waydroid init -s GAPPS
+sudo systemctl start waydroid-container
+# 启动 Waydroid 图形界面
+waydroid show-full-ui
+
+#完全停止
+waydroid session stop
+sudo systemctl stop waydroid-container
+```
+
+Fix: This device isn’t Play Protect certified
+
+```bash
+#获取 Waydroid 的 Android ID（GSF ID）
+sudo waydroid shell -- sh -c "sqlite3 /data/data/com.google.android.gsf/databases/gservices.db 'select value from main where name = \"android_id\";'"
+#输出是一串长数字（比如 1234567890123456789），这就是你的 android_id。
+
+```
+
+在浏览器注册设备
+
+```
+打开任何浏览器（Manjaro 的 Firefox/Chrome 都行），访问：
+https://www.google.com/android/uncertified
+用你要登录 Play Store 的 同一个 Google 账号 登录。
+输入刚才复制的 android_id（只复制数字，不要带 android_id|）。
+完成 reCAPTCHA（可能要点图片验证）。
+点击 Register。
+页面会显示 “Device registered” 或类似（如果卡住不动，别慌，注册已成功）。
+
+等待 + 清理缓存（关键步骤，很多坑在这里）
+注册后 不要马上登录 Play Store，等 5-30 分钟（有时需几小时，Google 服务器同步慢）。
+在 Waydroid 里：
+去 设置 > 应用 > 查看所有应用 > Google Play Store → 强制停止 + 清除缓存 + 清除数据。
+同上，对 Google Play Services 也清除缓存（别清数据，除非必要）。
+```
+
+重启 Waydroid：
+```bash
+waydroid session stop
+sudo systemctl restart waydroid-container
+waydroid show-full-ui
+```
+
+安装apk
+
+```bash
+waydroid session start
+waydroid app install /path/to/your.apk
+```
