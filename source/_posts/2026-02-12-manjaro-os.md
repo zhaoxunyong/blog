@@ -30,7 +30,7 @@ sudo pacman -Syu
 ```bash
 #pacman
 #https://zhuanlan.zhihu.com/p/383694450
-sudo pacman -S pacman-contrib vim xorg-mkfontscale net-tools jq
+sudo pacman -S pacman-contrib vim xorg-mkfontscale net-tools jq lrzsz
 
 #yay
 sudo pacman -S yay
@@ -44,6 +44,8 @@ yay -Yc
 #降级软件包版本
 yay -S downgrade
 sudo downgrade 包名
+#自动化安装
+yay -S packagename --noconfirm --needed
 
 #paru
 #https://zhuanlan.zhihu.com/p/350920414
@@ -414,4 +416,110 @@ waydroid show-full-ui
 ```bash
 waydroid session start
 waydroid app install /path/to/your.apk
+```
+
+## Samba
+
+```bash
+sudo pacman -Syu samba smbclient
+
+#共享 /works/share 文件夹
+sudo vim /etc/samba/smb.conf
+[share]
+   comment = share
+   path = /works/share
+   browseable = yes
+   writable = yes
+   create mask = 0700
+   directory mask = 0700
+   valid users = dave
+
+#创建共享目录并设置权限
+mkdir -p /works/share
+chmod 777 /works/share
+
+#添加 Samba 用户
+sudo smbpasswd -a $USER
+# 启用该用户
+sudo smbpasswd -e $USER
+
+#禁用AppArmor
+sudo aa-complain /usr/sbin/smbd
+
+#启动并设置为开机自启
+sudo systemctl enable --now smb
+
+#检查状态
+sudo systemctl status smb
+# 检查配置文件是否有语法错误
+testparm
+
+#连接测试
+smbclient //192.168.3.10/share -U dave
+```
+
+## aria2
+
+```bash
+yay -Syu aria2
+
+mkdir -p /works/aria2 /works/aria2/Downloads
+vim /works/aria2/aria2.conf
+# 基本设置
+dir=/works/aria2/Downloads
+file-allocation=falloc
+continue=true
+allow-overwrite=true
+
+# 速度与连接优化（根据你带宽调整）
+max-concurrent-downloads=10
+max-connection-per-server=16
+min-split-size=1M
+split=16
+
+# RPC 设置（给 AriaNg、Motrix、手机App等前端用，必开）
+enable-rpc=true
+rpc-listen-all=true
+rpc-listen-port=6800
+rpc-secret=Aa123456
+rpc-allow-origin-all=true
+
+# BT相关（可选）
+enable-dht=true
+enable-peer-exchange=true
+bt-enable-lpd=true
+bt-max-peers=0
+seed-ratio=0.0
+
+# 其他优化
+disk-cache=64M
+http-accept-gzip=true
+user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+
+#测试启动
+aria2c --conf-path=/works/aria2/aria2.conf
+
+#做成 systemd 用户服务
+mkdir -p ~/.config/systemd/user
+nano ~/.config/systemd/user/aria2.service
+[Unit]
+Description=aria2 download utility
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/aria2c --conf-path=/works/aria2/aria2.conf --log=/works/aria2/aria2.log
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+
+systemctl --user daemon-reload
+systemctl --user enable --now aria2.service
+systemctl --user status aria2
+
+#aria2-explorer 
+https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimigbofkhgjn?pli=1
+系统设置->常规设置：配置对应的RPC即可
 ```
