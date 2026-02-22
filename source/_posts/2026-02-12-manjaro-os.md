@@ -509,15 +509,15 @@ user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 #测试启动
 aria2c --conf-path=/works/aria2/aria2.conf
 
-#做成 systemd 用户服务
-mkdir -p ~/.config/systemd/user
-nano ~/.config/systemd/user/aria2.service
+#做成 systemd服务
+sudo nano /etc/systemd/system/aria2.service
 [Unit]
 Description=aria2 download utility
 After=network.target
 
 [Service]
 Type=simple
+User=dave
 ExecStart=/usr/bin/aria2c --conf-path=/works/aria2/aria2.conf --log=/works/aria2/aria2.log
 Restart=on-failure
 RestartSec=5
@@ -525,9 +525,14 @@ RestartSec=5
 [Install]
 WantedBy=default.target
 
-systemctl --user daemon-reload
-systemctl --user enable --now aria2.service
-systemctl --user status aria2
+sudo systemctl daemon-reload
+sudo systemctl enable --now aria2.service
+sudo systemctl status aria2
+
+# nano ~/.config/systemd/user/aria2.service
+# systemctl --user daemon-reload
+# systemctl --user enable --now aria2.service
+# systemctl --user status aria2
 
 #aria2-explorer 
 https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimigbofkhgjn?pli=1
