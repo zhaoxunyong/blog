@@ -290,6 +290,12 @@ gestures install-service
 
 # 3. Enable and start the service
 systemctl --user enable --now gestures.service
+
+#禁止休眠
+# 一次性禁止所有休眠相关目标（sleep/suspend/hibernate/hybrid-sleep）
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+想恢复时用：
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
 ```
 
 ## ssh
