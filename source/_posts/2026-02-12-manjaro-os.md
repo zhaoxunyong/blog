@@ -294,8 +294,12 @@ systemctl --user enable --now gestures.service
 #禁止休眠
 # 一次性禁止所有休眠相关目标（sleep/suspend/hibernate/hybrid-sleep）
 sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
-想恢复时用：
+#恢复
 sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+
+#iso to usb
+#https://etcher.balena.io/
+yay -S balena-etcher
 ```
 
 ## ssh
