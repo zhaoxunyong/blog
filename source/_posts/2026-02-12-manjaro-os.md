@@ -533,3 +533,8 @@ systemctl --user status aria2
 https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimigbofkhgjn?pli=1
 系统设置->常规设置：配置对应的RPC即可
 ```
+
+## openwrt
+
+https://kwx.cc/post/3880
+
