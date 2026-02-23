@@ -322,8 +322,9 @@ yay --editmenu --editor=nano -S scrt
 #把里面的source地址改为：https://eli.xir.no/VanDyke/scrt-9.6.4-3695.ubuntu24-64.x86_64.deb
 git clone https://github.com/amsilence/Linux-tools.git
 cd Linux-tools
-#rm -fr /tmp/.securecrt.tmp/
-./securecrt_linux_crack.pl /usr/bin/SecureCRT
+#rm -fr /tmp/.securecrt.tmp
+chmod +x ./securecrt_linux_crack.pl
+sudo ./securecrt_linux_crack.pl /usr/bin/SecureCRT
 #注册
 Name: ygeR
 Company: TEAM ZWT
