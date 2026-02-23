@@ -325,7 +325,7 @@ cd Linux-tools
 #rm -fr /tmp/.securecrt.tmp
 chmod +x ./securecrt_linux_crack.pl
 sudo ./securecrt_linux_crack.pl /usr/bin/SecureCRT
-#注册
+#注册:替换VanDyke目前后再继续，不然还得重复注册
 Name: ygeR
 Company: TEAM ZWT
 Serial Number: 03-38-361120
