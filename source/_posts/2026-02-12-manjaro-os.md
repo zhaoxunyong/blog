@@ -254,7 +254,7 @@ Disable 3 Finger Gestures Redux
 Input Method Panel
 ```
 
-### toupad
+## toupad
 
 三指拖放：https://github.com/ferstar/gestures.git
 
