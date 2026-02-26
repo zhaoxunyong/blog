@@ -115,6 +115,9 @@ yay -S musicfree
 yay -S wechat-bin
 yay -S xunlei-bin
 yay -S alacarte
+yay -S keepassxc
+yay -S figma-linux-bin
+yay -S pwgen
 #多屏壁纸
 yay -S hydrapaper
 #录屏
