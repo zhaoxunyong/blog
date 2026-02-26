@@ -30,7 +30,7 @@ sudo pacman -Syu
 ```bash
 #pacman
 #https://zhuanlan.zhihu.com/p/383694450
-sudo pacman -S pacman-contrib vim xorg-mkfontscale net-tools jq lrzsz --noconfirm --needed
+sudo pacman -S base-devel cmake pkgconf pacman-contrib vim xorg-mkfontscale net-tools jq lrzsz --noconfirm --needed
 
 #yay
 sudo pacman -S yay
@@ -49,7 +49,6 @@ yay -S packagename --noconfirm --needed
 
 #paru
 #https://zhuanlan.zhihu.com/p/350920414
-sudo pacman -S --needed base-devel
 git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si
