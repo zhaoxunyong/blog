@@ -30,7 +30,7 @@ sudo pacman -Syu
 ```bash
 #pacman
 #https://zhuanlan.zhihu.com/p/383694450
-sudo pacman -S pacman-contrib vim xorg-mkfontscale net-tools jq lrzsz
+sudo pacman -S pacman-contrib vim xorg-mkfontscale net-tools jq lrzsz --noconfirm --needed
 
 #yay
 sudo pacman -S yay
@@ -68,11 +68,7 @@ sudo pacman -U package.xtz
 #安装输入法
 #https://zhuanlan.zhihu.com/p/468426138
 sudo pacman -Rs $(pacman -Qsq fcitx)
-sudo pacman -S fcitx5 
-sudo pacman -S fcitx5-configtool  
-sudo pacman -S fcitx5-qt
-sudo pacman -S fcitx5-gtk
-sudo pacman -S fcitx5-chinese-addons
+sudo pacman -S fcitx5 fcitx5-configtool fcitx5-qt fcitx5-gtk fcitx5-chinese-addons --noconfirm --needed
 
 #安装Input Method Panel
 https://extensions.gnome.org/extension/261/kimpanel/
@@ -154,6 +150,10 @@ sudo mv kubectl /usr/local/bin/
 
 #.zshrc
 alias ll="ls -l"
+alias history='history 1'
+alias yay="yay --noconfirm --needed"
+alias pacman="pacman --noconfirm --needed"
+alias paru="paru --noconfirm --needed"
 alias sudo='sudo '
 alias rm="/works/shell/rm.sh"
 alias k=kubectl
