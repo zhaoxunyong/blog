@@ -113,6 +113,7 @@ yay -S alacarte
 yay -S keepassxc
 yay -S figma-linux-bin
 yay -S pwgen
+yay -S media-downloader
 #多屏壁纸
 yay -S hydrapaper
 #录屏
@@ -546,3 +547,21 @@ https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimig
 
 https://kwx.cc/post/3880
 
+## Proxmox
+
+```bash
+#https://prox4-rs5.gd.ddnsto.com/pve-docs/chapter-pct.html#pct_container_images
+pveam update
+pveam available
+pveam download local debian-10.0-standard_10.0-1_amd64.tar.gz
+pveam list local
+
+#Arch arm64 template:
+cd /var/lib/vz/template/cache/
+wget http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
+# 或用镜像：
+# wget https://mirrors.dotsrc.org/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+
+# 可选：重命名成更易认的（Proxmox 会显示这个名字）
+mv ArchLinuxARM-aarch64-latest.tar.gz archlinuxarm-aarch64-latest.tar.gz
+```
