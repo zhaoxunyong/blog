@@ -23,6 +23,10 @@ Recommend: Add/Remove Software & Preferences->Use mirrors from: Change to China,
 Upgrade:
 ```
 sudo pacman -Syu
+
+#如果报错执行：
+pacman -Sy archlinux-keyring
+pacman -Syu
 ```
 
 ## 安装基础包
@@ -616,11 +620,12 @@ systemctl restart ssh
 #Openwrt
 #https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/
 cd /var/lib/vz/template/cache/
-wget https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/openwrt-25.12.0-x86-64-rootfs.tar.gz
+#wget https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/openwrt-25.12.0-x86-64-rootfs.tar.gz
+wget https://downloads.openwrt.org/releases/24.10.5/targets/x86/64/openwrt-24.10.5-x86-64-rootfs.tar.gz
 
-pct create 101 /var/lib/vz/template/cache/openwrt-25.12.0-x86-64-rootfs.tar.gz \
+pct create 101 /var/lib/vz/template/cache/openwrt-24.10.5-x86-64-rootfs.tar.gz \
   --arch amd64 \
-  --hostname OpenWrt-CT \
+  --hostname OpenWrt-24.10 \
   --rootfs local:1 \
   --memory 512 \
   --cores 1 \
@@ -630,7 +635,7 @@ pct create 101 /var/lib/vz/template/cache/openwrt-25.12.0-x86-64-rootfs.tar.gz \
 
 #在web界面安装好后，宿主机进入容器:安装后IP有些问题，需要手动进入容器改一下IP
 > pct enter <容器id>
-vim /etc/config/network
+vi /etc/config/network
 ...
 config interface 'lan'
         option device 'br-lan'
