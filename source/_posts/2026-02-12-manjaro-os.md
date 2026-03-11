@@ -550,18 +550,104 @@ https://kwx.cc/post/3880
 ## Proxmox
 
 ```bash
+#下载debain
+#https://www.debian.org/CD/http-ftp/
+#https://mirror.lzu.edu.cn/debian-cd/13.3.0/
+wget https://mirror.lzu.edu.cn/debian-cd/13.3.0/amd64/iso-dvd/debian-13.3.0-amd64-DVD-1.iso
+#正常安装系统
+
+#安装Proxmox 9 on debain 13，按照以下文档安装即可
+#https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_13_Trixie
+
+#Connect to the Proxmox VE Web Interface
+Connect to the admin web interface (https://your-ip-address:8006). If you have a fresh install and have not added any users yet, you should select PAM authentication realm and login with root user account.
+
+#Create a Linux Bridge
+Create a Linux Bridge called vmbr0, and add your first network interface to it.
+
+The recommended default configuration can be adapted from the example given in the documentation. See the default configuration using a bridge：
+
+https://pve.proxmox.com/wiki/Network_Configuration#_default_configuration_using_a_bridge
+
+/etc/network/interfaces:
+
+auto lo
+iface lo inet loopback
+
+iface enp1s0 inet manual
+iface enp2s0 inet manual
+iface wlo1 inet manual
+
+auto vmbr0
+iface vmbr0 inet static
+        address 192.168.3.10/24
+        gateway 192.168.3.1
+        bridge-ports enp1s0
+        bridge-stp off
+        bridge-fd 0
+
+        post-up   echo 1 > /proc/sys/net/ipv4/ip_forward
+        post-up   iptables -t nat -A POSTROUTING -s '192.168.3.0/24' -o vmbr0 -j MASQUERADE
+        post-down iptables -t nat -D POSTROUTING -s '192.168.3.0/24' -o vmbr0 -j MASQUERADE
+
+#重新加载：
+apt install ifupdown2
+ifreload -a
+
+
+#安装CT
+#https://mirrors.ustc.edu.cn/help/proxmox.html
 #https://prox4-rs5.gd.ddnsto.com/pve-docs/chapter-pct.html#pct_container_images
 pveam update
 pveam available
-pveam download local debian-10.0-standard_10.0-1_amd64.tar.gz
+
+#安装ubuntu 24
+pveam download local ubuntu-24.04-standard_24.04-2_amd64.tar.zst
 pveam list local
 
-#Arch arm64 template:
-cd /var/lib/vz/template/cache/
-wget http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
-# 或用镜像：
-# wget https://mirrors.dotsrc.org/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+#在web界面安装好后，宿主机进入容器
+> pct enter <容器id>
+nano /etc/ssh/sshd_config
+# 找到 PermitRootLogin，修改为：
+PermitRootLogin yes
+# 重启服务
+systemctl restart ssh
 
-# 可选：重命名成更易认的（Proxmox 会显示这个名字）
-mv ArchLinuxARM-aarch64-latest.tar.gz archlinuxarm-aarch64-latest.tar.gz
+#Openwrt
+#https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/
+cd /var/lib/vz/template/cache/
+wget https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/openwrt-25.12.0-x86-64-rootfs.tar.gz
+
+pct create 101 /var/lib/vz/template/cache/openwrt-25.12.0-x86-64-rootfs.tar.gz \
+  --arch amd64 \
+  --hostname OpenWrt-CT \
+  --rootfs local:1 \
+  --memory 512 \
+  --cores 1 \
+  --ostype unmanaged \
+  --net0 name=eth0,bridge=vmbr0,ip=192.168.3.3/24,gw=192.168.3.1 \
+  --unprivileged 0
+
+#在web界面安装好后，宿主机进入容器:安装后IP有些问题，需要手动进入容器改一下IP
+> pct enter <容器id>
+vim /etc/config/network
+...
+config interface 'lan'
+        option device 'br-lan'
+        option proto 'static'
+        list ipaddr '192.168.3.3/24'
+        option ip6assign '60'
+        option gateway '192.168.3.1'
+        option multipath 'off'
+...
+#reboot
+
+#Arch linux:
+#http://download.proxmox.com
+cd /var/lib/vz/template/cache/
+wget http://download.proxmox.com/images/system/archlinux-base_20240911-1_amd64.tar.zst
+# 或用镜像：https://images.linuxcontainers.org/
+wget https://images.linuxcontainers.org/images/archlinux/current/amd64/default/20260310_04:18/rootfs.tar.xz
+# 重命名成更易认的（Proxmox 会显示这个名字）
+mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
 ```
