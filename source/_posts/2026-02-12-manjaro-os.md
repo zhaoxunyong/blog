@@ -564,16 +564,19 @@ wget https://mirror.lzu.edu.cn/debian-cd/13.3.0/amd64/iso-dvd/debian-13.3.0-amd6
 #https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_13_Trixie
 
 #Connect to the Proxmox VE Web Interface
-Connect to the admin web interface (https://your-ip-address:8006). If you have a fresh install and have not added any users yet, you should select PAM authentication realm and login with root user account.
+Connect to the admin web interface (https://your-ip-address:8006). 
+If you have a fresh install and have not added any users yet, you should select PAM authentication realm 
+and login with root user account.
 
 #Create a Linux Bridge
 Create a Linux Bridge called vmbr0, and add your first network interface to it.
 
-The recommended default configuration can be adapted from the example given in the documentation. See the default configuration using a bridge：
-
+The recommended default configuration can be adapted from the example given in the documentation. 
+See the default configuration using a bridge：
 https://pve.proxmox.com/wiki/Network_Configuration#_default_configuration_using_a_bridge
 
-/etc/network/interfaces:
+#编辑文件：
+vim /etc/network/interfaces:
 
 auto lo
 iface lo inet loopback

@@ -9,8 +9,7 @@
 
 type（必须）只允许以下值：
 - feat：新功能
-- fix：修复 bug（产生 diff 并自动修复）
-- to：只产生 diff，不自动修复（用于多次提交，最后用 fix 修复）
+- fix：修复bug
 - docs：文档变更
 - style：代码风格调整（不影响运行）
 - refactor：代码重构
@@ -52,3 +51,10 @@ refactor: 重构用户认证逻辑
 1. README.md - 删除空行
 2. deploy.sh - 合并代码行，优化格式
 ```
+
+当前任务：
+1. 执行 `git diff --cached` 查看已暂存的变更（如果没有暂存，提醒用户先 git add）
+2. 分析变更内容
+3. 判断最合适的 type 和 scope
+4. 生成符合规范的 commit message（用中文）
+5. 始终不要自动git commit
