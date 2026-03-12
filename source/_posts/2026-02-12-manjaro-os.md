@@ -644,6 +644,18 @@ config interface 'lan'
         option ip6assign '60'
         option gateway '192.168.3.1'
         option multipath 'off'
+
+#/etc/resolv.conf是软链，不能被修复，需要删除重建
+# 删除现有的软链接
+rm /etc/resolv.conf
+
+# 创建一个真实的普通文件并写入你的 DNS
+cat <<EOF > /etc/resolv.conf
+search lan
+nameserver 223.5.5.5
+nameserver 8.8.8.8
+EOF
+
 ...
 #reboot
 
