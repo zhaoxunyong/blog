@@ -645,7 +645,7 @@ config interface 'lan'
         option gateway '192.168.3.1'
         option multipath 'off'
 
-#/etc/resolv.conf是软链，不能被修复，需要删除重建
+#/etc/resolv.conf是软链，不能被修改，需要删除重建
 # 删除现有的软链接
 rm /etc/resolv.conf
 
