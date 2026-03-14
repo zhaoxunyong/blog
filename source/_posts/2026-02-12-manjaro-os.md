@@ -671,3 +671,48 @@ wget https://images.linuxcontainers.org/images/archlinux/current/amd64/default/2
 # 重命名成更易认的（Proxmox 会显示这个名字）
 mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
 ```
+
+#https://grok.com/c/45ef9e72-4b86-4373-b5dd-c03a94345f86?rid=a9af3990-c617-426d-8173-1bfdef7ec61b
+# 1. 把 vpns+ 加到 LAN zone（支持通配 vpns0、vpns1...）
+uci -q del_list firewall.@zone[0].device='vpns+'
+uci -q del_list firewall.@zone[0].device='vpns+'
+
+# 2. 确保 WAN 到 VPN 端口已放行（你已经连上了，应该有，但保险起见）
+# uci -q delete firewall.oc
+# uci set firewall.oc=rule
+# uci set firewall.oc.name='Allow-OpenConnect'
+# uci set firewall.oc.src='wan'
+# uci set firewall.oc.dest_port='14443'   # 改成你的实际端口
+# uci set firewall.oc.proto='tcp udp'
+# uci set firewall.oc.target='ACCEPT'
+
+uci commit firewall
+service firewall restart
+
+配置其他网段的route:
+VPN->OpenConect VPN->路由表：
+192.168.101.0/24
+192.168.80.0/24
+
+也可以快速添加其他的网段：
+vim /etc/config/ocserv
+
+config routes
+        option ip '192.168.65.0/24'
+        option netmask '255.255.255.0'
+
+config routes
+        option ip '192.168.66.0/24'
+        option netmask '255.255.255.0'
+......
+
+
+
+ssl证书：
+VPN->OpenConect VPN->编辑模板：
+server-cert = /data/ocserv/ssl/szvpn.zerofinance.net.pem
+server-key = /data/ocserv/ssl/szvpn.zerofinance.net.key
+#提交并重启
+/etc/init.d/ocserv restart
+
+备份文件：blog的：backup/vpn/ocserv.zip
