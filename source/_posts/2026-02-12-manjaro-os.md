@@ -672,6 +672,7 @@ wget https://images.linuxcontainers.org/images/archlinux/current/amd64/default/2
 mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
 ```
 
+----------------------------
 #https://grok.com/c/45ef9e72-4b86-4373-b5dd-c03a94345f86?rid=a9af3990-c617-426d-8173-1bfdef7ec61b
 # 1. 把 vpns+ 加到 LAN zone（支持通配 vpns0、vpns1...）
 uci -q del_list firewall.@zone[0].device='vpns+'
@@ -688,6 +689,14 @@ uci -q del_list firewall.@zone[0].device='vpns+'
 
 uci commit firewall
 service firewall restart
+
+也可以在web里面操作：
+网络->防火墙->常规设置：
+wan： 都接受，勾选“IP 动态伪装“
+lan->编辑：高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
+防火墙 - 通信规则: 源区域: wan  目标端口: 14443 操作:接受
+-------------------------
+
 
 配置其他网段的route:
 VPN->OpenConect VPN->路由表：
@@ -706,7 +715,23 @@ config routes
         option netmask '255.255.255.0'
 ......
 
+或者手动添加：
+# 添加第一条：192.168.101.0/24 （已经通的）
+uci add ocserv routes
+uci set ocserv.@routes[-1].network='192.168.101.0/24'
 
+# 添加第二条：192.168.80.0/24
+uci add ocserv routes
+uci set ocserv.@routes[-1].network='192.168.80.0/24'
+
+# （可选）如果你还想推默认路由（全流量走 VPN），再加一条：
+# uci add ocserv routes
+# uci set ocserv.@routes[-1].network='0.0.0.0/0'
+
+# 提交并重启 ocserv
+uci commit ocserv
+/etc/init.d/ocserv restart
+-----------------------------------------
 
 ssl证书：
 VPN->OpenConect VPN->编辑模板：
@@ -714,5 +739,8 @@ server-cert = /data/ocserv/ssl/szvpn.zerofinance.net.pem
 server-key = /data/ocserv/ssl/szvpn.zerofinance.net.key
 #提交并重启
 /etc/init.d/ocserv restart
-
-备份文件：blog的：backup/vpn/ocserv.zip
+-----------------------------------------------
+blog的备份文件：backup/vpn/ocserv.zip
+-------------------------------------
+手机openconnect后，dns无效时，把DNS从8.8.8.8改为223.5.5.5即可
+建议都在openwrt web里面操作。
