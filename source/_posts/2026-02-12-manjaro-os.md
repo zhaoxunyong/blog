@@ -549,17 +549,123 @@ https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimig
 
 ## openwrt
 
-https://kwx.cc/post/3880
+安装后参考以下文章安装主题：https://kwx.cc/post/3880
+
+## ocserv
+
+```bash
+opkg update
+opkg install ocserv luci-app-ocserv luci-i18n-ocserv-zh-cn
+```
+
+通用配置：
+```yaml
+用户身份验证: plan
+端口： 443
+VPN IPv4–网络地址： 192.168.4.1
+DNS 服务器： 223.5.5.5
+```
+
+用户设置中配置账户信息即可。
+
+配置vpns+规则：
+```bash
+#https://grok.com/c/45ef9e72-4b86-4373-b5dd-c03a94345f86?rid=a9af3990-c617-426d-8173-1bfdef7ec61b
+# 1. 把 vpns+ 加到 LAN zone（支持通配 vpns0、vpns1...）
+uci -q del_list firewall.@zone[0].device='vpns+'
+uci -q del_list firewall.@zone[0].device='vpns+'
+
+# 2. 确保 WAN 到 VPN 端口已放行（你已经连上了，应该有，但保险起见）
+# uci -q delete firewall.oc
+# uci set firewall.oc=rule
+# uci set firewall.oc.name='Allow-OpenConnect'
+# uci set firewall.oc.src='wan'
+# uci set firewall.oc.dest_port='14443'   # 改成你的实际端口
+# uci set firewall.oc.proto='tcp udp'
+# uci set firewall.oc.target='ACCEPT'
+
+uci commit firewall
+service firewall restart
+```
+
+也可以在web里面操作：
+```bash
+#进入：网络->防火墙->常规设置：
+#wan： 
+"入站数据	出站数据	区域内转发":都接受，勾选“IP 动态伪装“
+#lan: 编辑：
+高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
+#防火墙 - 通信规则: 
+名称：Allow-Ocserv，源区域: wan  目标端口: 14443 操作:接受
+```
+
+配置其他网段的route:
+```
+#VPN->OpenConect VPN->路由表：
+192.168.101.0/24
+192.168.80.0/24
+```
+
+也可以快速添加其他的网段：
+vim /etc/config/ocserv
+```bash
+
+config routes
+        option ip '192.168.65.0/24'
+        option netmask '255.255.255.0'
+
+config routes
+        option ip '192.168.66.0/24'
+        option netmask '255.255.255.0'
+......
+```
+
+或者手动脚本添加：
+```bash
+# 添加第一条：192.168.101.0/24 （已经通的）
+uci add ocserv routes
+uci set ocserv.@routes[-1].network='192.168.101.0/24'
+
+# 添加第二条：192.168.80.0/24
+uci add ocserv routes
+uci set ocserv.@routes[-1].network='192.168.80.0/24'
+
+# （可选）如果你还想推默认路由（全流量走 VPN），再加一条：
+# uci add ocserv routes
+# uci set ocserv.@routes[-1].network='0.0.0.0/0'
+
+# 提交并重启 ocserv
+uci commit ocserv
+/etc/init.d/ocserv restart
+```
+
+ssl证书：
+```bash
+#VPN->OpenConect VPN->编辑模板：
+server-cert = /data/ocserv/ssl/szvpn.zerofinance.net.pem
+server-key = /data/ocserv/ssl/szvpn.zerofinance.net.key
+#提交并重启
+/etc/init.d/ocserv restart
+
+#blog的备份文件：backup/vpn/ocserv.zip
+
+手机openconnect后，dns无效时，把DNS从8.8.8.8改为223.5.5.5即可
+建议都在openwrt web里面操作。
+```
 
 ## Proxmox
 
+### 安装debain 13
 ```bash
 #下载debain
 #https://www.debian.org/CD/http-ftp/
 #https://mirror.lzu.edu.cn/debian-cd/13.3.0/
 wget https://mirror.lzu.edu.cn/debian-cd/13.3.0/amd64/iso-dvd/debian-13.3.0-amd64-DVD-1.iso
 #正常安装系统
+```
 
+### 安装Proxmox 9
+```bash
 #安装Proxmox 9 on debain 13，按照以下文档安装即可
 #https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_13_Trixie
 
@@ -567,15 +673,18 @@ wget https://mirror.lzu.edu.cn/debian-cd/13.3.0/amd64/iso-dvd/debian-13.3.0-amd6
 Connect to the admin web interface (https://your-ip-address:8006). 
 If you have a fresh install and have not added any users yet, you should select PAM authentication realm 
 and login with root user account.
+```
 
-#Create a Linux Bridge
+### 创建网桥
+
 Create a Linux Bridge called vmbr0, and add your first network interface to it.
 
 The recommended default configuration can be adapted from the example given in the documentation. 
 See the default configuration using a bridge：
 https://pve.proxmox.com/wiki/Network_Configuration#_default_configuration_using_a_bridge
 
-#编辑文件：
+编辑文件：
+```bash
 vim /etc/network/interfaces:
 
 auto lo
@@ -600,9 +709,10 @@ iface vmbr0 inet static
 #重新加载：
 apt install ifupdown2
 ifreload -a
+```
 
-
-#安装CT
+### 安装CT
+```bash
 #https://mirrors.ustc.edu.cn/help/proxmox.html
 #https://prox4-rs5.gd.ddnsto.com/pve-docs/chapter-pct.html#pct_container_images
 pveam update
@@ -611,7 +721,10 @@ pveam available
 #安装ubuntu 24
 pveam download local ubuntu-24.04-standard_24.04-2_amd64.tar.zst
 pveam list local
+```
 
+宿主机进入容器：
+```bash
 #在web界面安装好后，宿主机进入容器
 > pct enter <容器id>
 nano /etc/ssh/sshd_config
@@ -619,8 +732,10 @@ nano /etc/ssh/sshd_config
 PermitRootLogin yes
 # 重启服务
 systemctl restart ssh
+```
 
-#Openwrt
+#### Openwrt
+```bash
 #https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/
 cd /var/lib/vz/template/cache/
 #wget https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/openwrt-25.12.0-x86-64-rootfs.tar.gz
@@ -661,8 +776,10 @@ EOF
 
 ...
 #reboot
+```
 
-#Arch linux:
+#### Arch linux
+```bash
 #http://download.proxmox.com
 cd /var/lib/vz/template/cache/
 wget http://download.proxmox.com/images/system/archlinux-base_20240911-1_amd64.tar.zst
@@ -671,76 +788,3 @@ wget https://images.linuxcontainers.org/images/archlinux/current/amd64/default/2
 # 重命名成更易认的（Proxmox 会显示这个名字）
 mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
 ```
-
-----------------------------
-#https://grok.com/c/45ef9e72-4b86-4373-b5dd-c03a94345f86?rid=a9af3990-c617-426d-8173-1bfdef7ec61b
-# 1. 把 vpns+ 加到 LAN zone（支持通配 vpns0、vpns1...）
-uci -q del_list firewall.@zone[0].device='vpns+'
-uci -q del_list firewall.@zone[0].device='vpns+'
-
-# 2. 确保 WAN 到 VPN 端口已放行（你已经连上了，应该有，但保险起见）
-# uci -q delete firewall.oc
-# uci set firewall.oc=rule
-# uci set firewall.oc.name='Allow-OpenConnect'
-# uci set firewall.oc.src='wan'
-# uci set firewall.oc.dest_port='14443'   # 改成你的实际端口
-# uci set firewall.oc.proto='tcp udp'
-# uci set firewall.oc.target='ACCEPT'
-
-uci commit firewall
-service firewall restart
-
-也可以在web里面操作：
-网络->防火墙->常规设置：
-wan： 都接受，勾选“IP 动态伪装“
-lan->编辑：高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
-防火墙 - 通信规则: 源区域: wan  目标端口: 14443 操作:接受
--------------------------
-
-
-配置其他网段的route:
-VPN->OpenConect VPN->路由表：
-192.168.101.0/24
-192.168.80.0/24
-
-也可以快速添加其他的网段：
-vim /etc/config/ocserv
-
-config routes
-        option ip '192.168.65.0/24'
-        option netmask '255.255.255.0'
-
-config routes
-        option ip '192.168.66.0/24'
-        option netmask '255.255.255.0'
-......
-
-或者手动添加：
-# 添加第一条：192.168.101.0/24 （已经通的）
-uci add ocserv routes
-uci set ocserv.@routes[-1].network='192.168.101.0/24'
-
-# 添加第二条：192.168.80.0/24
-uci add ocserv routes
-uci set ocserv.@routes[-1].network='192.168.80.0/24'
-
-# （可选）如果你还想推默认路由（全流量走 VPN），再加一条：
-# uci add ocserv routes
-# uci set ocserv.@routes[-1].network='0.0.0.0/0'
-
-# 提交并重启 ocserv
-uci commit ocserv
-/etc/init.d/ocserv restart
------------------------------------------
-
-ssl证书：
-VPN->OpenConect VPN->编辑模板：
-server-cert = /data/ocserv/ssl/szvpn.zerofinance.net.pem
-server-key = /data/ocserv/ssl/szvpn.zerofinance.net.key
-#提交并重启
-/etc/init.d/ocserv restart
------------------------------------------------
-blog的备份文件：backup/vpn/ocserv.zip
--------------------------------------
-手机openconnect后，dns无效时，把DNS从8.8.8.8改为223.5.5.5即可
-建议都在openwrt web里面操作。
