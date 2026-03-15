@@ -549,7 +549,32 @@ https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimig
 
 ## openwrt
 
-安装后参考以下文章安装主题：https://kwx.cc/post/3880
+安装后，配置好网络。DHCP/DNS -> 过滤器 -> 勾掉"重绑定保护"
+
+### 中文包
+```
+OpenWRT -> System -> Software -> Filter
+填入： luci-i18n-base-zh-cn
+```
+
+### theme-argon
+
+参考以下文章安装主题：https://kwx.cc/post/3880
+
+```bash
+#https://github.com/jerrykuku/luci-theme-argon
+#https://github.com/jerrykuku/luci-app-argon-config
+wget https://github.com/jerrykuku/luci-theme-argon/releases/download/v2.3.2/luci-theme-argon_2.3.2-r20250207_all.ipk -O luci-theme-argon_2.3.2-r20250207_all.ipk
+
+opkg update
+opkg install luci-theme-argon_2.3.2-r20250207_all.ipk
+
+#https://github.com/Openwrt-Passwall/openwrt-passwall /etc/config/passwall opkg install kmod-nft-socket
+#https://github.com/lxiaya/openwrt-homeproxy  /etc/config/homeproxy
+#https://github.com/vernesong/openclash
+```
+
+### 
 
 ## ocserv
 
@@ -741,7 +766,7 @@ cd /var/lib/vz/template/cache/
 #wget https://downloads.openwrt.org/releases/25.12.0/targets/x86/64/openwrt-25.12.0-x86-64-rootfs.tar.gz
 wget https://downloads.openwrt.org/releases/24.10.5/targets/x86/64/openwrt-24.10.5-x86-64-rootfs.tar.gz
 
-pct create 101 /var/lib/vz/template/cache/openwrt-24.10.5-x86-64-rootfs.tar.gz \
+pct create 100 /var/lib/vz/template/cache/openwrt-24.10.5-x86-64-rootfs.tar.gz \
   --arch amd64 \
   --hostname OpenWrt-24.10 \
   --rootfs local:1 \
@@ -787,4 +812,12 @@ wget http://download.proxmox.com/images/system/archlinux-base_20240911-1_amd64.t
 wget https://images.linuxcontainers.org/images/archlinux/current/amd64/default/20260310_04:18/rootfs.tar.xz
 # 重命名成更易认的（Proxmox 会显示这个名字）
 mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
+```
+
+#### Ubuntu arm64
+
+```bash
+#https://github.com/jiangcuo/pxvirt/issues/174
+#https://jenkins.linuxcontainers.org/job/image-ubuntu/
+wget -O "ubuntu-noble-20250409_arm64.tar.xz" "https://jenkins.linuxcontainers.org/job/image-ubuntu/architecture=arm64,release=noble,variant=default/lastSuccessfulBuild/artifact/rootfs.tar.xz"
 ```
