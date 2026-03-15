@@ -832,6 +832,15 @@ pacman-key --init
 pacman-key --populate archlinuxarm
 pacman -Sy archlinux-keyring
 pacman -Syu
+
+#安装yay
+#nano /etc/pve/lxc/102.conf
+features: nesting=1
+lxc.cap.drop: 
+pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
 ```
 
 #### Ubuntu arm64
