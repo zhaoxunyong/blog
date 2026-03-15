@@ -834,9 +834,19 @@ pacman -Sy archlinux-keyring
 pacman -Syu
 
 #安装yay
-#nano /etc/pve/lxc/102.conf
+nano /etc/pve/lxc/102.conf
 features: nesting=1
 lxc.cap.drop: 
+# 安装 sudo（如果还没装）
+pacman -Syu sudo
+# 创建新用户（例如叫 builduser）
+useradd -m dave
+passwd dave
+# 将用户加入 wheel 组并允许 sudo
+# 使用 visudo 去掉 '%wheel ALL=(ALL:ALL) ALL' 前面的注释
+echo 'dave ALL=(ALL:ALL) ALL' >> /etc/sudoers
+# 切换到该用户
+su - dave
 pacman -S --needed git base-devel
 git clone https://aur.archlinux.org/yay.git
 cd yay
