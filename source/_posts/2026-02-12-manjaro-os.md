@@ -25,6 +25,8 @@ Upgrade:
 sudo pacman -Syu
 
 #如果报错执行：
+pacman-key --init
+pacman-key --populate archlinuxarm
 pacman -Sy archlinux-keyring
 pacman -Syu
 ```
@@ -812,6 +814,15 @@ wget http://download.proxmox.com/images/system/archlinux-base_20240911-1_amd64.t
 wget https://images.linuxcontainers.org/images/archlinux/current/amd64/default/20260310_04:18/rootfs.tar.xz
 # 重命名成更易认的（Proxmox 会显示这个名字）
 mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
+
+#arm64
+wget http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
+#cd cd /etc/systemd/network/,删除无用的network配置，否则ip获取错误。
+#DisableSandbox
+#打开配置文件：
+nano /etc/pacman.conf
+找到 [options] 部分，添加：
+DisableSandbox
 ```
 
 #### Ubuntu arm64
