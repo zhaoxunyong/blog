@@ -759,6 +759,8 @@ nano /etc/ssh/sshd_config
 PermitRootLogin yes
 # 重启服务
 systemctl restart ssh
+
+#配置文件位于宿主机：nano /etc/pve/lxc/<ct-id>.conf
 ```
 
 #### Openwrt
@@ -817,12 +819,19 @@ mv rootfs.tar.xz archlinuxarm-amd64-latest.tar.gz
 
 #arm64
 wget http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
-#cd cd /etc/systemd/network/,删除无用的network配置，否则ip获取错误。
+
+#配置：
+cd /etc/systemd/network/,删除无用的network配置，否则ip获取错误。
 #DisableSandbox
 #打开配置文件：
 nano /etc/pacman.conf
 找到 [options] 部分，添加：
 DisableSandbox
+#Upgrade:
+pacman-key --init
+pacman-key --populate archlinuxarm
+pacman -Sy archlinux-keyring
+pacman -Syu
 ```
 
 #### Ubuntu arm64
