@@ -629,6 +629,7 @@ service firewall restart
 配置其他网段的route:
 ```
 #VPN->OpenConect VPN->路由表：
+测试好像不生效，可以使用手动编辑/etc/config/ocserv的方式。
 192.168.101.0/24
 192.168.80.0/24
 ```
