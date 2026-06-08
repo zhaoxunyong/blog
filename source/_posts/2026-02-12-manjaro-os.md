@@ -583,6 +583,12 @@ opkg install luci-theme-argon_2.3.2-r20250207_all.ipk
 ```bash
 opkg update
 opkg install ocserv luci-app-ocserv luci-i18n-ocserv-zh-cn
+
+##vim /etc/sysctl.conf 
+#net.ipv4.ip_forward=1
+#net.ipv4.conf.all.proxy_arp=1
+
+#sysctl -p
 ```
 
 通用配置：
@@ -601,6 +607,7 @@ DNS 服务器： 223.5.5.5
 进入：网络->防火墙->常规设置：
 
 #路由器模式：
+#wan/lan: 
 "入站数据	出站数据	区域内转发":都接受，勾选“IP 动态伪装“
 #lan: 编辑：
 高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
@@ -608,6 +615,8 @@ DNS 服务器： 223.5.5.5
 名称：Allow-Ocserv，源区域: wan  目标端口: 14443 操作:接受
 
 #旁路由模式：
+#lan: 
+"入站数据	出站数据	区域内转发":都接受，勾选“IP 动态伪装“
 #lan: 编辑：
 高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
 #防火墙 - 通信规则（旁路由模式）: 
@@ -643,7 +652,6 @@ server-key = /data/ocserv/ssl/xxxx.net.key
 #blog的备份文件：backup/vpn/ocserv.zip
 
 手机openconnect后，dns无效时，把DNS从8.8.8.8改为223.5.5.5即可
-建议都在openwrt web里面操作。
 ```
 
 ## Proxmox
