@@ -597,48 +597,81 @@ DNS 服务器： 223.5.5.5
 
 配置vpns+规则：
 ```bash
-#进入：网络->防火墙->常规设置：
+#https://grok.com/c/45ef9e72-4b86-4373-b5dd-c03a94345f86?rid=a9af3990-c617-426d-8173-1bfdef7ec61b
+# 1. 把 vpns+ 加到 LAN zone（支持通配 vpns0、vpns1...）
+uci -q del_list firewall.@zone[0].device='vpns+'
+uci -q del_list firewall.@zone[0].device='vpns+'
 
-#路由器模式：
+# 2. 确保 WAN 到 VPN 端口已放行（你已经连上了，应该有，但保险起见）
+# uci -q delete firewall.oc
+# uci set firewall.oc=rule
+# uci set firewall.oc.name='Allow-OpenConnect'
+# uci set firewall.oc.src='wan'
+# uci set firewall.oc.dest_port='14443'   # 改成你的实际端口
+# uci set firewall.oc.proto='tcp udp'
+# uci set firewall.oc.target='ACCEPT'
+
+uci commit firewall
+service firewall restart
+```
+
+也可以在web里面操作：
+```bash
+#进入：网络->防火墙->常规设置：
+#wan： 
 "入站数据	出站数据	区域内转发":都接受，勾选“IP 动态伪装“
 #lan: 编辑：
 高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
 #防火墙 - 通信规则: 
 名称：Allow-Ocserv，源区域: wan  目标端口: 14443 操作:接受
-
-#旁路由模式：
-#lan: 编辑：
-高级设置：覆盖的设备：vpns+  地址族限制：仅IPv4
-#防火墙 - 通信规则（旁路由模式）: 
-名称：Allow-Ocserv，源区域: lan  目标端口: 14443 操作:接受
 ```
 
 配置其他网段的route:
 ```
 #VPN->OpenConect VPN->路由表：
 测试好像不生效，可以使用手动编辑/etc/config/ocserv的方式。
-192.168.111.0/24
-192.168.112.0/24
+192.168.101.0/24
+192.168.80.0/24
 ```
 
 也可以快速添加其他的网段：
 vim /etc/config/ocserv
 ```bash
+
 config routes
-        option ip '192.168.111.0/24'
+        option ip '192.168.65.0/24'
         option netmask '255.255.255.0'
 
 config routes
-        option ip '192.168.112.0/24'
+        option ip '192.168.66.0/24'
         option netmask '255.255.255.0'
 ......
+```
+
+或者手动脚本添加：
+```bash
+# 添加第一条：192.168.101.0/24 （已经通的）
+uci add ocserv routes
+uci set ocserv.@routes[-1].network='192.168.101.0/24'
+
+# 添加第二条：192.168.80.0/24
+uci add ocserv routes
+uci set ocserv.@routes[-1].network='192.168.80.0/24'
+
+# （可选）如果你还想推默认路由（全流量走 VPN），再加一条：
+# uci add ocserv routes
+# uci set ocserv.@routes[-1].network='0.0.0.0/0'
+
+# 提交并重启 ocserv
+uci commit ocserv
+/etc/init.d/ocserv restart
 ```
 
 ssl证书：
 ```bash
 #VPN->OpenConect VPN->编辑模板：
-server-cert = /data/ocserv/ssl/xxxx.net.pem
-server-key = /data/ocserv/ssl/xxxx.net.key
+server-cert = /data/ocserv/ssl/szvpn.zerofinance.net.pem
+server-key = /data/ocserv/ssl/szvpn.zerofinance.net.key
 #提交并重启
 /etc/init.d/ocserv restart
 
