@@ -596,8 +596,9 @@ DNS 服务器： 223.5.5.5
 用户设置中配置账户信息即可。
 
 配置vpns+规则：
+
 ```bash
-#进入：网络->防火墙->常规设置：
+进入：网络->防火墙->常规设置：
 
 #路由器模式：
 "入站数据	出站数据	区域内转发":都接受，勾选“IP 动态伪装“
@@ -614,16 +615,10 @@ DNS 服务器： 223.5.5.5
 ```
 
 配置其他网段的route:
-```
-#VPN->OpenConect VPN->路由表：
-测试好像不生效，可以使用手动编辑/etc/config/ocserv的方式。
-192.168.111.0/24
-192.168.112.0/24
-```
 
-也可以快速添加其他的网段：
-vim /etc/config/ocserv
 ```bash
+#vim /etc/config/ocserv
+
 config routes
         option ip '192.168.111.0/24'
         option netmask '255.255.255.0'
@@ -632,6 +627,9 @@ config routes
         option ip '192.168.112.0/24'
         option netmask '255.255.255.0'
 ......
+
+#重启
+/etc/init.d/ocserv restart
 ```
 
 ssl证书：
