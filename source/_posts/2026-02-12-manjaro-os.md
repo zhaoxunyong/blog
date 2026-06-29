@@ -47,6 +47,9 @@ pacman -Syu
 yay -Syu 
 #清理不需要的依赖 
 yay -Yc 
+sudo pacman -Sc
+#清空整个缓存目录（/var/cache/pacman/pkg/）
+#sudo pacman -Scc
 #降级软件包版本
 yay -S downgrade
 sudo downgrade 包名
