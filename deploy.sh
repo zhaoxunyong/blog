@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-. ~/.zshrc
+#. ~/.zshrc
 
 nvm use 12
 hexo clean
