@@ -695,13 +695,13 @@ auto lo
 iface lo inet loopback
 
 iface enp1s0 inet manual
-iface enp2s0 inet manual
+#iface enp2s0 inet manual
 iface wlo1 inet manual
 
 auto vmbr0
 iface vmbr0 inet static
         address 192.168.3.10/24
-        gateway 192.168.3.1
+        #gateway 192.168.3.1
         bridge-ports enp1s0
         bridge-stp off
         bridge-fd 0
@@ -710,9 +710,23 @@ iface vmbr0 inet static
         post-up   iptables -t nat -A POSTROUTING -s '192.168.3.0/24' -o vmbr0 -j MASQUERADE
         post-down iptables -t nat -D POSTROUTING -s '192.168.3.0/24' -o vmbr0 -j MASQUERADE
 
+auto vmbr1
+iface vmbr1 inet static
+        address 192.168.1.2/24
+        gateway 192.168.1.1
+        bridge-ports enp2s0
+        bridge-stp off
+        bridge-fd 0
+
+        post-up   echo 1 > /proc/sys/net/ipv4/ip_forward
+        post-up   iptables -t nat -A POSTROUTING -s '192.168.3.0/24' -o vmbr1 -j MASQUERADE
+        post-down iptables -t nat -D POSTROUTING -s '192.168.3.0/24' -o vmbr1 -j MASQUERADE
+
 #重新加载：
 apt install ifupdown2
 ifreload -a
+# 或
+systemctl restart networking
 ```
 
 ### 安装CT
@@ -807,6 +821,26 @@ lxc.apparmor.allow_nesting: 1
 /etc/config/dhcp
 #复制里面的防火墙部分
 /etc/config/firewall
+```
+
+解决openwrt作为路由器时，ip能ping通，当域名不能的问题：
+```
+# 给 WAN 接口强制指定上游 DNS（如果接口名不是 wan，请改成实际名字）
+uci set network.lan.peerdns='0'
+uci delete network.lan.dns
+uci add_list network.lan.dns='223.5.5.5'
+uci add_list network.lan.dns='8.8.8.8'
+
+# 同时让 dnsmasq 也使用这些 DNS
+uci set dhcp.@dnsmasq[0].noresolv='0'
+uci delete dhcp.@dnsmasq[0].server
+uci add_list dhcp.@dnsmasq[0].server='223.5.5.5'
+uci add_list dhcp.@dnsmasq[0].server='8.8.8.8'
+
+uci commit network
+uci commit dhcp
+/etc/init.d/network restart
+/etc/init.d/dnsmasq restart
 ```
 
 #### ZeroTier on OpenWrt
