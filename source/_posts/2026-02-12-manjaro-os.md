@@ -784,6 +784,26 @@ EOF
 #reboot
 ```
 
+Proxmox 9.x由于ujail限制，homeporxy无法启动，需要修改宿主机的配置：
+nano /etc/pve/lxc/104.conf
+```
+features: nesting=1,keyctl=1
+lxc.apparmor.profile: generated
+lxc.apparmor.allow_nesting: 1
+```
+
+重启CT容器后生效。
+
+如果需要前移旧设备的信息的话，可以把以下的三个文件里面的内容复制过去：
+```
+#可以直接覆盖
+/etc/config/homeproxy
+#复制里面的静态ip部分
+/etc/config/dhcp
+#复制里面的防火墙部分
+/etc/config/firewall
+```
+
 #### Arch linux
 ```bash
 #http://download.proxmox.com
