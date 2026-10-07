@@ -780,6 +780,11 @@ nameserver 223.5.5.5
 nameserver 8.8.8.8
 EOF
 
+#homeproxy别名
+vim ~/.profile
+alias ss="/etc/init.d/homeproxy start"
+alias tt="/etc/init.d/homeproxy stop"
+
 ...
 #reboot
 ```
