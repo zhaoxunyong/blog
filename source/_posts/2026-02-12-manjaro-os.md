@@ -809,6 +809,66 @@ lxc.apparmor.allow_nesting: 1
 /etc/config/firewall
 ```
 
+#### ZeroTier on OpenWrt
+```
+#https://github.com/mwarning/zerotier-openwrt/wiki/Configure-ZeroTier-on-OpenWrt
+#Installation
+opkg update
+opkg install zerotier
+#Configure ZeroTier on your OpenWrt router
+uci set zerotier.global.enabled='1'
+uci delete zerotier.earth
+uci set zerotier.openwrt_network=network
+uci set zerotier.openwrt_network.id='363c67c55a2b5dc0'
+uci commit zerotier
+
+reboot
+
+#Make sure you Authorize the client
+
+#Open OpenWrt Firewall for ZeroTier Incoming Connections
+uci add firewall rule
+uci set firewall.@rule[-1].name='Allow-ZeroTier-Inbound'
+uci set firewall.@rule[-1].src='*'
+uci set firewall.@rule[-1].target='ACCEPT'
+uci set firewall.@rule[-1].proto='udp'
+uci set firewall.@rule[-1].dest_port='9993'
+uci commit firewall
+
+/etc/init.d/firewall restart
+
+#https://github.com/mwarning/zerotier-openwrt/wiki/Configure-ZeroTier-routing-in-OpenWrt
+#Configure ZeroTier routing in OpenWrt
+# Create interface
+uci set network.ZeroTier=interface
+uci set network.ZeroTier.proto='none'
+uci set network.ZeroTier.device='ztXXXXXXXX' # Replace ztXXXXXXXX with your own ZeroTier interface name
+
+# Create zone
+uci add firewall zone
+uci set firewall.@zone[-1].name='vpn'
+uci set firewall.@zone[-1].input='ACCEPT'
+uci set firewall.@zone[-1].output='ACCEPT'
+uci set firewall.@zone[-1].forward='ACCEPT'
+uci set firewall.@zone[-1].masq='1'
+uci add_list firewall.@zone[-1].network='ZeroTier'
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='vpn'
+uci set firewall.@forwarding[-1].dest='lan'
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='vpn'
+uci set firewall.@forwarding[-1].dest='wan'
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].src='lan'
+uci set firewall.@forwarding[-1].dest='vpn'
+
+# Commit changes
+uci commit
+
+/etc/init.d/firewall restart
+```
+
+
 #### Arch linux
 ```bash
 #http://download.proxmox.com
