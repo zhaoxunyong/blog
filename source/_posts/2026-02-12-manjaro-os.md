@@ -809,6 +809,10 @@ nano /etc/pve/lxc/104.conf
 features: nesting=1,keyctl=1
 lxc.apparmor.profile: generated
 lxc.apparmor.allow_nesting: 1
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+lxc.cap.drop:
+#lxc.apparmor.profile: unconfined
 ```
 
 重启CT容器后生效。
