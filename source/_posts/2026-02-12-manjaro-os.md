@@ -695,7 +695,7 @@ auto lo
 iface lo inet loopback
 
 iface enp1s0 inet manual
-#iface enp2s0 inet manual
+iface enp2s0 inet manual
 iface wlo1 inet manual
 
 auto vmbr0
