@@ -806,13 +806,15 @@ alias tt="/etc/init.d/homeproxy stop"
 Proxmox 9.x由于ujail限制，homeporxy无法启动，需要修改宿主机的配置：
 nano /etc/pve/lxc/104.conf
 ```
-features: nesting=1,keyctl=1
-lxc.apparmor.profile: generated
-lxc.apparmor.allow_nesting: 1
+#features: nesting=1,keyctl=1
+unprivileged: 0
 lxc.cgroup2.devices.allow: c 10:200 rwm
 lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+lxc.mount.auto: proc:rw sys:rw
 lxc.cap.drop:
-#lxc.apparmor.profile: unconfined
+#lxc.apparmor.profile: generated
+lxc.apparmor.profile: unconfined
+lxc.apparmor.allow_nesting: 1
 ```
 
 重启CT容器后生效。
