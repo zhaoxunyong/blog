@@ -579,8 +579,6 @@ opkg install luci-theme-argon_2.3.2-r20250207_all.ipk
 #https://github.com/vernesong/openclash
 ```
 
-### 
-
 ## ocserv
 
 ```bash
@@ -846,7 +844,7 @@ uci commit dhcp
 /etc/init.d/dnsmasq restart
 ```
 
-#### ZeroTier on OpenWrt
+#### ZeroTier
 ```
 #https://github.com/mwarning/zerotier-openwrt/wiki/Configure-ZeroTier-on-OpenWrt
 #Installation
@@ -856,7 +854,7 @@ opkg install zerotier
 uci set zerotier.global.enabled='1'
 uci delete zerotier.earth
 uci set zerotier.openwrt_network=network
-uci set zerotier.openwrt_network.id='363c67c55a2b5dc0'
+uci set zerotier.openwrt_network.id='<your-network-id>'
 uci commit zerotier
 
 reboot
@@ -928,7 +926,7 @@ apt install -y iptables-persistent
 iptables-save > /etc/iptables/rules.v4
 # 或
 netfilter-persistent save
-···
+```
 
 
 #### Arch linux
