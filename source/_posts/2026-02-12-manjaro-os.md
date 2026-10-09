@@ -905,6 +905,31 @@ uci commit
 /etc/init.d/firewall restart
 ```
 
+如果openwrt采取的是lan+wan的方式的话，从宿主机无法访问到openwrt的解决方式:
+```
+#openwrt添加路由（推荐）
+# 让 OpenWRT 知道 192.168.195.0/24 要走宿主机
+#ip route add 192.168.195.0/24 via 192.168.3.10
+# 永久生效（写入配置）
+uci add network route
+uci set network.@route[-1].interface='lan'
+uci set network.@route[-1].target='192.168.195.0/24'
+uci set network.@route[-1].gateway='192.168.3.10'
+uci commit network
+/etc/init.d/network restart
+
+#可选：或者在宿主机配置, vmbr0为内网口:
+# 把从 ZeroTier 进来、去往 192.168.3.0/24 的流量伪装成主机自己的 IP
+iptables -t nat -A POSTROUTING -s 192.168.195.0/24 -d 192.168.3.0/24 -o vmbr0 -j MASQUERADE
+# 或者更宽一点:
+#iptables -t nat -A POSTROUTING -o vmbr0 -j MASQUERADE
+#持久化
+apt install -y iptables-persistent
+iptables-save > /etc/iptables/rules.v4
+# 或
+netfilter-persistent save
+···
+
 
 #### Arch linux
 ```bash
