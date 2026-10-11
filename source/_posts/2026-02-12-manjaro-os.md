@@ -776,10 +776,32 @@ vi /etc/config/network
 config interface 'lan'
         option device 'br-lan'
         option proto 'static'
-        list ipaddr '192.168.3.3/24'
+        list ipaddr '192.168.3.1/24'
         option ip6assign '60'
-        option gateway '192.168.3.1'
+        option gateway '192.168.3.10'
         option multipath 'off'
+
+#或者带wan+zerotier的配置：
+config interface 'lan'
+        option device 'br-lan'
+        option proto 'static'
+        option multipath 'off'
+        option peerdns '0'
+        list dns '223.5.5.5'
+        list dns '8.8.8.8'
+        list ipaddr '192.168.3.1/24'
+
+config interface 'wan'
+        option proto 'static'
+        option device 'eth1'
+        option ipaddr '192.168.1.3'
+        option netmask '255.255.255.0'
+        option gateway '192.168.1.1'
+
+config route
+        option interface 'lan'
+        option target '192.168.195.0/24'
+        option gateway '192.168.3.10'
 
 #/etc/resolv.conf是软链，不能被修改，需要删除重建
 # 删除现有的软链接
@@ -799,6 +821,8 @@ alias tt="/etc/init.d/homeproxy stop"
 
 ...
 #reboot
+pct stop <容器id>
+pct start <容器id>
 ```
 
 Proxmox 9.x由于ujail限制，homeporxy无法启动，需要修改宿主机的配置：
