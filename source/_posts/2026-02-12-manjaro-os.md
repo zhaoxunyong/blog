@@ -579,6 +579,44 @@ opkg install luci-theme-argon_2.3.2-r20250207_all.ipk
 #https://github.com/vernesong/openclash
 ```
 
+### 救砖
+
+```
+https://www.cnblogs.com/dingshaohua/p/18776622
+https://www.cnblogs.com/dingshaohua/p/18821929
+
+#下载openwrt-23.05.5-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb，必须23.05.5，24版本会报错
+wget https://downloads.openwrt.org/releases/23.05.5/targets/mediatek/filogic/openwrt-23.05.5-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb
+mv openwrt-23.05.5-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb openwrt-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb
+
+#下载Tera Term
+https://tera-term.en.softonic.com/
+#配置
+设置->串口:
+#端口以电脑设备的串口号为准
+端口： COM3
+比特率：115200
+先不要通电，接上usb to ttl的线，参考：https://www.cnblogs.com/dingshaohua/p/18776622
+使用Tera Term连接，选择COM3，连接。然后再通电，进入uboot console：
+
+成功进入 `MT7981>` 提示符，输入命令：
+loadx 0x46000000
+回车，uboot 等待接收文件。
+然后 Tera Term 顶部菜单：
+**文件 (F) → 传输 (T) → XMODEM → 发送 (S)**
+- 选中你下载好的 openwrt-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb
+会有进度条，时间会比较久，请耐心等待，完成后执行：
+## 第 1 步：设置内存内环境变量（解决 FDT 内存报错，只本次生效）
+setenv fdt_high 0xffffffff
+setenv initrd_high 0xffffffff
+直接复制粘贴到串口回车。
+## 第 2 步：执行 bootm 启动内存 OpenWrt
+bootm 0x46000000
+回车执行！uboot 开始解析 FIT 镜像，打印内核启动日志，大量日志刷屏。完成后：
+网线插路由器**LAN**，电脑网卡静态 IP：`192.168.1.254/255.255.255.0`，就可以连接上openwrt了，然后登录openwrt web，在更新固件中，更新固件即可：
+上传：openwrt-24.10.8-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-squashfs-sysupgrade.itb，重启即可。
+```
+
 ## ocserv
 
 ```bash
