@@ -591,9 +591,7 @@ mv openwrt-23.05.5-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-re
 
 #下载Tera Term
 https://tera-term.en.softonic.com/
-#配置
-设置->串口:
-#端口以电脑设备的串口号为准
+#配置：设置->串口:端口以电脑设备的串口号为准
 端口： COM3
 比特率：115200
 先不要通电，接上usb to ttl的线，参考：https://www.cnblogs.com/dingshaohua/p/18776622
@@ -612,8 +610,9 @@ setenv initrd_high 0xffffffff
 直接复制粘贴到串口回车。
 ## 第 2 步：执行 bootm 启动内存 OpenWrt
 bootm 0x46000000
-回车执行！uboot 开始解析 FIT 镜像，打印内核启动日志，大量日志刷屏。完成后：
-网线插路由器**LAN**，电脑网卡静态 IP：`192.168.1.254/255.255.255.0`，就可以连接上openwrt了，然后登录openwrt web，在更新固件中，更新固件即可：
+回车执行！uboot 开始解析 FIT 镜像，打印内核启动日志，大量日志刷屏。
+注意：openwrt基于内存，断电后失效。
+完成后，网线插路由器**LAN**，电脑网卡静态 IP：`192.168.1.254/255.255.255.0`，就可以连接上openwrt了，然后登录openwrt web，在更新固件中，更新固件即可：
 上传：openwrt-24.10.8-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-squashfs-sysupgrade.itb，重启即可。
 ```
 
