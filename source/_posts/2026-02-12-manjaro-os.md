@@ -584,6 +584,8 @@ opkg install luci-theme-argon_2.3.2-r20250207_all.ipk
 ```
 https://www.cnblogs.com/dingshaohua/p/18776622
 https://www.cnblogs.com/dingshaohua/p/18821929
+#安装CH340驱动：
+https://telesky.yuque.com/bdys8w/01/qiyzczoxb58nrqx0
 
 #下载openwrt-23.05.5-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb，必须23.05.5，24版本会报错
 wget https://downloads.openwrt.org/releases/23.05.5/targets/mediatek/filogic/openwrt-23.05.5-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-initramfs-recovery.itb
