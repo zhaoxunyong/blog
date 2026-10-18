@@ -816,9 +816,10 @@ vi /etc/config/network
 config interface 'lan'
         option device 'br-lan'
         option proto 'static'
-        list ipaddr '192.168.3.1/24'
-        option ip6assign '60'
+        option ipaddr '192.168.3.1'
+        option netmask '255.255.255.0'
         option gateway '192.168.3.10'
+        option ip6assign '60'
         option multipath 'off'
 
 #或者带wan+zerotier的配置：
