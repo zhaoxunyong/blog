@@ -740,6 +740,7 @@ iface vmbr0 inet static
         address 192.168.3.10/24
         #gateway 192.168.3.1
         bridge-ports enp1s0
+        #dns-nameservers 223.5.5.5 8.8.8.8
         bridge-stp off
         bridge-fd 0
 
