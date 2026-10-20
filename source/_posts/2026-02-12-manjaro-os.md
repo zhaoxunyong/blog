@@ -703,6 +703,8 @@ server-key = /data/ocserv/ssl/xxxx.net.key
 #https://mirror.lzu.edu.cn/debian-cd/13.3.0/
 wget https://mirror.lzu.edu.cn/debian-cd/13.3.0/amd64/iso-dvd/debian-13.3.0-amd64-DVD-1.iso
 #正常安装系统
+#设置时区
+timedatectl set-timezone Asia/Shanghai
 ```
 
 ### 安装Proxmox 9
