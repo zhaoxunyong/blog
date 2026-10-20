@@ -560,6 +560,12 @@ https://chromewebstore.google.com/detail/aria2-explorer/mpkodccbngfoacfalldjimig
 ```
 OpenWRT -> System -> Software -> Filter
 填入： luci-i18n-base-zh-cn
+
+#timezone:
+uci set system.@system[0].zonename='Asia/Shanghai'
+uci set system.@system[0].timezone='CST-8'
+uci commit system
+/etc/init.d/system restart
 ```
 
 ### theme-argon
