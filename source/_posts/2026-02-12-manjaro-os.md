@@ -853,11 +853,13 @@ write_rules() {
     show_current
 }
 
+# 只提取真正的规则行（以 ether 或 ip 开头），完全忽略注释和空行
 get_rule_lines() {
     if [ ! -f "$NFT_FILE" ]; then
         return
     fi
-    sed -n '/type filter/,/^}/p' "$NFT_FILE" | sed '1d;$d' | sed '/^$/d'
+    # 兼容 busybox，使用 [[:space:]] 而不是 \s
+    sed -n '/type filter/,/^}/p' "$NFT_FILE" | sed '1d;$d' | grep -E '^[[:space:]]*(ether|ip)[[:space:]]' | sed 's/^[[:space:]]*//'
 }
 
 print_numbered() {
@@ -868,11 +870,9 @@ print_numbered() {
     done
 }
 
-# 确认函数：直接回车默认 Y
 confirm_action() {
     echo -e "\n${YELLOW}请确认以上操作 (Y/n):${NC}"
     read -p "> " confirm
-    # 空输入或 Y/y 都视为确认
     if [ -z "$confirm" ] || [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
         return 0
     else
