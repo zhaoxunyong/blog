@@ -822,20 +822,26 @@ add_rule() {
     local start_hour="$3"
     local end_hour="$4"
     local weekdays="$5"
+    local comment="$6"
 
     match=""
     [ -n "$mac" ] && match="$match ether saddr $mac"
     [ -n "$ip" ]  && match="$match ip saddr $ip"
     match="$match fib daddr type != local meta l4proto { tcp, udp }"
 
+    comment_str=""
+    if [ -n "$comment" ]; then
+        comment_str=" comment \"$comment\""
+    fi
+
     if [ -n "$start_hour" ] && [ -n "$end_hour" ]; then
         if [ -n "$weekdays" ]; then
-            echo "        ${match} meta day { $weekdays } meta hour \"${start_hour}\"-\"${end_hour}\" counter drop"
+            echo "        ${match} meta day { $weekdays } meta hour \"${start_hour}\"-\"${end_hour}\" counter drop${comment_str}"
         else
-            echo "        ${match} meta hour \"${start_hour}\"-\"${end_hour}\" counter drop"
+            echo "        ${match} meta hour \"${start_hour}\"-\"${end_hour}\" counter drop${comment_str}"
         fi
     else
-        echo "        ${match} counter drop comment \"block all time\""
+        echo "        ${match} counter drop${comment_str}"
     fi
 }
 
@@ -853,12 +859,10 @@ write_rules() {
     show_current
 }
 
-# 只提取真正的规则行（以 ether 或 ip 开头），完全忽略注释和空行
 get_rule_lines() {
     if [ ! -f "$NFT_FILE" ]; then
         return
     fi
-    # 兼容 busybox，使用 [[:space:]] 而不是 \s
     sed -n '/type filter/,/^}/p' "$NFT_FILE" | sed '1d;$d' | grep -E '^[[:space:]]*(ether|ip)[[:space:]]' | sed 's/^[[:space:]]*//'
 }
 
@@ -918,6 +922,9 @@ menu_add() {
         *) echo -e "${RED}无效选择${NC}"; return ;;
     esac
 
+    # 新增：输入 comment（可为空）
+    read -p "请输入备注 comment（可直接回车为空）: " comment
+
     echo -e "\n时间控制（填写【禁止】的时间段）："
     echo "1. 全天禁止"
     echo "2. 指定禁止时段 + 星期"
@@ -926,7 +933,7 @@ menu_add() {
     rules=""
     case $time_type in
         1)
-            rules=$(add_rule "$mac" "$ip" "" "")
+            rules=$(add_rule "$mac" "$ip" "" "" "" "$comment")
             ;;
         2)
             while true; do
@@ -962,7 +969,7 @@ menu_add() {
                     return
                 fi
             fi
-            rules=$(add_rule "$mac" "$ip" "$start" "$end" "$weekdays")
+            rules=$(add_rule "$mac" "$ip" "$start" "$end" "$weekdays" "$comment")
             ;;
         *) echo -e "${RED}无效选择${NC}"; return ;;
     esac
