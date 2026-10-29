@@ -624,6 +624,497 @@ bootm 0x46000000
 上传：openwrt-24.10.8-mediatek-filogic-xiaomi_mi-router-wr30u-ubootmod-squashfs-sysupgrade.itb，重启即可。
 ```
 
+### proxy+firewall失效
+
+不能使用firewall的页面管理防火墙了，使用以下的脚本管理：
+
+1. 添加指定的mac地址：
+```
+cat > /etc/nftables.d/99-reject-mac.nft << 'EOF'
+chain reject_mac_early {
+        type filter hook prerouting priority mangle - 20; policy accept;
+        ether saddr 08:26:AE:39:54:13 fib daddr type != local meta l4proto { tcp, udp } counter drop comment "block external traffic before homeproxy"
+}
+EOF
+
+fw4 reload
+```
+
+2. 添加指定的ip地址：
+```
+cat > /etc/nftables.d/99-reject-mac.nft << 'EOF'
+chain reject_mac_early {
+        type filter hook prerouting priority mangle - 20; policy accept;
+        ip saddr 192.168.8.100 fib daddr type != local meta l4proto { tcp, udp } counter drop comment "block IP 192.168.8.100"
+}
+EOF
+
+fw4 reload
+```
+
+3. 添加mac+ip：
+```
+cat > /etc/nftables.d/99-reject-mac.nft << 'EOF'
+chain reject_mac_early {
+        type filter hook prerouting priority mangle - 20; policy accept;
+
+        # MAC + IP 同时匹配才拦截
+        ether saddr 08:26:AE:39:54:13 ip saddr 192.168.8.100 fib daddr type != local meta l4proto { tcp, udp } counter drop comment "block specific MAC+IP"
+}
+EOF
+
+fw4 reload
+```
+
+4. 添加mac+time:
+```
+cat > /etc/nftables.d/99-reject-mac.nft << 'EOF'
+chain reject_mac_early {
+        type filter hook prerouting priority mangle - 20; policy accept;
+
+        # 00:00-17:59 和 23:00-23:59 禁止
+        ether saddr 08:26:AE:39:54:13 fib daddr type != local meta l4proto { tcp, udp } meta hour "00:00"-"17:59" counter drop comment "block outside allowed hours"
+        ether saddr 08:26:AE:39:54:13 fib daddr type != local meta l4proto { tcp, udp } meta hour "23:00"-"23:59" counter drop comment "block outside allowed hours"
+        ether saddr 08:26:AE:39:54:13 fib daddr type != local meta l4proto { tcp, udp } \
+                meta day { Monday, Tuesday, Wednesday, Thursday, Friday } \
+                meta hour "22:00"-"23:59" counter drop
+}
+EOF
+
+fw4 reload
+```
+
+5. 验证：
+```
+nft list chain inet fw4 reject_mac_early
+table inet fw4 {
+        chain reject_mac_early {
+                type filter hook prerouting priority -170; policy accept;
+                ether saddr 08:26:ae:39:54:13 fib daddr type != local meta l4proto { tcp, udp } counter packets 58 bytes 41170 drop comment "block external traffic before homeproxy"
+        }
+}
+```
+
+6. 删除：
+```
+rm -f /etc/nftables.d/99-reject-mac.nft
+fw4 reload
+```
+
+7. 完整脚本：
+```
+cat > /root/proxy-block.sh << 'EOF'
+#!/bin/sh
+
+NFT_FILE="/etc/nftables.d/99-reject-mac.nft"
+CHAIN_NAME="reject_mac_early"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+print_header() {
+    clear
+    echo -e "${GREEN}========================================${NC}"
+    echo -e "${GREEN}   HomeProxy 外部流量拦截管理脚本${NC}"
+    echo -e "${GREEN}========================================${NC}"
+}
+
+check_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        echo -e "${RED}请使用 root 用户运行此脚本${NC}"
+        exit 1
+    fi
+}
+
+reload_fw() {
+    echo -e "${YELLOW}正在重新加载防火墙...${NC}"
+    fw4 reload >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}防火墙已重新加载${NC}"
+    else
+        echo -e "${RED}防火墙加载失败，请检查规则语法${NC}"
+    fi
+}
+
+show_current() {
+    echo -e "\n${YELLOW}当前规则：${NC}"
+    if [ -f "$NFT_FILE" ]; then
+        echo -e "${BLUE}---------- nft 实际生效规则 ----------${NC}"
+        nft list chain inet fw4 $CHAIN_NAME 2>/dev/null || echo "链未加载"
+        echo -e "\n${BLUE}---------- 规则文件内容 ----------${NC}"
+        cat "$NFT_FILE"
+    else
+        echo "当前没有拦截规则"
+    fi
+}
+
+gen_header() {
+    cat << HEADER
+chain $CHAIN_NAME {
+        type filter hook prerouting priority mangle - 20; policy accept;
+
+HEADER
+}
+
+validate_mac() {
+    local mac="$1"
+    echo "$mac" | grep -Eq '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
+    return $?
+}
+
+validate_time() {
+    local time="$1"
+    echo "$time" | grep -Eq '^([01][0-9]|2[0-3]):[0-5][0-9]$'
+    return $?
+}
+
+parse_weekdays() {
+    local input="$1"
+    local result=""
+
+    expanded=""
+    for part in $(echo "$input" | tr ',' ' '); do
+        if echo "$part" | grep -q '-'; then
+            start=$(echo "$part" | cut -d'-' -f1)
+            end=$(echo "$part" | cut -d'-' -f2)
+            if ! echo "$start" | grep -Eq '^[1-7]$' || ! echo "$end" | grep -Eq '^[1-7]$'; then
+                return 1
+            fi
+            i=$start
+            while [ "$i" -le "$end" ]; do
+                expanded="$expanded $i"
+                i=$((i + 1))
+            done
+        else
+            if ! echo "$part" | grep -Eq '^[1-7]$'; then
+                return 1
+            fi
+            expanded="$expanded $part"
+        fi
+    done
+
+    for d in $expanded; do
+        case $d in
+            1) name="Monday" ;;
+            2) name="Tuesday" ;;
+            3) name="Wednesday" ;;
+            4) name="Thursday" ;;
+            5) name="Friday" ;;
+            6) name="Saturday" ;;
+            7) name="Sunday" ;;
+            *) continue ;;
+        esac
+        if [ -z "$result" ]; then
+            result="$name"
+        else
+            result="$result, $name"
+        fi
+    done
+    echo "$result"
+}
+
+add_rule() {
+    local mac="$1"
+    local ip="$2"
+    local start_hour="$3"
+    local end_hour="$4"
+    local weekdays="$5"
+
+    match=""
+    [ -n "$mac" ] && match="$match ether saddr $mac"
+    [ -n "$ip" ]  && match="$match ip saddr $ip"
+    match="$match fib daddr type != local meta l4proto { tcp, udp }"
+
+    if [ -n "$start_hour" ] && [ -n "$end_hour" ]; then
+        if [ -n "$weekdays" ]; then
+            echo "        ${match} meta day { $weekdays } meta hour \"${start_hour}\"-\"${end_hour}\" counter drop"
+        else
+            echo "        ${match} meta hour \"${start_hour}\"-\"${end_hour}\" counter drop"
+        fi
+    else
+        echo "        ${match} counter drop comment \"block all time\""
+    fi
+}
+
+write_rules() {
+    local content="$1"
+    if [ -z "$(echo -e "$content" | sed '/^$/d')" ]; then
+        rm -f "$NFT_FILE"
+        echo -e "${YELLOW}规则已全部清空${NC}"
+    else
+        gen_header > "$NFT_FILE"
+        echo -e "$content" >> "$NFT_FILE"
+        echo "}" >> "$NFT_FILE"
+    fi
+    reload_fw
+    show_current
+}
+
+get_rule_lines() {
+    if [ ! -f "$NFT_FILE" ]; then
+        return
+    fi
+    sed -n '/type filter/,/^}/p' "$NFT_FILE" | sed '1d;$d' | sed '/^$/d'
+}
+
+print_numbered() {
+    local i=1
+    echo "$1" | while read -r line; do
+        printf "%2d. %s\n" "$i" "$line"
+        i=$((i + 1))
+    done
+}
+
+# 确认函数：直接回车默认 Y
+confirm_action() {
+    echo -e "\n${YELLOW}请确认以上操作 (Y/n):${NC}"
+    read -p "> " confirm
+    # 空输入或 Y/y 都视为确认
+    if [ -z "$confirm" ] || [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+        return 0
+    else
+        echo -e "${RED}已取消操作${NC}"
+        return 1
+    fi
+}
+
+menu_add() {
+    echo -e "\n${YELLOW}【添加拦截规则】${NC}"
+    echo "1. 仅 MAC"
+    echo "2. 仅 IP"
+    echo "3. MAC + IP"
+    read -p "请选择类型 [1-3]: " type
+
+    mac=""
+    ip=""
+    case $type in
+        1)
+            while true; do
+                read -p "请输入 MAC 地址 (例如 08:26:AE:39:54:13): " mac
+                if validate_mac "$mac"; then
+                    break
+                else
+                    echo -e "${RED}MAC 地址格式错误，请重新输入（示例：08:26:AE:39:54:13）${NC}"
+                fi
+            done
+            ;;
+        2)
+            read -p "请输入 IP 地址 (例如 192.168.8.100): " ip
+            ;;
+        3)
+            while true; do
+                read -p "请输入 MAC 地址: " mac
+                if validate_mac "$mac"; then
+                    break
+                else
+                    echo -e "${RED}MAC 地址格式错误，请重新输入（示例：08:26:AE:39:54:13）${NC}"
+                fi
+            done
+            read -p "请输入 IP 地址: " ip
+            ;;
+        *) echo -e "${RED}无效选择${NC}"; return ;;
+    esac
+
+    echo -e "\n时间控制（填写【禁止】的时间段）："
+    echo "1. 全天禁止"
+    echo "2. 指定禁止时段 + 星期"
+    read -p "请选择 [1-2]: " time_type
+
+    rules=""
+    case $time_type in
+        1)
+            rules=$(add_rule "$mac" "$ip" "" "")
+            ;;
+        2)
+            while true; do
+                read -p "禁止开始时间 (HH:MM，例如 00:00): " start
+                if validate_time "$start"; then
+                    break
+                else
+                    echo -e "${RED}时间格式错误，请输入 HH:MM（00:00 - 23:59）${NC}"
+                fi
+            done
+
+            while true; do
+                read -p "禁止结束时间 (HH:MM，例如 08:00): " end
+                if validate_time "$end"; then
+                    break
+                else
+                    echo -e "${RED}时间格式错误，请输入 HH:MM（00:00 - 23:59）${NC}"
+                fi
+            done
+
+            echo ""
+            echo "星期设置说明："
+            echo "  1=周一 2=周二 3=周三 4=周四 5=周五 6=周六 7=周日"
+            echo "  示例: 1,3,5   或  1-5   或  1-3,5,7"
+            echo "  留空表示每天"
+            read -p "请输入要禁止的星期 (直接回车=每天): " day_input
+
+            weekdays=""
+            if [ -n "$day_input" ]; then
+                weekdays=$(parse_weekdays "$day_input")
+                if [ -z "$weekdays" ]; then
+                    echo -e "${RED}星期格式错误，请重新添加规则${NC}"
+                    return
+                fi
+            fi
+            rules=$(add_rule "$mac" "$ip" "$start" "$end" "$weekdays")
+            ;;
+        *) echo -e "${RED}无效选择${NC}"; return ;;
+    esac
+
+    echo -e "\n${BLUE}即将添加的规则：${NC}"
+    echo "$rules"
+    if ! confirm_action; then
+        return
+    fi
+
+    old_content=$(get_rule_lines)
+    if [ -n "$old_content" ]; then
+        new_content="${old_content}
+${rules}"
+    else
+        new_content="$rules"
+    fi
+
+    write_rules "$new_content"
+    echo -e "${GREEN}规则已添加并生效${NC}"
+}
+
+menu_delete_one() {
+    echo -e "\n${YELLOW}【清除指定拦截规则】${NC}"
+
+    if [ ! -f "$NFT_FILE" ]; then
+        echo "当前没有任何规则"
+        return
+    fi
+
+    lines=$(get_rule_lines)
+    if [ -z "$lines" ]; then
+        echo "当前没有任何规则"
+        return
+    fi
+
+    echo -e "${BLUE}当前规则列表：${NC}"
+    print_numbered "$lines"
+
+    total=$(echo "$lines" | wc -l)
+    echo ""
+    read -p "请输入要删除的规则序号 (1-$total，多个用空格分隔，输入 all 删除全部): " input
+
+    if [ -z "$input" ]; then
+        echo -e "${RED}你没有输入任何序号，操作已取消${NC}"
+        return
+    fi
+
+    if [ "$input" = "all" ] || [ "$input" = "ALL" ]; then
+        echo -e "\n${YELLOW}即将删除【全部】规则${NC}"
+        if ! confirm_action; then
+            return
+        fi
+        rm -f "$NFT_FILE"
+        reload_fw
+        echo -e "${GREEN}已删除全部规则${NC}"
+        return
+    fi
+
+    valid=0
+    for num in $input; do
+        if [ "$num" -ge 1 ] 2>/dev/null && [ "$num" -le "$total" ] 2>/dev/null; then
+            valid=1
+            break
+        fi
+    done
+    if [ $valid -eq 0 ]; then
+        echo -e "${RED}输入的序号无效，操作已取消${NC}"
+        return
+    fi
+
+    echo -e "\n${BLUE}即将删除以下规则：${NC}"
+    i=1
+    echo "$lines" | while read -r line; do
+        for num in $input; do
+            if [ "$i" -eq "$num" ]; then
+                echo "  $i. $line"
+            fi
+        done
+        i=$((i + 1))
+    done
+
+    if ! confirm_action; then
+        return
+    fi
+
+    i=1
+    echo "$lines" | while read -r line; do
+        delete=0
+        for num in $input; do
+            if [ "$i" -eq "$num" ]; then
+                delete=1
+                break
+            fi
+        done
+        if [ $delete -eq 0 ]; then
+            echo "$line"
+        fi
+        i=$((i + 1))
+    done > /tmp/proxy_block_new.rules
+
+    new_content=$(cat /tmp/proxy_block_new.rules 2>/dev/null)
+    rm -f /tmp/proxy_block_new.rules
+
+    write_rules "$new_content"
+    echo -e "${GREEN}指定规则已删除${NC}"
+}
+
+menu_clear() {
+    echo -e "\n${YELLOW}即将删除【所有】拦截规则${NC}"
+    if ! confirm_action; then
+        return
+    fi
+    rm -f "$NFT_FILE"
+    reload_fw
+    echo -e "${GREEN}所有拦截规则已清除${NC}"
+}
+
+main_menu() {
+    while true; do
+        print_header
+        echo "1. 查看当前规则"
+        echo "2. 添加拦截规则（MAC / IP / 时间）"
+        echo "3. 清除指定拦截规则"
+        echo "4. 清除所有拦截规则"
+        echo "5. 手动重新加载防火墙"
+        echo "0. 退出"
+        echo "----------------------------------------"
+        read -p "请选择操作 [0-5]: " choice
+
+        case $choice in
+            1) show_current ;;
+            2) menu_add ;;
+            3) menu_delete_one ;;
+            4) menu_clear ;;
+            5) reload_fw ;;
+            0) echo "退出"; exit 0 ;;
+            *) echo -e "${RED}无效选择${NC}" ;;
+        esac
+
+        echo ""
+        read -p "按回车键继续..."
+    done
+}
+
+check_root
+main_menu
+EOF
+
+chmod +x /root/proxy-block.sh
+```
+
 ## ocserv
 
 ```bash
